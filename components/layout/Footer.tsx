@@ -1,0 +1,108 @@
+"use client"
+
+import Link from "next/link"
+import { useEffect, useState } from "react"
+
+const navLinks = [
+  { label: "Work",   href: "#work" },
+  { label: "About",  href: "#about" },
+  { label: "Resume", href: "/resume.pdf" },
+]
+
+const socialLinks = [
+  { label: "Email",    href: "mailto:jessica.wang255@gmail.com" },
+  { label: "LinkedIn", href: "https://linkedin.com/in/jessica-wang" },
+  { label: "X",        href: "https://x.com/jessica_wang" },
+  { label: "GitHub",   href: "https://github.com/jessicawang255" },
+]
+
+function LiveClock() {
+  const [time, setTime] = useState<string | null>(null)
+
+  useEffect(() => {
+    function format() {
+      return new Intl.DateTimeFormat("en-US", {
+        hour: "numeric",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: true,
+        timeZone: "America/Toronto",
+      }).format(new Date())
+    }
+
+    setTime(format())
+    const id = setInterval(() => setTime(format()), 1000)
+    return () => clearInterval(id)
+  }, [])
+
+  if (!time) return null
+
+  return (
+    <span className="text-base font-medium text-chrome-text/60">
+      {time}, Toronto
+    </span>
+  )
+}
+
+export function Footer() {
+  function toggleGravity() {
+    document.documentElement.classList.toggle("gravity-off")
+  }
+
+  return (
+    <footer id="site-footer" className="bg-chrome">
+      <div className="container-chrome grid grid-cols-4 gap-8 pt-9 pb-12">
+        {/* Name + clock */}
+        <div className="flex flex-col gap-1">
+          <span className="text-[18px] font-medium text-white">Jessica Wang</span>
+          <LiveClock />
+        </div>
+
+        {/* Nav links */}
+        <nav aria-label="Footer navigation">
+          <ul className="flex flex-col gap-1 list-none m-0 p-0">
+            {navLinks.map(({ label, href }) => (
+              <li key={label}>
+                <Link
+                  href={href}
+                  className="text-base font-medium text-chrome-text/60 transition-colors duration-[--duration-fast] hover:text-chrome-text"
+                >
+                  {label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+        {/* Social links */}
+        <nav aria-label="Social links">
+          <ul className="flex flex-col gap-1 list-none m-0 p-0">
+            {socialLinks.map(({ label, href }) => (
+              <li key={label}>
+                <a
+                  href={href}
+                  target={href.startsWith("http") ? "_blank" : undefined}
+                  rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
+                  className="text-base font-medium text-chrome-text/60 transition-colors duration-[--duration-fast] hover:text-chrome-text"
+                >
+                  {label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+        {/* Version + Easter egg */}
+        <div className="flex flex-col items-end gap-1">
+          <span className="text-base text-chrome-text/60">Portfolio V1</span>
+          <button
+            onClick={toggleGravity}
+            className="text-base text-chrome-text/40 underline underline-offset-2 transition-colors duration-[--duration-fast] hover:text-chrome-text/70 cursor-pointer bg-transparent border-none p-0"
+          >
+            Turn off gravity
+          </button>
+        </div>
+      </div>
+    </footer>
+  )
+}

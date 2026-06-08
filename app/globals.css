@@ -1,26 +1,177 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
+/* ─── Design tokens ────────────────────────────────────────────────────────── */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Colors */
+  --color-chrome:       #111412;
+  --color-surface:      #ffffff;
+  --color-accent:       #2E8B57;
+
+  --color-primary:      #171717;
+  --color-muted:        #888888;
+  --color-subtle:       #aaaaaa;
+  --color-divider:      #e8e8e4;
+
+  --color-chrome-text:  #f0f0f0;
+  --color-chrome-muted: #A0A7A3;
+  --color-icon-social:  #DEDEDE;
+
+  /* Typography */
+  --font-sans: 'Avenir', -apple-system, BlinkMacSystemFont,
+               'Helvetica Neue', Arial, sans-serif;
+
+  /* Radii */
+  --radius-sm:    4px;
+  --radius-base:  8px;
+  --radius-lg:    12px;
+  --radius-xl:    16px;
+  --radius-frame: 48px;
+  --radius-full:  9999px;
+
+  /* Motion — easing */
+  --ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.87, 0, 0.13, 1);
+
+  /* Motion — duration */
+  --duration-instant:    100ms;
+  --duration-fast:       150ms;
+  --duration-base:       200ms;
+  --duration-slow:       300ms;
+  --duration-deliberate: 500ms;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ─── Base ─────────────────────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+:root {
+  --nav-height: 60px;   /* py-5 (40px) + text-sm line height (~20px) */
+  --page-gap:   8px;
+}
+
+html {
+  background: var(--color-chrome);
+  transition: transform 1s var(--ease-in-out);
+  transform-origin: center center;
+}
+
+html.gravity-off {
+  transform: rotate(180deg);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  color: var(--color-primary);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  padding-top: calc(var(--nav-height) + var(--page-gap));
+}
+
+/* ─── Main frame — radius transitions ──────────────────────────────────────── */
+
+/*
+ * Default (page loads at top, header visible): all corners flat.
+ * CSS default matches the SSR state — no data attributes needed on first paint.
+ *
+ * data-header-visible="false"  → top corners   get radius (card has peeled from header)
+ * data-footer-visible="true"   → bottom corners get radius (card has peeled from footer)
+ */
+#main-frame {
+  /* Top corners rounded by default — header is visible on page load (SSR-safe) */
+  border-radius: 0;
+  border-top-left-radius:  var(--radius-frame);
+  border-top-right-radius: var(--radius-frame);
+  transition:
+    border-top-left-radius     650ms var(--ease-out),
+    border-top-right-radius    650ms var(--ease-out),
+    border-bottom-left-radius  650ms var(--ease-out),
+    border-bottom-right-radius 650ms var(--ease-out);
+}
+
+#main-frame[data-header-visible="false"] {
+  border-top-left-radius:  0;
+  border-top-right-radius: 0;
+}
+
+#main-frame[data-footer-visible="true"] {
+  border-bottom-left-radius:  var(--radius-frame);
+  border-bottom-right-radius: var(--radius-frame);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #main-frame {
+    transition: none;
+  }
+}
+
+/* ─── Layout utilities ─────────────────────────────────────────────────────── */
+@utility container-main {
+  width: 100%;
+  padding-inline: 64px;
+}
+
+@utility container-chrome {
+  width: 100%;
+  padding-inline: 45px;
+}
+
+@utility grid-wide-left {
+  grid-template-columns: 3fr 2fr;
+}
+
+@utility grid-wide-right {
+  grid-template-columns: 2fr 3fr;
+}
+
+/* ─── Card hover (gated by pointer capability) ─────────────────────────────── */
+@media (hover: hover) and (pointer: fine) {
+  .case-study-card {
+    transition: transform var(--duration-base) var(--ease-out);
+  }
+
+  .case-study-card:hover {
+    transform: translateY(-3px);
+  }
+
+  .case-study-card:hover .card-thumb-img {
+    transform: scale(1.04);
+  }
+}
+
+.card-thumb-img {
+  transition: transform var(--duration-slow) var(--ease-out);
+}
+
+/* ─── Nav link underline ────────────────────────────────────────────────────── */
+.nav-link {
+  position: relative;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--color-chrome-text);
+  transition: width var(--duration-fast) var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .nav-link:hover::after {
+    width: 100%;
+  }
+}
+
+/* ─── Reduced motion ────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  html,
+  #main-frame,
+  .case-study-card,
+  .card-thumb-img {
+    transition: none !important;
+  }
 }
