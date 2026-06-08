@@ -2,50 +2,92 @@
 
 import { useEffect } from "react"
 
-const PEEL_DELAY     = 100  // ms — peeling leads the scroll by this amount
-const SCROLL_DURATION = 650 // ms — scroll animation duration (peeling is same length, starts earlier)
+// ─── Tuning ───────────────────────────────────────────────────────────────────
+// ESCAPE_VELOCITY: px/ms — if instant or smoothed velocity exceeds this at zone
+//   entry, the snap is skipped. Raise to require a harder flick; lower to make
+//   escape easier. Typical slow scroll ~0.1–0.4; deliberate flick ~2.0+.
+// SNAP_DURATION:  animation length ms. 400 = snappy, 600 = cinematic.
+// COOLDOWN_MS:    silence window after a snap completes. Prevents re-trigger from
+//   lingering scroll events immediately after the animation ends.
+const MAX_RADIUS      = 36    // px — corner radius when element is fully visible
+const SNAP_DURATION   = 500   // ms
+const ESCAPE_VELOCITY = 1.0   // px/ms
+const COOLDOWN_MS     = 300   // ms
 
-// Exact JS implementation of CSS cubic-bezier(0.16, 1, 0.3, 1) — strong ease-out
+// ─── Easing: cubic-bezier(0.16, 1, 0.3, 1) ── matches --ease-out token ────────
 function makeCubicBezier(p1x: number, p1y: number, p2x: number, p2y: number) {
-  function calcBezier(t: number, a1: number, a2: number) {
-    return ((1 - 3 * a2 + 3 * a1) * t + (3 * a2 - 6 * a1)) * t * t + 3 * a1 * t
-  }
-  function getSlope(t: number, a1: number, a2: number) {
-    return 3 * (1 - 3 * a2 + 3 * a1) * t * t + 2 * (3 * a2 - 6 * a1) * t + 3 * a1
-  }
-  function getTForX(x: number) {
+  const A = (a1: number, a2: number) => 1 - 3 * a2 + 3 * a1
+  const B = (a1: number, a2: number) => 3 * a2 - 6 * a1
+  const C = (a1: number)             => 3 * a1
+  const calc  = (t: number, a1: number, a2: number) => ((A(a1, a2) * t + B(a1, a2)) * t + C(a1)) * t
+  const slope = (t: number, a1: number, a2: number) => 3 * A(a1, a2) * t * t + 2 * B(a1, a2) * t + C(a1)
+  function tForX(x: number) {
     let t = x
     for (let i = 0; i < 8; i++) {
-      const slope = getSlope(t, p1x, p2x)
-      if (slope === 0) return t
-      t -= (calcBezier(t, p1x, p2x) - x) / slope
+      const s = slope(t, p1x, p2x)
+      if (!s) return t
+      t -= (calc(t, p1x, p2x) - x) / s
     }
     return t
   }
-  return (x: number) => x === 0 || x === 1 ? x : calcBezier(getTForX(x), p1y, p2y)
+  return (x: number) => x === 0 || x === 1 ? x : calc(tForX(x), p1y, p2y)
+}
+const ease = makeCubicBezier(0.16, 1, 0.3, 1)
+
+// ─── Scroll-driven radius ─────────────────────────────────────────────────────
+// Pure function of scrollY — always in sync with actual page position.
+// Not used to determine snap direction.
+
+function headerRatio(scrollY: number, headerH: number) {
+  return Math.max(0, Math.min(1, 1 - scrollY / headerH))
 }
 
-const easeOut = makeCubicBezier(0.16, 1, 0.3, 1)
+function footerRatio(scrollY: number, footerAbsTop: number, footerH: number, winH: number) {
+  return Math.max(0, Math.min(1, (scrollY + winH - footerAbsTop) / footerH))
+}
 
-function animateScroll(target: number, onComplete: () => void): () => void {
-  const start     = window.scrollY
-  const distance  = target - start
-  const startTime = performance.now()
-  let rafId: number
+function setRadius(
+  el: HTMLElement,
+  scrollY: number,
+  headerH: number,
+  footerAbsTop: number,
+  footerH: number,
+  winH: number
+) {
+  const top    = headerRatio(scrollY, headerH) * MAX_RADIUS
+  const bottom = footerRatio(scrollY, footerAbsTop, footerH, winH) * MAX_RADIUS
+  el.style.borderTopLeftRadius     = `${top}px`
+  el.style.borderTopRightRadius    = `${top}px`
+  el.style.borderBottomLeftRadius  = `${bottom}px`
+  el.style.borderBottomRightRadius = `${bottom}px`
+}
+
+// ─── Snap animation ───────────────────────────────────────────────────────────
+
+function animateSnap(
+  target: number,
+  onFrame: (y: number) => void,
+  onDone: () => void
+): () => void {
+  const start = window.scrollY
+  const dist  = target - start
+  const t0    = performance.now()
+  let raf: number
 
   function step(now: number) {
-    const t = Math.min((now - startTime) / SCROLL_DURATION, 1)
-    window.scrollTo(0, start + distance * easeOut(t))
-    if (t < 1) {
-      rafId = requestAnimationFrame(step)
-    } else {
-      onComplete()
-    }
+    const p = Math.min((now - t0) / SNAP_DURATION, 1)
+    const y = start + dist * ease(p)
+    window.scrollTo(0, y)
+    onFrame(y)
+    if (p < 1) raf = requestAnimationFrame(step)
+    else onDone()
   }
 
-  rafId = requestAnimationFrame(step)
-  return () => cancelAnimationFrame(rafId)
+  raf = requestAnimationFrame(step)
+  return () => cancelAnimationFrame(raf)
 }
+
+// ─── Controller ───────────────────────────────────────────────────────────────
 
 export function FooterRevealController() {
   useEffect(() => {
@@ -53,99 +95,110 @@ export function FooterRevealController() {
     const footer = document.getElementById("site-footer")
     if (!main || !footer) return
 
-    const headerSnapThreshold = parseFloat(getComputedStyle(document.body).paddingTop) || 68
+    const reduced      = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    const headerH      = parseFloat(getComputedStyle(document.body).paddingTop) || 68
+    const footerH      = footer.offsetHeight
+    const footerAbsTop = footer.getBoundingClientRect().top + window.scrollY
 
-    let isSnapping       = false
-    let headerRevealed   = window.scrollY < headerSnapThreshold
-    let footerRevealed   = footer.getBoundingClientRect().top < window.innerHeight
-    let lastScrollY      = window.scrollY
-    let cancelSnap: () => void = () => {}
+    const r = (y: number) => setRadius(main!, y, headerH, footerAbsTop, footerH, window.innerHeight)
 
-    main.dataset.headerVisible = String(headerRevealed)
-    main.dataset.footerVisible = String(footerRevealed)
+    let snapping      = false
+    let cooldownUntil = 0
+    let scrollDir     = 0   // +1 = down, -1 = up (last user-initiated direction)
+    let velocity      = 0   // px/ms EMA — smoothed signal for sustained scrolling
+    let instant       = 0   // px/ms raw    — catches fast first events before EMA builds up
+    let lastY         = window.scrollY
+    let lastT         = performance.now()
+    let cancelAnim: () => void = () => {}
 
-    function snap(target: number, onStart: () => void) {
-      cancelSnap()
-      isSnapping = true
-      onStart() // peeling starts immediately via data attribute → CSS transition
+    // Initialise zone-active flags from current scroll position so we don't
+    // immediately snap if the page is loaded mid-zone (e.g. browser restore).
+    const initHr = headerRatio(window.scrollY, headerH)
+    const initFr = footerRatio(window.scrollY, footerAbsTop, footerH, window.innerHeight)
+    let headerZoneActive = initHr > 0.01 && initHr < 0.99
+    let footerZoneActive = initFr > 0.01 && initFr < 0.99
 
-      let cancelScroll: () => void = () => {}
+    r(window.scrollY)
 
-      // scroll starts PEEL_DELAY ms after the peel, so the border-radius leads
-      const delayId = setTimeout(() => {
-        cancelScroll = animateScroll(target, () => {
-          isSnapping = false
-        })
-      }, PEEL_DELAY)
-
-      cancelSnap = () => {
-        clearTimeout(delayId)
-        cancelScroll()
-        isSnapping = false
-      }
-    }
-
-    function snapShowHeader() {
-      snap(0, () => {
-        headerRevealed = true
-        main!.dataset.headerVisible = "true"
+    function snap(target: number) {
+      if (Math.abs(target - window.scrollY) < 1) return // already there
+      cancelAnim()
+      if (reduced) { window.scrollTo({ top: target }); return }
+      snapping = true
+      cancelAnim = animateSnap(target, r, () => {
+        snapping      = false
+        cooldownUntil = performance.now() + COOLDOWN_MS
       })
     }
 
-    function snapHideHeader() {
-      snap(headerSnapThreshold, () => {
-        headerRevealed = false
-        main!.dataset.headerVisible = "false"
-      })
-    }
+    function onScroll() {
+      const now = performance.now()
+      const y   = window.scrollY
+      const dy  = y - lastY
+      const dt  = now - lastT
 
-    function snapShowFooter() {
-      snap(document.documentElement.scrollHeight - window.innerHeight, () => {
-        footerRevealed = true
-        main!.dataset.footerVisible = "true"
-      })
-    }
-
-    function snapHideFooter() {
-      const footerAbsTop = footer!.getBoundingClientRect().top + window.scrollY
-      snap(footerAbsTop - window.innerHeight, () => {
-        footerRevealed = false
-        main!.dataset.footerVisible = "false"
-      })
-    }
-
-    function handleScroll() {
-      if (isSnapping) return
-
-      const currentScrollY = window.scrollY
-      const scrollingDown  = currentScrollY > lastScrollY
-      const scrollingUp    = currentScrollY < lastScrollY
-      lastScrollY          = currentScrollY
-
-      // ── Header ──────────────────────────────────────────────────────────────
-      if (headerRevealed && scrollingDown) {
-        snapHideHeader()
-        return
-      }
-      if (!headerRevealed && scrollingUp && currentScrollY < headerSnapThreshold) {
-        snapShowHeader()
-        return
+      // Only update direction/velocity from user-initiated scroll events.
+      // The RAF snap also fires scroll events via window.scrollTo — those must
+      // not corrupt scrollDir, instant, or velocity.
+      if (!snapping) {
+        if (dy !== 0) scrollDir = dy > 0 ? 1 : -1
+        if (dt > 0) {
+          instant  = Math.abs(dy) / dt
+          velocity = 0.6 * velocity + 0.4 * instant
+        }
       }
 
-      // ── Footer ──────────────────────────────────────────────────────────────
-      if (footerRevealed && scrollingUp) {
-        snapHideFooter()
-        return
+      lastY = y
+      lastT = now
+
+      // Radius always tracks actual scroll position (not snap state)
+      r(y)
+
+      // ── Zone exit: reset active flag ──────────────────────────────────────────
+      // Runs unconditionally — even during snap/cooldown — so flags are always
+      // accurate when snap decisions are evaluated.
+      const hr = headerRatio(y, headerH)
+      const fr = footerRatio(y, footerAbsTop, footerH, window.innerHeight)
+      const inHeaderZone = hr > 0.01 && hr < 0.99
+      const inFooterZone = fr > 0.01 && fr < 0.99
+
+      if (!inHeaderZone) headerZoneActive = false
+      if (!inFooterZone) footerZoneActive = false
+
+      if (snapping || performance.now() < cooldownUntil) return
+
+      // ── Zone entry: snap immediately ──────────────────────────────────────────
+      // Snap fires on the first scroll event that enters the zone.
+      // Direction (not visibility ratio) determines the snap target.
+      // Fast-scroll bypass: instant catches the first fast event; velocity catches
+      // sustained fast scrolling that EMA hasn't fully built up yet.
+      const isFast = instant > ESCAPE_VELOCITY || velocity > ESCAPE_VELOCITY
+
+      if (inHeaderZone && !headerZoneActive) {
+        headerZoneActive = true
+        if (!isFast) {
+          // scrollDir > 0 → scrolling down → leaving header → snap CLOSED (hide)
+          // scrollDir < 0 → scrolling up   → entering header → snap OPEN (show)
+          snap(scrollDir > 0 ? headerH : 0)
+          return
+        }
       }
-      if (!footerRevealed && footer!.getBoundingClientRect().top < window.innerHeight) {
-        snapShowFooter()
+
+      if (inFooterZone && !footerZoneActive) {
+        footerZoneActive = true
+        if (!isFast) {
+          // scrollDir > 0 → scrolling down → entering footer → snap OPEN (show)
+          // scrollDir < 0 → scrolling up   → leaving footer  → snap CLOSED (hide)
+          const maxY = document.documentElement.scrollHeight - window.innerHeight
+          snap(scrollDir > 0 ? maxY : footerAbsTop - window.innerHeight)
+        }
       }
     }
 
-    window.addEventListener("scroll", handleScroll, { passive: true })
+    window.addEventListener("scroll", onScroll, { passive: true })
     return () => {
-      window.removeEventListener("scroll", handleScroll)
-      cancelSnap()
+      window.removeEventListener("scroll", onScroll)
+      cancelAnim()
     }
   }, [])
 
