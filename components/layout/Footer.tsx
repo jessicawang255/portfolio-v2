@@ -50,7 +50,7 @@ export function Footer() {
   }
 
   return (
-    <footer id="site-footer" className="bg-chrome">
+    <footer id="site-footer" className="fixed inset-x-0 bottom-0 z-0 bg-chrome">
       <div className="container-chrome grid grid-cols-4 gap-8 pt-9 pb-12">
         {/* Name + clock */}
         <div className="flex flex-col gap-1">

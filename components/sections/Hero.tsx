@@ -1,8 +1,10 @@
 "use client"
 
+import { useRef } from "react"
 import { motion, useReducedMotion } from "framer-motion"
 import { stagger, fadeUp } from "@/lib/motion"
 import { PlantIcon } from "@/components/ui/PlantIcon"
+import { DotField } from "@/components/ui/DotField"
 
 const socials = [
   {
@@ -44,15 +46,25 @@ const socials = [
 ]
 
 export function Hero() {
-  const reduce = useReducedMotion()
+  const reduce     = useReducedMotion()
+  const sectionRef = useRef<HTMLElement | null>(null)
 
   return (
-    <section className="container-main pt-14 pb-20" aria-label="Introduction">
+    <section
+      ref={sectionRef}
+      className="container-main relative pt-14 pb-20"
+      aria-label="Introduction"
+    >
+      {/* Dot field sits behind all content — pointer-events: none so it never blocks clicks */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <DotField containerRef={sectionRef} />
+      </div>
+
       <motion.div
         variants={stagger}
         initial={reduce ? "visible" : "hidden"}
         animate="visible"
-        className="flex flex-col"
+        className="relative z-10 flex flex-col"
       >
         <motion.div variants={fadeUp} className="mb-6">
           <PlantIcon className="text-accent" />

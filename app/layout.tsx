@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import { Nav } from "@/components/layout/Nav"
 import { Footer } from "@/components/layout/Footer"
-import { FooterRevealController } from "@/components/layout/FooterRevealController"
+import { ScrollRadiusController } from "@/components/layout/ScrollRadiusController"
 import "./globals.css"
 
 export const metadata: Metadata = {
@@ -21,7 +21,7 @@ export default function RootLayout({
           {children}
         </main>
         <Footer />
-        <FooterRevealController />
+        <ScrollRadiusController />
       </body>
     </html>
   )
