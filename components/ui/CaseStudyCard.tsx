@@ -42,8 +42,8 @@ export function CaseStudyCard({ project, imageHeight = 340 }: Props) {
       >
         {/* Thumbnail */}
         <div
-          className="card-thumb relative w-full overflow-hidden rounded-[--radius-xl]"
-          style={{ height: imageHeight, ...bgStyle }}
+          className="card-thumb relative w-full overflow-hidden"
+          style={{ height: imageHeight, borderRadius: 18, ...bgStyle }}
         >
           {image && (
             <Image
@@ -57,7 +57,7 @@ export function CaseStudyCard({ project, imageHeight = 340 }: Props) {
         </div>
 
         {/* Text block */}
-        <div className="card-text flex flex-col gap-1.5">
+        <div className="card-text flex flex-col gap-1.5 px-5">
           <div className="flex items-start justify-between gap-3">
             <h3 className="text-xl font-extrabold leading-snug text-primary">
               {title}
