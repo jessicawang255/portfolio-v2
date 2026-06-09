@@ -69,6 +69,13 @@ body {
   padding-top: calc(var(--nav-height) + var(--page-gap));
 }
 
+/* ─── Link transitions ─────────────────────────────────────────────────────── */
+a {
+  transition-property: color, background-color, border-color, text-decoration-color;
+  transition-duration: 80ms;
+  transition-timing-function: ease;
+}
+
 /* ─── Main frame — scroll-driven radius ─────────────────────────────────────── */
 
 /*
@@ -117,28 +124,6 @@ body {
 
 .card-thumb-img {
   transition: transform var(--duration-slow) var(--ease-out);
-}
-
-/* ─── Nav link underline ────────────────────────────────────────────────────── */
-.nav-link {
-  position: relative;
-}
-
-.nav-link::after {
-  content: '';
-  position: absolute;
-  bottom: -2px;
-  left: 0;
-  width: 0;
-  height: 1px;
-  background: var(--color-chrome-text);
-  transition: width var(--duration-fast) var(--ease-out);
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .nav-link:hover::after {
-    width: 100%;
-  }
 }
 
 /* ─── Reduced motion ────────────────────────────────────────────────────────── */

@@ -4,17 +4,17 @@ import { useEffect, useRef, type RefObject } from "react"
 import { useReducedMotion } from "framer-motion"
 
 // ─── Config ────────────────────────────────────────────────────────────────────
-const GRID            = 20
+const GRID            = 16
 const DOT             = 1.1
 const GREY            = [180, 180, 180] as const
 // Light sage — same hue as site accent but desaturated and lifted
-const GREEN           = [8, 160, 75] as const
+const GREEN           = [23, 180, 90] as const
 const INFLUENCE       = 140    // px — illumination radius
-const STIFFNESS       = 0.05   // primary spring (lower = more lag)
-const DAMPING         = 0.82
-const TRAIL_STIFFNESS = 0.025  // trail lags ~2× more than primary
-const TRAIL_DAMPING   = 0.88
-const TRAIL_STRENGTH  = 0.40   // trail halo intensity relative to primary
+const STIFFNESS       = .9   // primary spring (lower = more lag) (how snappy the cursor tracking feels)
+const DAMPING         = 0.1   // primary spring (lower = more oscillation) (boioioing)
+const TRAIL_STIFFNESS = 0.15  // trail lags ~2× more than primary
+const TRAIL_DAMPING   = .5
+const TRAIL_STRENGTH  = .6   // trail halo intensity relative to primary
 
 function smoothstep(t: number) {
   const c = Math.max(0, Math.min(1, t))
@@ -52,16 +52,16 @@ export function DotField({
       // quadrant of the ellipse. Arc enters left edge ~40% down and exits the
       // bottom edge ~40% from the left — dots concentrate in the upper-right,
       // absent from the lower-left.
-      eCX = W * .8
-      eCY = -H * .8   // raised: bottom of ellipse = -H + 1.8H = 0.8H (no canvas cutoff)
-      eRX = W * 1
-      eRY = H * 1.80
+      eCX = W * 1    // ellipse X axis position
+      eCY = -H * .8   // ellipse Y axis position
+      eRX = W * 1.2     // ellipse width
+      eRY = H * 1.85    // ellipse height
       const cx = eCX, cy = eCY, rx = eRX, ry = eRY
 
-      // Fade only in the outer 40% of the ellipse radius — dots stay at full
+      // Fade only in the outer 20% of the ellipse radius — dots stay at full
       // opacity across most of the interior, with a narrow softening band at
       // the edge. This keeps the vignette subtle rather than gradient-heavy.
-      const fadeZone = 0.40
+      const fadeZone = 0.30
 
       for (let y = 0; y <= H; y += GRID) {
         for (let x = 0; x <= W; x += GRID) {

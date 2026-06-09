@@ -15,7 +15,7 @@ export function Nav() {
       >
         <Link
           href="/"
-          className="text-base text-chrome-text/80 transition-colors duration-[--duration-fast] hover:text-chrome-text"
+          className="text-base text-chrome-text/80 hover:text-chrome-text"
         >
           Jessica Wang
         </Link>
@@ -25,7 +25,7 @@ export function Nav() {
             <li key={label}>
               <Link
                 href={href}
-                className="nav-link text-base font-medium text-chrome-muted transition-colors duration-[--duration-fast] hover:text-chrome-text"
+                className="text-base font-medium text-chrome-muted hover:text-chrome-text"
               >
                 {label}
               </Link>

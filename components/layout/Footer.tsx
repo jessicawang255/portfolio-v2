@@ -65,7 +65,7 @@ export function Footer() {
               <li key={label}>
                 <Link
                   href={href}
-                  className="text-base font-medium text-chrome-text/60 transition-colors duration-[--duration-fast] hover:text-chrome-text"
+                  className="text-base font-medium text-chrome-text/60 hover:text-chrome-text"
                 >
                   {label}
                 </Link>
@@ -83,7 +83,7 @@ export function Footer() {
                   href={href}
                   target={href.startsWith("http") ? "_blank" : undefined}
                   rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
-                  className="text-base font-medium text-chrome-text/60 transition-colors duration-[--duration-fast] hover:text-chrome-text"
+                  className="text-base font-medium text-chrome-text/60 hover:text-chrome-text"
                 >
                   {label}
                 </a>
@@ -97,7 +97,7 @@ export function Footer() {
           <span className="text-base text-chrome-text/60">Portfolio V1</span>
           <button
             onClick={toggleGravity}
-            className="text-base text-chrome-text/40 underline underline-offset-2 transition-colors duration-[--duration-fast] hover:text-chrome-text/70 cursor-pointer bg-transparent border-none p-0"
+            className="text-base text-chrome-text/40 underline underline-offset-2 hover:text-chrome-text/70 cursor-pointer bg-transparent border-none p-0"
           >
             Turn off gravity
           </button>
