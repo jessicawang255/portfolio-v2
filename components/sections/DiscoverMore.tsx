@@ -8,9 +8,11 @@ export function DiscoverMore() {
         Discover More
       </h2>
 
-      <div className="grid grid-cols-3 gap-9">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-9 auto-rows-fr">
         {discoverItems.map((item) => (
-          <DiscoverCard key={item.slug} item={item} />
+          <div key={item.slug} className="h-full">
+            <DiscoverCard item={item} />
+          </div>
         ))}
       </div>
     </section>

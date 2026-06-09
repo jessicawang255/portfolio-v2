@@ -14,23 +14,33 @@ export type DiscoverItem = {
   title: string
   bg: string
   image?: string
+  height: number
 }
 
 export const discoverItems: DiscoverItem[] = [
   {
-    slug: "placeholder-1",
-    title: "Placeholder project one",
+    slug: "google-calendar",
+    title: "Google Calendar Enhanced Task Management",
     bg: "#e8e4f0",
+    height: 200
   },
   {
-    slug: "placeholder-2",
-    title: "Placeholder project two",
+    slug: "hack-western",
+    title: "Hack-Western",
     bg: "#e4ede8",
+    height: 250
   },
   {
-    slug: "placeholder-3",
-    title: "Placeholder project three",
+    slug: "snippets",
+    title: "Snippets",
     bg: "#f0ece4",
+    height: 287
+  },
+  {
+    slug: "syllabud",
+    title: "Syllabud",
+    bg: "#f0ece4",
+    height: 220
   },
 ]
 

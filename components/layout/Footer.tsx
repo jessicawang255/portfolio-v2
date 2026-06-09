@@ -11,8 +11,8 @@ const navLinks = [
 
 const socialLinks = [
   { label: "Email",    href: "mailto:jessica.wang255@gmail.com" },
-  { label: "LinkedIn", href: "https://linkedin.com/in/jessica-wang" },
-  { label: "X",        href: "https://x.com/jessica_wang" },
+  { label: "LinkedIn", href: "https://linkedin.com/in/jwang255" },
+  { label: "X",        href: "https://x.com/jossici" },
   { label: "GitHub",   href: "https://github.com/jessicawang255" },
 ]
 

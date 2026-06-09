@@ -15,7 +15,7 @@ export function Nav() {
       >
         <Link
           href="/"
-          className="text-base text-chrome-text/80 hover:text-chrome-text"
+          className="text-base font-medium text-chrome-muted hover:text-chrome-text"
         >
           Jessica Wang
         </Link>

@@ -1,6 +1,7 @@
 import Image from "next/image"
 import Link from "next/link"
 import type { Project } from "@/content/work"
+import type { ReactNode } from "react"
 
 type Props = {
   project: Project
@@ -10,8 +11,8 @@ type Props = {
 function ArrowUpRight() {
   return (
     <svg
-      width="18"
-      height="18"
+      width="16"
+      height="16"
       viewBox="0 0 18 18"
       fill="none"
       aria-hidden="true"
@@ -19,12 +20,20 @@ function ArrowUpRight() {
     >
       <path
         d="M4 14L14 4M14 4H7M14 4V11"
-        stroke="currentColor"
+        stroke="#A1AaA1"
         strokeWidth="1.6"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
     </svg>
+  )
+}
+
+function Separator({ children, className = "" }: { children: ReactNode; className?: string }) {
+  return (
+    <span className={`text-muted ${className}`} aria-hidden="true">
+      {children}
+    </span>
   )
 }
 
@@ -57,19 +66,19 @@ export function CaseStudyCard({ project, imageHeight = 340 }: Props) {
         </div>
 
         {/* Text block */}
-        <div className="card-text flex flex-col gap-1.5 px-5">
+        <div className="card-text flex flex-col gap-2 px-5">
           <div className="flex items-start justify-between gap-3">
-            <h3 className="text-xl font-extrabold leading-snug text-primary">
+            <h3 className="text-l font-bold leading-snug text-primary">
               {title}
             </h3>
-            <span className="card-arrow shrink-0 mt-1 text-primary" aria-hidden="true">
+            <span className="card-arrow shrink-0 mt-1 text-muted" aria-hidden="true">
               <ArrowUpRight />
             </span>
           </div>
 
-          <p className="text-sm text-muted">
+          <p className="text-sm font-normal text-primary">
             {org}
-            <span className="mx-1.5">•</span>
+            <span className="mx-1.5 text-subtle" >•</span>
             {status}
             <span className="mx-2 text-subtle">/</span>
             {disciplines.join(" / ")}

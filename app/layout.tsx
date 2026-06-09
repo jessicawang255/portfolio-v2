@@ -5,9 +5,9 @@ import { ScrollRadiusController } from "@/components/layout/ScrollRadiusControll
 import "./globals.css"
 
 export const metadata: Metadata = {
-  title: "Jessica Wang — Product Designer",
+  title: "Jessica Wang",
   description:
-    "Portfolio of Jessica Wang, a product designer focused on interaction design and thoughtful user experiences.",
+    "I'm Jessica. I'm a product designer. 🥑",
 }
 
 export default function RootLayout({

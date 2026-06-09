@@ -10,8 +10,8 @@ type Props = {
 function ArrowUpRight() {
   return (
     <svg
-      width="18"
-      height="18"
+      width="16"
+      height="16"
       viewBox="0 0 18 18"
       fill="none"
       aria-hidden="true"
@@ -19,7 +19,7 @@ function ArrowUpRight() {
     >
       <path
         d="M4 14L14 4M14 4H7M14 4V11"
-        stroke="currentColor"
+        stroke="#A1AaA1"
         strokeWidth="1.6"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -28,7 +28,7 @@ function ArrowUpRight() {
   )
 }
 
-export function DiscoverCard({ item, imageHeight = 220 }: Props) {
+export function DiscoverCard({ item}: Props) {
   const { slug, title, bg, image } = item
 
   const isGradient = bg.startsWith("linear-gradient")
@@ -42,7 +42,7 @@ export function DiscoverCard({ item, imageHeight = 220 }: Props) {
       >
         <div
           className="card-thumb relative w-full overflow-hidden"
-          style={{ height: imageHeight, borderRadius: 18, ...bgStyle }}
+          style={{ height: item.height, borderRadius: 18, ...bgStyle }}
         >
           {image && (
             <Image
@@ -57,7 +57,7 @@ export function DiscoverCard({ item, imageHeight = 220 }: Props) {
 
         <div className="card-text flex flex-col px-5">
           <div className="flex items-start justify-between gap-3">
-            <h3 className="text-base font-normal leading-snug text-primary">
+            <h3 className="text-base font-normal leading-snug text-black">
               {title}
             </h3>
             <span className="card-arrow shrink-0 mt-0.5 text-primary" aria-hidden="true">
