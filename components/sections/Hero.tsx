@@ -20,7 +20,7 @@ export function Hero() {
   return (
     <section
       ref={sectionRef}
-      className="container-main relative pt-14 pb-20"
+      className="container-main relative pt-14 pb-[120px]"
       aria-label="Introduction"
     >
       {/* Dot field sits behind all content — pointer-events: none so it never blocks clicks */}
