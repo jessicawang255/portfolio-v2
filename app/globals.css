@@ -48,9 +48,8 @@
 }
 
 :root {
-  --nav-height: 56px;
+  --nav-height: 60px;
   --page-gap:   8px;
-
 }
 
 html {
