@@ -10,7 +10,7 @@ export function Nav() {
   return (
     <header className="fixed inset-x-0 top-0 z-0 bg-chrome">
       <nav
-        className="container-chrome flex items-center justify-between py-3.5"
+        className="container-chrome flex items-center justify-between py-4"
         aria-label="Primary navigation"
       >
         <Link

@@ -55,7 +55,7 @@ export function DiscoverCard({ item}: Props) {
           )}
         </div>
 
-        <div className="card-text flex flex-col px-5">
+        <div className="card-text flex flex-col px-3">
           <div className="flex items-start justify-between gap-3">
             <h3 className="text-base font-normal leading-snug text-black">
               {title}
