@@ -54,12 +54,6 @@
 
 html {
   background: var(--color-chrome);
-  transition: transform 1s var(--ease-in-out);
-  transform-origin: center center;
-}
-
-html.gravity-off {
-  transform: rotate(180deg);
 }
 
 body {

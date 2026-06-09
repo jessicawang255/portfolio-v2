@@ -45,10 +45,6 @@ function LiveClock() {
 }
 
 export function Footer() {
-  function toggleGravity() {
-    document.documentElement.classList.toggle("gravity-off")
-  }
-
   return (
     <footer id="site-footer" className="fixed inset-x-0 bottom-0 z-0 bg-chrome">
       <div className="container-chrome grid grid-cols-4 gap-8 pt-9 pb-12">
@@ -92,15 +88,9 @@ export function Footer() {
           </ul>
         </nav>
 
-        {/* Version + Easter egg */}
+        {/* Version */}
         <div className="flex flex-col items-end gap-1">
           <span className="text-base text-chrome-text/60">Portfolio V1</span>
-          <button
-            onClick={toggleGravity}
-            className="text-base text-chrome-text/40 underline underline-offset-2 hover:text-chrome-text/70 cursor-pointer bg-transparent border-none p-0"
-          >
-            Turn off gravity
-          </button>
         </div>
       </div>
     </footer>
