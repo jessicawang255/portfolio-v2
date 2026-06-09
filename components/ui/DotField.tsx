@@ -4,13 +4,17 @@ import { useEffect, useRef, type RefObject } from "react"
 import { useReducedMotion } from "framer-motion"
 
 // ─── Config ────────────────────────────────────────────────────────────────────
-const GRID      = 18                        // px between dot centres
-const DOT       = 1                         // half-side of each dot → 2×2 CSS px
-const GREY      = [223, 223, 223] as const  // #DFDFDF
-const GREEN     = [46,  139,  87] as const  // #2E8B57 — site accent
-const INFLUENCE = 130                       // px — illumination radius around spring
-const STIFFNESS = 0.06                      // spring stiffness (lower = more lag)
-const DAMPING   = 0.78                      // spring friction (lower = more oscillation)
+const GRID            = 20
+const DOT             = 1.1
+const GREY            = [180, 180, 180] as const
+// Light sage — same hue as site accent but desaturated and lifted
+const GREEN           = [8, 160, 75] as const
+const INFLUENCE       = 140    // px — illumination radius
+const STIFFNESS       = 0.05   // primary spring (lower = more lag)
+const DAMPING         = 0.82
+const TRAIL_STIFFNESS = 0.025  // trail lags ~2× more than primary
+const TRAIL_DAMPING   = 0.88
+const TRAIL_STRENGTH  = 0.40   // trail halo intensity relative to primary
 
 function smoothstep(t: number) {
   const c = Math.max(0, Math.min(1, t))
@@ -40,25 +44,41 @@ export function DotField({
     let W = 0, H = 0, dpr = 1
     let dots: { x: number; y: number; baseAlpha: number }[] = []
     let staticLayer: HTMLCanvasElement | null = null
+    let eCX = 0, eCY = 0, eRX = 0, eRY = 0  // ellipse params — shared with drawFrame
 
     function buildDots() {
       dots = []
-      // Vignette: centre-right. Dots near the focus are opaque; edges fade to near-transparent.
-      const vigX = W * 0.72
-      const vigY = H * 0.50
-      const vigR  = Math.hypot(vigX, vigY) * 1.2
+      // Centre is off-screen top-right so the canvas shows the bottom-left
+      // quadrant of the ellipse. Arc enters left edge ~40% down and exits the
+      // bottom edge ~40% from the left — dots concentrate in the upper-right,
+      // absent from the lower-left.
+      eCX = W * .8
+      eCY = -H * .8   // raised: bottom of ellipse = -H + 1.8H = 0.8H (no canvas cutoff)
+      eRX = W * 1
+      eRY = H * 1.80
+      const cx = eCX, cy = eCY, rx = eRX, ry = eRY
+
+      // Fade only in the outer 40% of the ellipse radius — dots stay at full
+      // opacity across most of the interior, with a narrow softening band at
+      // the edge. This keeps the vignette subtle rather than gradient-heavy.
+      const fadeZone = 0.40
 
       for (let y = 0; y <= H; y += GRID) {
         for (let x = 0; x <= W; x += GRID) {
-          const t         = smoothstep(Math.max(0, 1 - Math.hypot(x - vigX, y - vigY) / vigR))
-          const baseAlpha = 0.07 + 0.33 * t   // 0.07 (far edge) → 0.40 (vignette centre)
+          const dx   = (x - cx) / rx
+          const dy   = (y - cy) / ry
+          const dist = Math.sqrt(dx * dx + dy * dy)
+          if (dist >= 1) continue
+          const inner     = Math.max(0, dist - (1 - fadeZone)) / fadeZone
+          const t         = smoothstep(1 - inner)
+          const baseAlpha = t * 0.38
+          if (baseAlpha < 0.015) continue
           dots.push({ x, y, baseAlpha })
         }
       }
     }
 
-    // Pre-render static grey vignette once. Blitted each frame via drawImage —
-    // a single GPU texture copy, not 1500 individual fillRect calls.
+    // Pre-render static grey field once; blitted each frame as a single GPU copy.
     function buildStaticLayer() {
       const sl   = document.createElement("canvas")
       sl.width   = canvas!.width
@@ -67,7 +87,9 @@ export function DotField({
       sCtx.setTransform(dpr, 0, 0, dpr, 0, 0)
       for (const { x, y, baseAlpha } of dots) {
         sCtx.fillStyle = `rgba(${GREY[0]},${GREY[1]},${GREY[2]},${baseAlpha.toFixed(2)})`
-        sCtx.fillRect(x - DOT, y - DOT, DOT * 2, DOT * 2)
+        sCtx.beginPath()
+        sCtx.arc(x, y, DOT, 0, Math.PI * 2)
+        sCtx.fill()
       }
       staticLayer = sl
     }
@@ -85,22 +107,26 @@ export function DotField({
       drawFrame()
     }
 
-    // ── Spring & influence ────────────────────────────────────────────────────
+    // ── Springs ───────────────────────────────────────────────────────────────
 
-    let sx = 0, sy = 0   // spring position (CSS px)
-    let vx = 0, vy = 0   // spring velocity
-    let tx = 0, ty = 0   // cursor target (CSS px)
-    let influence   = 0  // 0..1 — glow intensity, fades in/out on enter/leave
-    let infTarget   = 0
-    let rafId       = 0
-    let prevT       = 0
+    let cursorX = 0, cursorY = 0                          // raw mouse target
+    let springX = 0, springY = 0, springVX = 0, springVY = 0  // primary
+    let trailX  = 0, trailY  = 0, trailVX  = 0, trailVY  = 0  // lags behind primary
+    let influence  = 0
+    let infTarget  = 0
+    let rafId      = 0
+    let prevT      = 0
 
     function isSettled() {
       return (
-        Math.abs(vx)      < 0.08 &&
-        Math.abs(vy)      < 0.08 &&
-        Math.abs(tx - sx) < 0.5  &&
-        Math.abs(ty - sy) < 0.5  &&
+        Math.abs(springVX)           < 0.08 &&
+        Math.abs(springVY)           < 0.08 &&
+        Math.abs(trailVX)            < 0.08 &&
+        Math.abs(trailVY)            < 0.08 &&
+        Math.abs(cursorX - springX)  < 0.5  &&
+        Math.abs(cursorY - springY)  < 0.5  &&
+        Math.abs(springX - trailX)   < 0.5  &&
+        Math.abs(springY - trailY)   < 0.5  &&
         Math.abs(infTarget - influence) < 0.005
       )
     }
@@ -111,45 +137,80 @@ export function DotField({
       if (!staticLayer || W === 0) return
 
       ctx!.clearRect(0, 0, W, H)
-      ctx!.drawImage(staticLayer, 0, 0, W, H)  // blit static grey field
+      ctx!.drawImage(staticLayer, 0, 0, W, H)
 
-      if (influence < 0.002) return             // nothing illuminated
+      // DEBUG: red ellipse border — remove when done tuning
+      // ctx!.save()
+      // ctx!.strokeStyle = "rgba(255,0,0,0.85)"
+      // ctx!.lineWidth = 1.5
+      // ctx!.beginPath()
+      // ctx!.ellipse(eCX, eCY, eRX, eRY, 0, 0, Math.PI * 2)
+      // ctx!.stroke()
+      // ctx!.restore()
 
-      // Iterate all dots; skip those outside the influence radius.
-      // Only ~50–120 dots pass through at any cursor position.
+      if (influence < 0.002) return
+
       for (const { x, y, baseAlpha } of dots) {
-        const dx   = x - sx
-        const dy   = y - sy
-        const dist = Math.sqrt(dx * dx + dy * dy)
-        if (dist >= INFLUENCE) continue
+        // Primary halo
+        const dx1   = x - springX
+        const dy1   = y - springY
+        const dist1 = Math.sqrt(dx1 * dx1 + dy1 * dy1)
+        const prox1 = dist1 < INFLUENCE
+          ? smoothstep(1 - dist1 / INFLUENCE) * influence
+          : 0
 
-        // smoothstep gives a soft cubic falloff (zero derivative at 0 and 1)
-        const prox = smoothstep(1 - dist / INFLUENCE) * influence
+        // Trail halo — same radius, reduced intensity, spatially offset
+        const dx2   = x - trailX
+        const dy2   = y - trailY
+        const dist2 = Math.sqrt(dx2 * dx2 + dy2 * dy2)
+        const prox2 = dist2 < INFLUENCE
+          ? smoothstep(1 - dist2 / INFLUENCE) * influence * TRAIL_STRENGTH
+          : 0
+
+        // Dominant contribution per dot — primary wins in its zone, trail glows
+        // in the wake. Single fill call per dot keeps the loop tight.
+        const prox = Math.max(prox1, prox2)
         if (prox < 0.005) continue
 
         const r = (GREY[0] + (GREEN[0] - GREY[0]) * prox) | 0
         const g = (GREY[1] + (GREEN[1] - GREY[1]) * prox) | 0
         const b = (GREY[2] + (GREEN[2] - GREY[2]) * prox) | 0
-        const a = (baseAlpha + prox * 0.25).toFixed(2)
+        const a = (baseAlpha + prox * 0.20).toFixed(2)
 
         ctx!.fillStyle = `rgba(${r},${g},${b},${a})`
-        ctx!.fillRect(x - DOT, y - DOT, DOT * 2, DOT * 2)
+        ctx!.beginPath()
+        ctx!.arc(x, y, DOT, 0, Math.PI * 2)
+        ctx!.fill()
       }
     }
 
     // ── Animation loop ────────────────────────────────────────────────────────
 
     function tick(t: number) {
-      const dt    = Math.min(t - prevT, 64)                     // guard against tab-switch gaps
+      const dt    = Math.min(t - prevT, 64)
       prevT       = t
-      const steps = Math.max(1, Math.min(4, Math.round(dt / 16))) // fixed 16ms substeps
+      const steps = Math.max(1, Math.min(4, Math.round(dt / 16)))
 
       for (let i = 0; i < steps; i++) {
-        vx += (tx - sx) * STIFFNESS; vx *= DAMPING; sx += vx
-        vy += (ty - sy) * STIFFNESS; vy *= DAMPING; sy += vy
+        springVX += (cursorX - springX) * STIFFNESS
+        springVX *= DAMPING
+        springX  += springVX
+
+        springVY += (cursorY - springY) * STIFFNESS
+        springVY *= DAMPING
+        springY  += springVY
+
+        // Trail chases the primary spring, not the cursor
+        trailVX += (springX - trailX) * TRAIL_STIFFNESS
+        trailVX *= TRAIL_DAMPING
+        trailX  += trailVX
+
+        trailVY += (springY - trailY) * TRAIL_STIFFNESS
+        trailVY *= TRAIL_DAMPING
+        trailY  += trailVY
       }
 
-      influence += (infTarget - influence) * 0.1  // smooth fade in/out
+      influence += (infTarget - influence) * 0.1
 
       drawFrame()
 
@@ -167,31 +228,31 @@ export function DotField({
 
     function onMove(e: MouseEvent) {
       const rect = canvas!.getBoundingClientRect()
-      tx = e.clientX - rect.left
-      ty = e.clientY - rect.top
+      cursorX = e.clientX - rect.left
+      cursorY = e.clientY - rect.top
       startRAF()
     }
 
     function onEnter(e: MouseEvent) {
       const rect = canvas!.getBoundingClientRect()
-      tx = e.clientX - rect.left
-      ty = e.clientY - rect.top
-      // Teleport spring to cursor on entry so the halo appears immediately
-      // at the cursor position; lag only manifests as the cursor moves.
-      sx = tx; sy = ty; vx = 0; vy = 0
+      cursorX = e.clientX - rect.left
+      cursorY = e.clientY - rect.top
+      // Teleport both springs to entry point — trail develops organically from movement
+      springX = cursorX; springY = cursorY; springVX = 0; springVY = 0
+      trailX  = cursorX; trailY  = cursorY; trailVX  = 0; trailVY  = 0
       infTarget = 1
       startRAF()
     }
 
     function onLeave() {
       infTarget = 0
-      startRAF()  // continue ticking until halo fully fades
+      startRAF()
     }
 
     // ── Mount ─────────────────────────────────────────────────────────────────
 
     const ro = new ResizeObserver(resize)
-    ro.observe(container)   // fires immediately in all modern browsers → initial render
+    ro.observe(container)
 
     if (!reduced) {
       container.addEventListener("mousemove",  onMove)
