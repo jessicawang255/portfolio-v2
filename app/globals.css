@@ -48,8 +48,7 @@
 }
 
 :root {
-  --nav-height: 60px;
-  --page-gap:   8px;
+  --nav-height: 56px;   /* py-4 (32px) + text-base line height (24px) */
 }
 
 html {
@@ -60,7 +59,7 @@ body {
   color: var(--color-primary);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
-  padding-top: calc(var(--nav-height) + var(--page-gap));
+  padding-top: var(--nav-height);
 }
 
 /* ─── Main frame — radius transitions ──────────────────────────────────────── */
