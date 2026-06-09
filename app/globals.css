@@ -48,8 +48,9 @@
 }
 
 :root {
-  --nav-height: 60px;   /* py-5 (40px) + text-sm line height (~20px) */
+  --nav-height: 56px;
   --page-gap:   8px;
+
 }
 
 html {
