@@ -9,6 +9,31 @@ export type Project = {
   image?: string
 }
 
+export type DiscoverItem = {
+  slug: string
+  title: string
+  bg: string
+  image?: string
+}
+
+export const discoverItems: DiscoverItem[] = [
+  {
+    slug: "placeholder-1",
+    title: "Placeholder project one",
+    bg: "#e8e4f0",
+  },
+  {
+    slug: "placeholder-2",
+    title: "Placeholder project two",
+    bg: "#e4ede8",
+  },
+  {
+    slug: "placeholder-3",
+    title: "Placeholder project three",
+    bg: "#f0ece4",
+  },
+]
+
 export const projects: Project[] = [
   {
     slug: "hack-western",
