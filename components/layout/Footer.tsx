@@ -47,7 +47,7 @@ function LiveClock() {
 export function Footer() {
   return (
     <footer id="site-footer" className="fixed inset-x-0 bottom-0 z-0 bg-chrome">
-      <div className="container-chrome grid grid-cols-4 gap-8 pt-5 pb-16">
+      <div className="container-chrome grid grid-cols-4 gap-8 pt-6 pb-16">
         {/* Name + clock */}
         <div className="flex flex-col gap-1">
           <span className="text-[18px] font-medium text-white">Jessica Wang</span>
