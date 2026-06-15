@@ -7,6 +7,12 @@ export type Project = {
   disciplines: string[]
   bg: string
   image?: string
+  // Case study detail fields
+  role?: string
+  timeline?: string
+  team?: string
+  skills?: string
+  toc?: string[]
 }
 
 export type DiscoverItem = {
@@ -53,6 +59,11 @@ export const projects: Project[] = [
     year: 2025,
     disciplines: ["Visual design", "User testing"],
     bg: "#eae6f4",
+    role: "Product Designer",
+    timeline: "Sep – Dec 2024",
+    team: "1 design lead, 2 designers",
+    skills: "Visual design, User testing, Prototyping",
+    toc: ["Overview", "Challenge", "The theme", "App. portal ideation", "Designing for mobile", "The stickerbook", "Final product"],
   },
   {
     slug: "capsule-cabinet",

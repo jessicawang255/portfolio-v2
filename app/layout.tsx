@@ -17,9 +17,7 @@ export default function RootLayout({
     <html lang="en">
       <body className="flex min-h-screen flex-col">
         <Nav />
-        <main id="main-frame" className="relative z-10 flex-1 bg-surface">
-          {children}
-        </main>
+        {children}
         <Footer />
         <ScrollRadiusController />
       </body>
