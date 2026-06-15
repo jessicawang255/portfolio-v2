@@ -48,11 +48,16 @@ export function ScrollRadiusController() {
     // scrollHeight - footerH  =  headerH + mainHeight + mb2  (the bottom of #main-frame)
     const footerAbsTop = document.documentElement.scrollHeight - footerH
 
-    const r = (y: number) => setRadius(main!, y, headerH, footerAbsTop, footerH, window.innerHeight)
+    // Re-query on every event so a freshly-mounted #main-frame (after
+    // client-side navigation back to home) is always the live target.
+    function applyRadius(y: number) {
+      const el = document.getElementById("main-frame") ?? main!
+      setRadius(el, y, headerH, footerAbsTop, footerH, window.innerHeight)
+    }
 
-    r(window.scrollY)
+    applyRadius(window.scrollY)
 
-    function onScroll() { r(window.scrollY) }
+    function onScroll() { applyRadius(window.scrollY) }
 
     window.addEventListener("scroll", onScroll, { passive: true })
     return () => {

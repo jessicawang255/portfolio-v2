@@ -24,7 +24,7 @@ function ChevronLeft() {
 }
 
 export function CaseStudyLayout({ project, children }: Props) {
-  const { title, org, role, timeline, team, skills, bg, image, toc = [] } = project
+  const { title, name, role, timeline, team, skills, bg, image, toc = [] } = project
 
   const isGradient = bg.startsWith("linear-gradient")
   const bgStyle = isGradient ? { background: bg } : { backgroundColor: bg }
@@ -71,7 +71,7 @@ export function CaseStudyLayout({ project, children }: Props) {
 
         {/* Project header */}
         <div className="container-main pt-12 pb-0">
-          <p className="text-sm font-medium text-accent mb-1">{org}</p>
+          <p className="text-sm font-medium text-accent mb-1">{name}</p>
           <h1 className="text-[2rem] font-bold text-primary leading-tight max-w-3xl">
             {title}
           </h1>
