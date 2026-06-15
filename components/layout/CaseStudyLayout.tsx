@@ -70,7 +70,7 @@ export function CaseStudyLayout({ project, children }: Props) {
       <section id="cs-content" className="bg-surface rounded-t-[36px]">
 
         {/* Project header */}
-        <div className="container-main pt-12 pb-0">
+        <div className="container-main pt-16 pb-0 px-25">
           <p className="text-sm font-medium mb-4.5 uppercase text-subtle">{name}</p>
           <h1 className="text-[2.25rem] font-bold text-primary leading-tight max-w-3xl">
             {title}
@@ -94,10 +94,10 @@ export function CaseStudyLayout({ project, children }: Props) {
         </div>
 
         {/* Two-column layout: TOC rail + content */}
-        <div className="container-main flex">
+        <div className="container-main flex px-25">
           {/* Sticky TOC rail */}
-          <aside className="w-44 shrink-0 sticky top-[var(--nav-height)] self-start pt-10 pb-16">
-            <Link
+          <aside className="w-60 shrink-0 sticky top-[var(--nav-height)] self-start pt-10 pb-16">
+          <Link
               href="/"
               className="flex items-center gap-1 text-[15px] text-subtle font-medium hover:text-primary transition-colors duration-150 mb-8"
             >
