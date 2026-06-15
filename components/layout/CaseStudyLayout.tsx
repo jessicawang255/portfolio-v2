@@ -42,7 +42,7 @@ export function CaseStudyLayout({ project, children }: Props) {
       {/* ── Hero ── */}
       <section
         id="cs-hero"
-        className="w-full rounded-[36px] overflow-hidden"
+        className="w-full rounded-[48px] overflow-hidden"
         style={{ minHeight: "64vh", ...bgStyle }}
       >
         <div className="container-main flex flex-col h-full pt-12 pb-16" style={{ minHeight: "inherit" }}>
@@ -67,12 +67,12 @@ export function CaseStudyLayout({ project, children }: Props) {
       </section>
 
       {/* ── Content card ── */}
-      <section id="cs-content" className="bg-surface rounded-t-[36px]">
+      <section id="cs-content" className="bg-surface rounded-t-[48px]">
 
         {/* Project header */}
-        <div className="container-main pt-16 pb-0 px-25">
-          <p className="text-sm font-medium mb-4.5 uppercase text-subtle">{name}</p>
-          <h1 className="text-[2.25rem] font-bold text-primary leading-tight max-w-3xl">
+        <div className="container-main pt-16 pb-0 px-16">
+          <p className="text-base font-medium mb-4.5 uppercase text-subtle">{name}</p>
+          <h1 className="text-[2.25rem] font-bold text-primary leading-tight w-full">
             {title}
           </h1>
 
@@ -94,12 +94,12 @@ export function CaseStudyLayout({ project, children }: Props) {
         </div>
 
         {/* Two-column layout: TOC rail + content */}
-        <div className="container-main flex px-25">
+        <div className="container-main flex px-16">
           {/* Sticky TOC rail */}
-          <aside className="w-60 shrink-0 sticky top-[var(--nav-height)] self-start pt-10 pb-16">
+          <aside className="w-60 shrink-0 sticky top-16 self-start mt-16 pb-16">
           <Link
               href="/"
-              className="flex items-center gap-1 text-[15px] text-subtle font-medium hover:text-primary transition-colors duration-150 mb-8"
+              className="flex items-center gap-1 text-base text-subtle font-medium hover:text-primary transition-colors duration-150 mb-8"
             >
               <ChevronLeft />
               Back
