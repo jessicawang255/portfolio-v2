@@ -2,7 +2,7 @@
 
 import { useEffect } from "react"
 
-const MAX_RADIUS = 36 // px — corner radius when header/footer is fully visible
+const MAX_RADIUS = 48 // px — corner radius when header/footer is fully visible
 
 function headerRatio(scrollY: number, headerH: number) {
   return Math.max(0, Math.min(1, 1 - scrollY / headerH))

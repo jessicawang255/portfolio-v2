@@ -2,7 +2,7 @@
 
 import { useEffect } from "react"
 
-const MAX_RADIUS = 36 // matches ScrollRadiusController on home page
+const MAX_RADIUS = 48 // matches ScrollRadiusController on home page
 
 function headerRatio(scrollY: number, headerH: number) {
   return Math.max(0, Math.min(1, 1 - scrollY / headerH))

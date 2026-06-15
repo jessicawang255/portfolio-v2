@@ -9,7 +9,7 @@ import { useEffect } from "react"
 // SNAP_DURATION:  animation length ms. 400 = snappy, 600 = cinematic.
 // COOLDOWN_MS:    silence window after a snap completes. Prevents re-trigger from
 //   lingering scroll events immediately after the animation ends.
-const MAX_RADIUS      = 36    // px — corner radius when element is fully visible
+const MAX_RADIUS      = 48    // px — corner radius when element is fully visible
 const SNAP_DURATION   = 500   // ms
 const ESCAPE_VELOCITY = 1.0   // px/ms
 const COOLDOWN_MS     = 300   // ms
