@@ -70,7 +70,7 @@ export function CaseStudyLayout({ project, children }: Props) {
       <section id="cs-content" className="bg-surface rounded-t-[48px]">
 
         {/* Project header */}
-        <div className="container-main pt-16 pb-0 px-16">
+        <div className="cs-header-content container-main pt-16 pb-0 px-16">
           <p className="text-base font-medium mb-4.5 uppercase text-subtle">{name}</p>
           <h1 className="text-[2.25rem] font-bold text-primary leading-tight w-full">
             {title}

@@ -181,6 +181,57 @@ body {
   }
 }
 
+/* ─── Page cross-fade ───────────────────────────────────────────────────────── */
+
+/* Old page exits fast; new page enters slightly after */
+::view-transition-old(page-content) {
+  animation: 150ms var(--ease-out) both fade reverse;
+}
+::view-transition-new(page-content) {
+  animation: 200ms var(--ease-out) 100ms both fade;
+}
+
+/* Nav + footer are persistent — don't let root snapshot animate them */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+}
+
+@keyframes fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(page-content),
+  ::view-transition-new(page-content) {
+    animation: none;
+  }
+}
+
+/* ─── Case study entry animations ──────────────────────────────────────────── */
+
+@keyframes cs-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(var(--cs-y, 20px));
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.cs-header-content > * {
+  --cs-y: 8px;
+  animation: cs-fade-up 350ms var(--ease-out) both;
+}
+
+.cs-header-content > *:nth-child(1) { animation-delay: 220ms; }
+.cs-header-content > *:nth-child(2) { animation-delay: 260ms; }
+.cs-header-content > *:nth-child(3) { animation-delay: 300ms; }
+.cs-header-content > *:nth-child(4) { animation-delay: 340ms; }
+
 /* ─── Reduced motion ────────────────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   html,
@@ -189,5 +240,9 @@ body {
   .card-text,
   .card-arrow {
     transition: none !important;
+  }
+
+  .cs-header-content > * {
+    animation: none;
   }
 }

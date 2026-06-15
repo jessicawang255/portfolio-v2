@@ -1,3 +1,4 @@
+import { ViewTransition } from "react"
 import type { Metadata } from "next"
 import { Nav } from "@/components/layout/Nav"
 import { Footer } from "@/components/layout/Footer"
@@ -17,7 +18,7 @@ export default function RootLayout({
     <html lang="en">
       <body className="flex min-h-screen flex-col">
         <Nav />
-        {children}
+        <ViewTransition name="page-content">{children}</ViewTransition>
         <Footer />
         <ScrollRadiusController />
       </body>
