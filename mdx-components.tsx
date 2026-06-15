@@ -27,7 +27,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       </h3>
     ),
     p: ({ children, ...props }) => (
-      <p className="text-base text-primary leading-relaxed mb-5" {...props}>
+      <p className="text-base text-secondary leading-relaxed mb-5" {...props}>
         {children}
       </p>
     ),

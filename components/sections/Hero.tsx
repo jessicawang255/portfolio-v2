@@ -40,14 +40,14 @@ export function Hero() {
 
         <motion.h1
           variants={fadeUp}
-          className="mb-3 text-lg font-extrabold text-accent"
+          className="mb-3 text-lg font-bold text-accent"
         >
           Hi, I&rsquo;m Jessica.
         </motion.h1>
 
         <motion.p
           variants={fadeUp}
-          className="mb-9 max-w-md text-balance text-lg font-medium leading-[normal] text-primary/80"
+          className="mb-9 max-w-md text-balance text-lg font-medium leading-[normal] text-secondary"
         >
           I fell in love with making new interactions a while ago, and I want
           to do it for at least the next little bit of my life.

@@ -8,6 +8,7 @@
   --color-accent:       #2E8B57;
 
   --color-primary:      #171717;
+  --color-secondary:    #5a5a5a;
   --color-muted:        #888888;
   --color-subtle:       #aaaaaa;
   --color-divider:      #e8e8e4;
@@ -58,7 +59,7 @@ html {
 body {
   color: var(--color-primary);
   font-family: var(--font-sans);
-  -webkit-font-smoothing: antialiased;
+  /* -webkit-font-smoothing: antialiased; */
   padding-top: var(--nav-height);
 }
 

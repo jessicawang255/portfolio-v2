@@ -84,7 +84,7 @@ export function CaseStudyLayout({ project, children }: Props) {
                   <p className="text-sm font-medium uppercase text-subtle mb-1">
                     {label}
                   </p>
-                  <p className="text-[15px] text-primary">{value}</p>
+                  <p className="text-[15px] text-secondary">{value}</p>
                 </div>
               ))}
             </div>

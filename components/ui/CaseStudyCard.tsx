@@ -38,7 +38,7 @@ function Separator({ children, className = "" }: { children: ReactNode; classNam
 }
 
 export function CaseStudyCard({ project, imageHeight = 340 }: Props) {
-  const { slug, title, org, status, disciplines, bg, image } = project
+  const { slug, title, name, status, disciplines, bg, image } = project
 
   const isGradient = bg.startsWith("linear-gradient")
   const bgStyle = isGradient ? { background: bg } : { backgroundColor: bg }
@@ -77,7 +77,7 @@ export function CaseStudyCard({ project, imageHeight = 340 }: Props) {
           </div>
 
           <p className="text-sm font-normal text-primary">
-            {org}
+            {name}
             <span className="mx-1.5 text-subtle" >•</span>
             {status}
             <span className="mx-2 text-subtle">/</span>
