@@ -71,20 +71,20 @@ export function CaseStudyLayout({ project, children }: Props) {
 
         {/* Project header */}
         <div className="container-main pt-12 pb-0">
-          <p className="text-sm font-medium text-accent mb-1">{name}</p>
-          <h1 className="text-[2rem] font-bold text-primary leading-tight max-w-3xl">
+          <p className="text-sm font-medium mb-4.5 uppercase text-subtle">{name}</p>
+          <h1 className="text-[2.25rem] font-bold text-primary leading-tight max-w-3xl">
             {title}
           </h1>
 
           {/* Metadata row */}
           {metaFields.length > 0 && (
-            <div className="flex flex-wrap gap-x-12 gap-y-4 mt-8">
+            <div className="flex flex-wrap gap-x-12 gap-y-4 mt-16">
               {metaFields.map(({ label, value }) => (
                 <div key={label}>
-                  <p className="text-[10px] font-semibold uppercase tracking-widest text-subtle mb-1">
+                  <p className="text-sm font-medium uppercase text-subtle mb-1">
                     {label}
                   </p>
-                  <p className="text-sm text-primary">{value}</p>
+                  <p className="text-[15px] text-primary">{value}</p>
                 </div>
               ))}
             </div>
@@ -99,7 +99,7 @@ export function CaseStudyLayout({ project, children }: Props) {
           <aside className="w-44 shrink-0 sticky top-[var(--nav-height)] self-start pt-10 pb-16">
             <Link
               href="/"
-              className="flex items-center gap-1 text-sm text-subtle font-medium hover:text-primary transition-colors duration-150 mb-8"
+              className="flex items-center gap-1 text-[15px] text-subtle font-medium hover:text-primary transition-colors duration-150 mb-8"
             >
               <ChevronLeft />
               Back
