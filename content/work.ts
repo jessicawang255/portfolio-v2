@@ -1,7 +1,7 @@
 export type Project = {
   slug: string
   title: string
-  org: string
+  name: string
   status: string
   year: number
   disciplines: string[]
@@ -54,7 +54,7 @@ export const projects: Project[] = [
   {
     slug: "hack-western",
     title: "Designing an inviting application experience for 2,000 hackers",
-    org: "Hack Western",
+    name: "Hack Western",
     status: "Shipped 2025",
     year: 2025,
     disciplines: ["Visual design", "User testing"],
@@ -68,7 +68,7 @@ export const projects: Project[] = [
   {
     slug: "capsule-cabinet",
     title: "A digital time capsule to capture memories with friends",
-    org: "Retrospect",
+    name: "Retrospect",
     status: "Demoed 2025",
     year: 2025,
     disciplines: ["Interaction design", "Prototyping"],
@@ -77,7 +77,7 @@ export const projects: Project[] = [
   {
     slug: "grief-support",
     title: "Boosting discovery for a grief support platform",
-    org: "Autumn",
+    name: "Autumn",
     status: "Shipped 2024",
     year: 2024,
     disciplines: ["Business strategy", "UX design"],
@@ -86,7 +86,7 @@ export const projects: Project[] = [
   {
     slug: "gluca",
     title: "Easing the daily burdens of diabetes management",
-    org: "gluCal",
+    name: "gluCal",
     status: "Showcased 2024",
     year: 2024,
     disciplines: ["User research", "Mobile design"],
