@@ -4,12 +4,13 @@ import { useEffect, useRef, type RefObject } from "react"
 import { useReducedMotion } from "framer-motion"
 
 // ─── Config ────────────────────────────────────────────────────────────────────
-const GRID            = 16
-const DOT             = 1.1
-const GREY            = [180, 180, 180] as const
+const GRID            = 20
+const DOT             = 1
+const GREY            = [190, 190, 190] as const
 // Light sage — same hue as site accent but desaturated and lifted
 const GREEN           = [23, 180, 90] as const
 const INFLUENCE       = 140    // px — illumination radius
+const SIZE_BOOST      = .3   // max extra radius added at full proximity
 const STIFFNESS       = .9   // primary spring (lower = more lag) (how snappy the cursor tracking feels)
 const DAMPING         = 0.1   // primary spring (lower = more oscillation) (boioioing)
 const TRAIL_STIFFNESS = 0.15  // trail lags ~2× more than primary
@@ -175,11 +176,12 @@ export function DotField({
         const r = (GREY[0] + (GREEN[0] - GREY[0]) * prox) | 0
         const g = (GREY[1] + (GREEN[1] - GREY[1]) * prox) | 0
         const b = (GREY[2] + (GREEN[2] - GREY[2]) * prox) | 0
-        const a = (baseAlpha + prox * 0.20).toFixed(2)
+        const a = (baseAlpha + (1 - baseAlpha) * prox).toFixed(2)
 
+        const radius = DOT + SIZE_BOOST * prox
         ctx!.fillStyle = `rgba(${r},${g},${b},${a})`
         ctx!.beginPath()
-        ctx!.arc(x, y, DOT, 0, Math.PI * 2)
+        ctx!.arc(x, y, radius, 0, Math.PI * 2)
         ctx!.fill()
       }
     }
