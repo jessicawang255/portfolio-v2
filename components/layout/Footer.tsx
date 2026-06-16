@@ -61,7 +61,7 @@ export function Footer() {
               <li key={label}>
                 <Link
                   href={href}
-                  className="text-base font-medium text-chrome-text/60 hover:text-chrome-text"
+                  className="text-base font-medium text-chrome-text/60 hover:text-chrome-text transition-colors duration-75"
                 >
                   {label}
                 </Link>
@@ -79,7 +79,7 @@ export function Footer() {
                   href={href}
                   target={href.startsWith("http") ? "_blank" : undefined}
                   rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
-                  className="text-base font-medium text-chrome-text/60 hover:text-chrome-text"
+                  className="text-base font-medium text-chrome-text/60 hover:text-chrome-text transition-colors duration-75"
                 >
                   {label}
                 </a>
