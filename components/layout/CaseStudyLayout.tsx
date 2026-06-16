@@ -37,7 +37,7 @@ export function CaseStudyLayout({ project, children }: Props) {
   ].filter(f => f.value)
 
   return (
-    <main className="relative z-10 flex-1 flex flex-col gap-6">
+    <main className="relative z-10 flex-1 flex flex-col gap-6 bg-chrome">
       <CaseStudyRadiusController />
       {/* ── Hero ── */}
       <section
@@ -99,7 +99,7 @@ export function CaseStudyLayout({ project, children }: Props) {
           <aside className="w-60 shrink-0 sticky top-16 self-start mt-16 pb-16">
           <Link
               href="/"
-              className="flex items-center gap-1 text-base text-subtle font-medium hover:text-primary transition-colors duration-150 mb-8"
+              className="flex items-center gap-1 text-base text-subtle font-medium hover:text-accent transition-colors duration-75 mb-8"
             >
               <ChevronLeft />
               Back

@@ -51,8 +51,8 @@ export function TableOfContents({ sections }: Props) {
             <li key={id}>
               <a
                 href={`#${id}`}
-                className={`text-base font-medium leading-snug transition-colors duration-150 ${
-                  isActive ? "text-primary font-medium" : "text-subtle hover:text-muted"
+                className={`text-base font-medium leading-snug transition-colors duration-75 ${
+                  isActive ? "text-secondary font-medium" : "text-subtle hover:text-muted"
                 }`}
               >
                 {section}
