@@ -51,6 +51,12 @@ export function TableOfContents({ sections }: Props) {
             <li key={id}>
               <a
                 href={`#${id}`}
+                onClick={(e) => {
+                  e.preventDefault()
+                  const el = document.getElementById(id)
+                  if (el) el.scrollIntoView({ behavior: "smooth", block: "start" })
+                  setActiveId(id)
+                }}
                 className={`text-base font-medium leading-snug transition-colors duration-75 ${
                   isActive ? "text-secondary font-medium" : "text-subtle hover:text-muted"
                 }`}

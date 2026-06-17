@@ -14,7 +14,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       return (
         <h2
           id={id}
-          className="text-2xl font-bold text-primary mt-16 mb-5 first:mt-0"
+          className="text-2xl font-bold text-primary mt-16 mb-5 first:mt-0 scroll-mt-10"
           {...props}
         >
           {children}
