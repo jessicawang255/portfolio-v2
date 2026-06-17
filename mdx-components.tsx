@@ -14,7 +14,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       return (
         <h2
           id={id}
-          className="text-2xl font-bold text-primary mt-16 mb-5 first:mt-0 scroll-mt-10"
+          className="text-2xl font-medium text-primary mt-16 mb-5 first:mt-0 scroll-mt-10"
           {...props}
         >
           {children}
@@ -22,12 +22,12 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       )
     },
     h3: ({ children, ...props }) => (
-      <h3 className="text-lg font-semibold text-primary mt-10 mb-3" {...props}>
+      <h3 className="text-xl font-medium text-primary mt-10 mb-3" {...props}>
         {children}
       </h3>
     ),
     p: ({ children, ...props }) => (
-      <p className="text-base text-secondary leading-relaxed mb-5" {...props}>
+      <p className="text-base font-normal text-secondary leading-relaxed mb-5" {...props}>
         {children}
       </p>
     ),

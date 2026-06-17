@@ -1,6 +1,6 @@
 const colors = [
   { token: "--color-chrome",       hex: "#111412", label: "Chrome",        bg: "bg-chrome",        dark: true  },
-  { token: "--color-surface",      hex: "#ffffff",  label: "Surface",       bg: "bg-surface",       dark: false },
+  { token: "--color-surface",      hex: "#F2F3F4", label: "Surface",       bg: "bg-surface",       dark: false },
   { token: "--color-accent",       hex: "#2E8B57", label: "Accent",        bg: "bg-accent",        dark: true  },
   { token: "--color-primary",      hex: "#171717", label: "Primary",       bg: "bg-primary",       dark: true  },
   { token: "--color-secondary",    hex: "#5a5a5a", label: "Secondary",     bg: "bg-secondary",     dark: true  },
@@ -13,15 +13,11 @@ const colors = [
 ]
 
 const weights = [
-  { label: "Thin",        cls: "font-thin",       value: 100 },
-  { label: "Extralight",  cls: "font-extralight",  value: 200 },
-  { label: "Light",       cls: "font-light",       value: 300 },
-  { label: "Normal",      cls: "font-normal",      value: 400 },
-  { label: "Medium",      cls: "font-medium",      value: 420, custom: true }, // remapped from 500
-  { label: "Semibold",    cls: "font-semibold",    value: 560, custom: true },
-  { label: "Bold",        cls: "font-bold",        value: 640, custom: true },
-  { label: "Extrabold",   cls: "font-extrabold",   value: 800 },
-  { label: "Black",       cls: "font-black",       value: 900 },
+  { label: "Light",    cls: "font-light",    value: 300 },
+  { label: "Normal",   cls: "font-normal",   value: 400 },
+  { label: "Medium",   cls: "font-medium",   value: 420, custom: true },
+  { label: "Semibold", cls: "font-semibold", value: 560, custom: true },
+  { label: "Bold",     cls: "font-bold",     value: 600, custom: true },
 ]
 
 const sizes = [

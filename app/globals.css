@@ -3,8 +3,8 @@
 /* ─── Design tokens ────────────────────────────────────────────────────────── */
 @theme inline {
   /* Colors */
-  --color-chrome:       #111412;
-  --color-surface:      #ffffff;
+  --color-chrome:       #111314;
+  --color-surface:      #FCFDFD;
   --color-accent:       #2E8B57;
 
   --color-primary:      #171717;
@@ -21,10 +21,14 @@
   --font-sans: 'Avenir Next', -apple-system, BlinkMacSystemFont,
                'Helvetica Neue', Arial, sans-serif;
 
-  /* Variable font weight axis — nudge heavy weights down slightly */
-  --font-weight-medium:   420;
-  --font-weight-semibold: 560;
-  --font-weight-bold:     640;
+  /* Variable font weight axis */
+  --font-weight-thin:       initial;
+  --font-weight-extralight: initial;
+  --font-weight-medium:     420;
+  --font-weight-semibold:   560;
+  --font-weight-bold:       600;
+  --font-weight-extrabold:  initial;
+  --font-weight-black:      initial;
 
   /* Radii */
   --radius-sm:    4px;

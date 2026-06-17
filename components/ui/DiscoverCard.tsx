@@ -38,7 +38,7 @@ export function DiscoverCard({ item}: Props) {
     <article className="case-study-card">
       <Link
         href={`/work/${slug}`}
-        className="flex flex-col gap-4 rounded-[--radius-xl] outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-4"
+        className="flex flex-col gap-3 rounded-[--radius-xl] outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-4"
       >
         <div
           className="card-thumb relative w-full overflow-hidden"
@@ -57,7 +57,7 @@ export function DiscoverCard({ item}: Props) {
 
         <div className="card-text flex flex-col px-3">
           <div className="flex items-start justify-between gap-3">
-            <h3 className="text-base font-normal leading-snug text-black">
+            <h3 className="text-sm font-normal leading-snug text-black">
               {title}
             </h3>
             <span className="card-arrow shrink-0 mt-0.5 text-primary" aria-hidden="true">

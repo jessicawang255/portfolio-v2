@@ -7,7 +7,7 @@ import { PlantIcon } from "@/components/ui/PlantIcon"
 import { DotField } from "@/components/ui/DotField"
 
 const socials = [
-  { label: "LinkedIn", href: "https://linkedin.com/in/jessica-wang", icon: "/images/Linkedin.svg" },
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/jwang255/", icon: "/images/Linkedin.svg" },
   { label: "X",        href: "https://x.com/jessica_wang",           icon: "/images/X.svg" },
   { label: "Email",    href: "mailto:jessica.wang255@gmail.com",       icon: "/images/Mail.svg" },
   { label: "GitHub",   href: "https://github.com/jessicawang255",      icon: "/images/GitHub.svg" },
@@ -47,7 +47,7 @@ export function Hero() {
 
         <motion.p
           variants={fadeUp}
-          className="mb-9 max-w-md text-balance text-lg font-normal leading-[normal] text-primary"
+          className="mb-9 max-w-md text-balance text-lg font-normal leading-[normal] text-secondary"
         >
           I fell in love with making new interactions a while ago, and I want
           to do it for at least the next little bit of my life.

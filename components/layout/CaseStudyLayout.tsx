@@ -72,7 +72,7 @@ export function CaseStudyLayout({ project, children }: Props) {
         {/* Project header */}
         <div className="cs-header-content container-main pt-16 pb-0 px-16">
           <p className="text-base font-medium mb-4.5 uppercase text-subtle">{name}</p>
-          <h1 className="text-[2.25rem] font-bold text-primary leading-tight w-full">
+          <h1 className="text-[2.25rem] font-semibold text-primary leading-tight w-full">
             {title}
           </h1>
 
@@ -81,7 +81,7 @@ export function CaseStudyLayout({ project, children }: Props) {
             <div className="flex flex-wrap gap-x-12 gap-y-4 mt-16">
               {metaFields.map(({ label, value }) => (
                 <div key={label}>
-                  <p className="text-sm font-medium uppercase text-subtle mb-1">
+                  <p className="text-sm font-medium text-subtle mb-1">
                     {label}
                   </p>
                   <p className="text-[15px] text-secondary">{value}</p>
@@ -99,7 +99,7 @@ export function CaseStudyLayout({ project, children }: Props) {
           <aside className="w-60 shrink-0 sticky top-16 self-start mt-16 pb-16">
           <Link
               href="/"
-              className="flex items-center gap-1 text-base text-subtle font-medium hover:text-accent transition-colors duration-75 mb-8"
+              className="flex items-center gap-1 text-base text-subtle font-normal hover:text-accent transition-colors duration-75 mb-8"
             >
               <ChevronLeft />
               Back
