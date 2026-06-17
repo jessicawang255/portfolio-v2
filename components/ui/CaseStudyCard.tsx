@@ -66,9 +66,9 @@ export function CaseStudyCard({ project, imageHeight = 340 }: Props) {
         </div>
 
         {/* Text block */}
-        <div className="card-text flex flex-col gap-2 px-5">
+        <div className="card-text flex flex-col gap-0.5 px-3.5">
           <div className="flex items-start justify-between gap-3">
-            <h3 className="text-l font-bold leading-snug text-primary">
+            <h3 className="text-base font-medium leading-[1.4] text-primary">
               {title}
             </h3>
             <span className="card-arrow shrink-0 mt-1 text-muted" aria-hidden="true">
@@ -76,7 +76,7 @@ export function CaseStudyCard({ project, imageHeight = 340 }: Props) {
             </span>
           </div>
 
-          <p className="text-sm font-normal text-primary">
+          <p className="text-sm font-normal text-muted">
             {name}
             <span className="mx-1.5 text-subtle" >•</span>
             {status}

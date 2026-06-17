@@ -38,7 +38,7 @@ function LiveClock() {
   if (!time) return null
 
   return (
-    <span className="text-base font-medium text-chrome-text/60">
+    <span className="text-base font-normal text-chrome-text/60">
       {time}, Toronto
     </span>
   )
@@ -61,7 +61,7 @@ export function Footer() {
               <li key={label}>
                 <Link
                   href={href}
-                  className="text-base font-medium text-chrome-text/60 hover:text-chrome-text transition-colors duration-75"
+                  className="text-base font-normal text-chrome-text/60 hover:text-chrome-text transition-colors duration-75"
                 >
                   {label}
                 </Link>
@@ -79,7 +79,7 @@ export function Footer() {
                   href={href}
                   target={href.startsWith("http") ? "_blank" : undefined}
                   rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
-                  className="text-base font-medium text-chrome-text/60 hover:text-chrome-text transition-colors duration-75"
+                  className="text-base font-normal text-chrome-text/60 hover:text-chrome-text transition-colors duration-75"
                 >
                   {label}
                 </a>

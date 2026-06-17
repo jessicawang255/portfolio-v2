@@ -18,8 +18,13 @@
   --color-icon-social:  #DEDEDE;
 
   /* Typography */
-  --font-sans: 'Avenir', -apple-system, BlinkMacSystemFont,
+  --font-sans: 'Avenir Next', -apple-system, BlinkMacSystemFont,
                'Helvetica Neue', Arial, sans-serif;
+
+  /* Variable font weight axis — nudge heavy weights down slightly */
+  --font-weight-medium:   420;
+  --font-weight-semibold: 560;
+  --font-weight-bold:     640;
 
   /* Radii */
   --radius-sm:    4px;
@@ -145,7 +150,7 @@ body {
 @media (hover: hover) and (pointer: fine) {
   /* Thumbnail sinks back */
   .case-study-card:hover .card-thumb {
-    transform: scale(0.96);
+    transform: scale(0.97);
   }
 
   /* Text floats up so visual gap from thumb stays consistent */
