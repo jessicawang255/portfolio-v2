@@ -42,8 +42,8 @@ export function CaseStudyLayout({ project, children }: Props) {
       {/* ── Hero ── */}
       <section
         id="cs-hero"
-        className="w-full rounded-[48px] overflow-hidden"
-        style={{ minHeight: "64vh", ...bgStyle }}
+        className="w-full overflow-hidden"
+        style={{ minHeight: "64vh", boxShadow: "inset 0 -80px 80px rgba(0,0,0,0.06)", ...bgStyle }}
       >
         <div className="container-main flex flex-col h-full pt-12 pb-16" style={{ minHeight: "inherit" }}>
           <p className="text-lg font-bold uppercase tracking-widest text-primary/40 select-none">
@@ -67,7 +67,7 @@ export function CaseStudyLayout({ project, children }: Props) {
       </section>
 
       {/* ── Content card ── */}
-      <section id="cs-content" className="bg-surface rounded-t-[48px]">
+      <section id="cs-content" className="bg-surface -mt-6">
 
         {/* Project header */}
         <div className="cs-header-content container-main pt-16 pb-0 px-16">

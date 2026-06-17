@@ -6,12 +6,12 @@ import { useReducedMotion } from "framer-motion"
 // ─── Config ────────────────────────────────────────────────────────────────────
 const GRID            = 20
 const DOT             = 1
-const GREY            = [190, 190, 190] as const
+const GREY            = [100, 100, 150] as const
 // Light sage — same hue as site accent but desaturated and lifted
-const GREEN           = [23, 180, 90] as const
+const GREEN           = [90, 200, 130] as const
 const INFLUENCE       = 140    // px — illumination radius
-const SIZE_BOOST      = .3   // max extra radius added at full proximity
-const STIFFNESS       = .9   // primary spring (lower = more lag) (how snappy the cursor tracking feels)
+const SIZE_BOOST      = .5   // max extra radius added at full proximity
+const STIFFNESS       = .98   // primary spring (lower = more lag) (how snappy the cursor tracking feels)
 const DAMPING         = 0.1   // primary spring (lower = more oscillation) (boioioing)
 const TRAIL_STIFFNESS = 0.15  // trail lags ~2× more than primary
 const TRAIL_DAMPING   = .5
@@ -53,7 +53,7 @@ export function DotField({
       // quadrant of the ellipse. Arc enters left edge ~40% down and exits the
       // bottom edge ~40% from the left — dots concentrate in the upper-right,
       // absent from the lower-left.
-      eCX = W * 1    // ellipse X axis position
+      eCX = W * 1.1    // ellipse X axis position
       eCY = -H * .8   // ellipse Y axis position
       eRX = W * 1.2     // ellipse width
       eRY = H * 1.85    // ellipse height

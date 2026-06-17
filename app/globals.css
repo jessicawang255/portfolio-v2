@@ -15,7 +15,7 @@
 
   --color-chrome-text:  #f0f0f0;
   --color-chrome-muted: #A0A7A3;
-  --color-icon-social:  #DEDEDE;
+  --color-icon-social:  #D6D6D6;
 
   /* Typography */
   --font-sans: 'Avenir Next', -apple-system, BlinkMacSystemFont,
@@ -35,7 +35,7 @@
   --radius-base:  8px;
   --radius-lg:    12px;
   --radius-xl:    16px;
-  --radius-frame: 48px;
+  --radius-frame: 36px;
   --radius-full:  9999px;
 
   /* Motion — easing */

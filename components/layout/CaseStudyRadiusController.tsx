@@ -2,7 +2,7 @@
 
 import { useEffect } from "react"
 
-const MAX_RADIUS = 48 // matches --radius-frame in globals.css
+const MAX_RADIUS = 36 // matches --radius-frame in globals.css
 
 function headerRatio(scrollY: number, headerH: number) {
   return Math.max(0, Math.min(1, 1 - scrollY / headerH))
@@ -12,11 +12,6 @@ function footerRatio(scrollY: number, footerAbsTop: number, footerH: number, win
   return Math.max(0, Math.min(1, (scrollY + winH - footerAbsTop) / footerH))
 }
 
-// 1 = full radius, 0 = flat; transitions over MAX_RADIUS px as content top meets y=0.
-// The nav is z-0 (behind main), so the visual top of the viewport is y=0, not the nav bottom.
-function contentTopRatio(viewportTop: number) {
-  return Math.max(0, Math.min(1, viewportTop / MAX_RADIUS))
-}
 
 export function CaseStudyRadiusController() {
   useEffect(() => {
@@ -37,17 +32,12 @@ export function CaseStudyRadiusController() {
     const footerAbsTop = document.documentElement.scrollHeight - footerH
 
     function update(scrollY: number) {
-      const top        = headerRatio(scrollY, headerH) * MAX_RADIUS
-      const bottom     = footerRatio(scrollY, footerAbsTop, footerH, window.innerHeight) * MAX_RADIUS
-      const contentTop = contentTopRatio(content!.getBoundingClientRect().top) * MAX_RADIUS
+      const top    = headerRatio(scrollY, headerH) * MAX_RADIUS
+      const bottom = footerRatio(scrollY, footerAbsTop, footerH, window.innerHeight) * MAX_RADIUS
 
       // Hero: only top corners animate (bottom corners stay rounded, set by CSS)
       hero!.style.borderTopLeftRadius  = `${top}px`
       hero!.style.borderTopRightRadius = `${top}px`
-
-      // Content card top corners: 48px → 0 as content top meets the viewport top (y=0)
-      content!.style.borderTopLeftRadius  = `${contentTop}px`
-      content!.style.borderTopRightRadius = `${contentTop}px`
 
       // Content card bottom corners: 0 → 48px as footer comes into view
       content!.style.borderBottomLeftRadius  = `${bottom}px`
