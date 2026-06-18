@@ -8,9 +8,9 @@ import { DotField } from "@/components/ui/DotField"
 
 const socials = [
   { label: "LinkedIn", href: "https://www.linkedin.com/in/jwang255/", icon: "/images/Linkedin.svg" },
-  { label: "X",        href: "https://x.com/jessica_wang",           icon: "/images/X.svg" },
-  { label: "Email",    href: "mailto:jessica.wang255@gmail.com",       icon: "/images/Mail.svg" },
-  { label: "GitHub",   href: "https://github.com/jessicawang255",      icon: "/images/GitHub.svg" },
+  { label: "X",        href: "https://x.com/jossici", icon: "/images/X.svg" },
+  { label: "Email",    href: "mailto:jessica.wang255@gmail.com", icon: "/images/Mail.svg" },
+  { label: "GitHub",   href: "https://github.com/jessicawang255", icon: "/images/GitHub.svg" },
 ]
 
 export function Hero() {
