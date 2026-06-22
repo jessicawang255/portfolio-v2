@@ -102,30 +102,42 @@ export function FlowerIcon() {
             willChange: 'transform',
           }}
         >
-          <AnimatePresence mode="wait">
+          <AnimatePresence mode="sync">
             <motion.div
               key={idx}
-              initial={
+              variants={
                 reducedMotion
-                  ? { opacity: 0 }
-                  : { rotate: -180, scale: 0.3, opacity: 0 }
+                  ? {
+                      hidden:  { opacity: 0 },
+                      visible: { opacity: 1, transition: { duration: 0.15 } },
+                      exit:    { opacity: 0, transition: { duration: 0.15 } },
+                    }
+                  : {
+                      // Exit shrinks first; enter is delayed so it starts while
+                      // exit is still finishing — brief overlap = crossfade,
+                      // but each phase reads as its own distinct motion.
+                      hidden:  { rotate: -60, scale: 0.4, opacity: 0 },
+                      visible: {
+                        rotate: 0, scale: 1, opacity: 1,
+                        transition: { duration: 0.55, delay: 0.25, ease: [0.42, 0, 0.58, 1] },
+                      },
+                      exit: {
+                        rotate: 60, scale: 0.4, opacity: 0,
+                        transition: { duration: 0.4, ease: [0.42, 0, 0.58, 1] },
+                      },
+                    }
               }
-              animate={
-                reducedMotion
-                  ? { opacity: 1 }
-                  : { rotate: 0, scale: 1, opacity: 1 }
-              }
-              exit={
-                reducedMotion
-                  ? { opacity: 0 }
-                  : { rotate: 180, scale: 0.3, opacity: 0 }
-              }
-              transition={
-                reducedMotion
-                  ? { duration: 0.1 }
-                  : { duration: 0.35, ease: [0.87, 0, 0.13, 1] }
-              }
-              style={{ transformOrigin: '50% 50%' }}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                transformOrigin: '50% 50%',
+              }}
             >
               <FlowerComponent />
             </motion.div>
