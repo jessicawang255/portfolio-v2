@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useRef } from 'react'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import { FLOWERS, Stem } from './flowers'
 import { ErosionFilterDef, useErosion } from './ErosionFilter'
@@ -23,26 +23,37 @@ export function FlowerIcon() {
     onMouseLeave: erosionLeave,
   } = useErosion(!!reducedMotion)
 
+  // Locked after a click — hover won't reactivate until the cursor leaves and
+  // re-enters, so the new flower doesn't immediately inherit the hover state.
+  const hoverLocked = useRef(false)
+
   const handleMouseEnter = useCallback(() => {
+    if (hoverLocked.current) return
     setIsHovered(true)
     erosionEnter()
   }, [erosionEnter])
 
   const handleMouseLeave = useCallback(() => {
+    hoverLocked.current = false
     setIsHovered(false)
     erosionLeave()
   }, [erosionLeave])
 
-  const handleClick = useCallback(() => {
+  const cycle = useCallback(() => {
+    hoverLocked.current = true
+    setIsHovered(false)
+    erosionLeave()
     setIdx(i => pickRandom(i, FLOWERS.length))
-  }, [])
+  }, [erosionLeave])
+
+  const handleClick = useCallback(() => { cycle() }, [cycle])
 
   const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault()
-      setIdx(i => pickRandom(i, FLOWERS.length))
+      cycle()
     }
-  }, [])
+  }, [cycle])
 
   const FlowerComponent = FLOWERS[idx].component
 
@@ -53,6 +64,8 @@ export function FlowerIcon() {
       aria-label="Decorative flower — click to change"
       onClick={handleClick}
       onKeyDown={handleKeyDown}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
       style={{ position: 'relative', width: 32, height: 45, cursor: 'pointer' }}
     >
       <div style={{
@@ -71,8 +84,6 @@ export function FlowerIcon() {
         </div>
 
         <motion.div
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
           whileHover={reducedMotion ? { opacity: 0.75 } : undefined}
           animate={
             reducedMotion ? undefined :
