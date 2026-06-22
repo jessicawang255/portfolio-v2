@@ -4,7 +4,7 @@ import { useEffect, useRef, type RefObject } from "react"
 import { useReducedMotion } from "framer-motion"
 
 // ─── Config ────────────────────────────────────────────────────────────────────
-const GRID            = 20
+const GRID            = 28
 const DOT             = 1
 const GREY            = [100, 100, 150] as const
 // Light sage — same hue as site accent but desaturated and lifted
