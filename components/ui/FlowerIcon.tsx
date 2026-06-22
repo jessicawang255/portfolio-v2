@@ -5,14 +5,13 @@ import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import { FLOWERS, Stem } from './flowers'
 import { ErosionFilterDef, useErosion } from './ErosionFilter'
 
-function pickRandom(current: number, total: number): number {
-  let next: number
-  do { next = Math.floor(Math.random() * total) } while (next === current)
-  return next
-}
-
-export function FlowerIcon() {
-  const [idx, setIdx] = useState(0)
+export function FlowerIcon({
+  flowerIdx,
+  onCycle,
+}: {
+  flowerIdx: number
+  onCycle: () => void
+}) {
   const [isHovered, setIsHovered] = useState(false)
   const reducedMotion = useReducedMotion()
 
@@ -43,8 +42,8 @@ export function FlowerIcon() {
     hoverLocked.current = true
     setIsHovered(false)
     erosionLeave()
-    setIdx(i => pickRandom(i, FLOWERS.length))
-  }, [erosionLeave])
+    onCycle()
+  }, [erosionLeave, onCycle])
 
   const handleClick = useCallback(() => { cycle() }, [cycle])
 
@@ -55,7 +54,7 @@ export function FlowerIcon() {
     }
   }, [cycle])
 
-  const FlowerComponent = FLOWERS[idx].component
+  const FlowerComponent = FLOWERS[flowerIdx].component
 
   return (
     <div
@@ -115,7 +114,7 @@ export function FlowerIcon() {
         >
           <AnimatePresence mode="sync">
             <motion.div
-              key={idx}
+              key={flowerIdx}
               variants={
                 reducedMotion
                   ? {

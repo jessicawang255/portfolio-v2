@@ -3,6 +3,7 @@
 import { useEffect, useRef, type RefObject } from "react"
 import { useReducedMotion } from "framer-motion"
 
+
 // ─── Config ────────────────────────────────────────────────────────────────────
 const GRID            = 28
 const DOT             = 1
@@ -26,11 +27,26 @@ function smoothstep(t: number) {
 
 export function DotField({
   containerRef,
+  accentColor,
 }: {
   containerRef: RefObject<HTMLElement | null>
+  accentColor: readonly [number, number, number]
 }) {
-  const canvasRef = useRef<HTMLCanvasElement>(null)
-  const reduced   = useReducedMotion()
+  const canvasRef      = useRef<HTMLCanvasElement>(null)
+  const reduced        = useReducedMotion()
+  // Always-fresh ref so the canvas loop can read the latest color without
+  // the effect needing to re-run (which would reset all spring state).
+  const accentColorRef = useRef(accentColor)
+  accentColorRef.current = accentColor
+  // Exposes startRAF from inside the effect so the nudge effect below
+  // can kick the loop when the color changes while the cursor is idle.
+  const startRAFRef = useRef<() => void>(() => {})
+
+  // Kick the RAF whenever accentColor changes so the lerp runs even if
+  // the cursor hasn't moved.
+  useEffect(() => {
+    startRAFRef.current()
+  }, [accentColor])
 
   useEffect(() => {
     const canvas    = canvasRef.current
@@ -108,6 +124,14 @@ export function DotField({
       drawFrame()
     }
 
+    // ── Animated accent colour ────────────────────────────────────────────────
+    // Lerps toward accentColorRef.current each tick so colour transitions are
+    // smooth rather than instant when the flower changes.
+
+    let animR = accentColorRef.current[0]
+    let animG = accentColorRef.current[1]
+    let animB = accentColorRef.current[2]
+
     // ── Springs ───────────────────────────────────────────────────────────────
 
     let cursorX = 0, cursorY = 0                          // raw mouse target
@@ -119,6 +143,7 @@ export function DotField({
     let prevT      = 0
 
     function isSettled() {
+      const [tr, tg, tb] = accentColorRef.current
       return (
         Math.abs(springVX)           < 0.08 &&
         Math.abs(springVY)           < 0.08 &&
@@ -128,7 +153,10 @@ export function DotField({
         Math.abs(cursorY - springY)  < 0.5  &&
         Math.abs(springX - trailX)   < 0.5  &&
         Math.abs(springY - trailY)   < 0.5  &&
-        Math.abs(infTarget - influence) < 0.005
+        Math.abs(infTarget - influence) < 0.005 &&
+        Math.abs(tr - animR)         < 0.5  &&
+        Math.abs(tg - animG)         < 0.5  &&
+        Math.abs(tb - animB)         < 0.5
       )
     }
 
@@ -173,9 +201,9 @@ export function DotField({
         const prox = Math.max(prox1, prox2)
         if (prox < 0.005) continue
 
-        const r = (GREY[0] + (GREEN[0] - GREY[0]) * prox) | 0
-        const g = (GREY[1] + (GREEN[1] - GREY[1]) * prox) | 0
-        const b = (GREY[2] + (GREEN[2] - GREY[2]) * prox) | 0
+        const r = (GREY[0] + (animR - GREY[0]) * prox) | 0
+        const g = (GREY[1] + (animG - GREY[1]) * prox) | 0
+        const b = (GREY[2] + (animB - GREY[2]) * prox) | 0
         const a = (baseAlpha + (1 - baseAlpha) * prox).toFixed(2)
 
         const radius = DOT + SIZE_BOOST * prox
@@ -214,6 +242,11 @@ export function DotField({
 
       influence += (infTarget - influence) * 0.1
 
+      // Lerp animated colour toward the current target (~0.3 s to 95%)
+      animR += (accentColorRef.current[0] - animR) * 0.06
+      animG += (accentColorRef.current[1] - animG) * 0.06
+      animB += (accentColorRef.current[2] - animB) * 0.06
+
       drawFrame()
 
       rafId = isSettled() ? 0 : requestAnimationFrame(tick)
@@ -225,6 +258,7 @@ export function DotField({
         rafId = requestAnimationFrame(tick)
       }
     }
+    startRAFRef.current = startRAF
 
     // ── Events ────────────────────────────────────────────────────────────────
 
