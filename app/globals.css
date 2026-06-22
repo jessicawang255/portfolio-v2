@@ -29,11 +29,11 @@
   --color-subtle:       #AAB5B0;
   --color-divider:      #ECEFEC;
 
-  --color-nav-link:     #6F7B74;
+  --color-nav-link:     #89948F;
   --color-nav-link-hover: #161D19;
 
-  --color-chrome-text:  #ECEFEC;
-  --color-chrome-muted: #AAB5B0;
+  --color-chrome-text:  #FF0000;
+  --color-chrome-muted: #ff0000;
   --color-icon-social:  #D2D7D2;
 
   /* Typography */
