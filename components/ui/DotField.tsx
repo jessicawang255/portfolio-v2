@@ -11,7 +11,7 @@ const GREY            = [100, 100, 150] as const
 const GREEN           = [90, 200, 130] as const
 const INFLUENCE       = 140    // px — illumination radius
 const SIZE_BOOST      = .8   // max extra radius added at full proximity
-const STIFFNESS       = .98   // primary spring (lower = more lag) (how snappy the cursor tracking feels)
+const STIFFNESS       = 1   // primary spring (lower = more lag) (how snappy the cursor tracking feels)
 const DAMPING         = 0.1   // primary spring (lower = more oscillation) (boioioing)
 const TRAIL_STIFFNESS = 0.15  // trail lags ~2× more than primary
 const TRAIL_DAMPING   = .5

@@ -29,12 +29,9 @@
   --color-subtle:       #AAB5B0;
   --color-divider:      #ECEFEC;
 
-  --color-nav-link:     #89948F;
-  --color-nav-link-hover: #161D19;
-
-  --color-chrome-text:  #FF0000;
-  --color-chrome-muted: #ff0000;
-  --color-icon-social:  #D2D7D2;
+  --color-nav-link:     var(--color-neutral-600);
+  --color-nav-link-hover: var(--color-neutral-900);
+  --color-icon-social:  var(--color-neutral-200);
 
   /* Typography */
   --font-sans: 'Avenir Next', -apple-system, BlinkMacSystemFont,
@@ -106,6 +103,7 @@ body {
   border-radius: 0;
   border-top-left-radius:  var(--radius-frame);
   border-top-right-radius: var(--radius-frame);
+  box-shadow: 0 0 50px 0 rgba(165, 192, 177, 0.4);
   transition:
     border-top-left-radius     650ms var(--ease-out),
     border-top-right-radius    650ms var(--ease-out),

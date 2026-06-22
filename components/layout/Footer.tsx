@@ -38,7 +38,7 @@ function LiveClock() {
   if (!time) return null
 
   return (
-    <span className="text-base font-normal text-nav-link">
+    <span className="text-sm font-normal text-neutral-500">
       {time}, Toronto
     </span>
   )
