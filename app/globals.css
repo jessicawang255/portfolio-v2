@@ -19,22 +19,22 @@
   --color-green-bg:     #DDE9DF;
 
   /* Semantic aliases */
-  --color-chrome:       var(--color-green-bg);
-  --color-surface:      var(--color-neutral-50);
-  --color-accent:       var(--color-green-accent);
+  --color-chrome:       #DDE9DF;
+  --color-surface:      #FFFFFF;
+  --color-accent:       #2E8B57;
 
-  --color-primary:      var(--color-neutral-900);
-  --color-secondary:    var(--color-neutral-700);
-  --color-muted:        var(--color-neutral-500);
-  --color-subtle:       var(--color-neutral-400);
-  --color-divider:      var(--color-neutral-100);
+  --color-primary:      #161D19;
+  --color-secondary:    #4B534F;
+  --color-muted:        #89948F;
+  --color-subtle:       #AAB5B0;
+  --color-divider:      #ECEFEC;
 
-  --color-nav-link:     var(--color-neutral-600);
-  --color-nav-link-hover: var(--color-neutral-900);
+  --color-nav-link:     #6F7B74;
+  --color-nav-link-hover: #161D19;
 
-  --color-chrome-text:  var(--color-neutral-100);
-  --color-chrome-muted: var(--color-neutral-400);
-  --color-icon-social:  var(--color-neutral-200);
+  --color-chrome-text:  #ECEFEC;
+  --color-chrome-muted: #AAB5B0;
+  --color-icon-social:  #D2D7D2;
 
   /* Typography */
   --font-sans: 'Avenir Next', -apple-system, BlinkMacSystemFont,
