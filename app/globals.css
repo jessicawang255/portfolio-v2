@@ -2,20 +2,39 @@
 
 /* ─── Design tokens ────────────────────────────────────────────────────────── */
 @theme inline {
-  /* Colors */
-  --color-chrome:       #111314;
-  --color-surface:      #FCFDFD;
-  --color-accent:       #2E8B57;
+  /* Neutral scale */
+  --color-neutral-900: #161D19;
+  --color-neutral-800: #383E3A;
+  --color-neutral-700: #4B534F;
+  --color-neutral-600: #6F7B74;
+  --color-neutral-500: #89948F;
+  --color-neutral-400: #AAB5B0;
+  --color-neutral-300: #BEC6C2;
+  --color-neutral-200: #D2D7D2;
+  --color-neutral-100: #ECEFEC;
+  --color-neutral-50:  #FFFFFF;
 
-  --color-primary:      #171717;
-  --color-secondary:    #5a5a5a;
-  --color-muted:        #888888;
-  --color-subtle:       #aaaaaa;
-  --color-divider:      #e8e8e4;
+  /* Green */
+  --color-green-accent: #2E8B57;
+  --color-green-bg:     #DDE9DF;
 
-  --color-chrome-text:  #f0f0f0;
-  --color-chrome-muted: #A0A7A3;
-  --color-icon-social:  #D6D6D6;
+  /* Semantic aliases */
+  --color-chrome:       var(--color-green-bg);
+  --color-surface:      var(--color-neutral-50);
+  --color-accent:       var(--color-green-accent);
+
+  --color-primary:      var(--color-neutral-900);
+  --color-secondary:    var(--color-neutral-700);
+  --color-muted:        var(--color-neutral-500);
+  --color-subtle:       var(--color-neutral-400);
+  --color-divider:      var(--color-neutral-100);
+
+  --color-nav-link:     var(--color-neutral-600);
+  --color-nav-link-hover: var(--color-neutral-900);
+
+  --color-chrome-text:  var(--color-neutral-100);
+  --color-chrome-muted: var(--color-neutral-400);
+  --color-icon-social:  var(--color-neutral-200);
 
   /* Typography */
   --font-sans: 'Avenir Next', -apple-system, BlinkMacSystemFont,

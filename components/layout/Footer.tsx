@@ -38,7 +38,7 @@ function LiveClock() {
   if (!time) return null
 
   return (
-    <span className="text-base font-normal text-chrome-text/60">
+    <span className="text-base font-normal text-nav-link">
       {time}, Toronto
     </span>
   )
@@ -50,7 +50,7 @@ export function Footer() {
       <div className="container-chrome grid grid-cols-4 gap-8 pt-9 pb-16">
         {/* Name + clock */}
         <div className="flex flex-col gap-1">
-          <span className="text-[18px] font-medium text-white">Jessica Wang</span>
+          <span className="text-[18px] font-medium text-neutral-900">Jessica Wang</span>
           <LiveClock />
         </div>
 
@@ -61,7 +61,7 @@ export function Footer() {
               <li key={label}>
                 <Link
                   href={href}
-                  className="text-base font-normal text-chrome-text/60 hover:text-chrome-text transition-colors duration-75"
+                  className="text-base font-normal text-nav-link hover:text-nav-link-hover transition-colors duration-75"
                 >
                   {label}
                 </Link>
@@ -79,7 +79,7 @@ export function Footer() {
                   href={href}
                   target={href.startsWith("http") ? "_blank" : undefined}
                   rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
-                  className="text-base font-normal text-chrome-text/60 hover:text-chrome-text transition-colors duration-75"
+                  className="text-base font-normal text-nav-link hover:text-nav-link-hover transition-colors duration-75"
                 >
                   {label}
                 </a>
@@ -90,7 +90,7 @@ export function Footer() {
 
         {/* Version */}
         <div className="flex flex-col items-end gap-1">
-          <span className="text-base text-chrome-text/60">Portfolio V1</span>
+          <span className="text-base text-nav-link">Portfolio V1</span>
         </div>
       </div>
     </footer>
