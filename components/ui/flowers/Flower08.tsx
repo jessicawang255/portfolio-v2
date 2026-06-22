@@ -1,0 +1,33 @@
+export function Flower08() {
+  return (
+    <svg width={100} height={100} viewBox="0 0 104 104" fill="none">
+      <g filter="url(#filter0_gn_467_1826)">
+        <path d="M51.9209 1.91992C56.9661 1.92037 61.4395 9.90105 64.2266 22.209C74.901 15.4761 83.7087 12.9977 87.2764 16.5654C90.8434 20.1334 88.3633 28.9394 81.6309 39.6133C93.9398 42.4004 101.92 46.8754 101.92 51.9209C101.919 56.9662 93.9393 61.4395 81.6309 64.2266C88.3638 74.9011 90.8431 83.7077 87.2754 87.2754C83.7076 90.843 74.9011 88.3638 64.2266 81.6309C61.4395 93.9393 56.9662 101.92 51.9209 101.921C46.8754 101.921 42.4004 93.9398 39.6133 81.6309C28.9391 88.3634 20.1331 90.843 16.5654 87.2754C12.9979 83.7077 15.4763 74.9008 22.209 64.2266C9.90105 61.4395 1.92037 56.9661 1.91992 51.9209C1.91992 46.8755 9.90057 42.4004 22.209 39.6133C15.4766 28.9393 12.9979 20.1331 16.5654 16.5654C20.133 12.9978 28.9392 15.4766 39.6133 22.209C42.4004 9.90057 46.8755 1.91992 51.9209 1.91992ZM48.8369 40.417L42.4678 35.5488L43.498 43.499L35.5479 42.4688L40.416 48.8379L33.0156 51.9209L40.416 55.0029L35.5479 61.3721L43.498 60.3418L42.4678 68.292L48.8369 63.4238L51.9199 70.8242L55.002 63.4238L61.3711 68.292L60.3408 60.3418L68.291 61.3721L63.4229 55.0029L70.8232 51.9209L63.4229 48.8379L68.291 42.4688L60.3408 43.499L61.3711 35.5488L55.002 40.417L51.9199 33.0166L48.8369 40.417Z" fill="#82D72C"/>
+      </g>
+      <rect x="51.9199" y="44.7988" width="10.0693" height="10.0693" transform="rotate(45 51.9199 44.7988)" fill="#82D72C"/>
+      <defs>
+        <filter id="filter0_gn_467_1826" x="0.000719547" y="0.000719547" width="103.838" height="103.838" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+          <feFlood floodOpacity="0" result="BackgroundImageFix"/>
+          <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+          <feTurbulence type="fractalNoise" baseFrequency="0.065131224691867828 0.065131224691867828" numOctaves="3" seed="5997"/>
+          <feDisplacementMap in="shape" scale="3.838404655456543" xChannelSelector="R" yChannelSelector="G" result="displacedImage" width="100%" height="100%"/>
+          <feMerge result="effect1_texture_467_1826">
+            <feMergeNode in="displacedImage"/>
+          </feMerge>
+          <feTurbulence type="fractalNoise" baseFrequency="1.4473605155944824 1.4473605155944824" stitchTiles="stitch" numOctaves="3" result="noise" seed="6296"/>
+          <feColorMatrix in="noise" type="luminanceToAlpha" result="alphaNoise"/>
+          <feComponentTransfer in="alphaNoise" result="coloredNoise1">
+            <feFuncA type="discrete" tableValues="0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0"/>
+          </feComponentTransfer>
+          <feComposite operator="in" in2="effect1_texture_467_1826" in="coloredNoise1" result="noise1Clipped"/>
+          <feFlood floodColor="#B9BFFE" result="color1Flood"/>
+          <feComposite operator="in" in2="noise1Clipped" in="color1Flood" result="color1"/>
+          <feMerge result="effect2_noise_467_1826">
+            <feMergeNode in="effect1_texture_467_1826"/>
+            <feMergeNode in="color1"/>
+          </feMerge>
+        </filter>
+      </defs>
+    </svg>
+  )
+}

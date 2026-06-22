@@ -3,7 +3,7 @@
 import { useRef } from "react"
 import { motion, useReducedMotion } from "framer-motion"
 import { stagger, fadeUp } from "@/lib/motion"
-import { PlantIcon } from "@/components/ui/PlantIcon"
+import { FlowerIcon } from "@/components/ui/FlowerIcon"
 import { DotField } from "@/components/ui/DotField"
 
 const socials = [
@@ -20,7 +20,7 @@ export function Hero() {
   return (
     <section
       ref={sectionRef}
-      className="container-main relative pt-14 pb-[120px]"
+      className="container-main relative pt-20 pb-[120px]"
       aria-label="Introduction"
     >
       {/* Dot field sits behind all content — pointer-events: none so it never blocks clicks */}
@@ -35,7 +35,7 @@ export function Hero() {
         className="relative z-10 flex flex-col"
       >
         <motion.div variants={fadeUp} className="mb-6">
-          <PlantIcon className="text-accent" />
+          <FlowerIcon />
         </motion.div>
 
         <motion.h1
