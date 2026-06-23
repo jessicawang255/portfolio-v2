@@ -3,10 +3,10 @@
 import Link from "next/link"
 import { useEffect, useState } from "react"
 
-const navLinks = [
-  { label: "Work",   href: "#work" },
-  { label: "About",  href: "#about" },
-  { label: "Resume", href: "/resume.pdf" },
+const navLinks: { label: string; href: string; target?: string }[] = [
+  { label: "Work",   href: "/" },
+  { label: "About",  href: "/about" },
+  { label: "Resume", href: "/resume.pdf", target: "_blank" },
 ]
 
 const socialLinks = [
@@ -106,10 +106,12 @@ export function Footer() {
         {/* Nav links */}
         <nav aria-label="Footer navigation">
           <ul className="flex flex-col gap-1 list-none m-0 p-0">
-            {navLinks.map(({ label, href }) => (
+            {navLinks.map(({ label, href, target }) => (
               <li key={label}>
                 <Link
                   href={href}
+                  target={target}
+                  rel={target === "_blank" ? "noopener noreferrer" : undefined}
                   className="text-base font-normal text-nav-link hover:text-nav-link-hover transition-colors duration-75"
                 >
                   {label}

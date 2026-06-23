@@ -1,9 +1,9 @@
 import Link from "next/link"
 
-const links = [
-  { label: "Work",   href: "#work" },
-  { label: "About",  href: "#about" },
-  { label: "Resume", href: "/resume.pdf" },
+const links: { label: string; href: string; target?: string }[] = [
+  { label: "Work",   href: "/" },
+  { label: "About",  href: "/about" },
+  { label: "Resume", href: "/resume.pdf", target: "_blank" },
 ]
 
 export function Nav() {
@@ -21,10 +21,12 @@ export function Nav() {
         </Link>
 
         <ul className="flex items-center gap-7 list-none m-0 p-0">
-          {links.map(({ label, href }) => (
+          {links.map(({ label, href, target }) => (
             <li key={label}>
               <Link
                 href={href}
+                target={target}
+                rel={target === "_blank" ? "noopener noreferrer" : undefined}
                 className="text-base font-normal text-nav-link hover:text-nav-link-hover transition-colors duration-75"
               >
                 {label}
