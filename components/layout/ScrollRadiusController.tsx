@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect } from "react"
+import { usePathname } from "next/navigation"
 
 const MAX_RADIUS = 36 // px — corner radius when header/footer is fully visible
 
@@ -29,6 +30,8 @@ function setRadius(
 }
 
 export function ScrollRadiusController() {
+  const pathname = usePathname()
+
   useEffect(() => {
     const main   = document.getElementById("main-frame")
     const footer = document.getElementById("site-footer")
@@ -64,7 +67,7 @@ export function ScrollRadiusController() {
       window.removeEventListener("scroll", onScroll)
       document.body.style.paddingBottom = ""
     }
-  }, [])
+  }, [pathname])
 
   return null
 }
