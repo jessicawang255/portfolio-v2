@@ -1,7 +1,15 @@
 @import "tailwindcss";
 
 /* ─── Design tokens ────────────────────────────────────────────────────────── */
-@theme inline {
+
+/*
+ * @theme  (no inline) → emits real CSS custom properties to :root so that
+ *   var(--color-*), var(--radius-*), etc. work in hand-written CSS.
+ * @theme inline        → bakes values directly into Tailwind utility output;
+ *   does NOT emit CSS variables. Used only for font tokens here.
+ */
+
+@theme {
   /* Neutral scale */
   --color-neutral-900: #161D19;
   --color-neutral-800: #383E3A;
@@ -29,22 +37,9 @@
   --color-subtle:       #AAB5B0;
   --color-divider:      #ECEFEC;
 
-  --color-nav-link:     var(--color-neutral-700);
+  --color-nav-link:       var(--color-neutral-700);
   --color-nav-link-hover: var(--color-neutral-900);
-  --color-icon-social:  var(--color-neutral-200);
-
-  /* Typography */
-  --font-sans: 'Avenir Next', -apple-system, BlinkMacSystemFont,
-               'Helvetica Neue', Arial, sans-serif;
-
-  /* Variable font weight axis */
-  --font-weight-thin:       initial;
-  --font-weight-extralight: initial;
-  --font-weight-medium:     420;
-  --font-weight-semibold:   560;
-  --font-weight-bold:       600;
-  --font-weight-extrabold:  initial;
-  --font-weight-black:      initial;
+  --color-icon-social:    var(--color-neutral-200);
 
   /* Radii */
   --radius-sm:    4px;
@@ -64,6 +59,21 @@
   --duration-base:       200ms;
   --duration-slow:       300ms;
   --duration-deliberate: 500ms;
+}
+
+@theme inline {
+  /* Font family — inlined so Tailwind doesn't generate var() chains */
+  --font-sans: 'Avenir Next', -apple-system, BlinkMacSystemFont,
+               'Helvetica Neue', Arial, sans-serif;
+
+  /* Variable font weight axis */
+  --font-weight-thin:       initial;
+  --font-weight-extralight: initial;
+  --font-weight-medium:     420;
+  --font-weight-semibold:   560;
+  --font-weight-bold:       600;
+  --font-weight-extrabold:  initial;
+  --font-weight-black:      initial;
 }
 
 /* ─── Base ─────────────────────────────────────────────────────────────────── */
@@ -186,7 +196,7 @@ body {
   }
 }
 
-─── Nav link underline ──────────────────────────────────────────────────────
+/* ─── Nav link underline ──────────────────────────────────────────────────── */
 .nav-link {
   position: relative;
 }
@@ -198,7 +208,7 @@ body {
   left: 0;
   width: 0;
   height: 1px;
-  background: var(--color-chrome-text);
+  background: currentColor;
   transition: width var(--duration-fast) var(--ease-out);
 }
 
