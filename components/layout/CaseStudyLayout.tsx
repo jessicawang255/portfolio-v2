@@ -23,10 +23,10 @@ function ChevronLeft() {
   )
 }
 
-const navLinks = [
-  { label: "Work",   href: "#work" },
-  { label: "About",  href: "#about" },
-  { label: "Resume", href: "/resume.pdf" },
+const navLinks: { label: string; href: string; target?: string }[] = [
+  { label: "Work",   href: "/" },
+  { label: "About",  href: "/about" },
+  { label: "Resume", href: "/resume.pdf", target: "_blank" },
 ]
 
 // Hero occupies 65vh of the viewport. The spacer below accounts for the
@@ -61,10 +61,12 @@ export function CaseStudyLayout({ project, children }: Props) {
             Jessica Wang
           </Link>
           <ul className="flex items-center gap-7 list-none m-0 p-0">
-            {navLinks.map(({ label, href }) => (
+            {navLinks.map(({ label, href, target }) => (
               <li key={label}>
                 <Link
                   href={href}
+                  target={target}
+                  rel={target === "_blank" ? "noopener noreferrer" : undefined}
                   className="text-base font-normal text-nav-link hover:text-nav-link-hover transition-colors duration-75"
                 >
                   {label}
