@@ -23,6 +23,16 @@ function ChevronLeft() {
   )
 }
 
+const navLinks = [
+  { label: "Work",   href: "#work" },
+  { label: "About",  href: "#about" },
+  { label: "Resume", href: "/resume.pdf" },
+]
+
+// Hero occupies 65vh of the viewport. The spacer below accounts for the
+// body's padding-top (nav-height) so the content card aligns to the hero bottom.
+const HERO_HEIGHT = "65vh"
+
 export function CaseStudyLayout({ project, children }: Props) {
   const { title, name, role, timeline, team, skills, bg, image, toc = [] } = project
 
@@ -37,21 +47,44 @@ export function CaseStudyLayout({ project, children }: Props) {
   ].filter(f => f.value)
 
   return (
-    <main className="relative z-10 flex-1 flex flex-col gap-6 bg-chrome">
-      <CaseStudyRadiusController />
-      {/* ── Hero ── */}
-      <section
-        id="cs-hero"
-        className="w-full overflow-hidden"
-        style={{ minHeight: "64vh", boxShadow: "inset 0 -80px 80px rgba(0,0,0,0.06)", ...bgStyle }}
-      >
-        <div className="container-main flex flex-col h-full pt-12 pb-16" style={{ minHeight: "inherit" }}>
-          <p className="text-lg font-bold uppercase tracking-widest text-primary/40 select-none">
-            Placeholder Thumbnail
-          </p>
+    <>
+      {/* Transparent nav overlay — always on top, no background */}
+      <header className="fixed inset-x-0 top-0 z-50 pointer-events-none">
+        <nav
+          className="container-chrome flex items-center justify-between py-4 pointer-events-auto"
+          aria-label="Primary navigation"
+        >
+          <Link
+            href="/"
+            className="text-base font-normal text-nav-link hover:text-nav-link-hover transition-colors duration-75"
+          >
+            Jessica Wang
+          </Link>
+          <ul className="flex items-center gap-7 list-none m-0 p-0">
+            {navLinks.map(({ label, href }) => (
+              <li key={label}>
+                <Link
+                  href={href}
+                  className="text-base font-normal text-nav-link hover:text-nav-link-hover transition-colors duration-75"
+                >
+                  {label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </header>
 
+      <main className="flex-1 flex flex-col">
+        <CaseStudyRadiusController />
+
+        {/* Hero — fixed, starts at viewport top, sits above root nav (z-0) */}
+        <div
+          className="fixed inset-x-0 top-0"
+          style={{ zIndex: 5, height: HERO_HEIGHT, ...bgStyle }}
+        >
           {image && (
-            <div className="flex-1 flex items-center justify-center mt-8">
+            <div className="flex items-center justify-center h-full">
               <div className="relative w-full max-w-2xl" style={{ height: 340 }}>
                 <Image
                   src={image}
@@ -64,56 +97,67 @@ export function CaseStudyLayout({ project, children }: Props) {
             </div>
           )}
         </div>
-      </section>
 
-      {/* ── Content card ── */}
-      <section id="cs-content" className="bg-surface -mt-6">
+        {/* Spacer — body has padding-top: nav-height (56px) so the first in-flow
+            element starts at viewport y=56px. We need the content card to start
+            at viewport y=65vh, so spacer height = 65vh - 56px. */}
+        <div
+          aria-hidden="true"
+          style={{ height: `calc(${HERO_HEIGHT} - var(--nav-height))` }}
+        />
 
-        {/* Project header */}
-        <div className="cs-header-content container-main pt-16 pb-0 px-16">
-          <p className="text-base font-medium mb-4.5 uppercase text-subtle">{name}</p>
-          <h1 className="text-[2.25rem] font-semibold text-primary leading-tight w-full">
-            {title}
-          </h1>
+        {/* Content card — scrolls over the fixed hero as user scrolls */}
+        <section
+          id="cs-content"
+          className="relative bg-surface"
+          style={{
+            zIndex: 10,
+            marginTop: "calc(-1 * var(--radius-frame))",
+            borderTopLeftRadius:  "var(--radius-frame)",
+            borderTopRightRadius: "var(--radius-frame)",
+            boxShadow: "0 -8px 40px rgba(0,0,0,0.07)",
+          }}
+        >
+          {/* Project header */}
+          <div className="cs-header-content container-main pt-16 pb-0 px-16">
+            <p className="text-base font-medium mb-4.5 uppercase text-subtle">{name}</p>
+            <h1 className="text-[2.25rem] font-semibold text-primary leading-tight w-full">
+              {title}
+            </h1>
 
-          {/* Metadata row */}
-          {metaFields.length > 0 && (
-            <div className="flex flex-wrap gap-x-12 gap-y-4 mt-16">
-              {metaFields.map(({ label, value }) => (
-                <div key={label}>
-                  <p className="text-sm font-medium text-subtle mb-1">
-                    {label}
-                  </p>
-                  <p className="text-[15px] text-secondary">{value}</p>
-                </div>
-              ))}
-            </div>
-          )}
+            {metaFields.length > 0 && (
+              <div className="flex flex-wrap gap-x-12 gap-y-4 mt-16">
+                {metaFields.map(({ label, value }) => (
+                  <div key={label}>
+                    <p className="text-sm font-medium text-subtle mb-1">{label}</p>
+                    <p className="text-[15px] text-secondary">{value}</p>
+                  </div>
+                ))}
+              </div>
+            )}
 
-          <hr className="mt-10 border-divider" />
-        </div>
-
-        {/* Two-column layout: TOC rail + content */}
-        <div className="container-main flex px-16">
-          {/* Sticky TOC rail */}
-          <aside className="w-60 shrink-0 sticky top-16 self-start mt-16 pb-16">
-          <Link
-              href="/"
-              className="flex items-center gap-1 text-base text-subtle font-normal hover:text-accent transition-colors duration-75 mb-8"
-            >
-              <ChevronLeft />
-              Back
-            </Link>
-
-            <TableOfContents sections={toc} />
-          </aside>
-
-          {/* MDX content */}
-          <div className="flex-1 min-w-0 p-16">
-            {children}
+            <hr className="mt-10 border-divider" />
           </div>
-        </div>
-      </section>
-    </main>
+
+          {/* TOC rail + content */}
+          <div className="container-main flex px-16">
+            <aside className="w-60 shrink-0 sticky top-16 self-start mt-16 pb-16">
+              <Link
+                href="/"
+                className="flex items-center gap-1 text-base text-subtle font-normal hover:text-accent transition-colors duration-75 mb-8"
+              >
+                <ChevronLeft />
+                Back
+              </Link>
+              <TableOfContents sections={toc} />
+            </aside>
+
+            <div className="flex-1 min-w-0 p-16">
+              {children}
+            </div>
+          </div>
+        </section>
+      </main>
+    </>
   )
 }

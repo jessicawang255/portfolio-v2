@@ -4,53 +4,43 @@ import { useEffect } from "react"
 
 const MAX_RADIUS = 36 // matches --radius-frame in globals.css
 
-function headerRatio(scrollY: number, headerH: number) {
-  return Math.max(0, Math.min(1, 1 - scrollY / headerH))
-}
-
 function footerRatio(scrollY: number, footerAbsTop: number, footerH: number, winH: number) {
   return Math.max(0, Math.min(1, (scrollY + winH - footerAbsTop) / footerH))
 }
 
-
 export function CaseStudyRadiusController() {
   useEffect(() => {
-    const hero    = document.getElementById("cs-hero")
     const content = document.getElementById("cs-content")
     const footer  = document.getElementById("site-footer")
-    if (!hero || !content || !footer) return
+    if (!content || !footer) return
 
-    const headerH = parseFloat(getComputedStyle(document.body).paddingTop) || 56
     const footerH = footer.offsetHeight
-
-    // Same technique as ScrollRadiusController: add body padding so the page
-    // has enough scroll range to fully reveal the fixed footer.
     document.body.style.paddingBottom = `${footerH}px`
-
-    // Reading scrollHeight after the mutation forces a reflow so we get the
-    // updated value (same pattern as the home-page controller).
     const footerAbsTop = document.documentElement.scrollHeight - footerH
 
-    function update(scrollY: number) {
-      const top    = headerRatio(scrollY, headerH) * MAX_RADIUS
-      const bottom = footerRatio(scrollY, footerAbsTop, footerH, window.innerHeight) * MAX_RADIUS
+    function update() {
+      const scrollY = window.scrollY
 
-      // Hero: only top corners animate (bottom corners stay rounded, set by CSS)
-      hero!.style.borderTopLeftRadius  = `${top}px`
-      hero!.style.borderTopRightRadius = `${top}px`
+      // Top corners: shrink to 0 as content card reaches the viewport top.
+      // getBoundingClientRect().top gives exact pixel distance from viewport top.
+      const contentTop = content!.getBoundingClientRect().top
+      const topRadius  = Math.max(0, Math.min(MAX_RADIUS, contentTop))
 
-      // Content card bottom corners: 0 → 48px as footer comes into view
-      content!.style.borderBottomLeftRadius  = `${bottom}px`
-      content!.style.borderBottomRightRadius = `${bottom}px`
+      // Bottom corners: grow as fixed footer comes into view behind the card.
+      const botRadius = footerRatio(scrollY, footerAbsTop, footerH, window.innerHeight) * MAX_RADIUS
+
+      content!.style.borderTopLeftRadius    = `${topRadius}px`
+      content!.style.borderTopRightRadius   = `${topRadius}px`
+      content!.style.borderBottomLeftRadius  = `${botRadius}px`
+      content!.style.borderBottomRightRadius = `${botRadius}px`
     }
 
-    update(window.scrollY)
-
-    function onScroll() { update(window.scrollY) }
-    window.addEventListener("scroll", onScroll, { passive: true })
+    update()
+    window.addEventListener("scroll", update, { passive: true })
 
     return () => {
-      window.removeEventListener("scroll", onScroll)
+      window.removeEventListener("scroll", update)
+      document.body.style.paddingBottom = ""
     }
   }, [])
 
