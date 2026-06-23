@@ -48,8 +48,8 @@ export function CaseStudyLayout({ project, children }: Props) {
 
   return (
     <>
-      {/* Transparent nav overlay — always on top, no background */}
-      <header className="fixed inset-x-0 top-0 z-50 pointer-events-none">
+      {/* Transparent nav overlay — above hero (z:5), below content card (z:10) */}
+      <header className="fixed inset-x-0 top-0 pointer-events-none" style={{ zIndex: 6 }}>
         <nav
           className="container-chrome flex items-center justify-between py-4 pointer-events-auto"
           aria-label="Primary navigation"
@@ -121,7 +121,7 @@ export function CaseStudyLayout({ project, children }: Props) {
           {/* Project header */}
           <div className="cs-header-content container-main pt-16 pb-0 px-16">
             <p className="text-base font-medium mb-4.5 uppercase text-subtle">{name}</p>
-            <h1 className="text-[2.25rem] font-semibold text-primary leading-tight w-full">
+            <h1 className="text-[1.875rem] font-medium text-primary leading-tight w-full">
               {title}
             </h1>
 
@@ -129,8 +129,8 @@ export function CaseStudyLayout({ project, children }: Props) {
               <div className="flex flex-wrap gap-x-12 gap-y-4 mt-16">
                 {metaFields.map(({ label, value }) => (
                   <div key={label}>
-                    <p className="text-sm font-medium text-subtle mb-1">{label}</p>
-                    <p className="text-[15px] text-secondary">{value}</p>
+                    <p className="text-sm text-neutral-300 mb-1">{label}</p>
+                    <p className="text-base text-neutral-500">{value}</p>
                   </div>
                 ))}
               </div>
