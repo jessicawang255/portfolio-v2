@@ -1,10 +1,10 @@
 export type Project = {
   slug: string
   title: string
-  name: string
-  status: string
-  year: number
-  disciplines: string[]
+  name?: string
+  status?: string
+  year?: number
+  disciplines?: string[]
   bg: string
   image?: string
   // Case study detail fields
@@ -15,38 +15,26 @@ export type Project = {
   toc?: string[]
 }
 
-export type DiscoverItem = {
-  slug: string
-  title: string
-  bg: string
-  image?: string
-  height: number
-}
-
-export const discoverItems: DiscoverItem[] = [
+export const discoverItems: Project[] = [
   {
     slug: "google-calendar",
     title: "Google Calendar Enhanced Task Management",
     bg: "#e8e4f0",
-    height: 200
   },
   {
     slug: "hack-western",
-    title: "Hack-Western",
+    title: "Hack Western",
     bg: "#e4ede8",
-    height: 250
   },
   {
     slug: "snippets",
     title: "Snippets",
     bg: "#f0ece4",
-    height: 287
   },
   {
     slug: "syllabud",
     title: "Syllabud",
-    bg: "#f0ece4",
-    height: 220
+    bg: "#eceaf4",
   },
 ]
 

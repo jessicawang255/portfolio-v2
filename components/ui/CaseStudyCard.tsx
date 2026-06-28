@@ -31,7 +31,7 @@ function ArrowUpRight() {
 
 function Separator({ children, className = "" }: { children: ReactNode; className?: string }) {
   return (
-    <span className={`text-muted ${className}`} aria-hidden="true">
+    <span className={`text-subtle ${className}`} aria-hidden="true">
       {children}
     </span>
   )
@@ -42,6 +42,7 @@ export function CaseStudyCard({ project, imageHeight = 340 }: Props) {
 
   const isGradient = bg.startsWith("linear-gradient")
   const bgStyle = isGradient ? { background: bg } : { backgroundColor: bg }
+  const hasMetadata = name || status || (disciplines && disciplines.length > 0)
 
   return (
     <article className="case-study-card">
@@ -71,18 +72,20 @@ export function CaseStudyCard({ project, imageHeight = 340 }: Props) {
             <h3 className="text-base font-medium leading-[1.4] text-primary">
               {title}
             </h3>
-            <span className="card-arrow shrink-0 mt-1 text-muted" aria-hidden="true">
+            <span className="card-arrow shrink-0 mt-1" aria-hidden="true">
               <ArrowUpRight />
             </span>
           </div>
 
-          <p className="text-sm font-normal text-muted">
-            {name}
-            <span className="mx-1.5 text-subtle" >•</span>
-            {status}
-            <span className="mx-2 text-subtle">/</span>
-            {disciplines.join(" / ")}
-          </p>
+          {hasMetadata && (
+            <p className="text-sm font-normal text-muted">
+              {name}
+              {name && (status || disciplines?.length) && <Separator className="mx-1.5">•</Separator>}
+              {status}
+              {status && disciplines?.length && <Separator className="mx-2">/</Separator>}
+              {disciplines?.join(" / ")}
+            </p>
+          )}
         </div>
       </Link>
     </article>

@@ -7,9 +7,7 @@ import { useReducedMotion } from "framer-motion"
 // ─── Config ────────────────────────────────────────────────────────────────────
 const GRID            = 28
 const DOT             = 1
-const GREY            = [100, 100, 150] as const
-// Light sage — same hue as site accent but desaturated and lifted
-const GREEN           = [90, 200, 130] as const
+const GREY            = [100, 100, 100] as const
 const INFLUENCE       = 140    // px — illumination radius
 const SIZE_BOOST      = .8   // max extra radius added at full proximity
 const STIFFNESS       = 1   // primary spring (lower = more lag) (how snappy the cursor tracking feels)
@@ -28,9 +26,11 @@ function smoothstep(t: number) {
 export function DotField({
   containerRef,
   accentColor,
+  viewport = false,
 }: {
-  containerRef: RefObject<HTMLElement | null>
+  containerRef?: RefObject<HTMLElement | null>
   accentColor: readonly [number, number, number]
+  viewport?: boolean
 }) {
   const canvasRef      = useRef<HTMLCanvasElement>(null)
   const reduced        = useReducedMotion()
@@ -50,8 +50,9 @@ export function DotField({
 
   useEffect(() => {
     const canvas    = canvasRef.current
-    const container = containerRef.current
-    if (!canvas || !container) return
+    if (!canvas) return
+    const container = containerRef?.current
+    if (!viewport && !container) return
 
     const ctx = canvas.getContext("2d")
     if (!ctx) return
@@ -112,9 +113,14 @@ export function DotField({
     }
 
     function resize() {
-      const rect = container!.getBoundingClientRect()
-      W   = rect.width
-      H   = rect.height
+      if (viewport) {
+        W = window.innerWidth
+        H = window.innerHeight
+      } else {
+        const rect = container!.getBoundingClientRect()
+        W = rect.width
+        H = rect.height
+      }
       dpr = window.devicePixelRatio || 1
       canvas!.width  = Math.round(W * dpr)
       canvas!.height = Math.round(H * dpr)
@@ -167,15 +173,6 @@ export function DotField({
 
       ctx!.clearRect(0, 0, W, H)
       ctx!.drawImage(staticLayer, 0, 0, W, H)
-
-      // DEBUG: red ellipse border — remove when done tuning
-      // ctx!.save()
-      // ctx!.strokeStyle = "rgba(255,0,0,0.85)"
-      // ctx!.lineWidth = 1.5
-      // ctx!.beginPath()
-      // ctx!.ellipse(eCX, eCY, eRX, eRY, 0, 0, Math.PI * 2)
-      // ctx!.stroke()
-      // ctx!.restore()
 
       if (influence < 0.002) return
 
@@ -287,30 +284,51 @@ export function DotField({
 
     // ── Mount ─────────────────────────────────────────────────────────────────
 
-    const ro = new ResizeObserver(resize)
-    ro.observe(container)
+    if (viewport) {
+      window.addEventListener("resize", resize)
+      resize()
+      if (!reduced) {
+        document.addEventListener("mousemove",  onMove)
+        document.addEventListener("mouseenter", onEnter)
+        document.addEventListener("mouseleave", onLeave)
+      }
+      return () => {
+        document.removeEventListener("mousemove",  onMove)
+        document.removeEventListener("mouseenter", onEnter)
+        document.removeEventListener("mouseleave", onLeave)
+        window.removeEventListener("resize", resize)
+        cancelAnimationFrame(rafId)
+        staticLayer = null
+      }
+    } else {
+      const ro = new ResizeObserver(resize)
+      ro.observe(container!)
 
-    if (!reduced) {
-      container.addEventListener("mousemove",  onMove)
-      container.addEventListener("mouseenter", onEnter)
-      container.addEventListener("mouseleave", onLeave)
-    }
+      if (!reduced) {
+        container!.addEventListener("mousemove",  onMove)
+        container!.addEventListener("mouseenter", onEnter)
+        container!.addEventListener("mouseleave", onLeave)
+      }
 
-    return () => {
-      container.removeEventListener("mousemove",  onMove)
-      container.removeEventListener("mouseenter", onEnter)
-      container.removeEventListener("mouseleave", onLeave)
-      cancelAnimationFrame(rafId)
-      ro.disconnect()
-      staticLayer = null
+      return () => {
+        container!.removeEventListener("mousemove",  onMove)
+        container!.removeEventListener("mouseenter", onEnter)
+        container!.removeEventListener("mouseleave", onLeave)
+        cancelAnimationFrame(rafId)
+        ro.disconnect()
+        staticLayer = null
+      }
     }
-  }, [reduced, containerRef])
+  }, [reduced, containerRef, viewport])
 
   return (
     <canvas
       ref={canvasRef}
       aria-hidden="true"
-      style={{ display: "block", width: "100%", height: "100%", pointerEvents: "none" }}
+      style={viewport
+        ? { position: "fixed", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }
+        : { display: "block", width: "100%", height: "100%", pointerEvents: "none" }
+      }
     />
   )
 }

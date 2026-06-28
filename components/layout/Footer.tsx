@@ -32,11 +32,8 @@ function HorizonSunIcon() {
   return (
     <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"
          stroke="currentColor" strokeWidth="1.4" strokeLinecap="round">
-      {/* Sun arc above horizon — semicircle centered at (7, 9.5) r=4.5 */}
       <path d="M 2.5 9.5 A 4.5 4.5 0 0 1 11.5 9.5" />
-      {/* Horizon line */}
       <line x1="0.5" y1="9.5" x2="13.5" y2="9.5" />
-      {/* Three rays above the sun */}
       <line x1="7"    y1="2"   x2="7"    y2="4"   />
       <line x1="3"    y1="5.5" x2="2"    y2="4.5" />
       <line x1="11"   y1="5.5" x2="12"   y2="4.5" />
@@ -45,8 +42,6 @@ function HorizonSunIcon() {
 }
 
 function MoonIcon() {
-  // Crescent: outer circle (c=7,7 r=5) minus shadow circle (c=5,7 r=4.5)
-  // Intersection points ≈ (4.8, 2.5) and (4.8, 11.5) — lit side faces right (☽)
   return (
     <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true">
       <path d="M 4.8 2.5 A 5 5 0 1 1 4.8 11.5 A 4.5 4.5 0 0 0 4.8 2.5 Z" />
@@ -55,10 +50,10 @@ function MoonIcon() {
 }
 
 function getTimeIcon(hour: number) {
-  if (hour >= 5  && hour < 7)  return <HorizonSunIcon />  // dawn
-  if (hour >= 7  && hour < 18) return <SunIcon />          // day
-  if (hour >= 18 && hour < 21) return <HorizonSunIcon />  // dusk
-  return <MoonIcon />                                       // night
+  if (hour >= 5  && hour < 7)  return <HorizonSunIcon />
+  if (hour >= 7  && hour < 18) return <SunIcon />
+  if (hour >= 18 && hour < 21) return <HorizonSunIcon />
+  return <MoonIcon />
 }
 
 function LiveClock() {

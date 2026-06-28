@@ -1,5 +1,5 @@
 import { discoverItems } from "@/content/work"
-import { DiscoverCard } from "@/components/ui/DiscoverCard"
+import { CaseStudyCard } from "@/components/ui/CaseStudyCard"
 
 export function DiscoverMore() {
   return (
@@ -8,11 +8,9 @@ export function DiscoverMore() {
         Discover More
       </h2>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-9 auto-rows-fr">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
         {discoverItems.map((item) => (
-          <div key={item.slug} className="h-full">
-            <DiscoverCard item={item} />
-          </div>
+          <CaseStudyCard key={item.slug} project={item} imageHeight={160} />
         ))}
       </div>
     </section>

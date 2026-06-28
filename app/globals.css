@@ -11,35 +11,31 @@
 
 @theme {
   /* Neutral scale */
-  --color-neutral-900: #161D19;
-  --color-neutral-800: #383E3A;
-  --color-neutral-700: #4B534F;
-  --color-neutral-600: #6F7B74;
-  --color-neutral-500: #89948F;
-  --color-neutral-400: #AAB5B0;
-  --color-neutral-300: #BEC6C2;
-  --color-neutral-200: #D2D7D2;
-  --color-neutral-100: #ECEFEC;
+  --color-neutral-900: #191919;
+  --color-neutral-800: #3B3B3B;
+  --color-neutral-700: #4F4F4F;
+  --color-neutral-600: #757575;
+  --color-neutral-500: #8F8F8F;
+  --color-neutral-400: #B0B0B0;
+  --color-neutral-300: #C2C2C2;
+  --color-neutral-200: #D4D4D4;
+  --color-neutral-100: #EDEDED;
   --color-neutral-50:  #FFFFFF;
 
-  /* Green */
-  --color-green-accent: #2E8B57;
-  --color-green-bg:     #DDE9DF;
-
   /* Semantic aliases */
-  --color-chrome:       #DDE9DF;
+  --color-chrome:       #F9FAFB;
   --color-surface:      #FFFFFF;
-  --color-accent:       #2E8B57;
+  --color-accent:       #191919;
 
-  --color-primary:      #161D19;
-  --color-secondary:    #4B534F;
-  --color-muted:        #89948F;
-  --color-subtle:       #AAB5B0;
-  --color-divider:      #ECEFEC;
+  --color-primary:      #191919;
+  --color-secondary:    #4F4F4F;
+  --color-muted:        #707070;  /* AA-compliant on white: ~4.9:1 */
+  --color-subtle:       #B0B0B0;
+  --color-divider:      #EDEDED;
 
   --color-nav-link:       var(--color-neutral-600);
   --color-nav-link-hover: var(--color-neutral-900);
-  --color-icon-social:    var(--color-neutral-200);
+  --color-icon-social:    var(--color-neutral-400);
 
   /* Radii */
   --radius-sm:    4px;
@@ -113,7 +109,7 @@ body {
   border-radius: 0;
   border-top-left-radius:  var(--radius-frame);
   border-top-right-radius: var(--radius-frame);
-  box-shadow: 0 0 50px 0 rgba(165, 192, 177, 0.4);
+  box-shadow: 0 0 40px 0 rgba(0, 0, 0, 0.07);
   transition:
     border-top-left-radius     650ms var(--ease-out),
     border-top-right-radius    650ms var(--ease-out),
@@ -140,12 +136,12 @@ body {
 /* ─── Layout utilities ─────────────────────────────────────────────────────── */
 @utility container-main {
   width: 100%;
-  padding-inline: 64px;
+  padding-inline: 36px;
 }
 
 @utility container-chrome {
   width: 100%;
-  padding-inline: 45px;
+  padding-inline: 36px;
 }
 
 @utility grid-wide-left {

@@ -1,17 +1,7 @@
 "use client"
 
-import { useRef, useState, useCallback } from "react"
 import { motion, useReducedMotion } from "framer-motion"
 import { stagger, fadeUp } from "@/lib/motion"
-import { FlowerIcon } from "@/components/ui/FlowerIcon"
-import { DotField } from "@/components/ui/DotField"
-import { FLOWERS } from "@/components/ui/flowers"
-
-function pickRandom(current: number, total: number): number {
-  let next: number
-  do { next = Math.floor(Math.random() * total) } while (next === current)
-  return next
-}
 
 const socials = [
   { label: "LinkedIn", href: "https://www.linkedin.com/in/jwang255/", icon: "/images/Linkedin.svg" },
@@ -21,47 +11,39 @@ const socials = [
 ]
 
 export function Hero() {
-  const reduce     = useReducedMotion()
-  const sectionRef = useRef<HTMLElement | null>(null)
-  const [flowerIdx, setFlowerIdx] = useState(0)
-  const onCycle = useCallback(() => {
-    setFlowerIdx(i => pickRandom(i, FLOWERS.length))
-  }, [])
+  const reduce = useReducedMotion()
 
   return (
     <section
-      ref={sectionRef}
-      className="container-main relative pt-20 pb-[120px]"
+      className="container-main pointer-events-none sticky top-0 z-[2] -mt-14 pt-[120px] pb-[120px]"
       aria-label="Introduction"
     >
-      {/* Dot field sits behind all content — pointer-events: none so it never blocks clicks */}
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <DotField containerRef={sectionRef} accentColor={FLOWERS[flowerIdx].color} />
-      </div>
-
       <motion.div
         variants={stagger}
         initial={reduce ? "visible" : "hidden"}
         animate="visible"
-        className="relative z-10 flex flex-col"
+        className="pointer-events-auto relative z-[1] flex flex-col"
       >
-        <motion.div variants={fadeUp} className="mb-6">
-          <FlowerIcon flowerIdx={flowerIdx} onCycle={onCycle} />
-        </motion.div>
-
         <motion.h1
           variants={fadeUp}
-          className="mb-3 text-lg font-semibold text-accent"
+          className="mb-3 text-2xl font-semibold text-neutral-800"
         >
           Hi, I&rsquo;m Jessica.
         </motion.h1>
 
         <motion.p
           variants={fadeUp}
-          className="mb-9 max-w-sm text-balance text-base font-normal leading-[normal] text-primary"
+          className="mb-4 max-w-sm text-balance text-base font-normal leading-relaxed text-primary"
         >
           I fell in love with making new interactions a while ago, and I want
-          to do it for at least the next little bit of my life.
+          to do it for at least the next little bit of my life. Yada boo yada moo
+        </motion.p>
+
+        <motion.p
+          variants={fadeUp}
+          className="mb-9 font-mono text-sm text-muted"
+        >
+          Currently designing + building digital asset technology @ RBC.
         </motion.p>
 
         <motion.div variants={fadeUp} className="flex items-center gap-4">
@@ -72,7 +54,7 @@ export function Hero() {
               aria-label={label}
               target={href.startsWith("http") ? "_blank" : undefined}
               rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
-              className="text-icon-social hover:text-accent"
+              className="text-icon-social hover:text-accent transition-colors duration-75"
             >
               <span
                 aria-hidden="true"

@@ -5,8 +5,11 @@ import { usePathname } from "next/navigation"
 
 const MAX_RADIUS = 36 // px — corner radius when header/footer is fully visible
 
-function headerRatio(scrollY: number, headerH: number) {
-  return Math.max(0, Math.min(1, 1 - scrollY / headerH))
+// Animation starts only once the frame's top edge reaches the nav bottom.
+// triggerAt = scroll distance required to bring #main-frame to the nav.
+// After that, the radius collapses over MAX_RADIUS pixels of additional scroll.
+function headerRatio(scrollY: number, triggerAt: number) {
+  return Math.max(0, Math.min(1, 1 - (scrollY - triggerAt) / MAX_RADIUS))
 }
 
 function footerRatio(scrollY: number, footerAbsTop: number, footerH: number, winH: number) {
@@ -16,12 +19,12 @@ function footerRatio(scrollY: number, footerAbsTop: number, footerH: number, win
 function setRadius(
   el: HTMLElement,
   scrollY: number,
-  headerH: number,
+  triggerAt: number,
   footerAbsTop: number,
   footerH: number,
   winH: number
 ) {
-  const top    = headerRatio(scrollY, headerH) * MAX_RADIUS
+  const top    = headerRatio(scrollY, triggerAt) * MAX_RADIUS
   const bottom = footerRatio(scrollY, footerAbsTop, footerH, winH) * MAX_RADIUS
   el.style.borderTopLeftRadius     = `${top}px`
   el.style.borderTopRightRadius    = `${top}px`
@@ -37,25 +40,23 @@ export function ScrollRadiusController() {
     const footer = document.getElementById("site-footer")
     if (!main || !footer) return
 
-    const headerH = parseFloat(getComputedStyle(document.body).paddingTop) || 68
-    const footerH = footer.offsetHeight
+    // triggerAt = scroll distance needed to bring #main-frame's top edge to
+    // the nav bottom. On the home page this equals the sticky hero height;
+    // on other pages main.offsetTop ≈ navH so triggerAt ≈ 0 and the corners
+    // collapse immediately over the first MAX_RADIUS pixels of scroll.
+    const navH     = parseFloat(getComputedStyle(document.body).paddingTop) || 56
+    const triggerAt = Math.max(main.offsetTop - navH, 0)
+    const footerH  = footer.offsetHeight
 
     // Footer is fixed (out of document flow). Add padding-bottom so the page
     // has enough scroll range to fully reveal the footer behind #main-frame.
-    // mb-2 (8px) on #main-frame provides the same gap as the header side.
     document.body.style.paddingBottom = `${footerH}px`
 
-    // Reading scrollHeight after the style mutation forces a reflow, so this
-    // correctly reflects the new padding-bottom.
-    // footerAbsTop is the virtual document position where the reveal begins:
-    // scrollHeight - footerH  =  headerH + mainHeight + mb2  (the bottom of #main-frame)
     const footerAbsTop = document.documentElement.scrollHeight - footerH
 
-    // Re-query on every event so a freshly-mounted #main-frame (after
-    // client-side navigation back to home) is always the live target.
     function applyRadius(y: number) {
       const el = document.getElementById("main-frame") ?? main!
-      setRadius(el, y, headerH, footerAbsTop, footerH, window.innerHeight)
+      setRadius(el, y, triggerAt, footerAbsTop, footerH, window.innerHeight)
     }
 
     applyRadius(window.scrollY)

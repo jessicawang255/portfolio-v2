@@ -8,7 +8,7 @@ const links: { label: string; href: string; target?: string }[] = [
 
 export function Nav() {
   return (
-    <header className="fixed inset-x-0 top-0 z-0 bg-chrome">
+    <header className="fixed inset-x-0 top-0 z-[2] bg-chrome/75 backdrop-blur-md">
       <nav
         className="container-chrome flex items-center justify-between py-4"
         aria-label="Primary navigation"
