@@ -11,21 +11,22 @@
 
 @theme {
   /* Neutral scale */
-  --color-neutral-900: #191919;
-  --color-neutral-800: #3B3B3B;
-  --color-neutral-700: #4F4F4F;
-  --color-neutral-600: #757575;
-  --color-neutral-500: #8F8F8F;
-  --color-neutral-400: #B0B0B0;
-  --color-neutral-300: #C2C2C2;
-  --color-neutral-200: #D4D4D4;
-  --color-neutral-100: #EDEDED;
+  --color-neutral-900: #16191D;
+  --color-neutral-800: #363B40;
+  --color-neutral-700: #4A4F54;
+  --color-neutral-600: #6F747B;
+  --color-neutral-500: #898E94;
+  --color-neutral-400: #AAAFB5;
+  --color-neutral-300: #BEC2C6;
+  --color-neutral-200: #D1D4D8;
+  --color-neutral-100: #ECEDEF;
+  --color-neutral-75:  #F9FAFB;
   --color-neutral-50:  #FFFFFF;
 
   /* Semantic aliases */
-  --color-chrome:       #F9FAFB;
-  --color-surface:      #FFFFFF;
-  --color-accent:       #191919;
+  --color-chrome:       var(--color-neutral-75);
+  --color-surface:      var(--color-neutral-50);
+  --color-accent:       #FF0000; /* TODO: replace with brand red */
 
   --color-primary:      #191919;
   --color-secondary:    #4F4F4F;
@@ -109,7 +110,7 @@ body {
   border-radius: 0;
   border-top-left-radius:  var(--radius-frame);
   border-top-right-radius: var(--radius-frame);
-  box-shadow: 0 0 40px 0 rgba(0, 0, 0, 0.07);
+  box-shadow: 0 0 40px 0 rgba(0, 0, 0, 0.07), inset 0 0 0 1px rgba(0, 0, 0, 0.06);
   transition:
     border-top-left-radius     650ms var(--ease-out),
     border-top-right-radius    650ms var(--ease-out),
