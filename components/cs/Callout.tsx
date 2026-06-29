@@ -7,7 +7,7 @@ type CalloutProps = {
 
 export function Callout({ label, heading, body, children }: CalloutProps) {
   return (
-    <div className="border-l-2 border-hack-western pl-6 pt-6 pb-3 h-fit">
+    <div className="border-l-2 border-hack-western pl-6 h-fit">
       <p className="text-base text-hack-western">{label}</p>
       <p className="text-xl font-medium text-neutral-800 mt-3 leading-snug">{heading}</p>
       {body && (

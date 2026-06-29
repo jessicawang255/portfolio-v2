@@ -144,7 +144,7 @@ export function CaseStudyLayout({ project, children }: Props) {
                   {metaFields.map(({ label, value }) => (
                     <div key={label}>
                       <p className="text-sm text-neutral-300 mb-1">{label}</p>
-                      <p className="text-base text-neutral-500">{value}</p>
+                      <p className="text-base text-neutral-600">{value}</p>
                     </div>
                   ))}
                 </div>
