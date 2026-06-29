@@ -78,14 +78,14 @@ export default function HackWestern() {
           ratio="3/2"
           left={<ImageBlock height={320} />}
           right={
-            <p className="text-base text-neutral-500 leading-relaxed">
+            <p className="text-base text-neutral-600">
               On the desktop version, stickers appear based on a user&rsquo;s answers. For example,
               selecting Mathematics/Statistics as my major would surface a &ldquo;Math/Stats&rdquo; sticker
               in the background.
             </p>
           }
         />
-        <p className="text-base text-neutral-500 leading-relaxed">
+        <p className="text-base text-neutral-600">
           Our solution was a sticker drawer: a hidden panel that opened when users tapped a floating
           sticker icon in the navigation. This allowed users to view their collected stickers without
           cluttering the smaller mobile layout.
