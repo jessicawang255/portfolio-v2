@@ -14,7 +14,7 @@ export function Section({ tag, headline, body, primary = false, id, children }: 
         {primary && (
           <span className="w-1.5 h-1.5 rounded-full bg-red-500 shrink-0 mt-px" aria-hidden="true" />
         )}
-        <p className="text-base font-medium uppercase tracking-wider text-neutral-400">{tag}</p>
+        <p className="text-base font-normal uppercase text-neutral-500">{tag}</p>
       </div>
       <h1 className="text-2xl font-medium text-primary leading-snug mt-3">
         {headline}
