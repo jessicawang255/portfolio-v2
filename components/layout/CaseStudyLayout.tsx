@@ -117,33 +117,12 @@ export function CaseStudyLayout({ project, children }: Props) {
             marginTop: "calc(-1 * var(--radius-frame))",
             borderTopLeftRadius:  "var(--radius-frame)",
             borderTopRightRadius: "var(--radius-frame)",
-            boxShadow: "0 -8px 40px rgba(0,0,0,0.07), inset 0 0 0 1px rgba(0,0,0,0.06)",
+            boxShadow: "0 -8px 40px rgba(0,0,0,0.07)",
           }}
         >
-          {/* Project header */}
-          <div className="cs-header-content container-main pt-16 pb-0 px-16">
-            <p className="text-base font-medium mb-4.5 uppercase text-subtle">{name}</p>
-            <h1 className="text-[1.875rem] font-medium text-primary leading-tight w-full">
-              {title}
-            </h1>
-
-            {metaFields.length > 0 && (
-              <div className="flex flex-wrap gap-x-12 gap-y-4 mt-16">
-                {metaFields.map(({ label, value }) => (
-                  <div key={label}>
-                    <p className="text-sm text-neutral-300 mb-1">{label}</p>
-                    <p className="text-base text-neutral-500">{value}</p>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            <hr className="mt-10 border-divider" />
-          </div>
-
-          {/* TOC rail + content */}
-          <div className="container-main flex px-16">
-            <aside className="w-60 shrink-0 sticky top-16 self-start mt-16 pb-16">
+          {/* TOC rail + content (title/meta inline with TOC) */}
+          <div className="container-main flex gap-16">
+            <aside className="w-60 shrink-0 sticky top-0 self-start pt-12 pb-16">
               <Link
                 href="/"
                 className="flex items-center gap-1 text-base text-subtle font-normal hover:text-accent transition-colors duration-75 mb-8"
@@ -154,7 +133,25 @@ export function CaseStudyLayout({ project, children }: Props) {
               <TableOfContents sections={toc} />
             </aside>
 
-            <div className="flex-1 min-w-0 p-16">
+            <div className="cs-header-content flex-1 min-w-0 pt-12 pb-16 pr-60">
+              <p className="text-base font-medium mb-4.5 uppercase text-subtle">{name}</p>
+              <h1 className="text-[1.875rem] font-medium text-primary leading-tight w-full">
+                {title}
+              </h1>
+
+              {metaFields.length > 0 && (
+                <div className="flex flex-wrap gap-x-12 gap-y-4 mt-9">
+                  {metaFields.map(({ label, value }) => (
+                    <div key={label}>
+                      <p className="text-sm text-neutral-300 mb-1">{label}</p>
+                      <p className="text-base text-neutral-500">{value}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              <hr className="mt-10 border-divider" />
+
               {children}
             </div>
           </div>
