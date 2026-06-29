@@ -135,7 +135,7 @@ export function CaseStudyLayout({ project, children }: Props) {
 
             <div className="cs-header-content flex-1 min-w-0 pt-12 pb-16 pr-60">
               <p className="text-base font-medium mb-4.5 uppercase text-subtle">{name}</p>
-              <h1 className="text-[1.875rem] font-medium text-primary leading-tight w-full">
+              <h1 className="text-[1.875rem] font-bold text-primary leading-tight w-full">
                 {title}
               </h1>
 
