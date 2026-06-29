@@ -152,7 +152,9 @@ export function CaseStudyLayout({ project, children }: Props) {
 
               <hr className="mt-10 border-divider" />
 
-              {children}
+              <div className="pt-12">
+                {children}
+              </div>
             </div>
           </div>
         </section>

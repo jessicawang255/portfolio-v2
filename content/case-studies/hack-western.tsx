@@ -6,7 +6,7 @@ import { Outcomes } from "@/components/cs/Outcomes"
 
 export default function HackWestern() {
   return (
-    <div className="flex flex-col gap-12">
+    <div className="flex flex-col gap-20">
       <Section
         id="overview"
         tag="Overview"
