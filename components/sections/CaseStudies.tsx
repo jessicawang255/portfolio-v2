@@ -11,8 +11,8 @@ export function CaseStudies() {
       </h2>
 
       <div className="flex flex-col gap-y-16">
-        {/* Row 1: left card dominant */}
-        <div className="grid gap-9 grid-wide-left">
+        {/* Row 1: 5/4 split */}
+        <div className="grid gap-9 grid-cols-[5fr_4fr]">
           <CaseStudyCard project={p0} imageHeight={504} />
           <CaseStudyCard project={p1} imageHeight={388} />
         </div>
