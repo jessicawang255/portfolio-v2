@@ -26,7 +26,7 @@ export function Hero() {
       >
         <motion.h1
           variants={fadeUp}
-          className="mb-3 text-2xl font-medium text-primary"
+          className="mb-3 text-2xl font-semibold text-neutral-800"
         >
           Hi, I&rsquo;m Jessica.
         </motion.h1>
@@ -41,7 +41,7 @@ export function Hero() {
 
         <motion.p
           variants={fadeUp}
-          className="mb-9 font-mono font-light text-sm text-muted"
+          className="mb-9 font-mono font-light text-sm text-neutral-400"
         >
           Currently designing + building digital asset technology @ RBC.
         </motion.p>

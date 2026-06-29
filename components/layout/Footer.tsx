@@ -81,7 +81,7 @@ function LiveClock() {
   if (!info) return null
 
   return (
-    <span className="inline-flex items-center gap-1.5 text-sm font-normal text-neutral-500">
+    <span className="inline-flex items-center gap-1.5 text-sm font-normal text-neutral-400">
       {getTimeIcon(info.hour)}
       {info.time}, Toronto
     </span>
