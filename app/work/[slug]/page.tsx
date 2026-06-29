@@ -24,10 +24,15 @@ export default async function CaseStudyPage({
 
   let Content: React.ComponentType | null = null
   try {
-    const mod = await import(`@/content/case-studies/${slug}.mdx`)
+    const mod = await import(`@/content/case-studies/${slug}.tsx`)
     Content = mod.default
   } catch {
-    // No MDX file yet for this case study
+    try {
+      const mod = await import(`@/content/case-studies/${slug}.mdx`)
+      Content = mod.default
+    } catch {
+      // No content file yet for this case study
+    }
   }
 
   return (

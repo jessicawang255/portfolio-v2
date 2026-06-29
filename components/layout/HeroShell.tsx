@@ -12,7 +12,7 @@ export function HeroShell() {
     const el = ref.current
     if (!el) return
     const navH = parseFloat(getComputedStyle(document.body).paddingTop) || 56
-    function measure() { setSpacer(el.offsetHeight - navH) }
+    function measure() { setSpacer(el!.offsetHeight - navH) }
     measure()
     const ro = new ResizeObserver(measure)
     ro.observe(el)
