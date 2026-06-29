@@ -15,7 +15,7 @@ export function Hero() {
 
   return (
     <section
-      className="container-main pointer-events-none sticky top-0 z-[2] -mt-14 pt-[120px] pb-[120px]"
+      className="container-main pointer-events-none pt-[120px] pb-20"
       aria-label="Introduction"
     >
       <motion.div
