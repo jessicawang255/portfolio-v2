@@ -18,13 +18,15 @@ export function CaseStudyRadiusController() {
     document.body.style.paddingBottom = `${footerH}px`
     const footerAbsTop = document.documentElement.scrollHeight - footerH
 
+    const navH = parseFloat(getComputedStyle(document.body).paddingTop) || 56
+
     function update() {
       const scrollY = window.scrollY
 
-      // Top corners: shrink to 0 as content card reaches the viewport top.
-      // getBoundingClientRect().top gives exact pixel distance from viewport top.
+      // Top corners: peel starts when card top touches nav bottom (contentTop = navH),
+      // finishes MAX_RADIUS pixels later as card slides under nav.
       const contentTop = content!.getBoundingClientRect().top
-      const topRadius  = Math.max(0, Math.min(MAX_RADIUS, contentTop))
+      const topRadius  = Math.max(0, Math.min(MAX_RADIUS, contentTop - navH + MAX_RADIUS))
 
       // Bottom corners: grow as fixed footer comes into view behind the card.
       const botRadius = footerRatio(scrollY, footerAbsTop, footerH, window.innerHeight) * MAX_RADIUS

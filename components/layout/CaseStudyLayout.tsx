@@ -117,7 +117,7 @@ export function CaseStudyLayout({ project, children }: Props) {
             marginTop: "calc(-1 * var(--radius-frame))",
             borderTopLeftRadius:  "var(--radius-frame)",
             borderTopRightRadius: "var(--radius-frame)",
-            boxShadow: "0 -8px 40px rgba(0,0,0,0.07)",
+            boxShadow: "0 -8px 40px rgba(0,0,0,0.07), inset 0 0 0 1px rgba(0,0,0,0.06)",
           }}
         >
           {/* Project header */}
