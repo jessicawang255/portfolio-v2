@@ -20,7 +20,7 @@ function ArrowUpRight() {
     >
       <path
         d="M4 14L14 4M14 4H7M14 4V11"
-        stroke="#A1AaA1"
+        stroke="currentColor"
         strokeWidth="1.6"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -69,16 +69,16 @@ export function CaseStudyCard({ project, imageHeight = 340 }: Props) {
         {/* Text block */}
         <div className="card-text flex flex-col gap-0.5 px-3.5">
           <div className="flex items-start justify-between gap-3">
-            <h3 className="text-base font-medium leading-[1.4] text-primary">
+            <h3 className="text-base font-medium leading-[1.4] text-neutral-800">
               {title}
             </h3>
-            <span className="card-arrow shrink-0 mt-1" aria-hidden="true">
+            <span className="card-arrow shrink-0 mt-1 text-neutral-400" aria-hidden="true">
               <ArrowUpRight />
             </span>
           </div>
 
           {hasMetadata && (
-            <p className="text-sm font-normal text-muted">
+            <p className="font-mono text-sm font-light text-neutral-400">
               {name}
               {name && (status || disciplines?.length) && <Separator className="mx-1.5">•</Separator>}
               {status}
