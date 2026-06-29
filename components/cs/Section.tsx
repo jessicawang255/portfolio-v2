@@ -14,13 +14,13 @@ export function Section({ tag, headline, body, primary = false, id, children }: 
         {primary && (
           <span className="w-1.5 h-1.5 rounded-full bg-hack-western shrink-0 mt-px" aria-hidden="true" />
         )}
-        <p className="text-base font-normal uppercase text-neutral-500">{tag}</p>
+        <p className="text-sm font-medium uppercase text-neutral-400">{tag}</p>
       </div>
       <h1 className="text-2xl font-medium text-primary mt-3">
         {headline}
       </h1>
       {body && (
-        <p className="text-base text-neutral-600 mt-[18px]">{body}</p>
+        <p className="text-base text-neutral-500 mt-[18px]">{body}</p>
       )}
       {children && (
         <div className="flex flex-col gap-9 mt-9">
