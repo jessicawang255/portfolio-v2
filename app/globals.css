@@ -23,6 +23,10 @@
   --color-neutral-75:  #F9FAFB;
   --color-neutral-50:  #FFFFFF;
 
+  /* Case study accent colors */
+  --color-hack-western: #C3589C;
+  --color-retrospect: #8051BA;
+
   /* Semantic aliases */
   --color-chrome:       var(--color-neutral-75);
   --color-surface:      var(--color-neutral-50);
