@@ -12,9 +12,9 @@ export function Section({ tag, headline, body, primary = false, id, children }: 
     <section id={id} className="flex flex-col scroll-mt-12">
       <div className="flex items-center gap-2">
         {primary && (
-          <span className="w-1.5 h-1.5 rounded-full bg-hack-western shrink-0 mt-px" aria-hidden="true" />
+          <span className="w-1.5 h-1.5 rounded-full bg-[var(--cs-accent)] shrink-0 mt-px" aria-hidden="true" />
         )}
-        <p className="text-sm font-medium uppercase text-neutral-400">{tag}</p>
+        <p className="text-sm font-medium uppercase text-neutral-500">{tag}</p>
       </div>
       <h1 className="text-2xl font-medium text-primary mt-3">
         {headline}

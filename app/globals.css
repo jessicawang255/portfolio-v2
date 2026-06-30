@@ -26,6 +26,8 @@
   /* Case study accent colors */
   --color-hack-western: #C3589C;
   --color-retrospect: #8051BA;
+  --color-autumn: #C89867;
+  --color-glucal: #FF8F89;
 
   /* Semantic aliases */
   --color-chrome:       var(--color-neutral-75);

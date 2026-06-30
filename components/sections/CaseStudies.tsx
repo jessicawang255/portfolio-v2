@@ -6,7 +6,7 @@ export function CaseStudies() {
 
   return (
     <section id="work" className="container-main pt-12 pb-20">
-      <h2 className="mb-5 text-sm font-medium uppercase text-subtle">
+      <h2 className="mb-5 text-sm font-medium uppercase text-neutral-400">
         Case Studies
       </h2>
 

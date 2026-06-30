@@ -6,6 +6,7 @@ export type Project = {
   year?: number
   disciplines?: string[]
   bg: string
+  accent?: string
   image?: string
   // Case study detail fields
   role?: string
@@ -47,6 +48,7 @@ export const projects: Project[] = [
     year: 2025,
     disciplines: ["Visual design", "User testing"],
     bg: "#eae6f4",
+    accent: "hack-western",
     role: "Product Designer",
     timeline: "Sep – Dec 2024",
     team: "1 design lead, 2 designers",
@@ -61,6 +63,7 @@ export const projects: Project[] = [
     year: 2025,
     disciplines: ["Interaction design", "Prototyping"],
     bg: "#0d1240",
+    accent: "retrospect",
   },
   {
     slug: "grief-support",
@@ -70,6 +73,7 @@ export const projects: Project[] = [
     year: 2024,
     disciplines: ["Business strategy", "UX design"],
     bg: "#c8cfc0",
+    accent: "autumn",
   },
   {
     slug: "gluca",
@@ -79,5 +83,6 @@ export const projects: Project[] = [
     year: 2024,
     disciplines: ["User research", "Mobile design"],
     bg: "linear-gradient(160deg, #f9dede 0%, #fce8e8 100%)",
+    accent: "glucal",
   },
 ]

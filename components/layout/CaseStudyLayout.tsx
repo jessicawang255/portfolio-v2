@@ -34,7 +34,7 @@ const navLinks: { label: string; href: string; target?: string }[] = [
 const HERO_HEIGHT = "65vh"
 
 export function CaseStudyLayout({ project, children }: Props) {
-  const { title, name, role, timeline, team, skills, bg, image, toc = [] } = project
+  const { title, name, role, timeline, team, skills, bg, accent, image, toc = [] } = project
 
   const isGradient = bg.startsWith("linear-gradient")
   const bgStyle = isGradient ? { background: bg } : { backgroundColor: bg }
@@ -118,6 +118,7 @@ export function CaseStudyLayout({ project, children }: Props) {
             borderTopLeftRadius:  "var(--radius-frame)",
             borderTopRightRadius: "var(--radius-frame)",
             boxShadow: "0 -8px 40px rgba(0,0,0,0.07)",
+            ...(accent ? { "--cs-accent": `var(--color-${accent})` } as React.CSSProperties : {}),
           }}
         >
           {/* TOC rail + content (title/meta inline with TOC) */}
@@ -125,7 +126,7 @@ export function CaseStudyLayout({ project, children }: Props) {
             <aside className="w-60 shrink-0 sticky top-0 self-start pt-12 pb-16">
               <Link
                 href="/"
-                className="flex items-center gap-1 text-base text-subtle font-normal hover:text-hack-western transition-colors duration-75 mb-8"
+                className="flex items-center gap-1 text-base text-subtle font-normal hover:text-[var(--cs-accent)] transition-colors duration-75 mb-8"
               >
                 <ChevronLeft />
                 Back
@@ -134,7 +135,7 @@ export function CaseStudyLayout({ project, children }: Props) {
             </aside>
 
             <div className="cs-header-content flex-1 min-w-0 pt-12 pb-16 pr-60">
-              <p className="text-sm font-medium uppercase text-neutral-400 mb-4.5">{name}</p>
+              <p className="text-sm font-medium uppercase text-neutral-500 mb-4.5">{name}</p>
               <h1 className="text-[1.875rem] font-bold text-primary leading-tight w-full">
                 {title}
               </h1>
