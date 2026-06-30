@@ -27,12 +27,7 @@ export default async function CaseStudyPage({
     const mod = await import(`@/content/case-studies/${slug}.tsx`)
     Content = mod.default
   } catch {
-    try {
-      const mod = await import(`@/content/case-studies/${slug}.mdx`)
-      Content = mod.default
-    } catch {
-      // No content file yet for this case study
-    }
+    // No content file yet for this case study
   }
 
   return (
