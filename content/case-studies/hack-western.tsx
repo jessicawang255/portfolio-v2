@@ -35,7 +35,7 @@ export default function HackWestern() {
       </Section>
 
       <Section
-        id="the-theme"
+        id="theme"
         tag="Creating the Theme"
         headline="We started by creating a theme for Hack Western XII that would carry through every part of the hackathon."
         body="My teammate led a short open-ended questionnaire asking participants to share how each theme concept made them feel. Most described the clean, pastel, scrapbook-inspired direction as the most welcoming and interesting."
@@ -104,7 +104,7 @@ export default function HackWestern() {
       </Section>
 
       <Section
-        id="the-stickerbook"
+        id="stickerbook"
         tag="The Stickerbook"
         headline="Applicants earned stickers by completing milestones, giving them a reason to return to the portal before the event."
         body="From submitting an application to confirming attendance and joining the Discord, each action unlocked a new sticker. The collection built anticipation and kept the portal feeling alive in the weeks leading up to Hack Western."

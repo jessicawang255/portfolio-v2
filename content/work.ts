@@ -53,7 +53,7 @@ export const projects: Project[] = [
     timeline: "Sep – Dec 2024",
     team: "1 design lead, 2 designers",
     skills: "Visual design, User testing, Prototyping",
-    toc: ["Overview", "Challenge", "The theme", "App. portal ideation", "Designing for mobile", "The stickerbook", "Final product"],
+    toc: ["Overview", "Challenge", "Theme", "App. Portal Ideation", "Designing for Mobile", "Stickerbook", "Final Product"],
   },
   {
     slug: "retrospect",
@@ -68,7 +68,7 @@ export const projects: Project[] = [
     timeline: "Aug 2024 - Feb 2025",
     team: "1 product manager, 2 designers, 4 engineers",
     skills: "Interaction design, Prototyping, User testing",
-    toc: ["Overview", "Inspiration", "Research", "Core App Flows", "Final product"],
+    toc: ["Overview", "Inspiration", "Research", "Core App Flows", "Final Product"],
   },
   {
     slug: "autumn",
@@ -79,6 +79,11 @@ export const projects: Project[] = [
     disciplines: ["Business strategy", "UX design"],
     bg: "#c8cfc0",
     accent: "autumn",
+    role: "Product Designer",
+    timeline: "Jun - Aug 2024",
+    team: "1 founder, 1 product designer, 2 product managers, 2 developers",
+    skills: "Product design, User research, Prototyping",
+    toc: ["Overview", "Problem", "Understanding the Market", "User Touchpoints", "Design Challenges", "Final Product"],
   },
   {
     slug: "glucal",
@@ -89,5 +94,10 @@ export const projects: Project[] = [
     disciplines: ["User research", "Mobile design"],
     bg: "linear-gradient(160deg, #f9dede 0%, #fce8e8 100%)",
     accent: "glucal",
+    role: "Sole designer, Developer",
+    timeline: "Mar - Apr 2024",
+    team: "1 designer, 1 developer",
+    skills: "User research, Prototyping, Mobile dev",
+    toc: ["Problem", "Solution", "Research", "Competitive Analysis", "Design Decisions", "Final Product"],
   },
 ]

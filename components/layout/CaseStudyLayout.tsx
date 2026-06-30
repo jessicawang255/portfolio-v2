@@ -122,7 +122,7 @@ export function CaseStudyLayout({ project, children }: Props) {
           }}
         >
           {/* TOC rail + content (title/meta inline with TOC) */}
-          <div className="container-main flex gap-16">
+          <div className="container-main flex gap-10">
             <aside className="w-60 shrink-0 sticky top-0 self-start pt-12 pb-16">
               <Link
                 href="/"
