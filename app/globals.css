@@ -66,17 +66,18 @@
 
 @theme inline {
   /* Font family — inlined so Tailwind doesn't generate var() chains */
-  --font-sans: 'Avenir Next', -apple-system, BlinkMacSystemFont,
+  --font-sans: 'Avenir Next W1G', 'Avenir Next', -apple-system, BlinkMacSystemFont,
                'Helvetica Neue', Arial, sans-serif;
   --font-mono: var(--font-jetbrains-mono), 'JetBrains Mono', ui-monospace, monospace;
 
-  /* Variable font weight axis */
-  --font-weight-thin:       initial;
-  --font-weight-extralight: initial;
+  /* Discrete weight faces available in Avenir Next W1G */
+  --font-weight-thin:       100;
+  --font-weight-extralight: 200;
+  --font-weight-light:      300;
   --font-weight-medium:     500;
-  --font-weight-semibold:   560;
-  --font-weight-bold:       600;
-  --font-weight-extrabold:  initial;
+  --font-weight-semibold:   600;
+  --font-weight-bold:       700;
+  --font-weight-extrabold:  800;
   --font-weight-black:      initial;
 }
 
