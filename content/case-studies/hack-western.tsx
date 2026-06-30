@@ -116,8 +116,7 @@ export default function HackWestern() {
       <Section
         id="final-product"
         tag="Final Product"
-        headline="The redesigned portal shipped to 2,000+ hackers and meaningfully reduced drop-off in the earliest steps of the flow."
-        body="Drop-off rate in the first two steps fell by 40%, and organizer support tickets related to navigation dropped by over half. The sticker mechanic became one of the most talked-about features in post-event feedback."
+        headline="The redesigned portal shipped to 2,000+ hackers and received overwhelmingly positive feedback!"
         primary
       >
         <ImageBlock height={280} />

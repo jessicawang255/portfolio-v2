@@ -135,8 +135,8 @@ export function CaseStudyLayout({ project, children }: Props) {
             </aside>
 
             <div className="cs-header-content flex-1 min-w-0 pt-12 pb-16 pr-60">
-              <p className="text-sm font-medium uppercase text-neutral-500 mb-4.5">{name}</p>
-              <h1 className="text-[1.875rem] font-bold text-primary leading-tight w-full">
+              <p className="text-sm font-medium uppercase leading-[1.2] text-neutral-500 mb-4.5">{name}</p>
+              <h1 className="text-[1.875rem] font-bold text-primary leading-[1.2] w-full">
                 {title}
               </h1>
 
@@ -145,7 +145,7 @@ export function CaseStudyLayout({ project, children }: Props) {
                   {metaFields.map(({ label, value }) => (
                     <div key={label}>
                       <p className="font-mono text-sm font-light text-neutral-400 mb-1">{label}</p>
-                      <p className="text-base text-neutral-600">{value}</p>
+                      <p className="text-base text-neutral-500">{value}</p>
                     </div>
                   ))}
                 </div>

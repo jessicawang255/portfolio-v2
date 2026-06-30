@@ -57,8 +57,8 @@ export function TableOfContents({ sections }: Props) {
                   if (el) el.scrollIntoView({ behavior: "smooth", block: "start" })
                   setActiveId(id)
                 }}
-                className={`text-base font-normal transition-colors duration-100 ${
-                  isActive ? "text-neutral-900" : "text-subtle hover:text-muted"
+                className={`text-base transition-colors duration-100 ${
+                  isActive ? "text-neutral-700" : "font-normal text-subtle hover:text-muted"
                 }`}
               >
                 {section}
