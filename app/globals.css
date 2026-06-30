@@ -287,3 +287,9 @@ body {
     animation: none;
   }
 }
+
+/* ─── Case study accent — hex values directly; avoids @theme tree-shaking ───── */
+[data-accent="hack-western"] { --cs-accent: #C3589C; }
+[data-accent="retrospect"]   { --cs-accent: #8051BA; }
+[data-accent="autumn"]       { --cs-accent: #C89867; }
+[data-accent="glucal"]       { --cs-accent: #FF8F89; }

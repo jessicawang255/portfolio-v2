@@ -56,7 +56,7 @@ export const projects: Project[] = [
     toc: ["Overview", "Challenge", "The theme", "App. portal ideation", "Designing for mobile", "The stickerbook", "Final product"],
   },
   {
-    slug: "capsule-cabinet",
+    slug: "retrospect",
     title: "A digital time capsule to capture memories with friends",
     name: "Retrospect",
     status: "Demoed 2025",
@@ -64,9 +64,14 @@ export const projects: Project[] = [
     disciplines: ["Interaction design", "Prototyping"],
     bg: "#0d1240",
     accent: "retrospect",
+    role: "Product Designer",
+    timeline: "Aug 2024 - Feb 2025",
+    team: "1 product manager, 2 designers, 4 engineers",
+    skills: "Interaction design, Prototyping, User testing",
+    toc: ["Overview", "Inspiration", "Research", "Core App Flows", "Final product"],
   },
   {
-    slug: "grief-support",
+    slug: "autumn",
     title: "Boosting discovery for a grief support platform",
     name: "Autumn",
     status: "Shipped 2024",
@@ -76,7 +81,7 @@ export const projects: Project[] = [
     accent: "autumn",
   },
   {
-    slug: "gluca",
+    slug: "glucal",
     title: "Easing the daily burdens of diabetes management",
     name: "gluCal",
     status: "Showcased 2024",

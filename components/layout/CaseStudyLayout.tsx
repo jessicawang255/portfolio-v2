@@ -112,13 +112,13 @@ export function CaseStudyLayout({ project, children }: Props) {
         <section
           id="cs-content"
           className="relative bg-surface"
+          data-accent={accent}
           style={{
             zIndex: 10,
             marginTop: "calc(-1 * var(--radius-frame))",
             borderTopLeftRadius:  "var(--radius-frame)",
             borderTopRightRadius: "var(--radius-frame)",
             boxShadow: "0 -8px 40px rgba(0,0,0,0.07)",
-            ...(accent ? { "--cs-accent": `var(--color-${accent})` } as React.CSSProperties : {}),
           }}
         >
           {/* TOC rail + content (title/meta inline with TOC) */}
