@@ -68,7 +68,7 @@
   /* Font family — inlined so Tailwind doesn't generate var() chains */
   --font-sans: 'Avenir Next W1G', 'Avenir Next', -apple-system, BlinkMacSystemFont,
                'Helvetica Neue', Arial, sans-serif;
-  --font-mono: var(--font-jetbrains-mono), 'JetBrains Mono', ui-monospace, monospace;
+  --font-mono: var(--font-roboto-mono), 'Roboto Mono', ui-monospace, monospace;
 
   /* Discrete weight faces available in Avenir Next W1G */
   --font-weight-thin:       100;

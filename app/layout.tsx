@@ -1,15 +1,15 @@
 import { ViewTransition } from "react"
 import type { Metadata } from "next"
-import { JetBrains_Mono } from "next/font/google"
+import { Roboto_Mono } from "next/font/google"
 import { DotBackground } from "@/components/layout/DotBackground"
 import { Nav } from "@/components/layout/Nav"
 import { Footer } from "@/components/layout/Footer"
 import { ScrollRadiusController } from "@/components/layout/ScrollRadiusController"
 import "./globals.css"
 
-const jetbrainsMono = JetBrains_Mono({
+const robotoMono = Roboto_Mono({
   subsets: ["latin"],
-  variable: "--font-jetbrains-mono",
+  variable: "--font-roboto-mono",
 })
 
 export const metadata: Metadata = {
@@ -23,7 +23,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body className={`${jetbrainsMono.variable} flex min-h-screen flex-col`}>
+      <body className={`${robotoMono.variable} flex min-h-screen flex-col`}>
         <DotBackground />
         <Nav />
         <ViewTransition name="page-content">{children}</ViewTransition>
