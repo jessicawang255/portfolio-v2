@@ -10,7 +10,7 @@ type OutcomesProps = {
 export function Outcomes({ metrics }: OutcomesProps) {
   return (
     <div className="grid grid-cols-4 items-start">
-      <p className="text-sm font-medium uppercase leading-[1.2] text-neutral-500 pt-1">
+      <p className="text-sm font-mono font-light leading-[1.2] text-neutral-400 pt-1 mt-1.5">
         Outcomes
       </p>
       <div className="col-span-3 flex flex-wrap gap-x-12 gap-y-6">
