@@ -41,7 +41,7 @@ export function Hero() {
 
         <motion.p
           variants={fadeUp}
-          className="mb-9 font-mono font-light text-sm text-neutral-400"
+          className="mb-9 font-mono text-sm text-neutral-400"
         >
           Currently designing + building digital asset technology @ RBC.
         </motion.p>

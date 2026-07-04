@@ -67,7 +67,7 @@ export function CaseStudyCard({ project, imageHeight = 340 }: Props) {
         </div>
 
         {/* Text block */}
-        <div className="card-text flex flex-col gap-0.5 px-3.5">
+        <div className="card-text flex flex-col gap-1 px-3.5">
           <div className="flex items-start justify-between gap-3">
             <h3 className="text-base font-medium leading-[1.4] text-neutral-800">
               {title}
@@ -78,7 +78,7 @@ export function CaseStudyCard({ project, imageHeight = 340 }: Props) {
           </div>
 
           {hasMetadata && (
-            <p className="font-mono text-sm font-light text-neutral-400">
+            <p className="font-mono text-sm text-neutral-300">
               {name}
               {name && (status || disciplines?.length) && <Separator className="mx-1.5">•</Separator>}
               {status}
