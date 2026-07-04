@@ -121,43 +121,52 @@ export function CaseStudyLayout({ project, children }: Props) {
             boxShadow: "0 -8px 40px rgba(0,0,0,0.07)",
           }}
         >
-          {/* TOC rail + content (title/meta inline with TOC). The aside is a
-              fixed-width, left-aligned flex item; the content column's right
-              padding matches the aside's width + gap so the column fills to
-              appear visually centered without repositioning anything. */}
-          <div className="container-main flex gap-10">
-            <aside className="w-60 shrink-0 sticky top-0 self-start pt-12 pb-16">
-              <Link
-                href="/"
-                className="flex items-center gap-1 text-base text-subtle font-normal hover:text-[var(--cs-accent)] transition-colors duration-75 mb-8"
-              >
-                <ChevronLeft />
-                Back
-              </Link>
-              <TableOfContents sections={toc} />
-            </aside>
-
-            <div className="cs-header-content flex-1 min-w-0 pt-12 pb-16 pr-[17.5rem]">
-              <p className="font-mono text-sm uppercase leading-[1.2] text-neutral-500 mb-4.5">{name}</p>
-              <h1 className="text-4xl font-medium text-primary leading-[1.2] w-full">
-                {title}
-              </h1>
-
-              {metaFields.length > 0 && (
-                <div className="flex flex-wrap gap-x-12 gap-y-4 mt-9">
-                  {metaFields.map(({ label, value }) => (
-                    <div key={label}>
-                      <p className="font-mono text-sm text-neutral-400 mb-1">{label}</p>
-                      <p className="text-base text-neutral-500">{value}</p>
-                    </div>
-                  ))}
+          {/* The content column is truly centered (mx-auto) — its margins are
+              always equal, at any max-width. The TOC lives in the left
+              margin: it's absolutely positioned outside the column's own
+              left edge (left-[-17.5rem] = its w-60 + the gap), so it never
+              factors into the column's width or centering math at all. */}
+          <div className="container-main">
+            {/* min(...) guarantees the column's margin never drops below 17.5rem
+                (the TOC's w-60 + gap) — otherwise the TOC gets pushed off-screen
+                to the left on any viewport narrower than max-w + 2*17.5rem. */}
+            <div className="relative mx-auto max-w-[min(100rem,calc(100%-35rem))]">
+              <aside className="absolute top-0 h-full w-60 left-[-17.5rem]">
+                <div className="sticky top-0 pt-12 pb-16">
+                  <Link
+                    href="/"
+                    className="flex items-center gap-1 text-base text-subtle font-normal hover:text-[var(--cs-accent)] transition-colors duration-75 mb-8"
+                  >
+                    <ChevronLeft />
+                    Back
+                  </Link>
+                  <TableOfContents sections={toc} />
                 </div>
-              )}
+              </aside>
 
-              <hr className="mt-10 border-divider" />
+              {/* max-w-[100rem] above caps the content column — tune it freely, it never affects the TOC's own w-60 */}
+              <div className="cs-header-content pt-12 pb-16">
+                <p className="font-mono text-sm uppercase leading-[1.2] text-neutral-500 mb-4.5">{name}</p>
+                <h1 className="text-4xl font-medium text-primary leading-[1.2] w-full">
+                  {title}
+                </h1>
 
-              <div className="pt-12">
-                {children}
+                {metaFields.length > 0 && (
+                  <div className="flex flex-wrap gap-x-12 gap-y-4 mt-9">
+                    {metaFields.map(({ label, value }) => (
+                      <div key={label}>
+                        <p className="font-mono text-sm text-neutral-400 mb-1">{label}</p>
+                        <p className="text-base text-neutral-500">{value}</p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                <hr className="mt-10 border-divider" />
+
+                <div className="pt-12">
+                  {children}
+                </div>
               </div>
             </div>
           </div>
