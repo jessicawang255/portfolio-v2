@@ -121,7 +121,10 @@ export function CaseStudyLayout({ project, children }: Props) {
             boxShadow: "0 -8px 40px rgba(0,0,0,0.07)",
           }}
         >
-          {/* TOC rail + content (title/meta inline with TOC) */}
+          {/* TOC rail + content (title/meta inline with TOC). The aside is a
+              fixed-width, left-aligned flex item; the content column's right
+              padding matches the aside's width + gap so the column fills to
+              appear visually centered without repositioning anything. */}
           <div className="container-main flex gap-10">
             <aside className="w-60 shrink-0 sticky top-0 self-start pt-12 pb-16">
               <Link
@@ -134,7 +137,7 @@ export function CaseStudyLayout({ project, children }: Props) {
               <TableOfContents sections={toc} />
             </aside>
 
-            <div className="cs-header-content flex-1 min-w-0 pt-12 pb-16 pr-60">
+            <div className="cs-header-content flex-1 min-w-0 pt-12 pb-16 pr-[17.5rem]">
               <p className="font-mono text-sm uppercase leading-[1.2] text-neutral-500 mb-4.5">{name}</p>
               <h1 className="text-4xl font-medium text-primary leading-[1.2] w-full">
                 {title}
