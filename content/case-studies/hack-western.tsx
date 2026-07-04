@@ -42,12 +42,16 @@ export default function HackWestern() {
         primary
       >
         <ImageBlock height={280} />
-        <Callout
-          label="Final theme reveal"
-          heading="Hack Western XII: The world is your canvas."
-          body="Our theme celebrates creativity, collaboration, and the idea that anyone can build something meaningful from their imagination. Visually, we brought this to life through a warm, pastel, scrapbook-inspired style filled with stickers, doodles, and an infinite canvas user interface."
-        />
+
+         <Section
+          id="theme reveal"
+          tag="We landed on..."
+          headline="Introducing Hack Western XII: The world is your canvas."
+        >
       </Section>
+
+      </Section>
+
 
       <Section
         id="app-portal-ideation"
@@ -106,8 +110,10 @@ export default function HackWestern() {
       <Section
         id="stickerbook"
         tag="The Stickerbook"
-        headline="Applicants earned stickers by completing milestones, giving them a reason to return to the portal before the event."
-        body="From submitting an application to confirming attendance and joining the Discord, each action unlocked a new sticker. The collection built anticipation and kept the portal feeling alive in the weeks leading up to Hack Western."
+        headline='I created a "sticker book" feature to create a personalized token for applicants to save, share, and bring into the event.'
+        body="Accessible from their dashboard, the sticker book carried forward into the actual event, where participants could unlock 
+        new stickers by completing tasks. It also included an option to share their collections on social media, helping spread the word
+         and inviting more first-time hackers to join the community."
         primary
       >
         <ImageBlock height={280} />
@@ -120,6 +126,26 @@ export default function HackWestern() {
         primary
       >
         <ImageBlock height={280} />
+      </Section>
+
+      <Section
+        id="reflection"
+        tag="it's done! what did i learn?"
+        headline=""
+        primary
+      >
+        <h2 className="text-2xl font-normal leading-[1.2] text-primary">
+          A good design system leaves nothing unsaid
+        </h2>
+        <p className="text-base leading-normal text-neutral-500">
+          I learned that a good design system is more than just a set of components and rules. It should also include clear documentation and examples, so that anyone can understand how to use it effectively. This ensures consistency and quality across the product, even when different designers or developers are working on it.
+        </p>
+         <h2 className="text-2xl font-normal leading-[1.2] text-primary">
+          😛
+        </h2>
+        <p className="text-base leading-normal text-neutral-500">
+          😺
+        </p>
       </Section>
     </div>
   )
