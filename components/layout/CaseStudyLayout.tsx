@@ -152,11 +152,19 @@ export function CaseStudyLayout({ project, children }: Props) {
                 </h1>
 
                 {metaFields.length > 0 && (
-                  <div className="flex flex-wrap gap-x-12 gap-y-4 mt-9">
+                  <div className="flex flex-wrap gap-x-14 gap-y-4 mt-9">
                     {metaFields.map(({ label, value }) => (
                       <div key={label}>
                         <p className="font-mono text-sm text-neutral-400 mb-1">{label}</p>
-                        <p className="text-base text-neutral-500">{value}</p>
+                        {Array.isArray(value) ? (
+                          <div className="text-base text-neutral-500">
+                            {value.map((item, i) => (
+                              <p key={i} className="m-0">{item}</p>
+                            ))}
+                          </div>
+                        ) : (
+                          <p className="text-base text-neutral-500">{value}</p>
+                        )}
                       </div>
                     ))}
                   </div>

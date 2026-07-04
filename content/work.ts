@@ -11,8 +11,8 @@ export type Project = {
   // Case study detail fields
   role?: string
   timeline?: string
-  team?: string
-  skills?: string
+  team?: string[]
+  skills?: string[]
   toc?: string[]
 }
 
@@ -51,8 +51,8 @@ export const projects: Project[] = [
     accent: "hack-western",
     role: "Product Designer",
     timeline: "Sep – Dec 2024",
-    team: "1 design lead, 2 designers",
-    skills: "Visual design, User testing, Prototyping",
+    team: ["1 design lead", "2 designers"],
+    skills: ["Visual design", "User testing", "Prototyping"],
     toc: ["Overview", "Challenge", "Theme", "App. Portal Ideation", "Designing for Mobile", "Stickerbook", "Final Product"],
   },
   {
@@ -66,8 +66,8 @@ export const projects: Project[] = [
     accent: "retrospect",
     role: "Product Designer",
     timeline: "Aug 2024 - Feb 2025",
-    team: "1 product manager, 2 designers, 4 engineers",
-    skills: "Interaction design, Prototyping, User testing",
+    team: ["1 product manager", "2 designers", "4 engineers"],
+    skills: ["Interaction design", "Prototyping", "User testing"],
     toc: ["Overview", "Inspiration", "Research", "Core App Flows", "Final Product"],
   },
   {
@@ -81,8 +81,8 @@ export const projects: Project[] = [
     accent: "autumn",
     role: "Product Designer",
     timeline: "Jun - Aug 2024",
-    team: "1 founder, 1 product designer, 2 product managers, 2 developers",
-    skills: "Product design, User research, Prototyping",
+    team: ["1 founder", "1 product designer", "2 product managers", "2 developers"],
+    skills: ["Product design", "User research", "Prototyping"],
     toc: ["Overview", "Problem", "Understanding the Market", "User Touchpoints", "Design Challenges", "Final Product"],
   },
   {
@@ -96,8 +96,8 @@ export const projects: Project[] = [
     accent: "glucal",
     role: "Sole designer, Developer",
     timeline: "Mar - Apr 2024",
-    team: "1 designer, 1 developer",
-    skills: "User research, Prototyping, Mobile dev",
+    team: ["1 designer", "1 developer"],
+    skills: ["User research", "Prototyping", "Mobile dev"],
     toc: ["Problem", "Solution", "Research", "Competitive Analysis", "Design Decisions", "Final Product"],
   },
 ]
