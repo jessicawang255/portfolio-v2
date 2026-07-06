@@ -146,7 +146,7 @@ export function CaseStudyLayout({ project, children }: Props) {
 
               {/* max-w-[100rem] above caps the content column — tune it freely, it never affects the TOC's own w-60 */}
               <div className="cs-header-content pt-12 pb-16">
-                <p className="font-mono text-sm uppercase leading-[1.2] text-neutral-500 mb-4.5">{name}</p>
+                <p className="font-mono text-sm uppercase leading-[1.2] text-neutral-400 mb-4.5">{name}</p>
                 <h1 className="text-4xl font-medium text-primary leading-[1.2] w-full">
                   {title}
                 </h1>
