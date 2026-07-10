@@ -101,7 +101,7 @@ function ArrowUpRight() {
 
 function SectionHeader({ label, action }: { label: string; action?: React.ReactNode }) {
   return (
-    <div className="mb-4.5 flex items-center justify-between">
+    <div className="mb-6 flex items-center justify-between">
       <h2 className="font-mono text-sm uppercase leading-[1.2] text-neutral-400">{label}</h2>
       {action}
     </div>
@@ -129,7 +129,7 @@ function JourneyRow({
     <div
       onMouseEnter={onHover}
       onMouseLeave={onUnhover}
-      className="-mx-3 flex items-center justify-between gap-6 rounded-sm px-3 py-3 transition-colors duration-0 hover:bg-neutral-100/50"
+      className="-mx-3 flex items-center justify-between gap-6 rounded-sm px-3 py-3 transition-colors hover:bg-neutral-75 hover:cursor-help"
     >
       <div>
         <p className="text-base font-medium text-neutral-900">{item.company}</p>
@@ -153,11 +153,11 @@ function CommunityRow({
     <div
       onMouseEnter={onHover}
       onMouseLeave={onUnhover}
-      className="-mx-3 flex items-center justify-between gap-6 rounded-sm px-3 py-4 transition-colors duration-0 hover:bg-neutral-100/50"
+      className="-mx-3 flex items-center justify-between gap-6 rounded-sm px-3 py-4 transition-colors duration-0 hover:bg-neutral-75 hover:cursor-help"
     >
       <div className="flex items-center gap-6">
         <div
-          className="h-20 w-20 shrink-0 rounded-2xl bg-cover bg-center"
+          className="h-15 w-15 shrink-0 rounded-base bg-cover bg-center"
           style={{ backgroundImage: `url(${item.logo})`, backgroundColor: item.logoBg }}
         />
         <div>
@@ -170,7 +170,7 @@ function CommunityRow({
         target="_blank"
         rel="noopener noreferrer"
         aria-label={item.name}
-        className="h-5 w-5 shrink-0 bg-contain bg-center bg-no-repeat"
+        className="h-6 w-6 shrink-0 bg-contain bg-center bg-no-repeat"
         style={{ backgroundImage: `url(${item.icon})` }}
       />
     </div>
@@ -205,7 +205,7 @@ export function AboutContent() {
     : "Hover to find out more…"
 
   return (
-    <div className="container-main py-16">
+    <div className="container-main py-9">
       <div className="grid grid-cols-1 gap-x-[54px] lg:grid-cols-[586px_1fr]">
         {/* Left column — sections 1-4 */}
         <div className="flex flex-col gap-20">
@@ -217,10 +217,12 @@ export function AboutContent() {
                   href="/resume.pdf"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-sm text-muted hover:text-primary transition-colors duration-75"
+                  className="inline-flex items-center gap-1 text-sm text-neutral-400 hover:text-primary transition-colors duration-75"
                 >
                   View resume
-                  <ArrowUpRight />
+                  <span className="text-neutral-400">
+                    <ArrowUpRight />
+                  </span>
                 </a>
               }
             />
@@ -323,7 +325,7 @@ export function AboutContent() {
         {/* Right column — sticky panel, scoped to the grid row above (ends after "My Playlist") */}
         <div className="relative mt-16 hidden lg:mt-0 lg:block">
           <div
-            className="sticky flex min-h-[70vh] flex-col rounded-2xl bg-neutral-75 p-9"
+            className="sticky flex min-h-[70vh] flex-col rounded-2xl border border-neutral-900/3 bg-neutral-75 p-9"
             style={{ top: "calc(var(--nav-height) + 20px)" }}
           >
             {reduce ? (

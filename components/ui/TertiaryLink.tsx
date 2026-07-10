@@ -37,7 +37,7 @@ export function TertiaryLink({ href, children, icon = { type: "none" }, classNam
           style={{ backgroundImage: `url(${iconSrc})` }}
         />
       )}
-      <span className="underline decoration-neutral-300 decoration-wavy decoration-[0.09em] underline-offset-[0.2em] transition-colors duration-150 group-hover:decoration-neutral-900">
+      <span className="underline decoration-neutral-300 decoration-wavy decoration-[0.06em] underline-offset-[0.14em] transition-colors duration-150 group-hover:decoration-neutral-900">
         {children}
       </span>
     </a>
