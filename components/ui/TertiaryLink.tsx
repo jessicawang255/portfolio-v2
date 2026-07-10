@@ -33,7 +33,7 @@ export function TertiaryLink({ href, children, icon = { type: "none" }, classNam
     >
       {iconSrc && (
         <span
-          className="ml-2 h-[1em] w-[1em] shrink-0 rounded-full bg-neutral-200 bg-cover bg-center motion-safe:group-hover:animate-[icon-wiggle_0.5s_ease-in-out]"
+          className="relative top-[0.15em] ml-2 h-[1em] w-[1em] shrink-0 bg-contain bg-center bg-no-repeat motion-safe:group-hover:animate-[icon-wiggle_0.9s_ease-in-out]"
           style={{ backgroundImage: `url(${iconSrc})` }}
         />
       )}

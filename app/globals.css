@@ -255,10 +255,10 @@ body {
 
 @keyframes icon-wiggle {
   0%, 100% { transform: rotate(0deg); }
-  20%      { transform: rotate(-10deg); }
-  40%      { transform: rotate(8deg); }
-  60%      { transform: rotate(-6deg); }
-  80%      { transform: rotate(4deg); }
+  20%      { transform: rotate(-20deg); }
+  40%      { transform: rotate(16deg); }
+  60%      { transform: rotate(-12deg); }
+  80%      { transform: rotate(8deg); }
 }
 
 /* ─── Case study entry animations ──────────────────────────────────────────── */
