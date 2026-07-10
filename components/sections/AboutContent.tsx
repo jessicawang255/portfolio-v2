@@ -28,30 +28,6 @@ const journeyItems: JourneyItem[] = [
   { id: "autumn",                   company: "Autumn",                             role: "Product Design Intern",       period: "2024" },
 ]
 
-function InstagramIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-      <rect x="1.5" y="1.5" width="13" height="13" rx="4" stroke="currentColor" strokeWidth="1.3" />
-      <circle cx="8" cy="8" r="3.25" stroke="currentColor" strokeWidth="1.3" />
-      <circle cx="11.75" cy="4.25" r="0.75" fill="currentColor" />
-    </svg>
-  )
-}
-
-function LinkIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-      <path
-        d="M7.5 4.5L8.4 3.5C9.6 2.3 11.4 2.3 12.5 3.5C13.7 4.6 13.7 6.4 12.5 7.5L11.5 8.5M8.5 11.5L7.6 12.5C6.4 13.7 4.6 13.7 3.5 12.5C2.3 11.4 2.3 9.6 3.5 8.5L4.5 7.5M6.3 9.7L9.7 6.3"
-        stroke="currentColor"
-        strokeWidth="1.3"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  )
-}
-
 type Community = {
   id: string
   name: string
@@ -59,8 +35,8 @@ type Community = {
   logo: string
   logoBg: string
   href: string
-  // Interchangeable — swap for any other icon component (e.g. LinkIcon) per item.
-  icon: React.ComponentType
+  // Interchangeable — swap for any other icon asset per item.
+  icon: string
 }
 
 const communities: Community[] = [
@@ -71,7 +47,7 @@ const communities: Community[] = [
     logo: "/images/communities/product-design-sprint.svg",
     logoBg: "#DCD6F7",
     href: "https://instagram.com/pds.uwo",
-    icon: InstagramIcon,
+    icon: "/icons/instagram.svg",
   },
   {
     id: "comm-hack-western",
@@ -80,7 +56,7 @@ const communities: Community[] = [
     logo: "/images/communities/hack-western.svg",
     logoBg: "#F3F4F6",
     href: "https://hackwestern.com",
-    icon: LinkIcon,
+    icon: "/icons/link.svg",
   },
   {
     id: "comm-framer",
@@ -89,7 +65,7 @@ const communities: Community[] = [
     logo: "/images/communities/framer.svg",
     logoBg: "#0A0A0A",
     href: "https://instagram.com/framer",
-    icon: InstagramIcon,
+    icon: "/icons/instagram.svg",
   },
   {
     id: "comm-ivey-product-society",
@@ -98,7 +74,7 @@ const communities: Community[] = [
     logo: "/images/communities/ivey-product-society.svg",
     logoBg: "#F9FAFB",
     href: "https://instagram.com/iveyproductsociety",
-    icon: InstagramIcon,
+    icon: "/icons/instagram.svg",
   },
 ]
 
@@ -173,7 +149,6 @@ function CommunityRow({
   onHover: () => void
   onUnhover: () => void
 }) {
-  const Icon = item.icon
   return (
     <div
       onMouseEnter={onHover}
@@ -195,10 +170,9 @@ function CommunityRow({
         target="_blank"
         rel="noopener noreferrer"
         aria-label={item.name}
-        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-neutral-100 text-neutral-400 transition-colors duration-75 hover:text-primary"
-      >
-        <Icon />
-      </a>
+        className="h-5 w-5 shrink-0 bg-contain bg-center bg-no-repeat"
+        style={{ backgroundImage: `url(${item.icon})` }}
+      />
     </div>
   )
 }
@@ -284,7 +258,7 @@ export function AboutContent() {
             onMouseLeave={() => setHoveredId(null)}
           >
             <SectionHeader label="WHAT I DO FOR FUN" />
-            <div className="flex flex-col gap-8 text-lg leading-relaxed text-neutral-900">
+            <div className="flex flex-col gap-8 text-base leading-relaxed text-neutral-900">
               <p>
                 I love making music. I sing and produce my own songs (jossici on
                 all platforms), and I&rsquo;m on a{" "}

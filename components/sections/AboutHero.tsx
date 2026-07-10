@@ -4,10 +4,10 @@ import { motion, useReducedMotion } from "framer-motion"
 import { stagger, fadeUp } from "@/lib/motion"
 
 const socials = [
-  { label: "LinkedIn", href: "https://www.linkedin.com/in/jwang255/", icon: "/icons/Linkedin.svg" },
-  { label: "X",        href: "https://x.com/jossici", icon: "/icons/X.svg" },
-  { label: "Email",    href: "mailto:jessica.wang255@gmail.com", icon: "/icons/Mail.svg" },
-  { label: "GitHub",   href: "https://github.com/jessicawang255", icon: "/icons/GitHub.svg" },
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/jwang255/", icon: "/icons/linkedin.svg" },
+  { label: "X",        href: "https://x.com/jossici", icon: "/icons/x.svg" },
+  { label: "Email",    href: "mailto:jessica.wang255@gmail.com", icon: "/icons/mail.svg" },
+  { label: "GitHub",   href: "https://github.com/jessicawang255", icon: "/icons/github.svg" },
 ]
 
 const photos = [
