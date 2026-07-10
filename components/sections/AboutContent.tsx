@@ -263,14 +263,16 @@ export function AboutContent() {
 
           <section id="communities">
             <SectionHeader label="MY COMMUNITIES" />
-            <div className="flex flex-col divide-y divide-neutral-200">
-              {communities.map((item) => (
-                <CommunityRow
-                  key={item.id}
-                  item={item}
-                  onHover={() => setHoveredId(item.id)}
-                  onUnhover={() => setHoveredId(null)}
-                />
+            <div className="flex flex-col">
+              {communities.map((item, i) => (
+                <div key={item.id}>
+                  {i > 0 && <div className="mx-1 h-px bg-neutral-200" />}
+                  <CommunityRow
+                    item={item}
+                    onHover={() => setHoveredId(item.id)}
+                    onUnhover={() => setHoveredId(null)}
+                  />
+                </div>
               ))}
             </div>
           </section>
