@@ -11,9 +11,9 @@ const socials = [
 ]
 
 const photos = [
-  { src: "/images/about/photo-1.jpg", alt: "Jessica at her desk", rotate: -4,  className: "w-[210px] h-[280px]" },
-  { src: "/images/about/photo-2.jpg", alt: "Jessica outside in autumn", rotate: 4, className: "w-[210px] h-[280px] mt-3" },
-  { src: "/images/about/photo-3.jpg", alt: "Jessica's cat", rotate: -3, className: "w-[280px] h-[220px] mt-9" },
+  { src: "/images/about/photo-1.jpg", alt: "Jessica at her desk", rotate: 5.5,  className: "w-[220px] h-[222px]" },
+  { src: "/images/about/photo-2.jpg", alt: "Jessica outside in autumn", rotate: -7.5, className: "w-[218px] h-[222px]" },
+  { src: "/images/about/photo-3.jpg", alt: "Jessica's cat", rotate: -1.7, className: "w-[280px] h-[192px]" },
 ]
 
 export function AboutHero() {
@@ -95,7 +95,7 @@ export function AboutHero() {
 
         <motion.div
           variants={fadeUp}
-          className="hidden items-start gap-6 pt-2 sm:flex"
+          className="hidden items-center gap-14 pt-2 sm:flex"
         >
           {photos.map(({ src, alt, rotate, className }) => (
             <div
