@@ -78,13 +78,13 @@ function JourneyRow({
     <div
       onMouseEnter={onHover}
       onMouseLeave={onUnhover}
-      className="-mx-3 flex items-center justify-between gap-6 rounded-2xl px-3 transition-colors duration-150 hover:bg-neutral-75"
+      className="-mx-3 flex items-center justify-between gap-6 rounded-sm px-3 py-3 transition-colors duration-0 hover:bg-neutral-100/50"
     >
       <div>
-        <p className="text-xl font-medium text-neutral-900">{item.company}</p>
-        <p className="text-lg text-neutral-400">{item.role}</p>
+        <p className="text-base font-medium text-neutral-900">{item.company}</p>
+        <p className="text-base text-neutral-500">{item.role}</p>
       </div>
-      <span className="shrink-0 font-mono text-sm uppercase text-neutral-400">{item.period}</span>
+      <span className="shrink-0 font-mono text-sm uppercase text-neutral-500">{item.period}</span>
     </div>
   )
 }
@@ -136,7 +136,7 @@ export function AboutContent() {
                 </a>
               }
             />
-            <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-0">
               {journeyItems.map((item) => (
                 <JourneyRow
                   key={item.id}
