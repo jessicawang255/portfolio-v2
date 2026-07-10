@@ -7,11 +7,12 @@ type PanelSection = { id: string; label: string }
 
 // Only the first four sections sit beside the sticky panel — "Some Statistics"
 // lives outside that grid entirely, so the panel scrolls away before it.
+// "Playlist" is intentionally excluded from panel tracking (scroll or hover) —
+// the panel just keeps showing "What I Do For Fun" while playlist is in view.
 const panelSections: PanelSection[] = [
   { id: "journey",     label: "MY JOURNEY THUS FAR" },
   { id: "communities", label: "MY COMMUNITIES" },
   { id: "fun",         label: "WHAT I DO FOR FUN" },
-  { id: "playlist",    label: "MY PLAYLIST" },
 ]
 
 function ArrowUpRight() {
@@ -125,11 +126,7 @@ export function AboutContent() {
             <PlaceholderBox className="h-[360px]" />
           </section>
 
-          <section
-            id="playlist"
-            onMouseEnter={() => setHoveredId("playlist")}
-            onMouseLeave={() => setHoveredId(null)}
-          >
+          <section id="playlist">
             <SectionHeader label="MY PLAYLIST" />
             <PlaceholderBox className="h-[175px]" />
           </section>
