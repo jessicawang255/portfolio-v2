@@ -3,7 +3,7 @@ import { CaseStudyCard } from "@/components/ui/CaseStudyCard"
 
 export function DiscoverMore() {
   return (
-    <section className="container-main pt-20 pb-20">
+    <section className="container-main pt-12 pb-20">
       <h2 className="mb-5 font-mono text-sm uppercase leading-[1.2] text-neutral-400">
         Discover More
       </h2>

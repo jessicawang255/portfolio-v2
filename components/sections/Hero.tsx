@@ -33,7 +33,7 @@ export function Hero() {
 
         <motion.p
           variants={fadeUp}
-          className="mb-4 max-w-lg text-balance text-base font-normal leading-relaxed text-neutral-700"
+          className="mb-4 max-w-lg text-balance text-base font-normal text-neutral-700"
         >
           I fell in love with making new interactions a while ago, and I want
           to do it for at least the next little bit of my life. Yada boo yada moo

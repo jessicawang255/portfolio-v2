@@ -5,7 +5,7 @@ export function CaseStudies() {
   const [p0, p1, p2, p3] = projects
 
   return (
-    <section id="work" className="container-main pt-12 pb-20">
+    <section id="work" className="container-main pt-9 pb-20">
       <h2 className="mb-5 font-mono text-sm uppercase leading-[1.2] text-neutral-400">
         Case Studies
       </h2>

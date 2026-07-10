@@ -132,7 +132,7 @@ export function CaseStudyLayout({ project, children }: Props) {
                 to the left on any viewport narrower than max-w + 2*17.5rem. */}
             <div className="relative mx-auto max-w-[min(100rem,calc(100%-35rem))]">
               <aside className="absolute top-0 h-full w-60 left-[-17.5rem]">
-                <div className="sticky top-0 pt-12 pb-16">
+                <div className="sticky top-0 pt-9 pb-16">
                   <Link
                     href="/"
                     className="flex items-center gap-1 text-base text-subtle font-normal hover:text-[var(--cs-accent)] transition-colors duration-75 mb-8"
@@ -145,7 +145,7 @@ export function CaseStudyLayout({ project, children }: Props) {
               </aside>
 
               {/* max-w-[100rem] above caps the content column — tune it freely, it never affects the TOC's own w-60 */}
-              <div className="cs-header-content pt-12 pb-16">
+              <div className="cs-header-content pt-9 pb-16">
                 <p className="font-mono text-sm uppercase leading-[1.2] text-neutral-400 mb-4.5">{name}</p>
                 <h1 className="text-4xl font-medium text-primary leading-[1.2] w-full">
                   {title}
