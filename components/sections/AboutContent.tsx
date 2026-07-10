@@ -16,11 +16,18 @@ const panelSections: PanelSection[] = [
 
 function ArrowUpRight() {
   return (
-    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 18 18"
+      fill="none"
+      aria-hidden="true"
+      focusable="false"
+    >
       <path
-        d="M3 9L9 3M9 3H4M9 3V8"
+        d="M4 14L14 4M14 4H7M14 4V11"
         stroke="currentColor"
-        strokeWidth="1.3"
+        strokeWidth="1.6"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
