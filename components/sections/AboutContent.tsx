@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion"
+import { TertiaryLink } from "@/components/ui/TertiaryLink"
 
 type PanelSection = { id: string; label: string }
 
@@ -283,7 +284,60 @@ export function AboutContent() {
             onMouseLeave={() => setHoveredId(null)}
           >
             <SectionHeader label="WHAT I DO FOR FUN" />
-            <PlaceholderBox className="h-[360px]" />
+            <div className="flex flex-col gap-8 text-lg leading-relaxed text-neutral-900">
+              <p>
+                I love making music. I sing and produce my own songs (jossici on
+                all platforms), and I&rsquo;m on a{" "}
+                <TertiaryLink
+                  href="https://www.instagram.com/repercussionsacappella/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  icon={{ type: "custom", src: "/icons/instagram.svg" }}
+                >
+                  varsity a cappella team
+                </TertiaryLink>
+                .
+              </p>
+
+              <p>
+                I&rsquo;ve taken a liking to bouldering because of the colourful
+                things on the wall.
+              </p>
+
+              <p>
+                I love exploring creative ways to make technology beautiful.
+                Check out some of my projects in{" "}
+                <TertiaryLink
+                  href="#"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  icon={{ type: "favicon" }}
+                >
+                  my playground
+                </TertiaryLink>
+                .
+              </p>
+
+              <p>
+                Check out a more comprehensive list of{" "}
+                <TertiaryLink
+                  href="#"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  icon={{ type: "favicon" }}
+                >
+                  the things I like
+                </TertiaryLink>
+                .
+              </p>
+
+              <p>
+                I find it humbling and grounding and awe-inspiring to learn
+                about our place in the universe, the little speck of dust we
+                are. And so I love learning about constellations and all the
+                things one sees when looking up at the sky at night.
+              </p>
+            </div>
           </section>
 
           <section id="playlist">
