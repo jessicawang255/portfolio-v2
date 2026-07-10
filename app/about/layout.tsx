@@ -1,11 +1,11 @@
 import { HeroShell } from "@/components/layout/HeroShell"
-import { Hero } from "@/components/sections/Hero"
+import { AboutHero } from "@/components/sections/AboutHero"
 
-export default function HomeLayout({ children }: { children: React.ReactNode }) {
+export default function AboutLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <HeroShell>
-        <Hero />
+      <HeroShell fallbackSpacer={340}>
+        <AboutHero />
       </HeroShell>
       <main id="main-frame" className="relative z-10 flex-1 bg-surface">
         {children}

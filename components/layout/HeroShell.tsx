@@ -1,12 +1,16 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import { Hero } from "@/components/sections/Hero"
 
-export function HeroShell() {
+type Props = {
+  children: React.ReactNode
+  /** SSR approximation of the hero's rendered height minus nav height. */
+  fallbackSpacer?: number
+}
+
+export function HeroShell({ children, fallbackSpacer = 324 }: Props) {
   const ref = useRef<HTMLDivElement>(null)
-  // SSR approximation: nav(56) + pt(120) + content(~180) + pb(80) - nav(56) = 324
-  const [spacer, setSpacer] = useState(324)
+  const [spacer, setSpacer] = useState(fallbackSpacer)
 
   useEffect(() => {
     const el = ref.current
@@ -22,7 +26,7 @@ export function HeroShell() {
   return (
     <>
       <div ref={ref} className="fixed inset-x-0 top-0 z-[2] pointer-events-none">
-        <Hero />
+        {children}
       </div>
       <div aria-hidden="true" style={{ height: spacer }} />
     </>

@@ -1,7 +1,9 @@
 export default function AboutPage() {
   return (
-    <main className="flex-1 flex items-center justify-center">
-      <p className="text-base text-muted">About — coming soon</p>
-    </main>
+    <div className="flex min-h-[calc(100vh-var(--nav-height))] items-center justify-center px-9 py-20">
+      <p className="text-4xl font-bold text-neutral-900">
+        Main frame content — ignore for now
+      </p>
+    </div>
   )
 }
