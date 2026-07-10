@@ -177,7 +177,7 @@ function CommunityRow({
     <div
       onMouseEnter={onHover}
       onMouseLeave={onUnhover}
-      className="-mx-3 flex items-center justify-between gap-6 rounded-sm px-3 py-3 transition-colors duration-0 hover:bg-neutral-100/50"
+      className="-mx-3 flex items-center justify-between gap-6 rounded-sm px-3 py-4 transition-colors duration-0 hover:bg-neutral-100/50"
     >
       <div className="flex items-center gap-6">
         <div
@@ -266,7 +266,7 @@ export function AboutContent() {
             <div className="flex flex-col">
               {communities.map((item, i) => (
                 <div key={item.id}>
-                  {i > 0 && <div className="mx-1 h-px bg-neutral-200" />}
+                  {i > 0 && <div className="h-px bg-neutral-100" />}
                   <CommunityRow
                     item={item}
                     onHover={() => setHoveredId(item.id)}
