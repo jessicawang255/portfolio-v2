@@ -27,6 +27,80 @@ const journeyItems: JourneyItem[] = [
   { id: "autumn",                   company: "Autumn",                             role: "Product Design Intern",       period: "2024" },
 ]
 
+function InstagramIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <rect x="1.5" y="1.5" width="13" height="13" rx="4" stroke="currentColor" strokeWidth="1.3" />
+      <circle cx="8" cy="8" r="3.25" stroke="currentColor" strokeWidth="1.3" />
+      <circle cx="11.75" cy="4.25" r="0.75" fill="currentColor" />
+    </svg>
+  )
+}
+
+function LinkIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <path
+        d="M7.5 4.5L8.4 3.5C9.6 2.3 11.4 2.3 12.5 3.5C13.7 4.6 13.7 6.4 12.5 7.5L11.5 8.5M8.5 11.5L7.6 12.5C6.4 13.7 4.6 13.7 3.5 12.5C2.3 11.4 2.3 9.6 3.5 8.5L4.5 7.5M6.3 9.7L9.7 6.3"
+        stroke="currentColor"
+        strokeWidth="1.3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}
+
+type Community = {
+  id: string
+  name: string
+  description: string
+  logo: string
+  logoBg: string
+  href: string
+  // Interchangeable — swap for any other icon component (e.g. LinkIcon) per item.
+  icon: React.ComponentType
+}
+
+const communities: Community[] = [
+  {
+    id: "comm-product-design-sprint",
+    name: "Product Design Sprint",
+    description: "Western University's first and largest design-a-thon",
+    logo: "/images/communities/product-design-sprint.svg",
+    logoBg: "#DCD6F7",
+    href: "https://instagram.com/pds.uwo",
+    icon: InstagramIcon,
+  },
+  {
+    id: "comm-hack-western",
+    name: "Hack Western",
+    description: "Western University's hackathon",
+    logo: "/images/communities/hack-western.svg",
+    logoBg: "#F3F4F6",
+    href: "https://hackwestern.com",
+    icon: LinkIcon,
+  },
+  {
+    id: "comm-framer",
+    name: "Framer",
+    description: "I'm a campus ambassador for Framer, xyz xyz xyz.",
+    logo: "/images/communities/framer.svg",
+    logoBg: "#0A0A0A",
+    href: "https://instagram.com/framer",
+    icon: InstagramIcon,
+  },
+  {
+    id: "comm-ivey-product-society",
+    name: "Ivey Product Society",
+    description: "Building the next generation of product leaders @ Ivey Business School",
+    logo: "/images/communities/ivey-product-society.svg",
+    logoBg: "#F9FAFB",
+    href: "https://instagram.com/iveyproductsociety",
+    icon: InstagramIcon,
+  },
+]
+
 function ArrowUpRight() {
   return (
     <svg
@@ -85,6 +159,45 @@ function JourneyRow({
         <p className="text-base text-neutral-500">{item.role}</p>
       </div>
       <span className="shrink-0 font-mono text-sm uppercase text-neutral-500">{item.period}</span>
+    </div>
+  )
+}
+
+function CommunityRow({
+  item,
+  onHover,
+  onUnhover,
+}: {
+  item: Community
+  onHover: () => void
+  onUnhover: () => void
+}) {
+  const Icon = item.icon
+  return (
+    <div
+      onMouseEnter={onHover}
+      onMouseLeave={onUnhover}
+      className="-mx-3 flex items-center justify-between gap-6 rounded-sm px-3 py-3 transition-colors duration-0 hover:bg-neutral-100/50"
+    >
+      <div className="flex items-center gap-6">
+        <div
+          className="h-20 w-20 shrink-0 rounded-2xl bg-cover bg-center"
+          style={{ backgroundImage: `url(${item.logo})`, backgroundColor: item.logoBg }}
+        />
+        <div>
+          <p className="text-base font-medium text-neutral-900">{item.name}</p>
+          <p className="text-base text-neutral-500">{item.description}</p>
+        </div>
+      </div>
+      <a
+        href={item.href}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={item.name}
+        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-neutral-100 text-neutral-400 transition-colors duration-75 hover:text-primary"
+      >
+        <Icon />
+      </a>
     </div>
   )
 }
@@ -148,13 +261,18 @@ export function AboutContent() {
             </div>
           </section>
 
-          <section
-            id="communities"
-            onMouseEnter={() => setHoveredId("communities")}
-            onMouseLeave={() => setHoveredId(null)}
-          >
+          <section id="communities">
             <SectionHeader label="MY COMMUNITIES" />
-            <PlaceholderBox className="h-[360px]" />
+            <div className="flex flex-col divide-y divide-neutral-200">
+              {communities.map((item) => (
+                <CommunityRow
+                  key={item.id}
+                  item={item}
+                  onHover={() => setHoveredId(item.id)}
+                  onUnhover={() => setHoveredId(null)}
+                />
+              ))}
+            </div>
           </section>
 
           <section
