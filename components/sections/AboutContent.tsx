@@ -15,6 +15,18 @@ const panelSections: PanelSection[] = [
   { id: "fun",         label: "WHAT I DO FOR FUN" },
 ]
 
+type JourneyItem = { id: string; company: string; role: string; period: string }
+
+const journeyItems: JourneyItem[] = [
+  { id: "royal-bank-of-canada",     company: "Royal Bank of Canada",               role: "Software Engineering Intern", period: "NOW" },
+  { id: "framer",                   company: "Framer",                             role: "Campus Ambassador",           period: "NOW" },
+  { id: "hack-western",             company: "Hack Western",                       role: "Design Lead",                 period: "NOW" },
+  { id: "cibc",                     company: "Canadian Imperial Bank of Commerce", role: "Software Engineering Intern", period: "2025" },
+  { id: "western-founders-network", company: "Western Founders Network",           role: "Vice President of Design",    period: "2025" },
+  { id: "the-residency",            company: "The Residency",                      role: "Design Lead",                 period: "2024" },
+  { id: "autumn",                   company: "Autumn",                             role: "Product Design Intern",       period: "2024" },
+]
+
 function ArrowUpRight() {
   return (
     <svg
@@ -53,6 +65,30 @@ function PlaceholderBox({ className }: { className?: string }) {
   )
 }
 
+function JourneyRow({
+  item,
+  onHover,
+  onUnhover,
+}: {
+  item: JourneyItem
+  onHover: () => void
+  onUnhover: () => void
+}) {
+  return (
+    <div
+      onMouseEnter={onHover}
+      onMouseLeave={onUnhover}
+      className="-mx-3 flex items-center justify-between gap-6 rounded-2xl px-3 transition-colors duration-150 hover:bg-neutral-75"
+    >
+      <div>
+        <p className="text-xl font-medium text-neutral-900">{item.company}</p>
+        <p className="text-lg text-neutral-400">{item.role}</p>
+      </div>
+      <span className="shrink-0 font-mono text-sm uppercase text-neutral-400">{item.period}</span>
+    </div>
+  )
+}
+
 export function AboutContent() {
   const reduce = useReducedMotion()
   const [activeId, setActiveId] = useState<string>("")
@@ -75,10 +111,9 @@ export function AboutContent() {
   }, [])
 
   const displayId = hoveredId ?? activeId
-  const displaySection = panelSections.find((s) => s.id === displayId)
   const trigger = hoveredId ? "hover" : "scroll"
-  const panelText = displaySection
-    ? `Active: ${displaySection.id} (${trigger})`
+  const panelText = displayId
+    ? `Active: ${displayId} (${trigger})`
     : "Hover to find out more…"
 
   return (
@@ -86,11 +121,7 @@ export function AboutContent() {
       <div className="grid grid-cols-1 gap-x-[54px] lg:grid-cols-[586px_1fr]">
         {/* Left column — sections 1-4 */}
         <div className="flex flex-col gap-20">
-          <section
-            id="journey"
-            onMouseEnter={() => setHoveredId("journey")}
-            onMouseLeave={() => setHoveredId(null)}
-          >
+          <section id="journey">
             <SectionHeader
               label="MY JOURNEY THUS FAR"
               action={
@@ -105,7 +136,16 @@ export function AboutContent() {
                 </a>
               }
             />
-            <PlaceholderBox className="h-[480px]" />
+            <div className="flex flex-col gap-6">
+              {journeyItems.map((item) => (
+                <JourneyRow
+                  key={item.id}
+                  item={item}
+                  onHover={() => setHoveredId(item.id)}
+                  onUnhover={() => setHoveredId(null)}
+                />
+              ))}
+            </div>
           </section>
 
           <section
