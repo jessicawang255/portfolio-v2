@@ -102,7 +102,7 @@ export function AboutHero() {
               key={src}
               role="img"
               aria-label={alt}
-              className={`${className} shrink-0 rounded-2xl bg-neutral-100 bg-cover bg-center shadow-[0_12px_28px_rgba(0,0,0,0.12)]`}
+              className={`${className} shrink-0 rounded-2xl bg-neutral-100 bg-cover bg-center`}
               style={{ backgroundImage: `url(${src})`, transform: `rotate(${rotate}deg)` }}
             />
           ))}
