@@ -3,13 +3,13 @@
 import { useEffect, useState } from "react"
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion"
 import { TertiaryLink } from "@/components/ui/TertiaryLink"
+import type { Song } from "@/lib/spotify"
 
 type PanelSection = { id: string; label: string }
 
-// Only the first four sections sit beside the sticky panel — "Some Statistics"
-// lives outside that grid entirely, so the panel scrolls away before it.
-// "Playlist" is intentionally excluded from panel tracking (scroll or hover) —
-// the panel just keeps showing "What I Do For Fun" while playlist is in view.
+// Only these three sections sit beside the sticky panel — "My Playlist" and
+// "Some Statistics" both live outside that grid entirely, so the panel
+// scrolls away before either of them.
 const panelSections: PanelSection[] = [
   { id: "journey",     label: "MY JOURNEY THUS FAR" },
   { id: "communities", label: "MY COMMUNITIES" },
@@ -33,7 +33,6 @@ type Community = {
   name: string
   description: string
   logo: string
-  logoBg: string
   href: string
   // Interchangeable — swap for any other icon asset per item.
   icon: string
@@ -44,17 +43,15 @@ const communities: Community[] = [
     id: "comm-product-design-sprint",
     name: "Product Design Sprint",
     description: "Western University's first and largest design-a-thon",
-    logo: "/images/communities/product-design-sprint.svg",
-    logoBg: "#DCD6F7",
-    href: "https://instagram.com/pds.uwo",
+    logo: "/images/communities/pds-icon.svg",
+    href: "https://instagram.com/westernfoundersnetwork/",
     icon: "/icons/instagram.svg",
   },
   {
     id: "comm-hack-western",
     name: "Hack Western",
     description: "Western University's hackathon",
-    logo: "/images/communities/hack-western.svg",
-    logoBg: "#F3F4F6",
+    logo: "/images/communities/hackwestern-icon.svg",
     href: "https://hackwestern.com",
     icon: "/icons/link.svg",
   },
@@ -62,40 +59,54 @@ const communities: Community[] = [
     id: "comm-framer",
     name: "Framer",
     description: "I'm a campus ambassador for Framer, xyz xyz xyz.",
-    logo: "/images/communities/framer.svg",
-    logoBg: "#0A0A0A",
-    href: "https://instagram.com/framer",
-    icon: "/icons/instagram.svg",
+    logo: "/images/communities/framer-icon.png",
+    href: "https://framer.com/",
+    icon: "/icons/link.svg",
   },
   {
     id: "comm-ivey-product-society",
     name: "Ivey Product Society",
     description: "Building the next generation of product leaders @ Ivey Business School",
-    logo: "/images/communities/ivey-product-society.svg",
-    logoBg: "#F9FAFB",
-    href: "https://instagram.com/iveyproductsociety",
+    logo: "/images/communities/ips-icon.svg",
+    href: "https://instagram.com/iveyproductsociety_",
     icon: "/icons/instagram.svg",
   },
 ]
 
+// Placeholder art tile until real album art is dropped in per song.
+const SONG_ART_BG = "#FFADA3"
+
+// Used when the live Spotify fetch fails or returns nothing.
+const FALLBACK_PLAYLIST: Song[] = [
+  { id: "song-flash-in-the-pan", title: "Flash in the Pan", artist: "Jane Remover",          art: "", href: "#" },
+  { id: "song-music-baby",       title: "Music Baby",        artist: "Jane Remover",          art: "", href: "#" },
+  { id: "song-dustcutter-1",     title: "DUSTCUTTER",        artist: "Quadeca",               art: "", href: "#" },
+  { id: "song-claws",            title: "claws",             artist: "Charli xcx",            art: "", href: "#" },
+  { id: "song-the-peace",        title: "The Peace",         artist: "Underscores",           art: "", href: "#" },
+  { id: "song-carpet",           title: "Carpet",             artist: "kmoe",                  art: "", href: "#" },
+  { id: "song-believe",          title: "Believe",           artist: "Venturing",             art: "", href: "#" },
+  { id: "song-constantly",       title: "CONSTANTLY",        artist: "Tiffany Day, slayr",     art: "", href: "#" },
+  { id: "song-dustcutter-2",     title: "DUSTCUTTER",        artist: "Quadeca",               art: "", href: "#" },
+]
+
 function ArrowUpRight() {
   return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 18 18"
-      fill="none"
+    <span
       aria-hidden="true"
-      focusable="false"
-    >
-      <path
-        d="M4 14L14 4M14 4H7M14 4V11"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
+      style={{
+        display: "inline-block",
+        verticalAlign: "middle",
+        width: 16,
+        height: 16,
+        WebkitMaskImage: "url(/icons/arrow-right-up-line.svg)",
+        maskImage: "url(/icons/arrow-right-up-line.svg)",
+        WebkitMaskSize: "contain",
+        maskSize: "contain",
+        WebkitMaskRepeat: "no-repeat",
+        maskRepeat: "no-repeat",
+        backgroundColor: "currentColor",
+      }}
+    />
   )
 }
 
@@ -114,6 +125,7 @@ function PlaceholderBox({ className }: { className?: string }) {
       <p className="text-base font-bold text-red-600">CONTENT INSIDE (this is temp)</p>
     </div>
   )
+  
 }
 
 function JourneyRow({
@@ -157,8 +169,8 @@ function CommunityRow({
     >
       <div className="flex items-center gap-6">
         <div
-          className="h-15 w-15 shrink-0 rounded-base bg-cover bg-center"
-          style={{ backgroundImage: `url(${item.logo})`, backgroundColor: item.logoBg }}
+          className="h-15 w-15 shrink-0 bg-contain bg-center bg-no-repeat"
+          style={{ backgroundImage: `url(${item.logo})` }}
         />
         <div>
           <p className="text-base font-medium text-neutral-900">{item.name}</p>
@@ -192,7 +204,39 @@ function CommunityRow({
   )
 }
 
-export function AboutContent() {
+// Same tile/text layout as CommunityRow, but the whole row is the link, and
+// the hover state reveals a "Play on Spotify" hint instead of highlighting
+// the row.
+function SongRow({ item }: { item: Song }) {
+  return (
+    <a
+      href={item.href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="group flex items-center justify-between gap-6"
+    >
+      <div className="flex items-center gap-6">
+        <div
+          className="relative h-15 w-15 shrink-0 overflow-hidden rounded-base border border-neutral-100 bg-cover bg-center"
+          style={{ backgroundImage: item.art ? `url(${item.art})` : undefined, backgroundColor: SONG_ART_BG }}
+        >
+          <div className="absolute inset-0 bg-black/0 transition-colors duration-150 group-hover:bg-black/30" />
+        </div>
+        <div>
+          <p className="text-base font-medium text-neutral-900">{item.title}</p>
+          <p className="text-base text-neutral-500">{item.artist}</p>
+        </div>
+      </div>
+      <span className="flex shrink-0 items-center gap-1 whitespace-nowrap text-sm text-neutral-400 opacity-0 transition-opacity duration-150 group-hover:opacity-100">
+        Play on Spotify
+        <ArrowUpRight />
+      </span>
+    </a>
+  )
+}
+
+export function AboutContent({ spotifyPlaylist }: { spotifyPlaylist: Song[] | null }) {
+  const playlist = spotifyPlaylist?.length ? spotifyPlaylist : FALLBACK_PLAYLIST
   const reduce = useReducedMotion()
   const [activeId, setActiveId] = useState<string>("")
   const [hoveredId, setHoveredId] = useState<string | null>(null)
@@ -235,9 +279,7 @@ export function AboutContent() {
                   className="inline-flex items-center gap-1 text-sm text-neutral-400 hover:text-primary transition-colors duration-150"
                 >
                   View resume
-                  <span className="text-neutral-400">
-                    <ArrowUpRight />
-                  </span>
+                  <ArrowUpRight />
                 </a>
               }
             />
@@ -328,11 +370,6 @@ export function AboutContent() {
               </p>
             </div>
           </section>
-
-          <section id="playlist">
-            <SectionHeader label="MY PLAYLIST" />
-            <PlaceholderBox className="h-[175px]" />
-          </section>
         </div>
 
         {/* Right column — sticky panel, scoped to the grid row above (ends after "My Playlist") */}
@@ -360,6 +397,20 @@ export function AboutContent() {
           </div>
         </div>
       </div>
+
+      {/* Playlist — outside the two-column grid; renders full width once the
+          sticky panel's container (above) has scrolled out of the way. */}
+      <section id="playlist" className="mt-20">
+        <SectionHeader label="MY PLAYLIST" />
+        <p className="mb-8 text-base text-neutral-900">
+          Based off my Spotify&rsquo;s most played songs in the past 6 months.
+        </p>
+        <div className="grid grid-flow-col grid-rows-3 gap-x-16 gap-y-6">
+          {playlist.map((item) => (
+            <SongRow key={item.id} item={item} />
+          ))}
+        </div>
+      </section>
 
       {/* Statistics — outside the two-column grid; renders full width once the
           sticky panel's container (above) has scrolled out of the way. */}
