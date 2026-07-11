@@ -34,10 +34,4 @@ This is a single-route App Router project. All pages live under `app/`:
 
 Tailwind v4 drops `tailwind.config.js` — theme customization goes in CSS using `@theme`:
 
-```css
-@theme inline {
-  --color-brand: #ff0000;
-}
-```
-
 Use `@import "tailwindcss"` at the top of the CSS entry point, not the old `@tailwind base/components/utilities` directives.
