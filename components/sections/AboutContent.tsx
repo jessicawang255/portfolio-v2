@@ -53,7 +53,7 @@ const communities: Community[] = [
     description: "Western University's hackathon",
     logo: "/images/communities/hackwestern-icon.svg",
     href: "https://hackwestern.com",
-    icon: "/icons/link.svg",
+    icon: "/icons/arrow-right-up-line.svg",
   },
   {
     id: "comm-framer",
@@ -61,7 +61,7 @@ const communities: Community[] = [
     description: "I'm a campus ambassador for Framer, xyz xyz xyz.",
     logo: "/images/communities/framer-icon.png",
     href: "https://framer.com/",
-    icon: "/icons/link.svg",
+    icon: "/icons/arrow-right-up-line.svg",
   },
   {
     id: "comm-ivey-product-society",
@@ -96,6 +96,8 @@ function ArrowUpRight() {
       style={{
         display: "inline-block",
         verticalAlign: "middle",
+        position: "relative",
+        top: 2,
         width: 16,
         height: 16,
         WebkitMaskImage: "url(/icons/arrow-right-up-line.svg)",

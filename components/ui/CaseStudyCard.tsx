@@ -10,22 +10,24 @@ type Props = {
 
 function ArrowUpRight() {
   return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 18 18"
-      fill="none"
+    <span
       aria-hidden="true"
-      focusable="false"
-    >
-      <path
-        d="M4 14L14 4M14 4H7M14 4V11"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
+      style={{
+        display: "inline-block",
+        verticalAlign: "middle",
+        position: "relative",
+        top: 2,
+        width: 16,
+        height: 16,
+        WebkitMaskImage: "url(/icons/arrow-right-up-line.svg)",
+        maskImage: "url(/icons/arrow-right-up-line.svg)",
+        WebkitMaskSize: "contain",
+        maskSize: "contain",
+        WebkitMaskRepeat: "no-repeat",
+        maskRepeat: "no-repeat",
+        backgroundColor: "currentColor",
+      }}
+    />
   )
 }
 
@@ -72,7 +74,7 @@ export function CaseStudyCard({ project, imageHeight = 340 }: Props) {
             <h3 className="text-base font-medium leading-[1.4] text-neutral-800">
               {title}
             </h3>
-            <span className="card-arrow shrink-0 mt-1 text-neutral-400" aria-hidden="true">
+            <span className="card-arrow shrink-0 leading-none text-neutral-400" aria-hidden="true">
               <ArrowUpRight />
             </span>
           </div>
