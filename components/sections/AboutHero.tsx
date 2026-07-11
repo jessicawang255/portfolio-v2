@@ -94,17 +94,21 @@ export function AboutHero() {
         </div>
 
         <motion.div
-          variants={fadeUp}
+          variants={stagger}
           className="hidden items-center gap-14 pt-2 sm:flex"
         >
           {photos.map(({ src, alt, rotate, className }) => (
-            <div
-              key={src}
-              role="img"
-              aria-label={alt}
-              className={`${className} shrink-0 rounded-2xl bg-neutral-100 bg-cover bg-center`}
-              style={{ backgroundImage: `url(${src})`, transform: `rotate(${rotate}deg)` }}
-            />
+            <motion.div key={src} variants={fadeUp}>
+              <div
+                role="img"
+                aria-label={alt}
+                className={`about-photo ${className} shrink-0 rounded-2xl bg-neutral-100 bg-cover bg-center`}
+                style={{
+                  backgroundImage: `url(${src})`,
+                  ["--photo-rotate" as string]: `${rotate}deg`,
+                } as React.CSSProperties}
+              />
+            </motion.div>
           ))}
         </motion.div>
       </motion.div>

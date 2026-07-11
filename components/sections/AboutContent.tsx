@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion"
 import { TertiaryLink } from "@/components/ui/TertiaryLink"
+import { stagger, fadeUp } from "@/lib/motion"
 import type { Song } from "@/lib/spotify"
 
 type PanelSection = { id: string; label: string }
@@ -270,55 +271,79 @@ export function AboutContent({ spotifyPlaylist }: { spotifyPlaylist: Song[] | nu
       <div className="grid grid-cols-1 gap-x-[54px] lg:grid-cols-[586px_1fr]">
         {/* Left column — sections 1-4 */}
         <div className="flex flex-col gap-20">
-          <section id="journey">
-            <SectionHeader
-              label="MY JOURNEY THUS FAR"
-              action={
-                <a
-                  href="/resume.pdf"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-sm text-neutral-400 hover:text-nav-link-hover transition-colors duration-150"
-                >
-                  View resume
-                  <ArrowUpRight />
-                </a>
-              }
-            />
+          <motion.section
+            id="journey"
+            variants={stagger}
+            initial={reduce ? "visible" : "hidden"}
+            whileInView="visible"
+            viewport={{ once: true, margin: "-80px" }}
+          >
+            <motion.div variants={fadeUp}>
+              <SectionHeader
+                label="MY JOURNEY THUS FAR"
+                action={
+                  <a
+                    href="/resume.pdf"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-sm text-neutral-400 hover:text-nav-link-hover transition-colors duration-150"
+                  >
+                    View resume
+                    <ArrowUpRight />
+                  </a>
+                }
+              />
+            </motion.div>
             <div className="flex flex-col gap-0">
               {journeyItems.map((item) => (
-                <JourneyRow
-                  key={item.id}
-                  item={item}
-                  onHover={() => setHoveredId(item.id)}
-                  onUnhover={() => setHoveredId(null)}
-                />
+                <motion.div key={item.id} variants={fadeUp}>
+                  <JourneyRow
+                    item={item}
+                    onHover={() => setHoveredId(item.id)}
+                    onUnhover={() => setHoveredId(null)}
+                  />
+                </motion.div>
               ))}
             </div>
-          </section>
+          </motion.section>
 
-          <section id="communities">
-            <SectionHeader label="MY COMMUNITIES" />
+          <motion.section
+            id="communities"
+            variants={stagger}
+            initial={reduce ? "visible" : "hidden"}
+            whileInView="visible"
+            viewport={{ once: true, margin: "-80px" }}
+          >
+            <motion.div variants={fadeUp}>
+              <SectionHeader label="MY COMMUNITIES" />
+            </motion.div>
             <div className="flex flex-col">
               {communities.map((item) => (
-                <CommunityRow
-                  key={item.id}
-                  item={item}
-                  onHover={() => setHoveredId(item.id)}
-                  onUnhover={() => setHoveredId(null)}
-                />
+                <motion.div key={item.id} variants={fadeUp}>
+                  <CommunityRow
+                    item={item}
+                    onHover={() => setHoveredId(item.id)}
+                    onUnhover={() => setHoveredId(null)}
+                  />
+                </motion.div>
               ))}
             </div>
-          </section>
+          </motion.section>
 
-          <section
+          <motion.section
             id="fun"
             onMouseEnter={() => setHoveredId("fun")}
             onMouseLeave={() => setHoveredId(null)}
+            variants={stagger}
+            initial={reduce ? "visible" : "hidden"}
+            whileInView="visible"
+            viewport={{ once: true, margin: "-80px" }}
           >
-            <SectionHeader label="WHAT I DO FOR FUN" />
+            <motion.div variants={fadeUp}>
+              <SectionHeader label="WHAT I DO FOR FUN" />
+            </motion.div>
             <div className="flex flex-col gap-8 text-base leading-relaxed text-neutral-900">
-              <p>
+              <motion.p variants={fadeUp}>
                 I love making music. I sing and produce my own songs (jossici on
                 all platforms), and I&rsquo;m on a{" "}
                 <TertiaryLink
@@ -330,14 +355,14 @@ export function AboutContent({ spotifyPlaylist }: { spotifyPlaylist: Song[] | nu
                   varsity a cappella team
                 </TertiaryLink>
                 .
-              </p>
+              </motion.p>
 
-              <p>
+              <motion.p variants={fadeUp}>
                 I&rsquo;ve taken a liking to bouldering because of the colourful
                 things on the wall.
-              </p>
+              </motion.p>
 
-              <p>
+              <motion.p variants={fadeUp}>
                 I love exploring creative ways to make technology beautiful.
                 Check out some of my projects in{" "}
                 <TertiaryLink
@@ -349,9 +374,9 @@ export function AboutContent({ spotifyPlaylist }: { spotifyPlaylist: Song[] | nu
                   my playground
                 </TertiaryLink>
                 .
-              </p>
+              </motion.p>
 
-              <p>
+              <motion.p variants={fadeUp}>
                 Check out a more comprehensive list of{" "}
                 <TertiaryLink
                   href="#"
@@ -362,16 +387,16 @@ export function AboutContent({ spotifyPlaylist }: { spotifyPlaylist: Song[] | nu
                   the things I like
                 </TertiaryLink>
                 .
-              </p>
+              </motion.p>
 
-              <p>
+              <motion.p variants={fadeUp}>
                 I find it humbling and grounding and awe-inspiring to learn
                 about our place in the universe, the little speck of dust we
                 are. And so I love learning about constellations and all the
                 things one sees when looking up at the sky at night.
-              </p>
+              </motion.p>
             </div>
-          </section>
+          </motion.section>
         </div>
 
         {/* Right column — sticky panel, scoped to the grid row above (ends after "My Playlist") */}
@@ -402,24 +427,46 @@ export function AboutContent({ spotifyPlaylist }: { spotifyPlaylist: Song[] | nu
 
       {/* Playlist — outside the two-column grid; renders full width once the
           sticky panel's container (above) has scrolled out of the way. */}
-      <section id="playlist" className="mt-20">
-        <SectionHeader label="MY PLAYLIST" />
-        <p className="mb-8 text-base text-neutral-900">
-          Based off my Spotify&rsquo;s most played songs in the past 6 months.
-        </p>
+      <motion.section
+        id="playlist"
+        className="mt-20"
+        variants={stagger}
+        initial={reduce ? "visible" : "hidden"}
+        whileInView="visible"
+        viewport={{ once: true, margin: "-80px" }}
+      >
+        <motion.div variants={fadeUp}>
+          <SectionHeader label="MY PLAYLIST" />
+          <p className="mb-8 text-base text-neutral-900">
+            Based off my Spotify&rsquo;s most played songs in the past 6 months.
+          </p>
+        </motion.div>
         <div className="grid grid-flow-col grid-rows-3 gap-x-16 gap-y-6">
           {playlist.map((item) => (
-            <SongRow key={item.id} item={item} />
+            <motion.div key={item.id} variants={fadeUp}>
+              <SongRow item={item} />
+            </motion.div>
           ))}
         </div>
-      </section>
+      </motion.section>
 
       {/* Statistics — outside the two-column grid; renders full width once the
           sticky panel's container (above) has scrolled out of the way. */}
-      <section id="stats" className="mt-20">
-        <SectionHeader label="SOME STATISTICS" />
-        <PlaceholderBox className="h-[135px] w-full" />
-      </section>
+      <motion.section
+        id="stats"
+        className="mt-20"
+        variants={stagger}
+        initial={reduce ? "visible" : "hidden"}
+        whileInView="visible"
+        viewport={{ once: true, margin: "-80px" }}
+      >
+        <motion.div variants={fadeUp}>
+          <SectionHeader label="SOME STATISTICS" />
+        </motion.div>
+        <motion.div variants={fadeUp}>
+          <PlaceholderBox className="h-[135px] w-full" />
+        </motion.div>
+      </motion.section>
     </div>
   )
 }
