@@ -171,7 +171,7 @@ function CommunityRow({
     >
       <div className="flex items-center gap-6">
         <div
-          className="h-15 w-15 shrink-0 bg-contain bg-center bg-no-repeat"
+          className="h-14 w-14 shrink-0 bg-contain bg-center bg-no-repeat"
           style={{ backgroundImage: `url(${item.logo})` }}
         />
         <div>

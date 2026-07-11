@@ -1,5 +1,5 @@
-<svg width="520" height="520" viewBox="0 0 520 520" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g filter="url(#filter0_d_728_1498)">
+<svg width="280" height="280" viewBox="120 100 280 280" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g>
 <rect x="120" y="100" width="280" height="280" rx="60" fill="#CAB2F2"/>
 <rect x="122.5" y="102.5" width="275" height="275" rx="57.5" stroke="white" stroke-opacity="0.3" stroke-width="5"/>
 <g clip-path="url(#clip0_728_1498)">
@@ -7,16 +7,6 @@
 </g>
 </g>
 <defs>
-<filter id="filter0_d_728_1498" x="0" y="0" width="520" height="520" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-<feFlood flood-opacity="0" result="BackgroundImageFix"/>
-<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
-<feOffset dy="20"/>
-<feGaussianBlur stdDeviation="60"/>
-<feComposite in2="hardAlpha" operator="out"/>
-<feColorMatrix type="matrix" values="0 0 0 0 0.215686 0 0 0 0 0.0980392 0 0 0 0 0.407843 0 0 0 0.25 0"/>
-<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_728_1498"/>
-<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_728_1498" result="shape"/>
-</filter>
 <clipPath id="clip0_728_1498">
 <rect width="200" height="170" fill="white" transform="translate(155 160)"/>
 </clipPath>
