@@ -184,7 +184,7 @@ function CommunityRow({
         target="_blank"
         rel="noopener noreferrer"
         aria-label={item.name}
-        className="h-6 w-6 shrink-0 text-icon-social transition-colors duration-150 hover:text-accent"
+        className="h-6 w-6 shrink-0 text-icon-social transition-colors duration-150 hover:text-nav-link-hover"
       >
         <span
           aria-hidden="true"
@@ -278,7 +278,7 @@ export function AboutContent({ spotifyPlaylist }: { spotifyPlaylist: Song[] | nu
                   href="/resume.pdf"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-sm text-neutral-400 hover:text-primary transition-colors duration-150"
+                  className="inline-flex items-center gap-1 text-sm text-neutral-400 hover:text-nav-link-hover transition-colors duration-150"
                 >
                   View resume
                   <ArrowUpRight />

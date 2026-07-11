@@ -32,7 +32,7 @@
   /* Semantic aliases */
   --color-chrome:       var(--color-neutral-75);
   --color-surface:      var(--color-neutral-50);
-  --color-accent:       car(--color-neutral-800);
+  --color-accent:       var(--color-neutral-800);
 
   --color-primary:      var(--color-neutral-900);
   --color-secondary:    var(--color-neutral-700);
