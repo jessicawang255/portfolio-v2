@@ -129,13 +129,13 @@ function JourneyRow({
     <div
       onMouseEnter={onHover}
       onMouseLeave={onUnhover}
-      className="-mx-3 flex items-center justify-between gap-6 rounded-sm border border-transparent px-3 py-3 transition-colors duration-150 hover:cursor-help hover:border-neutral-900/3 hover:bg-neutral-75 hover:duration-0"
+      className="-mx-3 flex items-center justify-between gap-6 border-x border-x-transparent border-y border-y-transparent px-3 py-3 transition-colors duration-150 hover:cursor-help hover:border-y-neutral-900/3 hover:bg-neutral-75 hover:duration-0"
     >
       <div>
         <p className="text-base font-medium text-neutral-900">{item.company}</p>
         <p className="text-base text-neutral-500">{item.role}</p>
       </div>
-      <span className="shrink-0 font-mono text-sm uppercase text-neutral-500">{item.period}</span>
+      <span className="shrink-0 font-mono text-sm uppercase text-neutral-400">{item.period}</span>
     </div>
   )
 }
