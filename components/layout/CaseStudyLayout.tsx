@@ -56,7 +56,7 @@ export function CaseStudyLayout({ project, children }: Props) {
         >
           <Link
             href="/"
-            className="text-base font-normal text-nav-link hover:text-nav-link-hover transition-colors duration-75"
+            className="text-base font-normal text-nav-link hover:text-nav-link-hover transition-colors duration-150"
           >
             Jessica Wang
           </Link>
@@ -67,7 +67,7 @@ export function CaseStudyLayout({ project, children }: Props) {
                   href={href}
                   target={target}
                   rel={target === "_blank" ? "noopener noreferrer" : undefined}
-                  className="text-base font-normal text-nav-link hover:text-nav-link-hover transition-colors duration-75"
+                  className="text-base font-normal text-nav-link hover:text-nav-link-hover transition-colors duration-150"
                 >
                   {label}
                 </Link>
@@ -135,7 +135,7 @@ export function CaseStudyLayout({ project, children }: Props) {
                 <div className="sticky top-0 pt-9 pb-16">
                   <Link
                     href="/"
-                    className="flex items-center gap-1 text-base text-subtle font-normal hover:text-[var(--cs-accent)] transition-colors duration-75 mb-8"
+                    className="flex items-center gap-1 text-base text-subtle font-normal hover:text-[var(--cs-accent)] transition-colors duration-150 mb-8"
                   >
                     <ChevronLeft />
                     Back

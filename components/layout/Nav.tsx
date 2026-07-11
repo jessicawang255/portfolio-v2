@@ -15,7 +15,7 @@ export function Nav() {
       >
         <Link
           href="/"
-          className="text-base font-normal text-nav-link hover:text-nav-link-hover transition-colors duration-75"
+          className="text-base font-normal text-nav-link hover:text-nav-link-hover transition-colors duration-150"
         >
           Jessica Wang
         </Link>
@@ -27,7 +27,7 @@ export function Nav() {
                 href={href}
                 target={target}
                 rel={target === "_blank" ? "noopener noreferrer" : undefined}
-                className="text-base font-normal text-nav-link hover:text-nav-link-hover transition-colors duration-75"
+                className="text-base font-normal text-nav-link hover:text-nav-link-hover transition-colors duration-150"
               >
                 {label}
               </Link>

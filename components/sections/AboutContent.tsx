@@ -129,7 +129,7 @@ function JourneyRow({
     <div
       onMouseEnter={onHover}
       onMouseLeave={onUnhover}
-      className="-mx-3 flex items-center justify-between gap-6 rounded-sm px-3 py-3 transition-colors hover:bg-neutral-75 hover:cursor-help"
+      className="-mx-3 flex items-center justify-between gap-6 rounded-sm border border-transparent px-3 py-3 transition-colors duration-150 hover:cursor-help hover:border-neutral-900/3 hover:bg-neutral-75 hover:duration-0"
     >
       <div>
         <p className="text-base font-medium text-neutral-900">{item.company}</p>
@@ -153,7 +153,7 @@ function CommunityRow({
     <div
       onMouseEnter={onHover}
       onMouseLeave={onUnhover}
-      className="-mx-3 flex items-center justify-between gap-6 rounded-sm px-3 py-4 transition-colors duration-0 hover:bg-neutral-75 hover:cursor-help"
+      className="-mx-3 flex items-center justify-between gap-6 rounded-sm border border-transparent px-3 py-4 transition-colors duration-150 hover:cursor-help hover:border-neutral-900/3 hover:bg-neutral-75 hover:duration-0"
     >
       <div className="flex items-center gap-6">
         <div
@@ -170,9 +170,24 @@ function CommunityRow({
         target="_blank"
         rel="noopener noreferrer"
         aria-label={item.name}
-        className="h-6 w-6 shrink-0 bg-contain bg-center bg-no-repeat"
-        style={{ backgroundImage: `url(${item.icon})` }}
-      />
+        className="h-6 w-6 shrink-0 text-icon-social transition-colors duration-150 hover:text-accent"
+      >
+        <span
+          aria-hidden="true"
+          style={{
+            display: "inline-block",
+            width: 24,
+            height: 24,
+            WebkitMaskImage: `url(${item.icon})`,
+            maskImage: `url(${item.icon})`,
+            WebkitMaskSize: "contain",
+            maskSize: "contain",
+            WebkitMaskRepeat: "no-repeat",
+            maskRepeat: "no-repeat",
+            backgroundColor: "currentColor",
+          }}
+        />
+      </a>
     </div>
   )
 }
@@ -217,7 +232,7 @@ export function AboutContent() {
                   href="/resume.pdf"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-sm text-neutral-400 hover:text-primary transition-colors duration-75"
+                  className="inline-flex items-center gap-1 text-sm text-neutral-400 hover:text-primary transition-colors duration-150"
                 >
                   View resume
                   <span className="text-neutral-400">
@@ -241,15 +256,13 @@ export function AboutContent() {
           <section id="communities">
             <SectionHeader label="MY COMMUNITIES" />
             <div className="flex flex-col">
-              {communities.map((item, i) => (
-                <div key={item.id}>
-                  {i > 0 && <div className="h-px bg-neutral-100" />}
-                  <CommunityRow
-                    item={item}
-                    onHover={() => setHoveredId(item.id)}
-                    onUnhover={() => setHoveredId(null)}
-                  />
-                </div>
+              {communities.map((item) => (
+                <CommunityRow
+                  key={item.id}
+                  item={item}
+                  onHover={() => setHoveredId(item.id)}
+                  onUnhover={() => setHoveredId(null)}
+                />
               ))}
             </div>
           </section>
@@ -329,7 +342,7 @@ export function AboutContent() {
             style={{ top: "calc(var(--nav-height) + 20px)" }}
           >
             {reduce ? (
-              <p className="font-mono text-sm text-muted">{panelText}</p>
+              <p className="font-sans text-base text-neutral-300 font-medium">{panelText}</p>
             ) : (
               <AnimatePresence mode="wait">
                 <motion.p
@@ -338,7 +351,7 @@ export function AboutContent() {
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.15 }}
-                  className="font-mono text-sm text-muted"
+                  className="font-sans text-base text-neutral-300"
                 >
                   {panelText}
                 </motion.p>

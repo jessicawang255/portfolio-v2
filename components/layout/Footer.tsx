@@ -107,7 +107,7 @@ export function Footer() {
                   href={href}
                   target={target}
                   rel={target === "_blank" ? "noopener noreferrer" : undefined}
-                  className="text-base font-normal text-nav-link hover:text-nav-link-hover transition-colors duration-75"
+                  className="text-base font-normal text-nav-link hover:text-nav-link-hover transition-colors duration-150"
                 >
                   {label}
                 </Link>
@@ -125,7 +125,7 @@ export function Footer() {
                   href={href}
                   target={href.startsWith("http") ? "_blank" : undefined}
                   rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
-                  className="text-base font-normal text-nav-link hover:text-nav-link-hover transition-colors duration-75"
+                  className="text-base font-normal text-nav-link hover:text-nav-link-hover transition-colors duration-150"
                 >
                   {label}
                 </a>

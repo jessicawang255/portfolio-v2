@@ -71,7 +71,7 @@ export function AboutHero() {
                 aria-label={label}
                 target={href.startsWith("http") ? "_blank" : undefined}
                 rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
-                className="text-icon-social hover:text-accent transition-colors duration-75"
+                className="text-icon-social hover:text-accent transition-colors duration-150"
               >
                 <span
                   aria-hidden="true"
