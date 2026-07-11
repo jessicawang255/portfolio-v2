@@ -167,7 +167,7 @@ function CommunityRow({
     <div
       onMouseEnter={onHover}
       onMouseLeave={onUnhover}
-      className="-mx-3 flex items-center justify-between gap-6 rounded-sm border border-transparent px-3 py-4 transition-colors duration-150 hover:cursor-help hover:border-neutral-900/3 hover:bg-neutral-75 hover:duration-0"
+      className="-mx-3 flex items-center justify-between gap-6 border-x border-x-transparent border-y border-y-transparent px-3 py-4 transition-colors duration-150 hover:cursor-help hover:border-y-neutral-900/3 hover:bg-neutral-75 hover:duration-0"
     >
       <div className="flex items-center gap-6">
         <div
