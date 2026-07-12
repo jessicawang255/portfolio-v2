@@ -402,7 +402,7 @@ export function AboutContent({ spotifyPlaylist }: { spotifyPlaylist: Song[] | nu
         {/* Right column — sticky panel, scoped to the grid row above (ends after "My Playlist") */}
         <div className="relative mt-16 hidden lg:mt-0 lg:block">
           <div
-            className="sticky flex min-h-[70vh] flex-col rounded-2xl border border-neutral-900/3 bg-neutral-75 p-9"
+            className="sticky flex min-h-[70vh] flex-col rounded-2xl border border-neutral-900/3 bg-neutral-75 p-9 "  // could add this shadow: shadow-[0_0_30px_-10px_rgba(22,25,29,0.08)]
             style={{ top: "calc(var(--nav-height) + 20px)" }}
           >
             {reduce ? (
