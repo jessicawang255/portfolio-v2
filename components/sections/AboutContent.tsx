@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react"
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion"
 import { TertiaryLink } from "@/components/ui/TertiaryLink"
+import { FLOWERS } from "@/components/ui/flowers"
+import { ErosionFilterDef, useErosion } from "@/components/ui/ErosionFilter"
 import { stagger, fadeUp } from "@/lib/motion"
 import type { Song } from "@/lib/spotify"
 
@@ -73,9 +75,6 @@ const communities: Community[] = [
     icon: "/icons/instagram.svg",
   },
 ]
-
-// Placeholder art tile until real album art is dropped in per song.
-const SONG_ART_BG = "#FFADA3"
 
 // Used when the live Spotify fetch fails or returns nothing.
 const FALLBACK_PLAYLIST: Song[] = [
@@ -207,24 +206,65 @@ function CommunityRow({
   )
 }
 
-// Same tile/text layout as CommunityRow, but the whole row is the link, and
-// the hover state reveals a "Play on Spotify" hint instead of highlighting
-// the row.
-function SongRow({ item }: { item: Song }) {
+// Stand-in art tile: one of the 12 unused flowers (from the pre-redesign
+// brand system), assigned per song. Reuses FlowerIcon's hover treatment
+// (rotate/scale + the erosion-filter grain increase) rather than cycling
+// or revealing a real photo — the flower itself is the artwork.
+function SongArt({ flowerIdx, isHovered }: { flowerIdx: number; isHovered: boolean }) {
+  const reduce = useReducedMotion()
+  const { filterId, scale, onMouseEnter, onMouseLeave } = useErosion(!!reduce)
+
+  useEffect(() => {
+    if (isHovered) onMouseEnter()
+    else onMouseLeave()
+  }, [isHovered, onMouseEnter, onMouseLeave])
+
+  const FlowerComponent = FLOWERS[flowerIdx % FLOWERS.length].component
+
+  return (
+    <div className="relative h-15 w-15 shrink-0 overflow-hidden rounded-base border border-neutral-100 bg-neutral-100">
+      <ErosionFilterDef id={filterId} scale={scale} />
+      <motion.div
+        animate={reduce ? undefined : { scale: isHovered ? 1.1 : 1, rotate: isHovered ? 45 : 0 }}
+        transition={
+          reduce ? undefined : {
+            scale: { duration: 0.3, ease: "easeOut" },
+            rotate: { duration: 0.3, ease: "easeOut" },
+          }
+        }
+        style={{
+          position: "absolute",
+          inset: 0,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          filter: reduce ? undefined : `url(#${filterId})`,
+        }}
+      >
+        <div className="h-[42%] w-[42%] [&>svg]:block [&>svg]:h-full [&>svg]:w-full">
+          <FlowerComponent />
+        </div>
+      </motion.div>
+    </div>
+  )
+}
+
+// Same hover language as JourneyRow/CommunityRow, since the sticky panel is
+// out of view by the time this section scrolls in — the "hover shows related
+// content elsewhere" distinction isn't perceivable here.
+function SongRow({ item, flowerIdx }: { item: Song; flowerIdx: number }) {
+  const [isHovered, setIsHovered] = useState(false)
   return (
     <a
       href={item.href}
       target="_blank"
       rel="noopener noreferrer"
-      className="group flex items-center justify-between gap-6"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      className="group -mx-3 flex items-center justify-between gap-6 border-x border-x-transparent border-y border-y-transparent px-3 py-3 transition-colors duration-150 hover:border-y-neutral-900/3 hover:bg-neutral-75 hover:duration-0"
     >
       <div className="flex items-center gap-6">
-        <div
-          className="relative h-15 w-15 shrink-0 overflow-hidden rounded-base border border-neutral-100 bg-cover bg-center"
-          style={{ backgroundImage: item.art ? `url(${item.art})` : undefined, backgroundColor: SONG_ART_BG }}
-        >
-          <div className="absolute inset-0 bg-black/0 transition-colors duration-150 group-hover:bg-black/30" />
-        </div>
+        <SongArt flowerIdx={flowerIdx} isHovered={isHovered} />
         <div>
           <p className="text-base font-medium text-neutral-900">{item.title}</p>
           <p className="text-base text-neutral-500">{item.artist}</p>
@@ -442,9 +482,9 @@ export function AboutContent({ spotifyPlaylist }: { spotifyPlaylist: Song[] | nu
           </p>
         </motion.div>
         <div className="grid grid-flow-col grid-rows-3 gap-x-16 gap-y-6">
-          {playlist.map((item) => (
+          {playlist.map((item, index) => (
             <motion.div key={item.id} variants={fadeUp}>
-              <SongRow item={item} />
+              <SongRow item={item} flowerIdx={index} />
             </motion.div>
           ))}
         </div>

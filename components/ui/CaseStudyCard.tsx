@@ -55,7 +55,7 @@ export function CaseStudyCard({ project, imageHeight = 340 }: Props) {
         {/* Thumbnail */}
         <div
           className="card-thumb relative w-full overflow-hidden"
-          style={{ height: imageHeight, borderRadius: 18, ...bgStyle }}
+          style={{ height: imageHeight, borderRadius: 16, ...bgStyle }}
         >
           {image && (
             <Image
