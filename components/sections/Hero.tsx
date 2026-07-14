@@ -35,8 +35,7 @@ export function Hero() {
           variants={fadeUp}
           className="mb-4 max-w-lg text-balance text-base font-normal text-neutral-700"
         >
-          I fell in love with making new interactions a while ago, and I want
-          to do it for at least the next little bit of my life.
+          I'm a product designer who's fluent from design to code. I like to think deeply about what the future of design will be. Are we all cooked? Maybe. But maybe not, too!
         </motion.p>
 
         <motion.p
