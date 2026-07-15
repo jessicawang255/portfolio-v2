@@ -94,6 +94,7 @@
 
 html {
   background: var(--color-chrome);
+  /* overscroll-behavior: none; */
 }
 
 body {
@@ -101,6 +102,7 @@ body {
   font-family: var(--font-sans);
   /* -webkit-font-smoothing: antialiased; */
   padding-top: var(--nav-height);
+  /* overscroll-behavior: none; */
 }
 
 /* ─── Main frame — radius transitions ──────────────────────────────────────── */

@@ -38,10 +38,11 @@ const navLinks: { label: string; href: string; target?: string }[] = [
 // body's padding-top (nav-height) so the content card aligns to the hero bottom.
 const HERO_HEIGHT = "65vh"
 
-// The hero container itself (background + foreground) runs 100px taller than
-// HERO_HEIGHT so the background bleeds underneath the content card instead of
-// cutting off right at its edge — intentional, covered by the card's z-index.
-const HERO_BG_BLEED = 100
+// The content card sits 80px further down the hero than HERO_HEIGHT alone
+// would put it (see the spacer below), so the hero container itself needs to
+// run 80px taller too — otherwise there's an 80px band between the hero's own
+// bottom edge and the content card's top edge with no background under it.
+const HERO_BG_EXTRA = 80
 
 export function CaseStudyLayout({ project, children, heroBackground }: Props) {
   const { title, name, role, timeline, team, skills, accent, image, imageWidth, imageHeight, toc = [] } = project
@@ -92,7 +93,7 @@ export function CaseStudyLayout({ project, children, heroBackground }: Props) {
         {/* Hero — fixed, starts at viewport top, sits above root nav (z-0) */}
         <div
           className="fixed inset-x-0 top-0 overflow-hidden"
-          style={{ zIndex: 5, height: `calc(${HERO_HEIGHT} + ${HERO_BG_BLEED}px)` }}
+          style={{ zIndex: 5, height: `calc(${HERO_HEIGHT} + ${HERO_BG_EXTRA}px)` }}
         >
           {/* Background layer — per-case-study, fixed (no parallax) */}
           <HeroBackground project={project} />
