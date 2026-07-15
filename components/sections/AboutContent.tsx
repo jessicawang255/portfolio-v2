@@ -55,7 +55,7 @@ const communities: Community[] = [
     description: "Western University's hackathon",
     logo: "/images/communities/hackwestern-icon.svg",
     href: "https://hackwestern.com",
-    icon: "/icons/arrow-right-up-line.svg",
+    icon: "/icons/global-line.svg",
   },
   {
     id: "comm-framer",
@@ -63,7 +63,7 @@ const communities: Community[] = [
     description: "I'm a campus ambassador for Framer, xyz xyz xyz.",
     logo: "/images/communities/framer-icon.png",
     href: "https://framer.com/",
-    icon: "/icons/arrow-right-up-line.svg",
+    icon: "/icons/global-line.svg",
   },
   {
     id: "comm-ivey-product-society",
