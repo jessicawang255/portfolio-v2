@@ -18,7 +18,7 @@ export function Nav() {
   const pathname = usePathname()
 
   return (
-    <header className="fixed inset-x-0 top-0 z-[2] bg-chrome/35 backdrop-blur-sm">
+    <header className="fixed inset-x-0 top-0 z-[2] bg-chrome/50">
       <nav
         className="container-chrome flex items-center justify-between py-4"
         aria-label="Primary navigation"
