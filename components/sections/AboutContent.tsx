@@ -4,7 +4,6 @@ import { useEffect, useState } from "react"
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion"
 import { TertiaryLink } from "@/components/ui/TertiaryLink"
 import { FLOWERS } from "@/components/ui/flowers"
-import { ErosionFilterDef, useErosion } from "@/components/ui/ErosionFilter"
 import { stagger, fadeUp } from "@/lib/motion"
 import type { Song } from "@/lib/spotify"
 
@@ -207,38 +206,23 @@ function CommunityRow({
 }
 
 // Stand-in art tile: one of the 12 unused flowers (from the pre-redesign
-// brand system), assigned per song. Reuses FlowerIcon's hover treatment
-// (rotate/scale + the erosion-filter grain increase) rather than cycling
-// or revealing a real photo — the flower itself is the artwork.
+// brand system), assigned per song. A subtle rotate/scale on hover rather
+// than cycling or revealing a real photo — the flower itself is the artwork.
 function SongArt({ flowerIdx, isHovered }: { flowerIdx: number; isHovered: boolean }) {
   const reduce = useReducedMotion()
-  const { filterId, scale, onMouseEnter, onMouseLeave } = useErosion(!!reduce)
-
-  useEffect(() => {
-    if (isHovered) onMouseEnter()
-    else onMouseLeave()
-  }, [isHovered, onMouseEnter, onMouseLeave])
-
   const FlowerComponent = FLOWERS[flowerIdx % FLOWERS.length].component
 
   return (
     <div className="relative h-15 w-15 shrink-0 overflow-hidden rounded-base border border-neutral-100 bg-neutral-100">
-      <ErosionFilterDef id={filterId} scale={scale} />
       <motion.div
-        animate={reduce ? undefined : { scale: isHovered ? 1.1 : 1, rotate: isHovered ? 45 : 0 }}
-        transition={
-          reduce ? undefined : {
-            scale: { duration: 0.3, ease: "easeOut" },
-            rotate: { duration: 0.3, ease: "easeOut" },
-          }
-        }
+        animate={reduce ? undefined : { rotate: isHovered ? 30 : 0 }}
+        transition={reduce ? undefined : { duration: 0.2, ease: "easeOut" }}
         style={{
           position: "absolute",
           inset: 0,
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          filter: reduce ? undefined : `url(#${filterId})`,
         }}
       >
         <div className="h-[42%] w-[42%] [&>svg]:block [&>svg]:h-full [&>svg]:w-full">
