@@ -1,4 +1,3 @@
-import Image from "next/image"
 import Link from "next/link"
 import type { Project } from "@/content/work"
 import { TableOfContents } from "@/components/ui/TableOfContents"
@@ -45,7 +44,7 @@ const HERO_HEIGHT = "65vh"
 const HERO_BG_EXTRA = 80
 
 export function CaseStudyLayout({ project, children, heroBackground }: Props) {
-  const { title, name, role, timeline, team, skills, accent, image, imageWidth, imageHeight, toc = [] } = project
+  const { title, name, role, timeline, team, skills, accent, toc = [] } = project
 
   const HeroBackground = heroBackground ?? DefaultHeroBackground
 
@@ -95,26 +94,10 @@ export function CaseStudyLayout({ project, children, heroBackground }: Props) {
           className="fixed inset-x-0 top-0 overflow-hidden"
           style={{ zIndex: 5, height: `calc(${HERO_HEIGHT} + ${HERO_BG_EXTRA}px)` }}
         >
-          {/* Background layer — per-case-study, fixed (no parallax) */}
+          {/* Background + foreground — both owned by the per-case-study hero
+              component now (whatever it renders: gradient, image, canvas,
+              plus its own foreground screenshots if any). */}
           <HeroBackground project={project} />
-
-          {/* Foreground layer — product screenshots, transparent PNG. Sized by
-              its real width/height (not `fill`) so it scales to the full
-              viewport width at its true aspect ratio — never stretched or
-              cropped, just clipped by the hero's overflow-hidden if it runs
-              taller than HERO_HEIGHT. */}
-          {image && imageWidth && imageHeight && (
-            <div className="absolute inset-x-0 top-0">
-              <Image
-                src={image}
-                alt={title}
-                width={imageWidth}
-                height={imageHeight}
-                className="w-full h-auto drop-shadow-lg"
-                sizes="100vw"
-              />
-            </div>
-          )}
         </div>
 
         {/* Spacer — body has padding-top: nav-height (56px) so the first in-flow

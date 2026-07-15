@@ -75,6 +75,127 @@ const communities: Community[] = [
   },
 ]
 
+// Rich content shown in the sticky panel when a journey/community row is
+// hovered. Keyed by the row's id. Rows without an entry fall back to the
+// plain "Active: {id}" panel text. Images are placeholders (aspect-ratio
+// boxes) until real photos are ready — swap PanelImagePlaceholder for an
+// <Image> once assets land.
+type PanelTextBlock =
+  | { type: "p"; text: string }
+  | { type: "bullets"; items: string[] }
+
+type PanelImage = { caption: string; aspect: string }
+
+type PanelEntry = { blocks: PanelTextBlock[]; images: PanelImage[] }
+
+const panelContent: Record<string, PanelEntry> = {
+  "royal-bank-of-canada": {
+    blocks: [
+      {
+        type: "p",
+        text: "Summer 2026, I was a software engineering intern at RBC as a part of their Amplify program - a specialized internship where you get paired into intern teams to design and build a solution for a real business challenge … Understanding the problem space, researching and interviewing real stakeholders, designing, developing, deploying, pitching to senior leaders",
+      },
+      {
+        type: "p",
+        text: "My team worked on building a proof of concept for a blockchain-based foreign exchange tool. As a developer,  learned XYZ….. a really fun summer!",
+      },
+    ],
+    images: [
+      {
+        caption:
+          "I worked on a joint challenge under two teams: Global Payments Technology and the digital asset innovation team in RBCx, RBC’s in-house innovation team or smth idk.",
+        aspect: "5/2",
+      },
+    ],
+  },
+  framer: {
+    blocks: [
+      {
+        type: "p",
+        text: "I’m a campus ambassador for Framer, where I teach students how to create their own websites in Framer, XYZ, host events on campus, and create a community for Framer lovers. In the past my co-ambassador, Adia, and I have run workshops, design-a-thons, and provided a lot of bubble tea.",
+      },
+    ],
+    images: [
+      { caption: "Presenting a Framer 101 workshop", aspect: "3/2" },
+      { caption: "A selfie with our community (ft. bubble tea!)", aspect: "4/5" },
+    ],
+  },
+  "hack-western": {
+    blocks: [
+      {
+        type: "p",
+        text: "I’m lucky to be leading an amazing team at Hack Western on all our designs - website, application portal, merch, and everything else in between.",
+      },
+    ],
+    images: [
+      { caption: "The organizer team", aspect: "3/2" },
+      { caption: "A collaborative canvas made during the event <3", aspect: "3/2" },
+      { caption: "Hack Western 12 merch designs", aspect: "3/2" },
+      { caption: "This was little known, but… I was one of the horses.", aspect: "1/2" },
+    ],
+  },
+  cibc: {
+    blocks: [
+      {
+        type: "p",
+        text: "I was a software engineering intern at CIBC in Summer 2025. I worked on a brand new project surroudning modernizing marketing, tailoring custom offers around clients rather than trying to find clients to send pre-existing offers to. I worked on building the ETL pipelines that enabled … etc.",
+      },
+      { type: "bullets", items: ["code got shipped"] },
+      {
+        type: "p",
+        text: "This was my first time working on a project with such a large scale and impact, and go to learn the inner workings of working on a big team, processes, working with QA, requirements to write production-ready code.",
+      },
+    ],
+    images: [{ caption: "Caption", aspect: "5/2" }],
+  },
+  "western-founders-network": {
+    blocks: [
+      {
+        type: "p",
+        text: "From 2023-2025, I was a part of the design team on Western Founders Network, a club for the intersection of technology, business, and entrepreneurship.",
+      },
+    ],
+    images: [
+      { caption: "Running Product Design Sprint, our university’s first and largest design-a-thon", aspect: "16/9" },
+      { caption: "My WFN team <3", aspect: "3/2" },
+    ],
+  },
+  "the-residency": {
+    blocks: [
+      {
+        type: "p",
+        text: "The Residency is a … for ambitious founders and builders. In 2024, I was the lead designer on all assets, led the new brand identity, etc. etc. It was a fun summer, and I’m grateful for the people building cool things that I met along the way!",
+      },
+    ],
+    images: [
+      { caption: "Their marble statue X futuristic tech theme is cool", aspect: "2/3" },
+      { caption: "Some graphic design I did for The Residency’s events", aspect: "3/2" },
+    ],
+  },
+  autumn: {
+    blocks: [
+      { type: "p", text: "Autumn is an end-of-life marketplace" },
+      {
+        type: "p",
+        text: "I learned all about what it’s like to work at an early stage startup, scrappy, wearing multiple hats, growth strategies, etc.",
+      },
+    ],
+    images: [{ caption: "Caption", aspect: "5/2" }],
+  },
+  "comm-ivey-product-society": {
+    blocks: [
+      {
+        type: "p",
+        text: "The Ivey Product Society is a product management community that aims to build the next generation of product leaders at Western University. As an executive on the team, I helped organize the 2026 cohort of our flagship Product Management Fellowship. During the fellowship, students get … yada yada yada. !",
+      },
+    ],
+    images: [
+      { caption: "The 2025/6 Ivey Product Society team <3", aspect: "1/1" },
+      { caption: "Caption", aspect: "1/1" },
+    ],
+  },
+}
+
 // Used when the live Spotify fetch fails or returns nothing.
 const FALLBACK_PLAYLIST: Song[] = [
   { id: "song-flash-in-the-pan", title: "Flash in the Pan", artist: "Jane Remover",          art: "", href: "#" },
@@ -127,6 +248,47 @@ function PlaceholderBox({ className }: { className?: string }) {
     </div>
   )
   
+}
+
+// Stand-in for a real photo: aspect-ratio box, 2px radius per spec. Swap for
+// an <Image> once assets are ready — the caption/spacing below stays the same.
+function PanelImagePlaceholder({ caption, aspect }: PanelImage) {
+  return (
+    <div>
+      <div
+        className="flex items-center justify-center rounded-[2px] border border-neutral-900/10 bg-neutral-100"
+        style={{ aspectRatio: aspect }}
+      >
+        <p className="px-3 text-center text-xs font-bold text-red-600">IMAGE (temp)</p>
+      </div>
+      <p className="mt-2 text-sm leading-[1.5] text-neutral-400 italic">{caption}</p>
+    </div>
+  )
+}
+
+function PanelContentView({ entry }: { entry: PanelEntry }) {
+  return (
+    <div>
+      <div className="flex flex-col gap-6 text-base leading-relaxed text-neutral-900">
+        {entry.blocks.map((block, i) =>
+          block.type === "p" ? (
+            <p key={i}>{block.text}</p>
+          ) : (
+            <ul key={i} className="list-disc pl-5">
+              {block.items.map((item, j) => (
+                <li key={j}>{item}</li>
+              ))}
+            </ul>
+          )
+        )}
+      </div>
+      <div className={`mt-9 grid gap-x-6 gap-y-9 ${entry.images.length > 1 ? "grid-cols-2" : "grid-cols-1"}`}>
+        {entry.images.map((img, i) => (
+          <PanelImagePlaceholder key={i} {...img} />
+        ))}
+      </div>
+    </div>
+  )
 }
 
 function JourneyRow({
@@ -289,6 +451,8 @@ export function AboutContent({ spotifyPlaylist }: { spotifyPlaylist: Song[] | nu
   const panelText = displayId
     ? `Active: ${displayId} (${trigger})`
     : "Hover to find out more…"
+  const panelEntry = displayId ? panelContent[displayId] : undefined
+  const panelKey = panelEntry ? `entry-${displayId}` : `text-${panelText}`
 
   return (
     <div className="container-main py-9">
@@ -430,19 +594,26 @@ export function AboutContent({ spotifyPlaylist }: { spotifyPlaylist: Song[] | nu
             style={{ top: "calc(var(--nav-height) + 20px)" }}
           >
             {reduce ? (
-              <p className="font-sans text-base text-neutral-300 font-medium">{panelText}</p>
+              panelEntry ? (
+                <PanelContentView entry={panelEntry} />
+              ) : (
+                <p className="font-sans text-base text-neutral-300 font-medium">{panelText}</p>
+              )
             ) : (
               <AnimatePresence mode="wait">
-                <motion.p
-                  key={panelText}
+                <motion.div
+                  key={panelKey}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.15 }}
-                  className="font-sans text-base text-neutral-300"
                 >
-                  {panelText}
-                </motion.p>
+                  {panelEntry ? (
+                    <PanelContentView entry={panelEntry} />
+                  ) : (
+                    <p className="font-sans text-base text-neutral-300">{panelText}</p>
+                  )}
+                </motion.div>
               </AnimatePresence>
             )}
           </div>
