@@ -40,7 +40,7 @@ function Separator({ children, className = "" }: { children: ReactNode; classNam
 }
 
 export function CaseStudyCard({ project, imageHeight = 340 }: Props) {
-  const { slug, title, name, status, disciplines, bg, image } = project
+  const { slug, title, name, status, disciplines, bg, thumbnail } = project
 
   const isGradient = bg.startsWith("linear-gradient")
   const bgStyle = isGradient ? { background: bg } : { backgroundColor: bg }
@@ -57,9 +57,9 @@ export function CaseStudyCard({ project, imageHeight = 340 }: Props) {
           className="card-thumb relative w-full overflow-hidden"
           style={{ height: imageHeight, borderRadius: 16, ...bgStyle }}
         >
-          {image && (
+          {thumbnail && (
             <Image
-              src={image}
+              src={thumbnail}
               alt={title}
               fill
               className="object-cover"

@@ -7,7 +7,12 @@ export type Project = {
   disciplines?: string[]
   bg: string
   accent?: string
+  thumbnail?: string
   image?: string
+  // Foreground hero image's real pixel dimensions — Next/Image needs these
+  // to preserve aspect ratio without cropping when it's not using `fill`.
+  imageWidth?: number
+  imageHeight?: number
   // Case study detail fields
   role?: string
   timeline?: string
@@ -44,10 +49,13 @@ export const projects: Project[] = [
     slug: "hack-western",
     title: "Designing an inviting application experience for 2,000 hackers",
     name: "Hack Western",
+    image: "/images/work/hack-western/hero.png",
+    imageWidth: 6000,
+    imageHeight: 2590,
     status: "Shipped 2025",
     year: 2025,
     disciplines: ["Visual design", "User testing"],
-    bg: "#eae6f4",
+    bg: "I#FF0000",
     accent: "hack-western",
     role: "Product Designer",
     timeline: "Sep – Dec 2024",

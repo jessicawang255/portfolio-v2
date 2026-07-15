@@ -492,7 +492,7 @@ export function AboutContent({ spotifyPlaylist }: { spotifyPlaylist: Song[] | nu
 
       {/* Statistics — outside the two-column grid; renders full width once the
           sticky panel's container (above) has scrolled out of the way. */}
-      <motion.section
+      {/* <motion.section
         id="stats"
         className="mt-20"
         variants={stagger}
@@ -506,7 +506,7 @@ export function AboutContent({ spotifyPlaylist }: { spotifyPlaylist: Song[] | nu
         <motion.div variants={fadeUp}>
           <PlaceholderBox className="h-[135px] w-full" />
         </motion.div>
-      </motion.section>
+      </motion.section> */}
     </div>
   )
 }

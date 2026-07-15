@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation"
-import { projects } from "@/content/work"
+import { projects, type Project } from "@/content/work"
 import { CaseStudyLayout } from "@/components/layout/CaseStudyLayout"
 
 export function generateStaticParams() {
@@ -30,8 +30,16 @@ export default async function CaseStudyPage({
     // No content file yet for this case study
   }
 
+  let HeroBackground: React.ComponentType<{ project: Project }> | null = null
+  try {
+    const mod = await import(`@/content/case-studies/hero/${slug}.tsx`)
+    HeroBackground = mod.default
+  } catch {
+    // No custom hero background — CaseStudyLayout falls back to a plain one
+  }
+
   return (
-    <CaseStudyLayout project={project}>
+    <CaseStudyLayout project={project} heroBackground={HeroBackground}>
       {Content ? <Content /> : null}
     </CaseStudyLayout>
   )

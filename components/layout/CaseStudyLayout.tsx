@@ -3,10 +3,15 @@ import Link from "next/link"
 import type { Project } from "@/content/work"
 import { TableOfContents } from "@/components/ui/TableOfContents"
 import { CaseStudyRadiusController } from "@/components/layout/CaseStudyRadiusController"
+import { DefaultHeroBackground } from "@/components/layout/DefaultHeroBackground"
 
 type Props = {
   project: Project
   children: React.ReactNode
+  // Per-case-study hero background — a static gradient, an image, a canvas
+  // with mouse-driven noise, whatever the case study calls for. Falls back
+  // to a plain color/gradient when a case study doesn't define one.
+  heroBackground?: React.ComponentType<{ project: Project }> | null
 }
 
 function ChevronLeft() {
@@ -33,11 +38,15 @@ const navLinks: { label: string; href: string; target?: string }[] = [
 // body's padding-top (nav-height) so the content card aligns to the hero bottom.
 const HERO_HEIGHT = "65vh"
 
-export function CaseStudyLayout({ project, children }: Props) {
-  const { title, name, role, timeline, team, skills, bg, accent, image, toc = [] } = project
+// The hero container itself (background + foreground) runs 100px taller than
+// HERO_HEIGHT so the background bleeds underneath the content card instead of
+// cutting off right at its edge — intentional, covered by the card's z-index.
+const HERO_BG_BLEED = 100
 
-  const isGradient = bg.startsWith("linear-gradient")
-  const bgStyle = isGradient ? { background: bg } : { backgroundColor: bg }
+export function CaseStudyLayout({ project, children, heroBackground }: Props) {
+  const { title, name, role, timeline, team, skills, accent, image, imageWidth, imageHeight, toc = [] } = project
+
+  const HeroBackground = heroBackground ?? DefaultHeroBackground
 
   const metaFields = [
     { label: "Role",     value: role },
@@ -82,30 +91,38 @@ export function CaseStudyLayout({ project, children }: Props) {
 
         {/* Hero — fixed, starts at viewport top, sits above root nav (z-0) */}
         <div
-          className="fixed inset-x-0 top-0"
-          style={{ zIndex: 5, height: HERO_HEIGHT, ...bgStyle }}
+          className="fixed inset-x-0 top-0 overflow-hidden"
+          style={{ zIndex: 5, height: `calc(${HERO_HEIGHT} + ${HERO_BG_BLEED}px)` }}
         >
-          {image && (
-            <div className="flex items-center justify-center h-full">
-              <div className="relative w-full max-w-2xl" style={{ height: 340 }}>
-                <Image
-                  src={image}
-                  alt={title}
-                  fill
-                  className="object-contain drop-shadow-lg"
-                  sizes="(max-width: 768px) 100vw, 672px"
-                />
-              </div>
+          {/* Background layer — per-case-study, fixed (no parallax) */}
+          <HeroBackground project={project} />
+
+          {/* Foreground layer — product screenshots, transparent PNG. Sized by
+              its real width/height (not `fill`) so it scales to the full
+              viewport width at its true aspect ratio — never stretched or
+              cropped, just clipped by the hero's overflow-hidden if it runs
+              taller than HERO_HEIGHT. */}
+          {image && imageWidth && imageHeight && (
+            <div className="absolute inset-x-0 top-0">
+              <Image
+                src={image}
+                alt={title}
+                width={imageWidth}
+                height={imageHeight}
+                className="w-full h-auto drop-shadow-lg"
+                sizes="100vw"
+              />
             </div>
           )}
         </div>
 
         {/* Spacer — body has padding-top: nav-height (56px) so the first in-flow
             element starts at viewport y=56px. We need the content card to start
-            at viewport y=65vh, so spacer height = 65vh - 56px. */}
+            at viewport y=65vh, so spacer height = 65vh - 56px. The +80px pushes
+            the content card 80px further down the hero. */}
         <div
           aria-hidden="true"
-          style={{ height: `calc(${HERO_HEIGHT} - var(--nav-height))` }}
+          style={{ height: `calc(${HERO_HEIGHT} - var(--nav-height) + 80px)` }}
         />
 
         {/* Content card — scrolls over the fixed hero as user scrolls */}
