@@ -437,7 +437,7 @@ export function AboutContent({ spotifyPlaylist }: { spotifyPlaylist: Song[] | nu
           if (entry.isIntersecting) setActiveId(entry.target.id)
         }
       },
-      { rootMargin: "-15% 0px -75% 0px", threshold: 0 }
+      { rootMargin: "-10% 0px -35% 0px", threshold: 0 }
     )
     panelSections.forEach(({ id }) => {
       const el = document.getElementById(id)
@@ -600,13 +600,13 @@ export function AboutContent({ spotifyPlaylist }: { spotifyPlaylist: Song[] | nu
                 <p className="font-sans text-base text-neutral-300 font-medium">{panelText}</p>
               )
             ) : (
-              <AnimatePresence mode="wait">
+              <AnimatePresence mode="popLayout">
                 <motion.div
                   key={panelKey}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.15 }}
+                  initial={{ opacity: 0, filter: "blur(2px)" }}
+                  animate={{ opacity: 1, filter: "blur(0px)" }}
+                  exit={{ opacity: 0, filter: "blur(2px)" }}
+                  transition={{ duration: 0.1, ease: "easeOut" }}
                 >
                   {panelEntry ? (
                     <PanelContentView entry={panelEntry} />
