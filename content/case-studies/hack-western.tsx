@@ -11,10 +11,15 @@ export default function HackWestern() {
         id="overview"
         tag="Overview"
         headline="Hack Western is one of the biggest student-run hackathons in Canada, with 400+ participants and 2,000+ applicants each year."
-        body="As a Design Organizer, I led the design of our Hack Western XII application portal, with the goal of making applying feel welcoming and fun."
+        body="As a Design Organizer, I led the design of our Hack Western 12 application portal, with the goal of making applying feel welcoming and fun."
         primary
       >
-        <ImageBlock height={280} />
+        <ImageBlock
+          src="/images/case-studies/hack-western/hw-overview.png"
+          alt="Screens from the Hack Western 12 application portal, including the long answers step, character customization, application review, and landing page"
+          width={2400}
+          height={1213}
+        />
       </Section>
 
       <Outcomes
@@ -28,25 +33,36 @@ export default function HackWestern() {
       <Section
         id="challenge"
         tag="The Challenge"
-        headline="Our goal was to make Hack Western XII feel like a safe, welcoming place for anyone new to tech."
+        headline="Our goal was to make Hack Western 12 feel like a safe, welcoming place for anyone new to tech."
         primary
       >
-        <ImageBlock height={280} />
+        <ImageBlock
+          src="/images/case-studies/hack-western/hw-challenge.png"
+          alt="Sticky notes reading 'Create a unique, innovative, and memorable experience for all hackers' and 'Appeal to a diverse audience by making the event beginner-friendly'"
+          width={2400}
+          height={961}
+        />
       </Section>
 
       <Section
         id="theme"
         tag="Creating the Theme"
-        headline="We started by creating a theme for Hack Western XII that would carry through every part of the hackathon."
+        headline="We started by creating a theme for Hack Western 12 that would carry through every part of the hackathon."
         body="My teammate led a short open-ended questionnaire asking participants to share how each theme concept made them feel. Most described the clean, pastel, scrapbook-inspired direction as the most welcoming and interesting."
         primary
       >
-        <ImageBlock height={280} />
+        <ImageBlock
+          src="/images/case-studies/hack-western/hw-theme.png"
+          alt="Moodboard of scrapbooking and minimal illustration references alongside questionnaire form responses used to choose the Hack Western 12 theme"
+          width={2400}
+          height={1948}
+          caption="Theme Ideation and Sentiment Analysis"
+        />
 
          <Section
           id="theme reveal"
           tag="We landed on..."
-          headline="Introducing Hack Western XII: The world is your canvas."
+          headline="Introducing Hack Western 12: The world is your canvas."
         >
       </Section>
 
@@ -60,7 +76,13 @@ export default function HackWestern() {
         body="Ideas ranged from personalized, customizable visuals to interactive, collaborative boards. In the end, we focused on three key features: personalized stickers that changed based on responses, customizable avatars, and a &ldquo;draw something&rdquo; question. These features struck a balance between technical feasibility and playful expression."
         primary
       >
-        <ImageBlock height={280} />
+        <ImageBlock
+          src="/images/case-studies/hack-western/hw-ideation-1.png"
+          alt="Feature brainstorm grid covering personalized stickers, characters/avatars, a collaborative public board, personalized digital collectibles, freeform canvas drawing, and hacker personas"
+          width={2400}
+          height={971}
+          caption="Delight-drive feature exploration"
+        />
       </Section>
 
       <Section
@@ -69,7 +91,40 @@ export default function HackWestern() {
         headline="I simplified the application flow from past years and mapped out where to add each of the new delight features."
         body="In previous years, technical constraints required an extra &ldquo;application dashboard&rdquo; page between logging in and filling out the form. With those limitations removed, users could now go straight from signing in to their application, returning directly where they left off."
       >
-        <ImageBlock height={280} />
+        <ImageBlock
+          src="/images/case-studies/hack-western/hw-ideation-2.png"
+          alt="Initial application user flow with an annotation to remove the redundant applicant dashboard step after login"
+          width={2400}
+          height={1001}
+          caption="Initial Application Flow"
+        />
+        <ImageBlock
+          src="/images/case-studies/hack-western/hw-ideation-3.png"
+          alt="Revised user flow adding an avatar creation step and a draw-something step, plus an edit-and-share-stickers step after submission"
+          width={2400}
+          height={769}
+          caption="Revamped Application Flow"
+        />
+      </Section>
+
+      <Section
+        id="wireframing"
+        tag="Wireframing"
+        headline="To kick off the user interface design, I explored a few options for navigation and how to display personalized stickers."
+        body="I wanted the interface to reflect the infinite canvas theme, while staying intuitive to use. Thus, I focused on keeping the core interactions familiar."
+      >
+        <ImageBlock
+          src="/images/case-studies/hack-western/hw-ideation-4.png"
+          alt="Wireframe comparison of navigation layouts, with the side panel navigation option selected as the final direction"
+          width={2400}
+          height={1660}
+          caption="Wireframe Explorations"
+        />
+        <p className="text-base text-neutral-600">I decided on a side panel, with the stickers stacked at the back for a few key reasons:</p>
+        <ol className="text-base text-neutral-600">
+          <li><b className="font-semibold">1. Reflecting Figma's interface</b> - The side panel navigation mirrors Figma’s user interface, aligning with our infinite canvas theme and keeping navigation familiar.</li>
+          <li><b className="font-semibold">2. Reducing visual clutter</b> - With side panel navigation, a fixed sticker book made the layout feel cramped, while scattered stickers better reinforced the sense of openness and creativity.</li>
+        </ol>
       </Section>
 
       <Section
@@ -80,7 +135,11 @@ export default function HackWestern() {
       >
         <TwoColumn
           ratio="3/2"
-          left={<ImageBlock height={320} />}
+          left={
+            <ImageBlock
+              height={300}
+            />
+          }
           right={
             <p className="text-base text-neutral-600">
               On the desktop version, stickers appear based on a user&rsquo;s answers. For example,
@@ -94,7 +153,9 @@ export default function HackWestern() {
           sticker icon in the navigation. This allowed users to view their collected stickers without
           cluttering the smaller mobile layout.
         </p>
-        <ImageBlock height={280} />
+        <ImageBlock 
+          height={450}
+          caption="Mobile Sticker Drawer" />
         <TwoColumn
           left={
             <Callout
@@ -111,12 +172,18 @@ export default function HackWestern() {
         id="stickerbook"
         tag="The Stickerbook"
         headline='I created a "sticker book" feature to create a personalized token for applicants to save, share, and bring into the event.'
-        body="Accessible from their dashboard, the sticker book carried forward into the actual event, where participants could unlock 
+        body="Accessible from their dashboard, the sticker book carried forward into the actual event, where participants could unlock
         new stickers by completing tasks. It also included an option to share their collections on social media, helping spread the word
          and inviting more first-time hackers to join the community."
         primary
       >
-        <ImageBlock height={280} />
+        <ImageBlock
+          src="/images/case-studies/hack-western/hw-stickerbook.png"
+          alt="Stickerbook page where applicants drag and arrange their collected stickers, with a submission confirmation and share option"
+          width={2400}
+          height={1590}
+          caption="Applicant Stickerbook Overview"
+        />
       </Section>
 
       <Section
@@ -125,7 +192,12 @@ export default function HackWestern() {
         headline="The redesigned portal shipped to 2,000+ hackers and received overwhelmingly positive feedback!"
         primary
       >
-        <ImageBlock height={280} />
+        <ImageBlock
+          src="/images/case-studies/hack-western/hw-overview.png"
+          alt="Screens from the Hack Western 12 application portal, including the long answers step, character customization, application review, and landing page"
+          width={2400}
+          height={1213}
+        />
       </Section>
 
       <Section
