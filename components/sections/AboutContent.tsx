@@ -305,7 +305,7 @@ function JourneyRow({
     <div
       onMouseEnter={onHover}
       onMouseLeave={onUnhover}
-      className="-mx-3 flex items-center justify-between gap-6 border-x border-x-transparent border-y border-y-transparent px-3 py-3 transition-colors duration-150 hover:cursor-help hover:border-y-neutral-900/3 hover:bg-neutral-75 hover:duration-0"
+      className="-mx-3 flex items-center justify-between gap-6 border-x border-x-transparent border-y border-y-transparent px-3 py-3 transition-colors duration-100 hover:cursor-help hover:border-y-neutral-900/3 hover:bg-neutral-75 hover:duration-0"
     >
       <div>
         <p className="text-base font-medium text-neutral-900">{item.company}</p>
@@ -329,7 +329,7 @@ function CommunityRow({
     <div
       onMouseEnter={onHover}
       onMouseLeave={onUnhover}
-      className="-mx-3 flex items-center justify-between gap-6 border-x border-x-transparent border-y border-y-transparent px-3 py-4 transition-colors duration-150 hover:cursor-help hover:border-y-neutral-900/3 hover:bg-neutral-75 hover:duration-0"
+      className="-mx-3 flex items-center justify-between gap-6 border-x border-x-transparent border-y border-y-transparent px-3 py-4 transition-colors duration-100 hover:cursor-help hover:border-y-neutral-900/3 hover:bg-neutral-75 hover:duration-0"
     >
       <div className="flex items-center gap-6">
         <div
@@ -343,7 +343,6 @@ function CommunityRow({
       </div>
       <IconButton
         href={item.href}
-        label={item.name}
         icon={item.icon}
         size={24}
         className="shrink-0"
@@ -443,7 +442,7 @@ export function AboutContent({ spotifyPlaylist }: { spotifyPlaylist: Song[] | nu
     <div className="container-main py-9">
       <div className="grid grid-cols-1 gap-x-[54px] lg:grid-cols-[586px_1fr]">
         {/* Left column — sections 1-4 */}
-        <div className="flex flex-col gap-20">
+        <div className="flex flex-col gap-28">
           <motion.section
             id="journey"
             variants={stagger}
@@ -609,7 +608,7 @@ export function AboutContent({ spotifyPlaylist }: { spotifyPlaylist: Song[] | nu
           sticky panel's container (above) has scrolled out of the way. */}
       <motion.section
         id="playlist"
-        className="mt-20"
+        className="mt-28"
         variants={stagger}
         initial={reduce ? "visible" : "hidden"}
         whileInView="visible"
@@ -621,7 +620,7 @@ export function AboutContent({ spotifyPlaylist }: { spotifyPlaylist: Song[] | nu
             Based off my Spotify&rsquo;s most played songs in the past 6 months.
           </p>
         </motion.div>
-        <div className="grid grid-flow-col grid-rows-3 gap-x-16 gap-y-6">
+        <div className="grid grid-flow-col grid-rows-3 gap-x-16">
           {playlist.map((item, index) => (
             <motion.div key={item.id} variants={fadeUp}>
               <SongRow item={item} flowerIdx={index} />
