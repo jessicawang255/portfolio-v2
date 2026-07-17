@@ -2,6 +2,7 @@
 
 import { motion, useReducedMotion } from "framer-motion"
 import { stagger, fadeUp } from "@/lib/motion"
+import { IconButton } from "@/components/ui/IconButton"
 
 const socials = [
   { label: "LinkedIn", href: "https://www.linkedin.com/in/jwang255/", icon: "/icons/linkedin.svg" },
@@ -65,30 +66,7 @@ export function AboutHero() {
 
           <motion.div variants={fadeUp} className="flex items-center gap-4">
             {socials.map(({ label, href, icon }) => (
-              <a
-                key={label}
-                href={href}
-                aria-label={label}
-                target={href.startsWith("http") ? "_blank" : undefined}
-                rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
-                className="text-icon-social hover:text-nav-link-hover transition-colors duration-150"
-              >
-                <span
-                  aria-hidden="true"
-                  style={{
-                    display: "inline-block",
-                    width: 22,
-                    height: 22,
-                    WebkitMaskImage: `url(${icon})`,
-                    maskImage: `url(${icon})`,
-                    WebkitMaskSize: "contain",
-                    maskSize: "contain",
-                    WebkitMaskRepeat: "no-repeat",
-                    maskRepeat: "no-repeat",
-                    backgroundColor: "currentColor",
-                  }}
-                />
-              </a>
+              <IconButton key={label} href={href} label={label} icon={icon} />
             ))}
           </motion.div>
         </div>

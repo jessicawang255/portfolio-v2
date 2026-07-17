@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion"
 import { TertiaryLink } from "@/components/ui/TertiaryLink"
+import { IconButton } from "@/components/ui/IconButton"
 import { FLOWERS } from "@/components/ui/flowers"
 import { stagger, fadeUp } from "@/lib/motion"
 import type { Song } from "@/lib/spotify"
@@ -340,29 +341,13 @@ function CommunityRow({
           <p className="text-base text-neutral-500">{item.description}</p>
         </div>
       </div>
-      <a
+      <IconButton
         href={item.href}
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label={item.name}
-        className="h-6 w-6 shrink-0 text-icon-social transition-colors duration-150 hover:text-nav-link-hover"
-      >
-        <span
-          aria-hidden="true"
-          style={{
-            display: "inline-block",
-            width: 24,
-            height: 24,
-            WebkitMaskImage: `url(${item.icon})`,
-            maskImage: `url(${item.icon})`,
-            WebkitMaskSize: "contain",
-            maskSize: "contain",
-            WebkitMaskRepeat: "no-repeat",
-            maskRepeat: "no-repeat",
-            backgroundColor: "currentColor",
-          }}
-        />
-      </a>
+        label={item.name}
+        icon={item.icon}
+        size={24}
+        className="shrink-0"
+      />
     </div>
   )
 }

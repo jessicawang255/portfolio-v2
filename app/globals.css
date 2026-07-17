@@ -268,14 +268,13 @@ body {
   }
 }
 
-/* ─── Icon wiggle (TertiaryLink hover) ───────────────────────────────────────── */
+/* ─── Icon tick (icon button hover) ──────────────────────────────────────────── */
 
-@keyframes icon-wiggle {
-  0%, 100% { transform: rotate(0deg); }
-  20%      { transform: rotate(-20deg); }
-  40%      { transform: rotate(16deg); }
-  60%      { transform: rotate(-12deg); }
-  80%      { transform: rotate(8deg); }
+@keyframes icon-tick {
+  0%   { rotate: 0deg; }
+  40%  { rotate: -3deg; }
+  75%  { rotate: 3deg; }
+  100% { rotate: 0deg; }
 }
 
 /* ─── Case study entry animations ──────────────────────────────────────────── */
