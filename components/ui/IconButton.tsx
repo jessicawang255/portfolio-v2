@@ -1,6 +1,11 @@
+import { getIconTooltip } from "@/lib/iconTooltips"
+
 type Props = {
   href: string
-  label: string
+  // Falls back to a label derived from `icon` (and `href` for the globe
+  // icon) via getIconTooltip when omitted — set this explicitly only when
+  // the derived default doesn't fit (e.g. "Copy Email" instead of "Email").
+  label?: string
   icon: string
   size?: number
   className?: string
@@ -12,11 +17,12 @@ type Props = {
 // delay on the base rule, so leaving skips straight to the fast fade-out).
 export function IconButton({ href, label, icon, size = 22, className, ...rest }: Props) {
   const external = href.startsWith("http")
+  const resolvedLabel = label ?? getIconTooltip(icon, href)
 
   return (
     <a
       href={href}
-      aria-label={label}
+      aria-label={resolvedLabel}
       target={external ? "_blank" : undefined}
       rel={external ? "noopener noreferrer" : undefined}
       className={`group relative inline-flex text-icon-social transition-[color,scale] duration-150 hover:scale-110 hover:text-nav-link-hover motion-safe:hover:animate-[icon-tick_var(--duration-slow)_var(--ease-out)] ${className ?? ""}`}
@@ -44,7 +50,7 @@ export function IconButton({ href, label, icon, size = 22, className, ...rest }:
         px-1.5 py-0.5 text-xs text-neutral-50 opacity-0 transition-[opacity,scale] duration-[var(--duration-slow)]
         ease-[var(--ease-out)] group-hover:scale-100 group-hover:opacity-100 group-hover:delay-500"
       >
-        {label}
+        {resolvedLabel}
       </span>
     </a>
   )
