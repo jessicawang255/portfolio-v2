@@ -1,18 +1,35 @@
+"use client"
+
+import { motion, useReducedMotion } from "framer-motion"
 import { discoverItems } from "@/content/work"
 import { CaseStudyCard } from "@/components/ui/CaseStudyCard"
+import { stagger, fadeUp } from "@/lib/motion"
 
 export function DiscoverMore() {
+  const reduce = useReducedMotion()
+
   return (
-    <section className="container-main pt-12 pb-20">
-      <h2 className="mb-5 font-mono text-sm uppercase leading-[1.2] text-neutral-400">
+    <motion.section
+      className="container-main pt-12 pb-20"
+      variants={stagger}
+      initial={reduce ? "visible" : "hidden"}
+      whileInView="visible"
+      viewport={{ once: true, margin: "-80px" }}
+    >
+      <motion.h2
+        variants={fadeUp}
+        className="mb-5 font-mono text-sm uppercase leading-[1.2] text-neutral-400"
+      >
         Discover More
-      </h2>
+      </motion.h2>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
         {discoverItems.map((item) => (
-          <CaseStudyCard key={item.slug} project={item} imageHeight={160} />
+          <motion.div key={item.slug} variants={fadeUp}>
+            <CaseStudyCard project={item} imageHeight={160} />
+          </motion.div>
         ))}
       </div>
-    </section>
+    </motion.section>
   )
 }
