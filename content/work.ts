@@ -1,3 +1,10 @@
+export type TocSection = {
+  title: string
+  // Nested entries rendered indented under this section, for sections split
+  // into multiple `<Section>`s in the content file (marked `primary={false}`).
+  subsections?: string[]
+}
+
 export type Project = {
   slug: string
   title: string
@@ -13,7 +20,7 @@ export type Project = {
   timeline?: string
   team?: string[]
   skills?: string[]
-  toc?: string[]
+  toc?: TocSection[]
 }
 
 export const discoverItems: Project[] = [
@@ -53,7 +60,15 @@ export const projects: Project[] = [
     timeline: "Sep – Dec 2024",
     team: ["1 design lead", "2 designers"],
     skills: ["Visual design", "User testing", "Prototyping"],
-    toc: ["Overview", "Challenge", "Theme", "App. Portal Ideation", "Designing for Mobile", "Stickerbook", "Final Product"],
+    toc: [
+      { title: "Overview" },
+      { title: "Challenge" },
+      { title: "Theme" },
+      { title: "App. Portal Ideation", subsections: ["Revamping the User Flow", "Wireframing"] },
+      { title: "Designing for Mobile" },
+      { title: "Stickerbook" },
+      { title: "Final Product" },
+    ],
   },
   {
     slug: "retrospect",
@@ -68,7 +83,13 @@ export const projects: Project[] = [
     timeline: "Aug 2024 - Feb 2025",
     team: ["1 product manager", "2 designers", "4 engineers"],
     skills: ["Interaction design", "Prototyping", "User testing"],
-    toc: ["Overview", "Inspiration", "Research", "Core App Flows", "Final Product"],
+    toc: [
+      { title: "Overview" },
+      { title: "Inspiration" },
+      { title: "Research", subsections: ["Competitive Analysis"] },
+      { title: "Core App Flows", subsections: ["Creating a Capsule", "Collaboration User Flow"] },
+      { title: "Final Product" },
+    ],
   },
   {
     slug: "autumn",
@@ -83,7 +104,14 @@ export const projects: Project[] = [
     timeline: "Jun - Aug 2024",
     team: ["1 founder", "1 product designer", "2 product managers", "2 developers"],
     skills: ["Product design", "User research", "Prototyping"],
-    toc: ["Overview", "Problem", "Understanding the Market", "User Touchpoints", "Design Challenges", "Final Product"],
+    toc: [
+      { title: "Overview" },
+      { title: "Problem" },
+      { title: "Understanding the Market" },
+      { title: "User Touchpoints" },
+      { title: "Design Challenges" },
+      { title: "Final Product" },
+    ],
   },
   {
     slug: "glucal",
@@ -98,6 +126,13 @@ export const projects: Project[] = [
     timeline: "Mar - Apr 2024",
     team: ["1 designer", "1 developer"],
     skills: ["User research", "Prototyping", "Mobile dev"],
-    toc: ["Problem", "Solution", "Research", "Competitive Analysis", "Design Decisions", "Final Product"],
+    toc: [
+      { title: "Problem" },
+      { title: "Solution" },
+      { title: "Research" },
+      { title: "Competitive Analysis" },
+      { title: "Design Decisions" },
+      { title: "Final Product" },
+    ],
   },
 ]

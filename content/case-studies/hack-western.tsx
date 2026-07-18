@@ -6,7 +6,7 @@ import { Outcomes } from "@/components/cs/Outcomes"
 
 export default function HackWestern() {
   return (
-    <div className="flex flex-col gap-20">
+    <div className="flex flex-col gap-30">
       <Section
         id="overview"
         tag="Overview"
@@ -59,13 +59,10 @@ export default function HackWestern() {
           caption="Theme Ideation and Sentiment Analysis"
         />
 
-         <Section
-          id="theme reveal"
-          tag="We landed on..."
-          headline="Introducing Hack Western 12: The world is your canvas."
-        >
-      </Section>
-
+        <Callout
+          label="We landed on..."
+          heading="Hack Western 12: The world is your canvas."
+        />
       </Section>
 
 

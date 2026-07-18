@@ -2,12 +2,11 @@ import { Section } from "@/components/cs/Section"
 import { Callout } from "@/components/cs/Callout"
 import { TwoColumn } from "@/components/cs/TwoColumn"
 import { ImageBlock } from "@/components/cs/ImageBlock"
-import { Outcomes } from "@/components/cs/Outcomes"
 import { h2 } from "framer-motion/client"
 
 export default function Retrospect() {
     return (
-        <div className="flex flex-col gap-20">
+        <div className="flex flex-col gap-30">
             <Section
                 id="overview"
                 tag="Overview"

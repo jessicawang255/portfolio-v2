@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react"
 import Image, { type StaticImageData } from "next/image"
 import { motion, useScroll, useTransform } from "framer-motion"
 
@@ -16,14 +17,18 @@ const PARALLAX_FACTOR = 0.4
 export function HeroForeground({ src, alt }: { src: StaticImageData; alt: string }) {
   const { scrollY } = useScroll()
   const y = useTransform(scrollY, (v) => v * -PARALLAX_FACTOR)
+  const [loaded, setLoaded] = useState(false)
 
   return (
     <motion.div className="absolute inset-x-0 top-0" style={{ y }}>
       <Image
         src={src}
         alt={alt}
-        className="w-full h-auto drop-shadow-lg"
+        className={`w-full h-auto drop-shadow-lg transition-opacity duration-500 ease-out ${
+          loaded ? "opacity-100" : "opacity-0"
+        }`}
         sizes="100vw"
+        onLoad={() => setLoaded(true)}
       />
     </motion.div>
   )
