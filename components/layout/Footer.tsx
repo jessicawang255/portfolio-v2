@@ -16,44 +16,30 @@ const socialLinks = [
   { label: "GitHub",   href: "https://github.com/jessicawang255" },
 ]
 
-function SunIcon() {
+function TimeIcon({ src }: { src: string }) {
   return (
-    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"
-         stroke="currentColor" strokeWidth="1.4" strokeLinecap="round">
-      <circle cx="7" cy="7" r="2.5" />
-      {[0, 45, 90, 135, 180, 225, 270, 315].map(a => (
-        <line key={a} x1="7" y1="1.8" x2="7" y2="3.5" transform={`rotate(${a} 7 7)`} />
-      ))}
-    </svg>
-  )
-}
-
-function HorizonSunIcon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"
-         stroke="currentColor" strokeWidth="1.4" strokeLinecap="round">
-      <path d="M 2.5 9.5 A 4.5 4.5 0 0 1 11.5 9.5" />
-      <line x1="0.5" y1="9.5" x2="13.5" y2="9.5" />
-      <line x1="7"    y1="2"   x2="7"    y2="4"   />
-      <line x1="3"    y1="5.5" x2="2"    y2="4.5" />
-      <line x1="11"   y1="5.5" x2="12"   y2="4.5" />
-    </svg>
-  )
-}
-
-function MoonIcon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true">
-      <path d="M 4.8 2.5 A 5 5 0 1 1 4.8 11.5 A 4.5 4.5 0 0 0 4.8 2.5 Z" />
-    </svg>
+    <span
+      aria-hidden="true"
+      className="inline-block h-3.5 w-3.5 shrink-0 bg-current"
+      style={{
+        WebkitMaskImage: `url(${src})`,
+        maskImage: `url(${src})`,
+        WebkitMaskSize: "contain",
+        maskSize: "contain",
+        WebkitMaskRepeat: "no-repeat",
+        maskRepeat: "no-repeat",
+        WebkitMaskPosition: "center",
+        maskPosition: "center",
+      }}
+    />
   )
 }
 
 function getTimeIcon(hour: number) {
-  if (hour >= 5  && hour < 7)  return <HorizonSunIcon />
-  if (hour >= 7  && hour < 18) return <SunIcon />
-  if (hour >= 18 && hour < 21) return <HorizonSunIcon />
-  return <MoonIcon />
+  if (hour >= 5  && hour < 8)  return <TimeIcon src="/icons/sun-foggy-fill.svg" /> // dawn
+  if (hour >= 8  && hour < 18) return <TimeIcon src="/icons/sun-fill.svg" />       // day
+  if (hour >= 18 && hour < 21) return <TimeIcon src="/icons/sun-foggy-fill.svg" /> // dusk
+  return <TimeIcon src="/icons/moon-clear-fill.svg" />                            // night
 }
 
 function LiveClock() {
