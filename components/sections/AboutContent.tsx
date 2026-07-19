@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import Image from "next/image"
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion"
 import { TertiaryLink } from "@/components/ui/TertiaryLink"
 import { IconButton } from "@/components/ui/IconButton"
@@ -45,7 +46,7 @@ const communities: Community[] = [
   {
     id: "comm-product-design-sprint",
     name: "Product Design Sprint",
-    description: "Western University's first and largest design-a-thon",
+    description: "Western University's first and largest design-a-thon.",
     logo: "/images/communities/pds-icon.svg",
     href: "https://instagram.com/westernfoundersnetwork/",
     icon: "/icons/instagram.svg",
@@ -53,7 +54,7 @@ const communities: Community[] = [
   {
     id: "comm-hack-western",
     name: "Hack Western",
-    description: "Western University's hackathon",
+    description: "Western University's hackathon.",
     logo: "/images/communities/hackwestern-icon.svg",
     href: "https://hackwestern.com",
     icon: "/icons/global-line.svg",
@@ -61,7 +62,7 @@ const communities: Community[] = [
   {
     id: "comm-framer",
     name: "Framer",
-    description: "I'm a campus ambassador for Framer, xyz xyz xyz.",
+    description: "A no-code tool for beautiful websites.",
     logo: "/images/communities/framer-icon.png",
     href: "https://framer.com/",
     icon: "/icons/global-line.svg",
@@ -69,7 +70,7 @@ const communities: Community[] = [
   {
     id: "comm-ivey-product-society",
     name: "Ivey Product Society",
-    description: "Building the next generation of product leaders @ Ivey Business School",
+    description: "A community of product leaders at Ivey Business School.",
     logo: "/images/communities/ips-icon.svg",
     href: "https://instagram.com/iveyproductsociety_",
     icon: "/icons/instagram.svg",
@@ -78,14 +79,18 @@ const communities: Community[] = [
 
 // Rich content shown in the sticky panel when a journey/community row is
 // hovered. Keyed by the row's id. Rows without an entry fall back to the
-// plain "Active: {id}" panel text. Images are placeholders (aspect-ratio
-// boxes) until real photos are ready — swap PanelImagePlaceholder for an
-// <Image> once assets land.
+// plain "Active: {id}" panel text.
 type PanelTextBlock =
   | { type: "p"; text: string }
   | { type: "bullets"; items: string[] }
 
-type PanelImage = { caption: string; aspect: string }
+// Same src-as-discriminant pattern as components/cs/ImageBlock.tsx: omit
+// src/alt to render an aspect-ratio placeholder, or supply both for the real
+// photo. Files live at public/images/about/{row-id}/{row-id}-{n}.{jpg,png},
+// numbered by position in the entry's images array (e.g. hack-western-1.jpg).
+type PanelImage =
+  | { caption?: string; aspect: string; width?: string; src: string; alt: string }
+  | { caption?: string; aspect: string; width?: string; src?: undefined; alt?: never }
 
 type PanelEntry = { blocks: PanelTextBlock[]; images: PanelImage[] }
 
@@ -94,18 +99,26 @@ const panelContent: Record<string, PanelEntry> = {
     blocks: [
       {
         type: "p",
-        text: "Summer 2026, I was a software engineering intern at RBC as a part of their Amplify program - a specialized internship where you get paired into intern teams to design and build a solution for a real business challenge … Understanding the problem space, researching and interviewing real stakeholders, designing, developing, deploying, pitching to senior leaders",
+        text: "Summer 2026, I interned at RBC as part of their Amplify program — a specialized internship where you're \
+        paired into small teams to design and build a solution for a real business challenge. We got to do it all: from \
+        understanding the problem space, interviewing stakeholders across the bank, to ideating on solutions, designing,\
+         developing, deploying, and presenting our work to senior leaders.",
       },
       {
         type: "p",
-        text: "My team worked on building a proof of concept for a blockchain-based foreign exchange tool. As a developer,  learned XYZ….. a really fun summer!",
+        text: "My team built a blockchain-based foreign exchange \
+         tool that explores how RBC could offer foreign exchange between tokenized deposits in the (near) future. As a developer, \
+         I was hands-on with coding smart contracts on Ethereum (something I never would have pictured myself doing!), and I learned \
+         so, so much about foreign exchange and the world of digital assets, stablecoins, and blockchain. It was a really fun summer!",
       },
     ],
     images: [
       {
         caption:
-          "I worked on a joint challenge under two teams: Global Payments Technology and the digital asset innovation team in RBCx, RBC’s in-house innovation team or smth idk.",
-        aspect: "5/2",
+          "My challenge spanned two teams: Global Payments Technology and the Digital Asset Innovation team within RBCx, RBC's in-house innovation arm.",
+        aspect: "8/2",
+        src: "/images/about/royal-bank-of-canada/rbc-1.svg",
+        alt: "RBC Amplify program",
       },
     ],
   },
@@ -113,89 +126,167 @@ const panelContent: Record<string, PanelEntry> = {
     blocks: [
       {
         type: "p",
-        text: "I’m a campus ambassador for Framer, where I teach students how to create their own websites in Framer, XYZ, host events on campus, and create a community for Framer lovers. In the past my co-ambassador, Adia, and I have run workshops, design-a-thons, and provided a lot of bubble tea.",
+        text: "I'm a campus ambassador for Framer, where I teach students how to create their own websites and build a community for Framer \
+        lovers. My co-ambassador Adia and I have run workshops, design-a-thons, and provided a lot of bubble tea along the way!",
       },
     ],
     images: [
-      { caption: "Presenting a Framer 101 workshop", aspect: "3/2" },
-      { caption: "A selfie with our community (ft. bubble tea!)", aspect: "4/5" },
+      { 
+        caption: "Presenting a Framer 101 workshop",
+        aspect: "3/2",
+        src: "/images/about/framer/framer-1.png",
+        alt: "Framer 101 workshop",
+      },
+      { 
+        caption: "A selfie with our community (ft. bubble tea!)",
+        aspect: "4/5",
+        src: "/images/about/framer/framer-2.png",
+        alt: "Framer community selfie",},
     ],
   },
   "hack-western": {
     blocks: [
       {
         type: "p",
-        text: "I’m lucky to be leading an amazing team at Hack Western on all our designs - website, application portal, merch, and everything else in between.",
+        text: "I'm lucky to be leading an amazing team of designers at Hack Western, a student-run hackathon at Western University, \
+        where we design everything from the website and application portal to merch and everything in between!",
       },
     ],
     images: [
-      { caption: "The organizer team", aspect: "3/2" },
-      { caption: "A collaborative canvas made during the event <3", aspect: "3/2" },
-      { caption: "Hack Western 12 merch designs", aspect: "3/2" },
-      { caption: "This was little known, but… I was one of the horses.", aspect: "1/2" },
+      { 
+        caption: "The organizer team",
+        aspect: "318/214",
+        src: "/images/about/hack-western/hw-1.png",
+        alt: "Hack Western organizer team",},
+      { 
+        caption: "A collaborative canvas made during the event",
+        aspect: "350/237",
+        width: "90%",
+        src: "/images/about/hack-western/hw-2.png",
+        alt: "Hack Western collaborative canvas",},
+      { 
+        caption: "Hack Western 12 merch designs",
+        aspect: "318/238",
+        src: "/images/about/hack-western/hw-3.png",
+        alt: "Hack Western 12 merch designs",},
+      {
+        caption: "This was a secret, but... I was one of the horses",
+        aspect: "214/254",
+        width: "60%",
+        src: "/images/about/hack-western/hw-4.png",
+        alt: "Hack Western 12 horse mascot",},
     ],
   },
   cibc: {
     blocks: [
       {
         type: "p",
-        text: "I was a software engineering intern at CIBC in Summer 2025. I worked on a brand new project surroudning modernizing marketing, tailoring custom offers around clients rather than trying to find clients to send pre-existing offers to. I worked on building the ETL pipelines that enabled … etc.",
+        text: "I was a software engineering intern at CIBC in Summer 2025. I worked on a project to modernize marketing \
+        for their card products by building custom offers for each client instead of matching clients to offers that already \
+        existed. I built ETL pipelines that enabled real-time client data to feed the offer engine.",
       },
-      { type: "bullets", items: ["code got shipped"] },
       {
         type: "p",
-        text: "This was my first time working on a project with such a large scale and impact, and go to learn the inner workings of working on a big team, processes, working with QA, requirements to write production-ready code.",
+        text: "This was my first time working on a project with this scale and impact, and I got to learn the inner workings of \
+        how a big team operates: project management, QA, and all the steps it takes to make code production-ready.",
       },
     ],
-    images: [{ caption: "Caption", aspect: "5/2" }],
+    images: [
+      {
+        aspect: "8/2",
+        src: "/images/about/cibc/cibc-1.svg",
+        alt: "CIBC logo",
+      },
+    ],
   },
   "western-founders-network": {
     blocks: [
       {
         type: "p",
-        text: "From 2023-2025, I was a part of the design team on Western Founders Network, a club for the intersection of technology, business, and entrepreneurship.",
+        text: "From 2023-2025, I was a part of the design team on Western Founders Network, a community for students \
+        passionate about tech, business, and entrepreneurship. We ran Product Design Sprint: the biggest \
+        (and at the time, only!) design-a-thon at Western University.",
       },
     ],
     images: [
-      { caption: "Running Product Design Sprint, our university’s first and largest design-a-thon", aspect: "16/9" },
-      { caption: "My WFN team <3", aspect: "3/2" },
+      { 
+        caption: "The team behind Product Design Sprint",
+        aspect: "318/178",
+        src: "/images/about/western-founders-network/wfn-1.png",
+        alt: "Product Design Sprint team photo",
+      },
+      { 
+        caption: "WFN Design <3", 
+        aspect: "350/232",
+        src: "/images/about/western-founders-network/wfn-2.png",
+        alt: "Western Founders Network design team photo",
+      },
     ],
   },
   "the-residency": {
     blocks: [
       {
         type: "p",
-        text: "The Residency is a … for ambitious founders and builders. In 2024, I was the lead designer on all assets, led the new brand identity, etc. etc. It was a fun summer, and I’m grateful for the people building cool things that I met along the way!",
+        text: "The Residency is a hacker house for ambitious founders and builders. In 2024, I was the lead designer \
+        on all assets and led the new brand identity. I'm grateful I got to meet so many people building cool things along the way!",
       },
     ],
     images: [
-      { caption: "Their marble statue X futuristic tech theme is cool", aspect: "2/3" },
-      { caption: "Some graphic design I did for The Residency’s events", aspect: "3/2" },
+      { 
+        caption: "The Residency's marble-meets-tech theme", 
+        aspect: "230/260",
+        src: "/images/about/the-residency/residency-1.png",
+        alt: "The Residency hacker house",
+      },
+      { caption: "Some event graphic design I designed for The Residency",
+        aspect: "328/226",
+        src: "/images/about/the-residency/residency-2.png",
+        alt: "The Residency event graphic design",
+      },
     ],
   },
   autumn: {
     blocks: [
-      { type: "p", text: "Autumn is an end-of-life marketplace" },
+      { type: "p", text: "Autumn is an end-of-life marketplace that connects people with end-of-life service providers to help \
+        them navigate bereavement. During my internship, I designed a library resource to engage users earlier and more frequently." },
       {
         type: "p",
-        text: "I learned all about what it’s like to work at an early stage startup, scrappy, wearing multiple hats, growth strategies, etc.",
+        text: "Along the way, I got a taste of what it's like to work at an early-stage startup: being scrappy, wearing multiple \
+        hats, and thinking through growth strategies firsthand.",
       },
     ],
-    images: [{ caption: "Caption", aspect: "5/2" }],
+    images: [{ 
+      aspect: "8/2",
+      src: "/images/about/autumn/autumn-1.svg",
+      alt: "Autumn logo",
+    }],
   },
   "comm-ivey-product-society": {
     blocks: [
       {
         type: "p",
-        text: "The Ivey Product Society is a product management community that aims to build the next generation of product leaders at Western University. As an executive on the team, I helped organize the 2026 cohort of our flagship Product Management Fellowship. During the fellowship, students get … yada yada yada. !",
+        text: "The Ivey Product Society is a product management community that aims to build the next generation of product leaders \
+        at Western University. As an executive on the team, I helped organize the 2026 cohort of our flagship Product Management \
+        Fellowship. Throughout the fellowship, students receive weekly mentorship, attend workshops on core PM skills, and create \
+        a capstone project to design and build a feature for an existing product, presenting their work to industry judges at the end.",
       },
     ],
     images: [
-      { caption: "The 2025/6 Ivey Product Society team <3", aspect: "1/1" },
-      { caption: "Caption", aspect: "1/1" },
+      { 
+        caption: "The 2025/6 Ivey Product Society team <3",
+        aspect: "334/358",
+        src: "/images/about/ivey-product-society/ips-1.png",
+        width: "40%",
+        alt: "Ivey Product Society team photo",},
     ],
   },
 }
+
+// Communities that overlap with a journey row share that row's panel
+// content rather than duplicating it.
+panelContent["comm-product-design-sprint"] = panelContent["western-founders-network"]
+panelContent["comm-hack-western"] = panelContent["hack-western"]
+panelContent["comm-framer"] = panelContent["framer"]
 
 // Used when the live Spotify fetch fails or returns nothing.
 const FALLBACK_PLAYLIST: Song[] = [
@@ -251,18 +342,79 @@ function PlaceholderBox({ className }: { className?: string }) {
   
 }
 
-// Stand-in for a real photo: aspect-ratio box, 2px radius per spec. Swap for
-// an <Image> once assets are ready — the caption/spacing below stays the same.
-function PanelImagePlaceholder({ caption, aspect }: PanelImage) {
+// 2px radius per spec. Renders the real photo once src/alt are set on the
+// PanelImage entry, otherwise falls back to an aspect-ratio placeholder.
+function AboutPanelImage({ caption, aspect, width, src, alt }: PanelImage) {
   return (
-    <div>
-      <div
-        className="flex items-center justify-center rounded-[2px] border border-neutral-900/10 bg-neutral-100"
-        style={{ aspectRatio: aspect }}
-      >
-        <p className="px-3 text-center text-xs font-bold text-red-600">IMAGE (temp)</p>
+    <div style={{ width: width ?? "100%" }}>
+      {src ? (
+        <div
+          className="relative overflow-hidden rounded-[2px] border border-neutral-900/10 bg-neutral-100"
+          style={{ aspectRatio: aspect }}
+        >
+          <Image
+            src={src}
+            alt={alt}
+            fill
+            sizes="(min-width: 1024px) 400px, 100vw"
+            className="object-cover"
+          />
+        </div>
+      ) : (
+        <div
+          className="flex items-center justify-center rounded-[2px] border border-neutral-900/10 bg-neutral-100"
+          style={{ aspectRatio: aspect }}
+        >
+          <p className="px-3 text-center text-xs font-bold text-red-600">IMAGE (temp)</p>
+        </div>
+      )}
+      {caption ? (
+        <p className="mt-2 text-sm leading-[1.5] text-neutral-400 italic">{caption}</p>
+      ) : null}
+    </div>
+  )
+}
+
+// Shown in the sticky panel whenever the "fun" section is in the viewport —
+// unlike journey/communities, "fun" has no hoverable rows, so this content
+// isn't hover-triggered. Custom layout (shared caption spanning the first
+// pair of photos) doesn't fit the generic masonry PanelContentView renders,
+// so it's hand-built here instead of going through panelContent.
+function FunPanelContent() {
+  return (
+    <div className="flex flex-col gap-9">
+      <div>
+        <div className="flex gap-6">
+          <div className="w-[29%] shrink-0">
+            <AboutPanelImage
+              aspect="395/648"
+              src="/images/about/fun/fun-1.jpg"
+              alt="Performing a cappella onstage"
+            />
+          </div>
+          <div className="flex-1">
+            <AboutPanelImage aspect="3/2" src="/images/about/fun/fun-2.jpg" alt="Repercussions a cappella team" />
+          </div>
+        </div>
+        <p className="mt-2 text-sm leading-[1.5] text-neutral-400 italic">
+          Left: Performing at the 2025 International Championship of Collegiate A cappella (the exact competition in
+          pitch perfect). Right: My a cappella team, Repercussions 💛
+        </p>
       </div>
-      <p className="mt-2 text-sm leading-[1.5] text-neutral-400 italic">{caption}</p>
+
+      <div className="flex gap-6">
+        <div className="w-[63%] shrink-0">
+          <AboutPanelImage aspect="5/3" caption="something" />
+        </div>
+        <div className="flex-1">
+          <AboutPanelImage
+            aspect="427/487"
+            src="/images/about/fun/fun-3.jpg"
+            alt="My cat, Twenty"
+            caption="My cat, Twenty"
+          />
+        </div>
+      </div>
     </div>
   )
 }
@@ -283,11 +435,26 @@ function PanelContentView({ entry }: { entry: PanelEntry }) {
           )
         )}
       </div>
-      <div className={`mt-9 grid gap-x-6 gap-y-9 ${entry.images.length > 1 ? "grid-cols-2" : "grid-cols-1"}`}>
-        {entry.images.map((img, i) => (
-          <PanelImagePlaceholder key={i} {...img} />
-        ))}
-      </div>
+      {entry.images.length > 1 ? (
+        <div className="mt-9 grid grid-cols-2 gap-x-6">
+          {[0, 1].map((col) => (
+            <div key={col} className="flex flex-col gap-y-9">
+              {entry.images
+                .map((img, i) => ({ img, i }))
+                .filter(({ i }) => i % 2 === col)
+                .map(({ img, i }) => (
+                  <AboutPanelImage key={i} {...img} />
+                ))}
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="mt-9 grid grid-cols-1 gap-x-6 gap-y-9">
+          {entry.images.map((img, i) => (
+            <AboutPanelImage key={i} {...img} />
+          ))}
+        </div>
+      )}
     </div>
   )
 }
@@ -431,12 +598,10 @@ export function AboutContent({ spotifyPlaylist }: { spotifyPlaylist: Song[] | nu
   }, [])
 
   const displayId = hoveredId ?? activeId
-  const trigger = hoveredId ? "hover" : "scroll"
-  const panelText = displayId
-    ? `Active: ${displayId} (${trigger})`
-    : "Hover to find out more…"
+  const panelText = "Hover to learn more…"
+  const isFun = displayId === "fun"
   const panelEntry = displayId ? panelContent[displayId] : undefined
-  const panelKey = panelEntry ? `entry-${displayId}` : `text-${panelText}`
+  const panelKey = isFun ? "entry-fun" : panelEntry ? `entry-${displayId}` : `text-${panelText}`
 
   return (
     <div className="container-main py-9">
@@ -504,8 +669,6 @@ export function AboutContent({ spotifyPlaylist }: { spotifyPlaylist: Song[] | nu
 
           <motion.section
             id="fun"
-            onMouseEnter={() => setHoveredId("fun")}
-            onMouseLeave={() => setHoveredId(null)}
             variants={stagger}
             initial={reduce ? "visible" : "hidden"}
             whileInView="visible"
@@ -574,11 +737,13 @@ export function AboutContent({ spotifyPlaylist }: { spotifyPlaylist: Song[] | nu
         {/* Right column — sticky panel, scoped to the grid row above (ends after "My Playlist") */}
         <div className="relative mt-16 hidden lg:mt-0 lg:block">
           <div
-            className="sticky flex min-h-[70vh] flex-col rounded-2xl border border-neutral-900/3 bg-neutral-75 p-9 "  // could add this shadow: shadow-[0_0_30px_-10px_rgba(22,25,29,0.08)]
-            style={{ top: "calc(var(--nav-height) + 20px)" }}
+            className="sticky flex min-h-[83vh] flex-col rounded-2xl border border-neutral-900/3 bg-neutral-75 p-9 "  // could add this shadow: shadow-[0_0_30px_-10px_rgba(22,25,29,0.08)]
+            style={{ top: "calc(var(--nav-height) - 20px)" }}
           >
             {reduce ? (
-              panelEntry ? (
+              isFun ? (
+                <FunPanelContent />
+              ) : panelEntry ? (
                 <PanelContentView entry={panelEntry} />
               ) : (
                 <p className="font-sans text-base text-neutral-300 font-medium">{panelText}</p>
@@ -592,7 +757,9 @@ export function AboutContent({ spotifyPlaylist }: { spotifyPlaylist: Song[] | nu
                   exit={{ opacity: 0, filter: "blur(2px)" }}
                   transition={{ duration: 0.1, ease: "easeOut" }}
                 >
-                  {panelEntry ? (
+                  {isFun ? (
+                    <FunPanelContent />
+                  ) : panelEntry ? (
                     <PanelContentView entry={panelEntry} />
                   ) : (
                     <p className="font-sans text-base text-neutral-300">{panelText}</p>
