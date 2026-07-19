@@ -15,7 +15,7 @@ export function Outcomes({ metrics }: OutcomesProps) {
       </p>
       <div className="col-span-3 flex flex-wrap gap-x-12 gap-y-6">
         {metrics.map(({ value, label }) => (
-          <div key={label}>
+          <div key={label} className="max-w-[12rem]">
             <p className="text-2xl font-medium text-primary">{value}</p>
             <p className="text-base leading-normal text-neutral-500">{label}</p>
           </div>

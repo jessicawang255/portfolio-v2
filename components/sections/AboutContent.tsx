@@ -349,7 +349,7 @@ function AboutPanelImage({ caption, aspect, width, src, alt }: PanelImage) {
     <div style={{ width: width ?? "100%" }}>
       {src ? (
         <div
-          className="relative overflow-hidden rounded-[2px] border border-neutral-900/10 bg-neutral-100"
+          className="relative overflow-hidden rounded-[2px] border border-neutral-100 bg-neutral-100"
           style={{ aspectRatio: aspect }}
         >
           <Image
@@ -362,7 +362,7 @@ function AboutPanelImage({ caption, aspect, width, src, alt }: PanelImage) {
         </div>
       ) : (
         <div
-          className="flex items-center justify-center rounded-[2px] border border-neutral-900/10 bg-neutral-100"
+          className="flex items-center justify-center rounded-[2px] border border-neutral-100 bg-neutral-100"
           style={{ aspectRatio: aspect }}
         >
           <p className="px-3 text-center text-xs font-bold text-red-600">IMAGE (temp)</p>
@@ -737,7 +737,7 @@ export function AboutContent({ spotifyPlaylist }: { spotifyPlaylist: Song[] | nu
         {/* Right column — sticky panel, scoped to the grid row above (ends after "My Playlist") */}
         <div className="relative mt-16 hidden lg:mt-0 lg:block">
           <div
-            className="sticky flex min-h-[83vh] flex-col rounded-2xl border border-neutral-900/3 bg-neutral-75 p-9 "  // could add this shadow: shadow-[0_0_30px_-10px_rgba(22,25,29,0.08)]
+            className="sticky flex min-h-[83vh] flex-col rounded-2xl border border-neutral-100 bg-neutral-75 p-9 shadow-[0_4px_20px_-6px_rgba(22,25,29,0.06)]"  // could add this shadow: shadow-[0_0_30px_-10px_rgba(22,25,29,0.08)]
             style={{ top: "calc(var(--nav-height) - 20px)" }}
           >
             {reduce ? (
