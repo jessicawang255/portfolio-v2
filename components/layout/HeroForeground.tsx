@@ -24,7 +24,7 @@ export function HeroForeground({ src, alt }: { src: StaticImageData; alt: string
       <Image
         src={src}
         alt={alt}
-        className={`w-full h-auto drop-shadow-lg transition-opacity duration-500 ease-out ${
+        className={`w-full h-auto transition-opacity duration-500 ease-out ${
           loaded ? "opacity-100" : "opacity-0"
         }`}
         sizes="100vw"
