@@ -620,7 +620,7 @@ export function AboutContent({ spotifyPlaylist }: { spotifyPlaylist: Song[] | nu
                 label="MY JOURNEY THUS FAR"
                 action={
                   <a
-                    href="/resume.pdf"
+                    href="/JessicaWang_Resume.pdf"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-1 text-sm text-neutral-400 hover:text-nav-link-hover transition-colors duration-150"

@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation"
 const links: { label: string; href: string; target?: string }[] = [
   { label: "Work",   href: "/" },
   { label: "About",  href: "/about" },
-  { label: "Resume", href: "/resume.pdf", target: "_blank" },
+  { label: "Resume", href: "/JessicaWang_Resume.pdf", target: "_blank" },
 ]
 
 function isActive(pathname: string, href: string) {
