@@ -46,7 +46,7 @@ const communities: Community[] = [
   {
     id: "comm-product-design-sprint",
     name: "Product Design Sprint",
-    description: "Western University's first and largest design-a-thon.",
+    description: "Western University's first and largest design-a-thon",
     logo: "/images/communities/pds-icon.svg",
     href: "https://instagram.com/westernfoundersnetwork/",
     icon: "/icons/instagram.svg",
@@ -54,7 +54,7 @@ const communities: Community[] = [
   {
     id: "comm-hack-western",
     name: "Hack Western",
-    description: "Western University's hackathon.",
+    description: "Western University's hackathon",
     logo: "/images/communities/hackwestern-icon.svg",
     href: "https://hackwestern.com",
     icon: "/icons/global-line.svg",
@@ -62,7 +62,7 @@ const communities: Community[] = [
   {
     id: "comm-framer",
     name: "Framer",
-    description: "A no-code tool for beautiful websites.",
+    description: "A no-code tool for beautiful websites",
     logo: "/images/communities/framer-icon.png",
     href: "https://framer.com/",
     icon: "/icons/global-line.svg",
@@ -70,7 +70,7 @@ const communities: Community[] = [
   {
     id: "comm-ivey-product-society",
     name: "Ivey Product Society",
-    description: "A community of product leaders at Ivey Business School.",
+    description: "A community of product leaders at Ivey Business School",
     logo: "/images/communities/ips-icon.svg",
     href: "https://instagram.com/iveyproductsociety_",
     icon: "/icons/instagram.svg",

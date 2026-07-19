@@ -30,7 +30,7 @@ function ChevronLeft() {
 const navLinks: { label: string; href: string; target?: string }[] = [
   { label: "Work",   href: "/" },
   { label: "About",  href: "/about" },
-  { label: "Resume", href: "/resume.pdf", target: "_blank" },
+  { label: "Resume", href: "/JessicaWang_Resume.pdf", target: "_blank" },
 ]
 
 // Hero occupies 65vh of the viewport. The spacer below accounts for the

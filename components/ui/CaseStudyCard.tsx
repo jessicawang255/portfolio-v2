@@ -39,30 +39,41 @@ function Separator({ children, className = "" }: { children: ReactNode; classNam
   )
 }
 
-export function CaseStudyCard({ project, imageHeight = 340 }: Props) {
-  const { slug, title, name, status, disciplines, bg, thumbnail } = project
+export function CaseStudyCard({ project, imageHeight }: Props) {
+  const { slug, title, name, status, disciplines, bg, thumbnail, thumbnailWidth, thumbnailHeight, href } = project
 
   const isGradient = bg.startsWith("linear-gradient")
   const bgStyle = isGradient ? { background: bg } : { backgroundColor: bg }
   const hasMetadata = name || status || (disciplines && disciplines.length > 0)
+  const isExternal = Boolean(href)
+
+  // With no explicit imageHeight, size the box to the thumbnail's own aspect
+  // ratio instead of forcing a uniform crop — lets Discover More's bento
+  // layout follow each asset's natural dimensions.
+  const thumbStyle =
+    !imageHeight && thumbnailWidth && thumbnailHeight
+      ? { aspectRatio: `${thumbnailWidth} / ${thumbnailHeight}`, borderRadius: 16, ...bgStyle }
+      : { height: imageHeight ?? 340, borderRadius: 16, ...bgStyle }
 
   return (
     <article className="case-study-card">
       <Link
-        href={`/work/${slug}`}
+        href={href ?? `/work/${slug}`}
+        target={isExternal ? "_blank" : undefined}
+        rel={isExternal ? "noopener noreferrer" : undefined}
         className="flex flex-col gap-4 rounded-[--radius-xl] outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-4"
       >
         {/* Thumbnail */}
         <div
           className="card-thumb relative w-full overflow-hidden"
-          style={{ height: imageHeight, borderRadius: 16, ...bgStyle }}
+          style={thumbStyle}
         >
           {thumbnail && (
             <Image
               src={thumbnail}
               alt={title}
               fill
-              className="object-cover"
+              className={!imageHeight && thumbnailWidth && thumbnailHeight ? "object-contain" : "object-cover"}
               sizes="(max-width: 768px) 100vw, 50vw"
             />
           )}

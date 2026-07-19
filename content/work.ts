@@ -15,6 +15,11 @@ export type Project = {
   bg: string
   accent?: string
   thumbnail?: string
+  thumbnailWidth?: number
+  thumbnailHeight?: number
+  // External destination (live site, GitHub, Devpost, etc). Falls back to
+  // the internal /work/{slug} case study page when omitted.
+  href?: string
   // Case study detail fields
   role?: string
   timeline?: string
@@ -26,23 +31,43 @@ export type Project = {
 export const discoverItems: Project[] = [
   {
     slug: "google-calendar",
-    title: "Google Calendar Enhanced Task Management",
-    bg: "#e8e4f0",
-  },
-  {
-    slug: "hack-western",
-    title: "Hack Western",
-    bg: "#e4ede8",
+    href: "https://www.figma.com/proto/bT2pWyNdvFSlDzzptTRZwG/Google-Calendar-Enhanced-Task-Management---2024-Ivey-Product-Society-Fellowship?node-id=38-346&p=f&viewport=177%2C357%2C0.08&t=YiZsyTmCXOvIMEG1-9&scaling=contain&content-scaling=fixed&starting-point-node-id=38%3A346&page-id=25%3A44&show-proto-sidebar=1",
+    title: "Google Calendar enhanced task management",
+    status: "Fellowship project",
+    bg: "#D6F0FF",
+    thumbnail: "/images/discover/gcal.svg",
+    thumbnailWidth: 260,
+    thumbnailHeight: 140,
   },
   {
     slug: "snippets",
+    href: "https://devpost.com/software/snippets-m4sc5i",
     title: "Snippets",
-    bg: "#f0ece4",
+    status: "Hack the 6ix 2024 project",
+    bg: "#F6F0E6",
+    thumbnail: "/images/discover/snippets.png",
+    thumbnailWidth: 1360,
+    thumbnailHeight: 900,
+  },
+  {
+    slug: "hack-western",
+    href: "https://www.hackwestern.com",
+    title: "Hack Western",
+    status: "Design lead",
+    bg: "#ECE3FC",
+    thumbnail: "/images/discover/hack-western.svg",
+    thumbnailWidth: 230,
+    thumbnailHeight: 200,
   },
   {
     slug: "syllabud",
+    href: "https://dorahacks.io/buidl/21423",
     title: "Syllabud",
-    bg: "#eceaf4",
+    status: "SheHacks+ 9 project",
+    bg: "linear-gradient(135deg, #8ecdf0, #8ff0d4)",
+    thumbnail: "/images/discover/syllabud.svg",
+    thumbnailWidth: 400,
+    thumbnailHeight: 250,
   },
 ]
 

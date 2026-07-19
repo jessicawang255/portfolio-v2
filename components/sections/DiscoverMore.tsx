@@ -23,10 +23,10 @@ export function DiscoverMore() {
         Discover More
       </motion.h2>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 items-start">
         {discoverItems.map((item) => (
           <motion.div key={item.slug} variants={fadeUp}>
-            <CaseStudyCard project={item} imageHeight={160} />
+            <CaseStudyCard project={item} />
           </motion.div>
         ))}
       </div>
