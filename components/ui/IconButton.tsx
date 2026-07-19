@@ -13,7 +13,7 @@ type Props = {
 
 // Icon-only link: mask-image icon that tints on hover, plus a floating
 // label tooltip that fades in after a beat of sustained hover and drops
-// out instantly on mouse-leave (group-hover:delay-500 has no matching
+// out instantly on mouse-leave (group-hover:delay-400 has no matching
 // delay on the base rule, so leaving skips straight to the fast fade-out).
 export function IconButton({ href, label, icon, size = 22, className, ...rest }: Props) {
   const external = href.startsWith("http")
@@ -48,7 +48,7 @@ export function IconButton({ href, label, icon, size = 22, className, ...rest }:
         className="pointer-events-none absolute bottom-full left-1/2 mb-1 origin-bottom
         -translate-x-1/2 scale-90 whitespace-nowrap rounded-[var(--radius-sm)] bg-neutral-900/90
         px-1.5 py-0.5 text-xs text-neutral-50 opacity-0 transition-[opacity,scale] duration-[var(--duration-slow)]
-        ease-[var(--ease-out)] group-hover:scale-100 group-hover:opacity-100 group-hover:delay-500"
+        ease-[var(--ease-out)] group-hover:scale-100 group-hover:opacity-100 group-hover:delay-400"
       >
         {resolvedLabel}
       </span>
