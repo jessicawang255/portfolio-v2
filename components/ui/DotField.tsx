@@ -1,13 +1,13 @@
 "use client"
 
-import { useEffect, useRef, type RefObject } from "react"
+import { useEffect, useMemo, useRef, type RefObject } from "react"
 import { useReducedMotion } from "framer-motion"
 
 
 // ─── Config ────────────────────────────────────────────────────────────────────
 const GRID            = 28
-const DOT             = 1
-const GREY            = [100, 100, 100] as const
+const DOT             = 1.2
+const GREY            = "#AAAFB5"  // base dot colour
 const INFLUENCE       = 140    // px — illumination radius
 const SIZE_BOOST      = .8   // max extra radius added at full proximity
 const STIFFNESS       = 1   // primary spring (lower = more lag) (how snappy the cursor tracking feels)
@@ -15,29 +15,39 @@ const DAMPING         = 0.1   // primary spring (lower = more oscillation) (boio
 const TRAIL_STIFFNESS = 0.15  // trail lags ~2× more than primary
 const TRAIL_DAMPING   = .5
 const TRAIL_STRENGTH  = .6   // trail halo intensity relative to primary
+const ACCENT_COLOR    = "#AAAFB5"  // default hover/glow colour
 
 function smoothstep(t: number) {
   const c = Math.max(0, Math.min(1, t))
   return c * c * (3 - 2 * c)
 }
 
+function hexToRgb(hex: string): readonly [number, number, number] {
+  const n = parseInt(hex.replace("#", ""), 16)
+  return [(n >> 16) & 255, (n >> 8) & 255, n & 255]
+}
+
+const GREY_RGB = hexToRgb(GREY)
+
 // ─── Component ─────────────────────────────────────────────────────────────────
 
 export function DotField({
   containerRef,
-  accentColor,
+  accentColor = ACCENT_COLOR,
   viewport = false,
 }: {
   containerRef?: RefObject<HTMLElement | null>
-  accentColor: readonly [number, number, number]
+  // Hover/glow colour — hex string, e.g. "#C89867"
+  accentColor?: string
   viewport?: boolean
 }) {
   const canvasRef      = useRef<HTMLCanvasElement>(null)
   const reduced        = useReducedMotion()
+  const accentRgb       = useMemo(() => hexToRgb(accentColor), [accentColor])
   // Always-fresh ref so the canvas loop can read the latest color without
   // the effect needing to re-run (which would reset all spring state).
-  const accentColorRef = useRef(accentColor)
-  accentColorRef.current = accentColor
+  const accentColorRef = useRef(accentRgb)
+  accentColorRef.current = accentRgb
   // Exposes startRAF from inside the effect so the nudge effect below
   // can kick the loop when the color changes while the cursor is idle.
   const startRAFRef = useRef<() => void>(() => {})
@@ -46,7 +56,7 @@ export function DotField({
   // the cursor hasn't moved.
   useEffect(() => {
     startRAFRef.current()
-  }, [accentColor])
+  }, [accentRgb])
 
   useEffect(() => {
     const canvas    = canvasRef.current
@@ -62,36 +72,12 @@ export function DotField({
     let W = 0, H = 0, dpr = 1
     let dots: { x: number; y: number; baseAlpha: number }[] = []
     let staticLayer: HTMLCanvasElement | null = null
-    let eCX = 0, eCY = 0, eRX = 0, eRY = 0  // ellipse params — shared with drawFrame
 
     function buildDots() {
       dots = []
-      // Centre is off-screen top-right so the canvas shows the bottom-left
-      // quadrant of the ellipse. Arc enters left edge ~40% down and exits the
-      // bottom edge ~40% from the left — dots concentrate in the upper-right,
-      // absent from the lower-left.
-      eCX = W * 1.25    // ellipse X axis position
-      eCY = -H * .8   // ellipse Y axis position
-      eRX = W * 1.2     // ellipse width
-      eRY = H * 1.85    // ellipse height
-      const cx = eCX, cy = eCY, rx = eRX, ry = eRY
-
-      // Fade only in the outer 20% of the ellipse radius — dots stay at full
-      // opacity across most of the interior, with a narrow softening band at
-      // the edge. This keeps the vignette subtle rather than gradient-heavy.
-      const fadeZone = 0.30
-
       for (let y = 0; y <= H; y += GRID) {
         for (let x = 0; x <= W; x += GRID) {
-          const dx   = (x - cx) / rx
-          const dy   = (y - cy) / ry
-          const dist = Math.sqrt(dx * dx + dy * dy)
-          if (dist >= 1) continue
-          const inner     = Math.max(0, dist - (1 - fadeZone)) / fadeZone
-          const t         = smoothstep(1 - inner)
-          const baseAlpha = t * 0.38
-          if (baseAlpha < 0.015) continue
-          dots.push({ x, y, baseAlpha })
+          dots.push({ x, y, baseAlpha: 0.38 })
         }
       }
     }
@@ -104,7 +90,7 @@ export function DotField({
       const sCtx = sl.getContext("2d")!
       sCtx.setTransform(dpr, 0, 0, dpr, 0, 0)
       for (const { x, y, baseAlpha } of dots) {
-        sCtx.fillStyle = `rgba(${GREY[0]},${GREY[1]},${GREY[2]},${baseAlpha.toFixed(2)})`
+        sCtx.fillStyle = `rgba(${GREY_RGB[0]},${GREY_RGB[1]},${GREY_RGB[2]},${baseAlpha.toFixed(2)})`
         sCtx.beginPath()
         sCtx.arc(x, y, DOT, 0, Math.PI * 2)
         sCtx.fill()
@@ -198,9 +184,9 @@ export function DotField({
         const prox = Math.max(prox1, prox2)
         if (prox < 0.005) continue
 
-        const r = (GREY[0] + (animR - GREY[0]) * prox) | 0
-        const g = (GREY[1] + (animG - GREY[1]) * prox) | 0
-        const b = (GREY[2] + (animB - GREY[2]) * prox) | 0
+        const r = (GREY_RGB[0] + (animR - GREY_RGB[0]) * prox) | 0
+        const g = (GREY_RGB[1] + (animG - GREY_RGB[1]) * prox) | 0
+        const b = (GREY_RGB[2] + (animB - GREY_RGB[2]) * prox) | 0
         const a = (baseAlpha + (1 - baseAlpha) * prox).toFixed(2)
 
         const radius = DOT + SIZE_BOOST * prox

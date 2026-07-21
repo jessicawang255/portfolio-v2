@@ -1,7 +1,7 @@
 import { ViewTransition } from "react"
 import type { Metadata } from "next"
 import { Roboto_Mono } from "next/font/google"
-import { DotBackground } from "@/components/layout/DotBackground"
+import { DotField } from "@/components/ui/DotField"
 import { Nav } from "@/components/layout/Nav"
 import { Footer } from "@/components/layout/Footer"
 import { ScrollRadiusController } from "@/components/layout/ScrollRadiusController"
@@ -24,7 +24,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${robotoMono.variable} flex min-h-screen flex-col`}>
-        <DotBackground />
+        <DotField viewport />
         <Nav />
         <ViewTransition name="page-content">{children}</ViewTransition>
         <Footer />
