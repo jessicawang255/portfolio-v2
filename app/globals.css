@@ -94,7 +94,7 @@
 
 html {
   background: var(--color-chrome);
-  overscroll-behavior: none;
+  /* overscroll-behavior: none; */
 }
 
 body {
@@ -102,7 +102,7 @@ body {
   font-family: var(--font-sans);
   /* -webkit-font-smoothing: antialiased; */
   padding-top: var(--nav-height);
-  overscroll-behavior: none;
+  /* overscroll-behavior: none; */
 }
 
 /* ─── Main frame — radius transitions ──────────────────────────────────────── */
@@ -147,12 +147,19 @@ body {
 /* ─── Layout utilities ─────────────────────────────────────────────────────── */
 @utility container-main {
   width: 100%;
-  padding-inline: 36px;
+  padding-inline: 20px;
 }
 
 @utility container-chrome {
   width: 100%;
-  padding-inline: 36px;
+  padding-inline: 20px;
+}
+
+@media (min-width: 640px) {
+  .container-main,
+  .container-chrome {
+    padding-inline: 36px;
+  }
 }
 
 @utility grid-wide-left {
@@ -168,6 +175,20 @@ body {
 /* Thumbnail box scales; default = no transform */
 .card-thumb {
   transition: transform 400ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Cards given an explicit desktop imageHeight (vs. aspect-ratio-derived
+   thumbnails) get a single uniform mobile height instead — the bespoke
+   desktop heights are tuned per-card for wide fluid columns and read as
+   oddly tall/narrow crops on a full-width mobile card. */
+.card-thumb-fixed {
+  height: 200px;
+}
+
+@media (min-width: 640px) {
+  .card-thumb-fixed {
+    height: var(--thumb-h);
+  }
 }
 
 /* Text block slides on y-axis; default = no transform */

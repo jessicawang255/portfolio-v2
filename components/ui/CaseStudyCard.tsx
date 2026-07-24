@@ -53,7 +53,7 @@ export function CaseStudyCard({ project, imageHeight }: Props) {
   const thumbStyle =
     !imageHeight && thumbnailWidth && thumbnailHeight
       ? { aspectRatio: `${thumbnailWidth} / ${thumbnailHeight}`, borderRadius: 16, ...bgStyle }
-      : { height: imageHeight ?? 340, borderRadius: 16, ...bgStyle }
+      : ({ "--thumb-h": `${imageHeight ?? 340}px`, borderRadius: 16, ...bgStyle } as React.CSSProperties)
 
   return (
     <article className="case-study-card">
@@ -65,7 +65,9 @@ export function CaseStudyCard({ project, imageHeight }: Props) {
       >
         {/* Thumbnail */}
         <div
-          className="card-thumb relative w-full overflow-hidden"
+          className={`card-thumb relative w-full overflow-hidden ${
+            !imageHeight && thumbnailWidth && thumbnailHeight ? "" : "card-thumb-fixed"
+          }`}
           style={thumbStyle}
         >
           {thumbnail && (
