@@ -17,6 +17,11 @@ function isActive(pathname: string, href: string) {
 export function Nav() {
   const pathname = usePathname()
 
+  // Case study pages render their own transparent nav overlay (see
+  // CaseStudyLayout) tuned to sit above their hero's z-stack — this one
+  // would just be duplicate, invisible markup underneath it.
+  if (pathname.startsWith("/work/")) return null
+
   return (
     <header className="fixed inset-x-0 top-0 z-[2] bg-chrome/50">
       <nav

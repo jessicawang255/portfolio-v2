@@ -89,9 +89,12 @@ export function CaseStudyLayout({ project, children, heroBackground }: Props) {
       <main className="flex-1 flex flex-col">
         <CaseStudyRadiusController />
 
-        {/* Hero — fixed, starts at viewport top, sits above root nav (z-0) */}
+        {/* Hero — fixed at sm and up, starts at viewport top, sits above root nav
+            (z-0). Below sm it's a normal in-flow element instead (see Footer.tsx
+            for why fixed-fixed-fixed stacking breaks on short/narrow viewports),
+            so no spacer is needed there either. */}
         <div
-          className="fixed inset-x-0 top-0 overflow-hidden"
+          className="static sm:fixed inset-x-0 top-0 overflow-hidden"
           style={{ zIndex: 5, height: `calc(${HERO_HEIGHT} + ${HERO_BG_EXTRA}px)` }}
         >
           {/* Background + foreground — both owned by the per-case-study hero
@@ -103,9 +106,11 @@ export function CaseStudyLayout({ project, children, heroBackground }: Props) {
         {/* Spacer — body has padding-top: nav-height (56px) so the first in-flow
             element starts at viewport y=56px. We need the content card to start
             at viewport y=65vh, so spacer height = 65vh - 56px. The +80px pushes
-            the content card 80px further down the hero. */}
+            the content card 80px further down the hero. Hidden below sm since
+            the hero above is in normal flow there and needs no reserved space. */}
         <div
           aria-hidden="true"
+          className="hidden sm:block"
           style={{ height: `calc(${HERO_HEIGHT} - var(--nav-height) + 80px)` }}
         />
 

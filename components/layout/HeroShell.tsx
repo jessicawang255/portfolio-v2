@@ -25,10 +25,13 @@ export function HeroShell({ children, fallbackSpacer = 324 }: Props) {
 
   return (
     <>
-      <div ref={ref} className="fixed inset-x-0 top-0 z-[2] pointer-events-none">
+      {/* Below `sm`, this stays in normal flow instead of fixed — see Footer.tsx
+          for why: fixed hero + fixed footer have no shared awareness of each
+          other's height, so on short/narrow viewports they can overlap. */}
+      <div ref={ref} className="static sm:fixed inset-x-0 top-0 z-[2] pointer-events-none">
         {children}
       </div>
-      <div aria-hidden="true" style={{ height: spacer }} />
+      <div aria-hidden="true" style={{ height: spacer }} className="hidden sm:block" />
     </>
   )
 }
