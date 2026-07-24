@@ -2,6 +2,7 @@ import Link from "next/link"
 import type { Project } from "@/content/work"
 import { TableOfContents } from "@/components/ui/TableOfContents"
 import { CaseStudyRadiusController } from "@/components/layout/CaseStudyRadiusController"
+import { CaseStudyHero } from "@/components/layout/CaseStudyHero"
 import { DefaultHeroBackground } from "@/components/layout/DefaultHeroBackground"
 
 type Props = {
@@ -33,14 +34,15 @@ const navLinks: { label: string; href: string; target?: string }[] = [
   { label: "Resume", href: "/JessicaWang_Resume.pdf", target: "_blank" },
 ]
 
-// Hero occupies 65vh of the viewport. The spacer below accounts for the
-// body's padding-top (nav-height) so the content card aligns to the hero bottom.
+// Hero occupies 65vh of the viewport. It sits in flow but cancels out the
+// body's padding-top with a negative margin (see CaseStudyHero) so it still
+// starts flush at the viewport top, under the transparent nav.
 const HERO_HEIGHT = "65vh"
 
-// The content card sits 80px further down the hero than HERO_HEIGHT alone
-// would put it (see the spacer below), so the hero container itself needs to
-// run 80px taller too — otherwise there's an 80px band between the hero's own
-// bottom edge and the content card's top edge with no background under it.
+// The content card sits 80px further down than HERO_HEIGHT alone would put
+// it, so the hero's own flow height needs the same 80px added — otherwise
+// there's a step between the hero's bottom edge and the content card's top
+// edge with no background under it.
 const HERO_BG_EXTRA = 80
 
 export function CaseStudyLayout({ project, children, heroBackground }: Props) {
@@ -89,32 +91,19 @@ export function CaseStudyLayout({ project, children, heroBackground }: Props) {
       <main className="flex-1 flex flex-col">
         <CaseStudyRadiusController />
 
-        {/* Hero — fixed at sm and up, starts at viewport top, sits above root nav
-            (z-0). Below sm it's a normal in-flow element instead (see Footer.tsx
-            for why fixed-fixed-fixed stacking breaks on short/narrow viewports),
-            so no spacer is needed there either. */}
-        <div
-          className="static sm:fixed inset-x-0 top-0 overflow-hidden"
-          style={{ zIndex: 5, height: `calc(${HERO_HEIGHT} + ${HERO_BG_EXTRA}px)` }}
-        >
-          {/* Background + foreground — both owned by the per-case-study hero
-              component now (whatever it renders: gradient, image, canvas,
-              plus its own foreground screenshots if any). */}
+        {/* Hero — in normal flow (not fixed), so it fully scrolls away under the
+            content card rather than pinning to the viewport. It drifts at half
+            scroll speed (see CaseStudyHero) for parallax depth while still
+            moving. Background + foreground are both owned by the per-case-study
+            hero component (whatever it renders: gradient, image, canvas, plus
+            its own foreground screenshots if any). */}
+        <CaseStudyHero height={`calc(${HERO_HEIGHT} + ${HERO_BG_EXTRA}px)`}>
           <HeroBackground project={project} />
-        </div>
+        </CaseStudyHero>
 
-        {/* Spacer — body has padding-top: nav-height (56px) so the first in-flow
-            element starts at viewport y=56px. We need the content card to start
-            at viewport y=65vh, so spacer height = 65vh - 56px. The +80px pushes
-            the content card 80px further down the hero. Hidden below sm since
-            the hero above is in normal flow there and needs no reserved space. */}
-        <div
-          aria-hidden="true"
-          className="hidden sm:block"
-          style={{ height: `calc(${HERO_HEIGHT} - var(--nav-height) + 80px)` }}
-        />
-
-        {/* Content card — scrolls over the fixed hero as user scrolls */}
+        {/* Content card — its top corners round off as it slides up over the
+            hero (see CaseStudyRadiusController); the hero itself keeps
+            scrolling away underneath, just slower (parallax). */}
         <section
           id="cs-content"
           className="relative bg-surface"
