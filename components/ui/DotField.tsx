@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useMemo, useRef, type RefObject } from "react"
+import { useEffect, useMemo, useRef, useState, type RefObject } from "react"
 import { useReducedMotion } from "framer-motion"
 
 
@@ -29,6 +29,24 @@ function hexToRgb(hex: string): readonly [number, number, number] {
 
 const GREY_RGB = hexToRgb(GREY)
 
+// Below `sm`, there's no cursor to track — the field renders as a static
+// grid with no hover glow, same treatment as prefers-reduced-motion.
+const DESKTOP_QUERY = "(min-width: 640px)"
+
+function useIsDesktop() {
+  const [isDesktop, setIsDesktop] = useState(
+    () => typeof window !== "undefined" && window.matchMedia(DESKTOP_QUERY).matches
+  )
+  useEffect(() => {
+    const mql = window.matchMedia(DESKTOP_QUERY)
+    const onChange = () => setIsDesktop(mql.matches)
+    onChange()
+    mql.addEventListener("change", onChange)
+    return () => mql.removeEventListener("change", onChange)
+  }, [])
+  return isDesktop
+}
+
 // ─── Component ─────────────────────────────────────────────────────────────────
 
 export function DotField({
@@ -43,6 +61,7 @@ export function DotField({
 }) {
   const canvasRef      = useRef<HTMLCanvasElement>(null)
   const reduced        = useReducedMotion()
+  const isDesktop      = useIsDesktop()
   const accentRgb       = useMemo(() => hexToRgb(accentColor), [accentColor])
   // Always-fresh ref so the canvas loop can read the latest color without
   // the effect needing to re-run (which would reset all spring state).
@@ -273,7 +292,7 @@ export function DotField({
     if (viewport) {
       window.addEventListener("resize", resize)
       resize()
-      if (!reduced) {
+      if (!reduced && isDesktop) {
         document.addEventListener("mousemove",  onMove)
         document.addEventListener("mouseenter", onEnter)
         document.addEventListener("mouseleave", onLeave)
@@ -290,7 +309,7 @@ export function DotField({
       const ro = new ResizeObserver(resize)
       ro.observe(container!)
 
-      if (!reduced) {
+      if (!reduced && isDesktop) {
         container!.addEventListener("mousemove",  onMove)
         container!.addEventListener("mouseenter", onEnter)
         container!.addEventListener("mouseleave", onLeave)
@@ -305,7 +324,7 @@ export function DotField({
         staticLayer = null
       }
     }
-  }, [reduced, containerRef, viewport])
+  }, [reduced, isDesktop, containerRef, viewport])
 
   return (
     <canvas
