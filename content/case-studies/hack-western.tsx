@@ -200,22 +200,10 @@ export default function HackWestern() {
       <Section
         id="reflection"
         tag="it's done! what did i learn?"
-        headline=""
+        headline="A good design system leaves nothing unsaid"
+        body="I learned that a good design system is more than just a set of components and rules. It should also include clear documentation and examples, so that anyone can understand how to use it effectively. This ensures consistency and quality across the product, even when different designers or developers are working on it."
         primary
-      >
-        <h2 className="text-2xl font-normal leading-[1.2] text-primary">
-          A good design system leaves nothing unsaid
-        </h2>
-        <p className="text-base leading-normal text-neutral-500">
-          I learned that a good design system is more than just a set of components and rules. It should also include clear documentation and examples, so that anyone can understand how to use it effectively. This ensures consistency and quality across the product, even when different designers or developers are working on it.
-        </p>
-         <h2 className="text-2xl font-normal leading-[1.2] text-primary">
-          😛
-        </h2>
-        <p className="text-base leading-normal text-neutral-500">
-          😺
-        </p>
-      </Section>
+      />
     </div>
   )
 }
