@@ -194,10 +194,12 @@ body {
   transition: transform 400ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* Cards given an explicit desktop imageHeight (vs. aspect-ratio-derived
-   thumbnails) get a single uniform mobile height instead — the bespoke
-   desktop heights are tuned per-card for wide fluid columns and read as
-   oddly tall/narrow crops on a full-width mobile card. */
+/* Every card gets a single uniform mobile height, regardless of whether it
+   has an explicit desktop imageHeight or an aspect-ratio-derived thumbnail —
+   bespoke/natural desktop ratios read as oddly tall/narrow crops on a
+   full-width mobile card. --thumb-h is only set for cards with an explicit
+   imageHeight; for aspect-ratio cards it's unset at `sm`, so `height` falls
+   back to auto and their natural aspect-ratio takes back over. */
 .card-thumb-fixed {
   height: 200px;
 }

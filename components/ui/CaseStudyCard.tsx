@@ -61,13 +61,13 @@ export function CaseStudyCard({ project, imageHeight }: Props) {
         href={href ?? `/work/${slug}`}
         target={isExternal ? "_blank" : undefined}
         rel={isExternal ? "noopener noreferrer" : undefined}
-        className="flex flex-col gap-4 rounded-[--radius-xl] outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-4"
+        className="flex flex-col gap-4 sm:gap-3 rounded-[--radius-xl] outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-4"
       >
-        {/* Thumbnail */}
+        {/* Thumbnail — card-thumb-fixed always applies so every card is the
+            same height on mobile (below `sm`, --thumb-h is unset for
+            aspect-ratio cards, which just re-enables their natural ratio). */}
         <div
-          className={`card-thumb relative w-full overflow-hidden ${
-            !imageHeight && thumbnailWidth && thumbnailHeight ? "" : "card-thumb-fixed"
-          }`}
+          className="card-thumb card-thumb-fixed relative w-full overflow-hidden"
           style={thumbStyle}
         >
           {thumbnail && (
@@ -75,19 +75,25 @@ export function CaseStudyCard({ project, imageHeight }: Props) {
               src={thumbnail}
               alt={title}
               fill
-              className={!imageHeight && thumbnailWidth && thumbnailHeight ? "object-contain" : "object-cover"}
+              className={
+                !imageHeight && thumbnailWidth && thumbnailHeight
+                  ? "object-cover sm:object-contain"
+                  : "object-cover"
+              }
               sizes="(max-width: 768px) 100vw, 50vw"
             />
           )}
         </div>
 
         {/* Text block */}
-        <div className="card-text flex flex-col gap-1 px-3.5">
+        <div className="card-text flex flex-col gap-0 sm:gap-1 px-0 sm:px-3.5">
           <div className="flex items-start justify-between gap-3">
             <h3 className="text-base font-medium leading-[1.4] text-neutral-800">
               {title}
             </h3>
-            <span className="card-arrow shrink-0 leading-none text-neutral-400" aria-hidden="true">
+            {/* Hover-reveal arrow — desktop only (see `hover: hover` gate in
+                globals.css); dropped on mobile since there's no hover to reveal it. */}
+            <span className="card-arrow hidden shrink-0 leading-none text-neutral-400 sm:inline" aria-hidden="true">
               <ArrowUpRight />
             </span>
           </div>
