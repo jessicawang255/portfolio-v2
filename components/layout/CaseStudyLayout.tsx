@@ -1,6 +1,7 @@
 import Link from "next/link"
 import type { Project } from "@/content/work"
 import { TableOfContents } from "@/components/ui/TableOfContents"
+import { MoreCaseStudies } from "@/components/ui/MoreCaseStudies"
 import { CaseStudyRadiusController } from "@/components/layout/CaseStudyRadiusController"
 import { CaseStudyHero } from "@/components/layout/CaseStudyHero"
 import { DefaultHeroBackground } from "@/components/layout/DefaultHeroBackground"
@@ -125,8 +126,11 @@ export function CaseStudyLayout({ project, children, heroBackground }: Props) {
           <div className="container-main">
             {/* min(...) guarantees the column's margin never drops below 17.5rem
                 (the TOC's w-60 + gap) — otherwise the TOC gets pushed off-screen
-                to the left on any viewport narrower than max-w + 2*17.5rem. */}
-            <div className="relative mx-auto max-w-[min(100rem,calc(100%-35rem))]">
+                to the left on any viewport narrower than max-w + 2*17.5rem.
+                Only applied from `sm` up — below that there's no TOC to
+                reserve space for, and `calc(100% - 35rem)` goes negative on
+                narrow viewports, collapsing the whole column. */}
+            <div className="relative mx-auto max-w-full sm:max-w-[min(100rem,calc(100%-35rem))]">
               <aside className="absolute top-0 h-full w-60 left-[-17.5rem]">
                 <div className="sticky top-0 pt-9 pb-16">
                   <Link
@@ -171,6 +175,8 @@ export function CaseStudyLayout({ project, children, heroBackground }: Props) {
                 <div className="pt-12">
                   {children}
                 </div>
+
+                <MoreCaseStudies currentSlug={project.slug} />
               </div>
             </div>
           </div>

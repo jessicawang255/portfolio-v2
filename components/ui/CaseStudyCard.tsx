@@ -8,7 +8,7 @@ type Props = {
   imageHeight?: number
 }
 
-function ArrowUpRight() {
+export function ArrowUpRight() {
   return (
     <span
       aria-hidden="true"
@@ -31,7 +31,7 @@ function ArrowUpRight() {
   )
 }
 
-function Separator({ children, className = "" }: { children: ReactNode; className?: string }) {
+export function Separator({ children, className = "" }: { children: ReactNode; className?: string }) {
   return (
     <span className={`text-subtle ${className}`} aria-hidden="true">
       {children}

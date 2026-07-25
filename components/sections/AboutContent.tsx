@@ -567,7 +567,10 @@ function SongRow({ item, flowerIdx }: { item: Song; flowerIdx: number }) {
           <p className="text-base text-neutral-500">{item.artist}</p>
         </div>
       </div>
-      <span className="flex shrink-0 items-center gap-1 whitespace-nowrap text-sm text-neutral-400 opacity-0 transition-opacity duration-150 group-hover:opacity-100">
+      {/* Hidden below the single-column breakpoint: reserving its width there
+          would force the title to wrap, and touch/mobile has no hover to
+          reveal it anyway. */}
+      <span className="hidden shrink-0 items-center gap-1 whitespace-nowrap text-sm text-neutral-400 opacity-0 transition-opacity duration-150 min-[960px]:flex group-hover:opacity-100">
         Play on Spotify
         <ArrowUpRight />
       </span>
@@ -598,7 +601,7 @@ export function AboutContent({ spotifyPlaylist }: { spotifyPlaylist: Song[] | nu
   }, [])
 
   const displayId = hoveredId ?? activeId
-  const panelText = "Hover to learn more…"
+  const panelText = "Hover on an item to learn more…"
   const isFun = displayId === "fun"
   const panelEntry = displayId ? panelContent[displayId] : undefined
   const panelKey = isFun ? "entry-fun" : panelEntry ? `entry-${displayId}` : `text-${panelText}`
@@ -787,7 +790,11 @@ export function AboutContent({ spotifyPlaylist }: { spotifyPlaylist: Song[] | nu
             Based off my Spotify&rsquo;s most played songs in the past 6 months.
           </p>
         </motion.div>
-        <div className="grid grid-flow-col grid-rows-3 gap-x-16">
+        {/* Column count steps down (3 → 2 → 1) before a row is narrow enough
+            to force "Title" and "Play on Spotify" into conflict — thresholds
+            are measured against the longest current title, not arbitrary
+            breakpoints. Re-measure if playlist content changes meaningfully. */}
+        <div className="flex flex-col min-[960px]:grid min-[960px]:grid-flow-col min-[960px]:grid-rows-5 min-[960px]:gap-x-12 min-[1360px]:grid-rows-3 min-[1360px]:gap-x-16">
           {playlist.map((item, index) => (
             <motion.div key={item.id} variants={fadeUp}>
               <SongRow item={item} flowerIdx={index} />
