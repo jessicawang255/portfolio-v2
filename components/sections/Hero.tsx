@@ -27,21 +27,21 @@ export function Hero() {
       >
         <motion.h1
           variants={fadeUp}
-          className="mb-3 text-xl font-medium text-neutral-900 sm:text-2xl"
+          className="mb-3 font-medium text-neutral-900 text-2xl"
         >
           Hi, I&rsquo;m Jessica.
         </motion.h1>
 
         <motion.p
           variants={fadeUp}
-          className="mb-4 max-w-lg text-balance text-sm font-normal text-neutral-700 sm:text-base"
+          className="mb-4 max-w-lg text-balance font-normal text-neutral-700 text-base"
         >
           I'm a product designer who's fluent from design to code. I like to think deeply about what the future of design will be. Are we all cooked? Maybe. But maybe not, too!
         </motion.p>
 
         <motion.p
           variants={fadeUp}
-          className="mb-9 font-mono text-xs text-neutral-400 sm:text-sm"
+          className="mb-9 font-mono text-neutral-400 text-sm"
         >
           Currently designing + building digital asset technology @ RBC.
         </motion.p>
