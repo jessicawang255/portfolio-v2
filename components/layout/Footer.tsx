@@ -74,13 +74,16 @@ function LiveClock() {
   )
 }
 
-// Below `sm`, this is a normal in-flow element (not fixed) — it scrolls with
-// the page like an ordinary footer instead of peeling out from behind
-// #main-frame. See ScrollRadiusController for the corresponding skip of the
-// reveal math below that breakpoint.
+// Always fixed — pinned behind #main-frame at every breakpoint so its bottom
+// corners can peel back to reveal it on scroll (see ScrollRadiusController /
+// CaseStudyRadiusController). Note HeroShell stays static below `sm`: with
+// the footer's mobile layout stacking into one tall column, a fixed hero
+// competing for the same short viewport could overlap it — but the footer
+// alone is safe since the reveal math always reserves exactly its height via
+// body padding-bottom.
 export function Footer() {
   return (
-    <footer id="site-footer" className="static sm:fixed inset-x-0 bottom-0 z-0 bg-chrome">
+    <footer id="site-footer" className="fixed inset-x-0 bottom-0 z-0 bg-chrome">
       <div className="container-chrome grid grid-cols-1 gap-8 pt-9 pb-16 sm:grid-cols-4">
         {/* Name + clock */}
         <div className="flex flex-col gap-1">
