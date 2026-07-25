@@ -163,6 +163,15 @@ export default function Autumn() {
           height={400}
         />
       </Section>
+
+      <Section
+        id="reflections"
+        tag="it's done! what did i learn?"
+        headline="A good design system leaves nothing unsaid"
+        body="I learned that a good design system is more than just a set of components and rules. It should also include clear documentation and examples, so that anyone can understand how to use it effectively. This ensures consistency and quality across the product, even when different designers or developers are working on it."
+        primary
+      />
+      
     </div>
   )
 }

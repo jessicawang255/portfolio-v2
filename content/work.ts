@@ -93,6 +93,7 @@ export const projects: Project[] = [
       { title: "Designing for Mobile" },
       { title: "Stickerbook" },
       { title: "Final Product" },
+      {title: "Reflections" },
     ],
   },
   {
@@ -114,6 +115,7 @@ export const projects: Project[] = [
       { title: "Research", subsections: ["Competitive Analysis"] },
       { title: "Core App Flows", subsections: ["Creating a Capsule", "Collaboration User Flow"] },
       { title: "Final Product" },
+      {title: "Reflections" },
     ],
   },
   {
@@ -136,6 +138,7 @@ export const projects: Project[] = [
       { title: "Adding User Touchpoints" },
       { title: "Design Challenges", subsections: ["Design Challenge #1", "Design Challenge #2"] },
       { title: "Final Product" },
+      { title: "Reflections"}
     ],
   },
   {
@@ -158,6 +161,7 @@ export const projects: Project[] = [
       { title: "Competitive Analysis" },
       { title: "Design Decisions" },
       { title: "Final Product" },
+      { title: "Next Steps"},
     ],
   },
 ]
