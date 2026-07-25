@@ -10,7 +10,7 @@ export function CaseStudies() {
   const reduce = useReducedMotion()
 
   return (
-    <section id="work" className="container-main pt-9 pb-20">
+    <section id="work" className="container-main pt-5 pb-20 sm:pt-9">
       <motion.h2
         variants={fadeUp}
         initial={reduce ? "visible" : "hidden"}

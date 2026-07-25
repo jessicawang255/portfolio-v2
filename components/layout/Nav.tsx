@@ -23,7 +23,8 @@ export function Nav() {
   if (pathname.startsWith("/work/")) return null
 
   return (
-    <header className="fixed inset-x-0 top-0 z-[2] bg-chrome/50">
+    // Below `sm`, the bottom pill nav takes over — no top bar to show.
+    <header className="fixed inset-x-0 top-0 z-[2] hidden bg-chrome/50 sm:block">
       <nav
         className="container-chrome flex items-center justify-between py-4"
         aria-label="Primary navigation"

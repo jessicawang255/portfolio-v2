@@ -59,8 +59,9 @@ export function CaseStudyLayout({ project, children, heroBackground }: Props) {
 
   return (
     <>
-      {/* Transparent nav overlay — above hero (z:5), below content card (z:10) */}
-      <header className="fixed inset-x-0 top-0 pointer-events-none" style={{ zIndex: 6 }}>
+      {/* Transparent nav overlay — above hero (z:5), below content card (z:10).
+          Below `sm`, the bottom pill nav takes over — no top bar to show. */}
+      <header className="fixed inset-x-0 top-0 hidden pointer-events-none sm:block" style={{ zIndex: 6 }}>
         <nav
           className="container-chrome flex items-center justify-between py-4 pointer-events-auto"
           aria-label="Primary navigation"
@@ -140,7 +141,7 @@ export function CaseStudyLayout({ project, children, heroBackground }: Props) {
               </aside>
 
               {/* max-w-[100rem] above caps the content column — tune it freely, it never affects the TOC's own w-60 */}
-              <div className="cs-header-content pt-9 pb-16">
+              <div className="cs-header-content pt-5 pb-16 sm:pt-9">
                 <p className="font-mono text-sm uppercase leading-[1.2] text-neutral-400 mb-4.5">{name}</p>
                 <h1 className="text-4xl font-medium text-primary leading-[1.2] w-full">
                   {title}
