@@ -30,11 +30,11 @@ export function CaseStudyRadiusController() {
     function setup() {
       cleanupScroll()
 
-      // Footer is fixed at every breakpoint, so it always needs the
-      // padding-bottom reservation to make room for its reveal.
+      // Footer is only fixed from `sm` up (see Footer.tsx) — below that it's
+      // in normal flow, so there's nothing to reveal and no space to reserve.
       const maxRadius     = mql.matches ? DESKTOP_RADIUS : MOBILE_RADIUS
       const footerH       = footer!.offsetHeight
-      document.body.style.paddingBottom = `${footerH}px`
+      document.body.style.paddingBottom = mql.matches ? `${footerH}px` : ""
       const footerAbsTop  = document.documentElement.scrollHeight - footerH
 
       function update() {
@@ -47,7 +47,9 @@ export function CaseStudyRadiusController() {
         content!.style.borderTopLeftRadius  = `${topRadius}px`
         content!.style.borderTopRightRadius = `${topRadius}px`
 
-        const botRadius = footerRatio(scrollY, footerAbsTop, footerH, window.innerHeight) * maxRadius
+        const botRadius = mql.matches
+          ? footerRatio(scrollY, footerAbsTop, footerH, window.innerHeight) * maxRadius
+          : 0
         content!.style.borderBottomLeftRadius  = `${botRadius}px`
         content!.style.borderBottomRightRadius = `${botRadius}px`
       }

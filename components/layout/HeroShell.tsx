@@ -25,13 +25,9 @@ export function HeroShell({ children, fallbackSpacer = 324 }: Props) {
 
   return (
     <>
-      {/* Below `sm`, this stays in normal flow instead of fixed. Footer.tsx is
-          fixed at every breakpoint (so its peel effect works on mobile too),
-          and its mobile layout stacks into one tall column — a fixed hero
-          competing with it for the same short viewport, with neither aware of
-          the other's height, could overlap it. Keeping the hero static avoids
-          that; the footer alone is safe since the reveal math in
-          ScrollRadiusController always reserves exactly its height. */}
+      {/* Below `sm`, this stays in normal flow instead of fixed — matching
+          Footer.tsx, which is likewise static on mobile and only fixed from
+          `sm` up. */}
       <div ref={ref} className="static sm:fixed inset-x-0 top-0 z-[2] pointer-events-none">
         {children}
       </div>

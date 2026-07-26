@@ -48,11 +48,11 @@ export function ScrollRadiusController() {
       // collapse immediately over the first MAX_RADIUS pixels of scroll.
       const triggerAt = Math.max(main!.offsetTop - navH, 0)
 
-      // Footer is fixed at every breakpoint, so it always needs the
-      // padding-bottom reservation to make room for its reveal.
+      // Footer is only fixed from `sm` up (see Footer.tsx) — below that it's
+      // in normal flow, so there's nothing to reveal and no space to reserve.
       const maxRadius     = mql.matches ? DESKTOP_RADIUS : MOBILE_RADIUS
       const footerH       = footer!.offsetHeight
-      document.body.style.paddingBottom = `${footerH}px`
+      document.body.style.paddingBottom = mql.matches ? `${footerH}px` : ""
       const footerAbsTop  = document.documentElement.scrollHeight - footerH
 
       function applyRadius(y: number) {
@@ -61,7 +61,9 @@ export function ScrollRadiusController() {
         el.style.borderTopLeftRadius  = `${top}px`
         el.style.borderTopRightRadius = `${top}px`
 
-        const bottom = footerRatio(y, footerAbsTop, footerH, window.innerHeight) * maxRadius
+        const bottom = mql.matches
+          ? footerRatio(y, footerAbsTop, footerH, window.innerHeight) * maxRadius
+          : 0
         el.style.borderBottomLeftRadius  = `${bottom}px`
         el.style.borderBottomRightRadius = `${bottom}px`
       }
