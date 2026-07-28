@@ -81,6 +81,9 @@ export const projects: Project[] = [
     disciplines: ["Visual design", "User testing"],
     bg: "#F5E8F7",
     accent: "hack-western",
+    thumbnail: "/images/case-studies/hack-western/hw-thumbnail.mp4",
+    thumbnailWidth: 2254,
+    thumbnailHeight: 1596,
     role: "Product Designer",
     timeline: "Sep – Dec 2024",
     team: ["1 design lead", "2 designers"],
@@ -162,6 +165,7 @@ export const projects: Project[] = [
       { title: "Design Decisions" },
       { title: "Final Product" },
       { title: "Next Steps"},
+      { title: "Reflections"},
     ],
   },
 ]

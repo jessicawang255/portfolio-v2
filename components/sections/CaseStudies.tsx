@@ -31,10 +31,10 @@ export function CaseStudies() {
           viewport={{ once: true, margin: "-80px" }}
         >
           <motion.div variants={fadeUp}>
-            <CaseStudyCard project={p0} imageHeight={504} />
+            <CaseStudyCard project={p0} imageRatio={[740, 504]} />
           </motion.div>
           <motion.div variants={fadeUp}>
-            <CaseStudyCard project={p1} imageHeight={388} />
+            <CaseStudyCard project={p1} imageRatio={[592, 388]} />
           </motion.div>
         </motion.div>
 
@@ -46,10 +46,10 @@ export function CaseStudies() {
           viewport={{ once: true, margin: "-80px" }}
         >
           <motion.div variants={fadeUp}>
-            <CaseStudyCard project={p2} imageHeight={400} />
+            <CaseStudyCard project={p2} imageRatio={[533, 400]} />
           </motion.div>
           <motion.div variants={fadeUp}>
-            <CaseStudyCard project={p3} imageHeight={475} />
+            <CaseStudyCard project={p3} imageRatio={[799, 475]} />
           </motion.div>
         </motion.div>
       </div>

@@ -5,7 +5,9 @@ import type { ReactNode } from "react"
 
 type Props = {
   project: Project
-  imageHeight?: number
+  // Explicit [width, height] box ratio for cards without a real thumbnail
+  // image (bento layout on the home page). Overrides thumbnailWidth/Height.
+  imageRatio?: [number, number]
 }
 
 export function ArrowUpRight() {
@@ -39,21 +41,29 @@ export function Separator({ children, className = "" }: { children: ReactNode; c
   )
 }
 
-export function CaseStudyCard({ project, imageHeight }: Props) {
+export function CaseStudyCard({ project, imageRatio }: Props) {
   const { slug, title, name, status, disciplines, bg, thumbnail, thumbnailWidth, thumbnailHeight, href } = project
 
   const isGradient = bg.startsWith("linear-gradient")
   const bgStyle = isGradient ? { background: bg } : { backgroundColor: bg }
+  const isVideo = thumbnail?.endsWith(".mp4") || thumbnail?.endsWith(".webm")
   const hasMetadata = name || status || (disciplines && disciplines.length > 0)
   const isExternal = Boolean(href)
 
-  // With no explicit imageHeight, size the box to the thumbnail's own aspect
+  // With no explicit imageRatio, size the box to the thumbnail's own aspect
   // ratio instead of forcing a uniform crop — lets Discover More's bento
   // layout follow each asset's natural dimensions.
-  const thumbStyle =
-    !imageHeight && thumbnailWidth && thumbnailHeight
-      ? { aspectRatio: `${thumbnailWidth} / ${thumbnailHeight}`, borderRadius: 16, ...bgStyle }
-      : ({ "--thumb-h": `${imageHeight ?? 340}px`, borderRadius: 16, ...bgStyle } as React.CSSProperties)
+  const usesThumbnailRatio = !imageRatio && thumbnailWidth && thumbnailHeight
+  const ratio = imageRatio ?? (usesThumbnailRatio ? [thumbnailWidth!, thumbnailHeight!] : undefined)
+
+  // aspect-ratio (not a pixel height) so the box scales proportionally with
+  // its fluid grid-column width instead of stretching width while height
+  // stays fixed.
+  const thumbStyle = {
+    ...(ratio ? { aspectRatio: `${ratio[0]} / ${ratio[1]}` } : {}),
+    borderRadius: 16,
+    ...bgStyle,
+  }
 
   return (
     <article className="case-study-card">
@@ -64,19 +74,34 @@ export function CaseStudyCard({ project, imageHeight }: Props) {
         className="flex flex-col gap-4 sm:gap-3 rounded-[--radius-xl] outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-4"
       >
         {/* Thumbnail — card-thumb-fixed always applies so every card is the
-            same height on mobile (below `sm`, --thumb-h is unset for
-            aspect-ratio cards, which just re-enables their natural ratio). */}
+            same height on mobile (below `sm`, height is fixed at 200px; at
+            `sm` and up it defers to the aspect-ratio set in thumbStyle so
+            the box scales proportionally instead of stretching). */}
         <div
           className="card-thumb card-thumb-fixed relative w-full overflow-hidden"
           style={thumbStyle}
         >
-          {thumbnail && (
+          {thumbnail && isVideo && (
+            <video
+              src={thumbnail}
+              autoPlay
+              loop
+              muted
+              playsInline
+              className={
+                usesThumbnailRatio
+                  ? "absolute inset-0 h-full w-full object-cover sm:object-contain"
+                  : "absolute inset-0 h-full w-full object-cover"
+              }
+            />
+          )}
+          {thumbnail && !isVideo && (
             <Image
               src={thumbnail}
               alt={title}
               fill
               className={
-                !imageHeight && thumbnailWidth && thumbnailHeight
+                usesThumbnailRatio
                   ? "object-cover sm:object-contain"
                   : "object-cover"
               }
