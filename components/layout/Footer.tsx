@@ -125,10 +125,8 @@ export function Footer() {
           </ul>
         </nav>
 
-        {/* Version */}
-        <div className="flex flex-col items-start gap-1 sm:items-end">
-          <span className="text-base text-nav-link">Portfolio V1</span>
-        </div>
+        {/* Reserved for future footer content */}
+        <div className="flex flex-col items-start gap-1 sm:items-end" />
       </div>
     </footer>
   )
