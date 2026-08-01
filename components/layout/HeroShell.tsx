@@ -28,7 +28,11 @@ export function HeroShell({ children, fallbackSpacer = 324 }: Props) {
       {/* Below `sm`, this stays in normal flow instead of fixed — matching
           Footer.tsx, which is likewise static on mobile and only fixed from
           `sm` up. */}
-      <div ref={ref} className="static sm:fixed inset-x-0 top-0 z-[2] pointer-events-none">
+      <div
+        ref={ref}
+        id="hero-content"
+        className="static sm:fixed inset-x-0 top-0 z-[2] pointer-events-none"
+      >
         {children}
       </div>
       <div aria-hidden="true" style={{ height: spacer }} className="hidden sm:block" />
