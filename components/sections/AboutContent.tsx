@@ -496,11 +496,11 @@ function CommunityRow({
     <div
       onMouseEnter={onHover}
       onMouseLeave={onUnhover}
-      className="-mx-3 flex items-center justify-between gap-6 border-x border-x-transparent border-y border-y-transparent px-3 py-4 transition-colors duration-100 hover:cursor-help hover:border-y-neutral-900/3 hover:bg-neutral-75 hover:duration-0"
+      className="group -mx-3 flex items-center justify-between gap-6 border-x border-x-transparent border-y border-y-transparent px-3 py-4 transition-colors duration-100 hover:cursor-help hover:border-y-neutral-900/3 hover:bg-neutral-75 hover:duration-0"
     >
       <div className="flex items-center gap-6">
         <div
-          className="h-14 w-14 shrink-0 bg-contain bg-center bg-no-repeat"
+          className="h-14 w-14 shrink-0 bg-contain bg-center bg-no-repeat transition-[scale] duration-200 group-hover:scale-95"
           style={{ backgroundImage: `url(${item.logo})` }}
         />
         <div>
@@ -521,12 +521,13 @@ function CommunityRow({
 // Stand-in art tile: one of the 12 unused flowers (from the pre-redesign
 // brand system), assigned per song. A subtle rotate/scale on hover rather
 // than cycling or revealing a real photo — the flower itself is the artwork.
+// Scale-down echoes MoreCaseStudies' thumbnail hover (scale-95).
 function SongArt({ flowerIdx, isHovered }: { flowerIdx: number; isHovered: boolean }) {
   const reduce = useReducedMotion()
   const FlowerComponent = FLOWERS[flowerIdx % FLOWERS.length].component
 
   return (
-    <div className="relative h-15 w-15 shrink-0 overflow-hidden rounded-base border border-neutral-100 bg-neutral-100">
+    <div className="relative h-15 w-15 shrink-0 overflow-hidden rounded-base border border-neutral-100 bg-neutral-100 transition-[scale] duration-200 group-hover:scale-95">
       <motion.div
         animate={reduce ? undefined : { rotate: isHovered ? 30 : 0 }}
         transition={reduce ? undefined : { duration: 0.2, ease: "easeOut" }}
