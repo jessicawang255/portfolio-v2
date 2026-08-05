@@ -1,38 +1,36 @@
-"use client"
-
-import { motion, useScroll, useTransform } from "framer-motion"
-
-// Hero sits in normal flow and drifts at a fraction of the page's scroll
-// speed — parallax depth without ever pinning it to the viewport. It still
-// fully scrolls away under the content card, just slower.
-const PARALLAX_SPEED = 0.5
-
+// Mirrors HeroShell.tsx's fixed/static split for Work/About: from `sm` up,
+// the hero (background + foreground both, as `children`) pins to the
+// viewport — removed from flow — so #cs-content can visually slide up and
+// cover it, the same "frame scrolls over hero" effect Work/About gets from
+// #main-frame. A spacer of the same height reserves its place in the flow
+// so #cs-content still lands in the right spot.
+//
+// Below `sm`, the hero stays in normal static flow instead (matching
+// HeroShell's mobile behavior) — no covering effect there, so no spacer is
+// needed either.
+//
+// Unlike HeroShell, `height` is a deterministic prop (a fixed vh-based
+// formula, not organic text content), so the spacer can be sized with a
+// plain CSS calc() instead of HeroShell's ResizeObserver measurement.
 type Props = {
   height: string
   children: React.ReactNode
 }
 
-// Takes the hero background as `children` (a server-rendered element), not a
-// component reference — a component/function type can't cross the server →
-// client boundary as a prop, only already-rendered elements can.
 export function CaseStudyHero({ height, children }: Props) {
-  const { scrollY } = useScroll()
-  const y = useTransform(scrollY, (v) => v * (1 - PARALLAX_SPEED))
-
   return (
-    <motion.div
-      className="relative inset-x-0 top-0 overflow-hidden"
-      style={{
-        zIndex: 5,
-        height,
-        y,
-        // body has padding-top: nav-height so in-flow elements start below the
-        // (transparent) nav — pull the hero back up to sit flush with the
-        // viewport top, same as it looked when it was position: fixed.
-        marginTop: "calc(-1 * var(--nav-height))",
-      }}
-    >
-      {children}
-    </motion.div>
+    <>
+      <div
+        className="static sm:fixed inset-x-0 top-0 overflow-hidden mt-[calc(-1*var(--nav-height))] sm:mt-0"
+        style={{ zIndex: 5, height }}
+      >
+        {children}
+      </div>
+      <div
+        aria-hidden="true"
+        style={{ height: `calc(${height} - var(--nav-height))` }}
+        className="hidden sm:block"
+      />
+    </>
   )
 }

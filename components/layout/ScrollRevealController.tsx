@@ -1,0 +1,140 @@
+"use client"
+
+import { useEffect } from "react"
+import { usePathname } from "next/navigation"
+import { footerRatio, applyFooterFade, resetFooterFade } from "./footerFade"
+import { headerProgress, headerRadius, fadeOpacity, fadeScale } from "./headerFade"
+
+// px — corner radius when header/footer is fully visible. Matches
+// --radius-frame in globals.css: 20px on mobile, 36px from `sm` up.
+const MOBILE_RADIUS  = 20
+const DESKTOP_RADIUS = 36
+
+// Must match the `sm:` breakpoint HeroShell.tsx/CaseStudyHero.tsx use to
+// switch between fixed (peels from behind the frame) and static (normal
+// flow), and the one --radius-frame in globals.css uses for its 20px/36px
+// swap.
+const DESKTOP_QUERY = "(min-width: 640px)"
+
+type Props = {
+  /** The card whose corners peel open as it slides toward the viewport top
+   *  — #main-frame on Work/About, #cs-content on case study pages. */
+  frameId: string
+  /** The hero content that fades + scales as the frame covers it —
+   *  #hero-content on Work/About, #cs-hero-content on case study pages. */
+  heroId: string
+}
+
+// Drives every scroll-tied animation shared between a page's content frame,
+// its hero, and #site-footer: the frame's own border-radius peel (top edge
+// as it's covered, bottom edge as the footer is revealed beneath it), the
+// hero's fade + scale as it's covered, and the footer's matching fade +
+// scale as it's revealed. One instance per page type (Work/About vs. case
+// studies), parameterized by which frame/hero elements it targets — see
+// headerFade.ts and footerFade.ts for the actual reveal math, shared here so
+// both instances can't drift out of timing sync with each other again.
+export function ScrollRevealController({ frameId, heroId }: Props) {
+  const pathname = usePathname()
+
+  useEffect(() => {
+    const frame  = document.getElementById(frameId)
+    const footer = document.getElementById("site-footer")
+    if (!frame || !footer) return
+
+    const mql = window.matchMedia(DESKTOP_QUERY)
+
+    let cleanupScroll = () => {}
+
+    // Re-run whenever the fixed/static breakpoint is crossed (resize, rotation)
+    // so the footer math never goes stale relative to Footer.tsx's own layout.
+    function setup() {
+      cleanupScroll()
+
+      // Footer is only fixed from `sm` up (see Footer.tsx) — below that it's
+      // in normal flow, so there's nothing to reveal and no space to reserve.
+      const maxRadius = mql.matches ? DESKTOP_RADIUS : MOBILE_RADIUS
+      document.body.style.paddingBottom = mql.matches ? `${footer!.offsetHeight}px` : ""
+
+      function applyRadius(y: number) {
+        const el = document.getElementById(frameId) ?? frame!
+
+        // Recomputed every frame rather than cached: a hero's spacer can
+        // render at an SSR-approximated height and correct itself once its
+        // own ResizeObserver measures the real height, which would
+        // otherwise leave a stale offsetTop baked into a one-time snapshot.
+        // offsetTop alone (no nav-height subtraction) is the scroll distance
+        // needed to bring the frame's top to true viewport y=0 — see
+        // headerProgress/headerRadius in headerFade.ts.
+        const triggerAt = Math.max(el.offsetTop, 0)
+        const p = headerProgress(y, triggerAt)
+        const top = headerRadius(p, maxRadius)
+        el.style.borderTopLeftRadius  = `${top}px`
+        el.style.borderTopRightRadius = `${top}px`
+
+        // footerH/footerAbsTop recomputed every frame for the same reason as
+        // triggerAt above: the page's total scrollHeight can still grow
+        // after mount (e.g. a hero spacer correcting an SSR approximation
+        // further up the page), which would otherwise leave footerAbsTop
+        // pinned to a stale, too-small value — compressing the footer's
+        // reveal/fade/scale window into a barely-visible sliver right at the
+        // very end of the scroll instead of its full natural range.
+        const footerH = footer!.offsetHeight
+        const footerAbsTop = document.documentElement.scrollHeight - footerH
+        const footerReveal = mql.matches
+          ? footerRatio(y, footerAbsTop, footerH, window.innerHeight)
+          : 0
+        const bottom = footerReveal * maxRadius
+        el.style.borderBottomLeftRadius  = `${bottom}px`
+        el.style.borderBottomRightRadius = `${bottom}px`
+
+        // Hero content fades + scales in step with the same header progress
+        // as the radius above, but on its own ease curve (see headerFade.ts)
+        // so the two motions can read slightly differently. transform-origin
+        // is a plain "center top" set once where the hero element is
+        // rendered — no shared viewport-anchor math needed, since this is
+        // the only element being scaled (nav is deliberately excluded, and
+        // stays static regardless of scroll).
+        const heroEl = document.getElementById(heroId)
+        if (heroEl) {
+          heroEl.style.opacity = mql.matches ? `${fadeOpacity(p)}` : ""
+          heroEl.style.transform = mql.matches ? `scale(${fadeScale(p)})` : ""
+        }
+
+        // Same fade + scale, shared via footerFade.ts, so #site-footer —
+        // which persists across every route since it's rendered once in the
+        // root layout — looks identical everywhere, regardless of which
+        // instance of this controller is currently active. Anchored on the
+        // viewport's own horizontal center.
+        const footerEl = document.getElementById("site-footer") ?? footer!
+        applyFooterFade(footerEl, footerReveal, window.innerWidth / 2, mql.matches)
+      }
+
+      applyRadius(window.scrollY)
+
+      function onScroll() { applyRadius(window.scrollY) }
+      window.addEventListener("scroll", onScroll, { passive: true })
+      cleanupScroll = () => window.removeEventListener("scroll", onScroll)
+    }
+
+    setup()
+    mql.addEventListener("change", setup)
+
+    return () => {
+      mql.removeEventListener("change", setup)
+      cleanupScroll()
+      document.body.style.paddingBottom = ""
+      // #site-footer persists across every route (rendered once in the root
+      // layout) — hand it back in a neutral state so a page that doesn't use
+      // this controller instance doesn't inherit whatever fade/scale was
+      // last applied here.
+      resetFooterFade(footer!)
+    }
+    // frameId/heroId are constant per call site (each layout always passes
+    // the same pair) but are included here for correctness. pathname is what
+    // actually matters: it re-runs setup on every navigation, including
+    // between two different case studies (a dynamic /work/[slug] route,
+    // where the frame/hero measurements genuinely need to be re-taken).
+  }, [pathname, frameId, heroId])
+
+  return null
+}

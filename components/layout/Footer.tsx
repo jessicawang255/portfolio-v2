@@ -216,9 +216,9 @@ function ColophonButton() {
 }
 
 // Static (scrolls with content) below `sm`, matching the header/nav's mobile
-// behavior. Fixed from `sm` up — pinned behind #main-frame so its bottom
-// corners can peel back to reveal it on scroll (see ScrollRadiusController /
-// CaseStudyRadiusController, which only animate that peel and reserve body
+// behavior. Fixed from `sm` up — pinned behind the content frame so its
+// bottom corners can peel back to reveal it on scroll (see
+// ScrollRevealController, which animates that peel and reserves body
 // padding-bottom for it at the desktop breakpoint).
 export function Footer() {
   return (

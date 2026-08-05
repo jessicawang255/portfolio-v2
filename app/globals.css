@@ -116,8 +116,7 @@ body {
 /* ─── Main frame — radius transitions ──────────────────────────────────────── */
 
 /* --radius-frame is 20px on mobile; bump to the full 36px at the `sm`
-   breakpoint, matching DESKTOP_QUERY in ScrollRadiusController /
-   CaseStudyRadiusController. */
+   breakpoint, matching DESKTOP_QUERY in ScrollRevealController. */
 @media (min-width: 640px) {
   :root {
     --radius-frame: 36px;

@@ -4,7 +4,7 @@ import { Roboto_Mono } from "next/font/google"
 import { DotField } from "@/components/ui/DotField"
 import { Nav } from "@/components/layout/Nav"
 import { Footer } from "@/components/layout/Footer"
-import { ScrollRadiusController } from "@/components/layout/ScrollRadiusController"
+import { ScrollRevealController } from "@/components/layout/ScrollRevealController"
 import "./globals.css"
 
 const robotoMono = Roboto_Mono({
@@ -28,7 +28,7 @@ export default function RootLayout({
         <Nav />
         <ViewTransition name="page-content">{children}</ViewTransition>
         <Footer />
-        <ScrollRadiusController />
+        <ScrollRevealController frameId="main-frame" heroId="hero-content" />
       </body>
     </html>
   )

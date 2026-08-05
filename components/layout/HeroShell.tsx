@@ -32,6 +32,7 @@ export function HeroShell({ children, fallbackSpacer = 324 }: Props) {
         ref={ref}
         id="hero-content"
         className="static sm:fixed inset-x-0 top-0 z-[2] pointer-events-none"
+        style={{ transformOrigin: "center top" }}
       >
         {children}
       </div>

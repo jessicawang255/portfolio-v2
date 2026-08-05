@@ -2,7 +2,7 @@ import Link from "next/link"
 import type { Project } from "@/content/work"
 import { TableOfContents } from "@/components/ui/TableOfContents"
 import { MoreCaseStudies } from "@/components/ui/MoreCaseStudies"
-import { CaseStudyRadiusController } from "@/components/layout/CaseStudyRadiusController"
+import { ScrollRevealController } from "@/components/layout/ScrollRevealController"
 import { CaseStudyHero } from "@/components/layout/CaseStudyHero"
 import { DefaultHeroBackground } from "@/components/layout/DefaultHeroBackground"
 
@@ -91,21 +91,24 @@ export function CaseStudyLayout({ project, children, heroBackground }: Props) {
       </header>
 
       <main className="flex-1 flex flex-col">
-        <CaseStudyRadiusController />
+        <ScrollRevealController frameId="cs-content" heroId="cs-hero-content" />
 
-        {/* Hero — in normal flow (not fixed), so it fully scrolls away under the
-            content card rather than pinning to the viewport. It drifts at half
-            scroll speed (see CaseStudyHero) for parallax depth while still
-            moving. Background + foreground are both owned by the per-case-study
-            hero component (whatever it renders: gradient, image, canvas, plus
-            its own foreground screenshots if any). */}
+        {/* Hero — pinned to the viewport from `sm` up (see CaseStudyHero), so
+            #cs-content can visually slide up and cover it, same as
+            #main-frame covers Work/About's hero. Background stays fully
+            static; only the foreground screenshot (HeroForeground) fades +
+            scales as it's covered — see ScrollRevealController. Below `sm`
+            the hero stays in normal static flow instead, with no covering
+            effect. Background + foreground are both owned by the
+            per-case-study hero component (whatever it renders: gradient,
+            image, canvas, plus its own foreground screenshot if any). */}
         <CaseStudyHero height={`calc(${HERO_HEIGHT} + ${HERO_BG_EXTRA}px)`}>
           <HeroBackground project={project} />
         </CaseStudyHero>
 
         {/* Content card — its top corners round off as it slides up over the
-            hero (see CaseStudyRadiusController); the hero itself keeps
-            scrolling away underneath, just slower (parallax). */}
+            fixed hero (see ScrollRevealController); the hero fades + scales
+            in place as it's covered, matching Work/About. */}
         <section
           id="cs-content"
           className="relative bg-surface"
