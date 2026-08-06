@@ -241,9 +241,9 @@ body {
   }
 }
 
-/* ─── About hero photos — hover lift ─────────────────────────────────────── */
+/* ─── About hero photos — hover lift + click-to-advance shimmer ──────────── */
 .about-photo {
-  transform: rotate(var(--photo-rotate, 0deg));
+  transform: rotate(var(--photo-rotate, 0deg)) scale(var(--photo-press, 1));
   /* Slight overshoot on the transform curve reads as a very soft spring settle */
   transition: transform 500ms cubic-bezier(0.3, 1.3, 0.5, 1), box-shadow 500ms var(--ease-out);
 }
@@ -251,9 +251,50 @@ body {
 @media (hover: hover) and (pointer: fine) {
   .about-photo:hover {
     /* Straighten only partway — a smaller rotation swing per photo instead of snapping flat */
-    transform: rotate(calc(var(--photo-rotate, 0deg) * 0.3)) scale(1.008) translateY(-2px);
+    transform: rotate(calc(var(--photo-rotate, 0deg) * 0.3)) scale(calc(var(--photo-press, 1) * 1.008)) translateY(-2px);
     box-shadow: 0 6px 12px -8px rgba(0, 0, 0, 0.08);
   }
+}
+
+/* Layer stack for the click-to-advance transition: a base <img> plus, only
+   while animating, an incoming <img> and a shimmer bar appended on top. */
+.about-photo-layers {
+  position: absolute;
+  inset: 0;
+}
+
+.about-photo-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Diagonal glare that sweeps across on click, purely decorative — it never
+   gates re-clicking the tile (see runShimmerTransition in AboutHero). */
+.about-photo-shimmer-bar {
+  position: absolute;
+  inset: -60% -25%;
+  /* Softness comes entirely from the gradient's own wide stops — no
+     filter: blur() here. A live blur on an element this large, while it's
+     being transform-animated, hits a Chromium bug where the blur is
+     computed per GPU compositor tile: at certain sub-pixel positions the
+     tiles don't blend seamlessly, showing a straight hairline seam right
+     through the glare. Baking the softness into the gradient sidesteps it
+     entirely, since there's no runtime filter pass to tile. */
+  background: linear-gradient(
+    112deg,
+    transparent 10%,
+    rgba(255, 255, 255, 0) 26%,
+    rgba(255, 255, 255, 0.9) 50%,
+    rgba(255, 255, 255, 0) 74%,
+    transparent 90%
+  );
+  mix-blend-mode: screen;
+  pointer-events: none;
+  transform: translateX(-120%);
 }
 
 /* ─── Nav link underline ──────────────────────────────────────────────────── */
