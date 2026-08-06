@@ -281,14 +281,16 @@ body {
      transform-animated element into Chromium's isolated-compositing path,
      which showed a straight hairline seam mid-sweep at certain sub-pixel
      positions (confirmed by removing each independently). Softness comes
-     entirely from the gradient's own wide stops; the glow comes from a high
-     peak alpha over plain compositing instead of a screen blend. */
+     entirely from the gradient's own wide stops, and the sweep itself is
+     plain compositing (no blend mode) in --color-neutral-200 (#D1D4D8) —
+     hex value hardcoded since @theme vars only emit to :root when
+     referenced by a Tailwind utility, not from hand-written CSS. */
   background: linear-gradient(
     112deg,
     transparent 10%,
-    rgba(255, 255, 255, 0) 26%,
-    rgba(255, 255, 255, 0.9) 50%,
-    rgba(255, 255, 255, 0) 74%,
+    rgba(209, 212, 216, 0) 26%,
+    rgba(209, 212, 216, 0.65) 50%,
+    rgba(209, 212, 216, 0) 74%,
     transparent 90%
   );
   pointer-events: none;

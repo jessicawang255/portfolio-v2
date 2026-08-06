@@ -3,6 +3,7 @@ import type { Metadata } from "next"
 import { Roboto_Mono } from "next/font/google"
 import { DotField } from "@/components/ui/DotField"
 import { Nav } from "@/components/layout/Nav"
+import { MobileNav } from "@/components/layout/MobileNav"
 import { Footer } from "@/components/layout/Footer"
 import { ScrollRevealController } from "@/components/layout/ScrollRevealController"
 import "./globals.css"
@@ -28,6 +29,7 @@ export default function RootLayout({
         <Nav />
         <ViewTransition name="page-content">{children}</ViewTransition>
         <Footer />
+        <MobileNav />
         <ScrollRevealController frameId="main-frame" heroId="hero-content" />
       </body>
     </html>
