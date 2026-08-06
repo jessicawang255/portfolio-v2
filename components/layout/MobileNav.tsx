@@ -11,14 +11,25 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion"
 // it's reachable from anywhere, including case study pages, which otherwise
 // have no way back to /work short of the browser's own back gesture.
 //
-// "Work" is a static anchor, not a per-route "current section" label — it's
-// always visible in the collapsed bar and always excluded from the expanded
-// list, so it doubles as the one-tap way back to the work list from a case
-// study. The other links live behind the toggle.
-const secondaryLinks: { label: string; href: string; target?: string }[] = [
+// The chip shows whichever page you're actually on — "Work" for `/` and
+// every `/work/[slug]` case study, "About" for `/about` — and the panel
+// behind it lists everywhere else. This mirrors Nav.tsx's own isActive
+// logic (see there) rather than reinventing it, just extended to also treat
+// case study routes as part of the Work section, which desktop's Nav.tsx
+// never needs to since it doesn't render on /work/* at all (CaseStudyLayout
+// has its own header there).
+type NavLink = { label: string; href: string; target?: string }
+
+const navLinks: NavLink[] = [
+  { label: "Work",   href: "/" },
   { label: "About",  href: "/about" },
   { label: "Resume", href: "/JessicaWang_Resume.pdf", target: "_blank" },
 ]
+
+function isCurrentSection(pathname: string, href: string) {
+  if (href === "/") return pathname === "/" || pathname.startsWith("/work/")
+  return pathname === href || pathname.startsWith(`${href}/`)
+}
 
 // Same on-screen-settle curve as Footer.tsx's Colophon popover and
 // TableOfContents' subsection reveal, so every "panel appears" moment on the
@@ -60,6 +71,12 @@ export function MobileNav() {
     setPrevPathname(pathname)
     setOpen(false)
   }
+
+  // Falls back to the first entry (Work) if somehow nothing matches, rather
+  // than showing no chip label at all — Work is the closest thing this site
+  // has to a root/home section, so it's the sanest default.
+  const current = navLinks.find(l => isCurrentSection(pathname, l.href)) ?? navLinks[0]
+  const secondaryLinks = navLinks.filter(l => l !== current)
 
   useEffect(() => {
     if (!open) return
@@ -140,12 +157,15 @@ export function MobileNav() {
                   chip's visible top (see the `bottom` calc() above), so
                   measuring 18px from Resume to the chip's top means padding
                   the panel's actual bottom edge by 18 + 24.
-                  Left-aligned (`items-start`), not centered — `px-6` here
-                  matches the chip's own `pl-6` below so "Work" and every
-                  secondary link share one left edge, reading as a single
-                  list rather than independently-centered labels. */}
+                  No `items-start`/`px-6` here — that inset now lives on each
+                  Link below instead, so every row's actual hitbox spans the
+                  full panel width (tapping the empty space to the right of
+                  the label still hits it), not just the text glyphs. Text
+                  still reads left-aligned because that's just how a block
+                  element's own text flows, so "Work" and every secondary
+                  link still share one left edge. */}
               <ul
-                className="flex flex-col items-start gap-9 list-none m-0 px-6 pt-4.5"
+                className="flex flex-col gap-9 list-none m-0 pt-4.5"
                 style={{ paddingBottom: PANEL_OVERLAP + 18 }}
               >
                 {secondaryLinks.map(({ label, href, target }) => (
@@ -154,7 +174,7 @@ export function MobileNav() {
                       href={href}
                       target={target}
                       rel={target === "_blank" ? "noopener noreferrer" : undefined}
-                      className="text-base font-normal text-nav-link hover:text-nav-link-hover transition-colors duration-150"
+                      className="block w-full px-6 text-base font-normal text-nav-link hover:text-nav-link-hover transition-colors duration-150"
                     >
                       {label}
                     </Link>
@@ -167,24 +187,37 @@ export function MobileNav() {
 
         {/* Current-page chip — always white, always `rounded-full`, always
             this exact same shape whether the panel is open or closed. 18px
-            above and below "Work" — see spacing redline.
+            above and below the label — see spacing redline.
             The whole chip toggles the panel now, not just the icon — a much
-            bigger, easier tap target. "Work" stops its own click from
-            bubbling so it keeps navigating to /work directly instead of
-            also toggling; that one-tap "back to work" from a case study is
-            the whole reason it's a real link and not just a label. */}
+            bigger, easier tap target.
+            The label is only a real link when it's not literally the page
+            you're already on — on a case study, the label reads "Work"
+            while pathname is "/work/[slug]", not "/", so tapping it still
+            needs to navigate home (that one-tap "back to work" is the whole
+            reason the label tracks the current *section*, not the exact
+            route). But on the Work or About page itself, pathname already
+            equals current.href — linking there just re-navigates to the
+            exact page you're standing on, which Next.js still treats as a
+            real navigation (resets scroll, etc.) even though nothing
+            actually changes. Plain text there instead, so a tap just
+            bubbles to the chip's own toggle like tapping anywhere else on
+            it would. */}
         <div
           onClick={() => setOpen((v) => !v)}
           className="relative z-10 flex cursor-pointer items-center justify-between rounded-full bg-surface pl-6 pr-5 py-4.5"
           style={{ boxShadow: open ? `${chipLiftShadow}, ${mainShadow}` : mainShadow }}
         >
-          <Link
-            href="/"
-            onClick={(e) => e.stopPropagation()}
-            className="text-base font-medium text-primary"
-          >
-            Work
-          </Link>
+          {pathname === current.href ? (
+            <span className="text-base font-medium text-primary">{current.label}</span>
+          ) : (
+            <Link
+              href={current.href}
+              onClick={(e) => e.stopPropagation()}
+              className="text-base font-medium text-primary"
+            >
+              {current.label}
+            </Link>
+          )}
           <button
             type="button"
             aria-expanded={open}

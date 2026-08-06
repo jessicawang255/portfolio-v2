@@ -134,7 +134,13 @@ export function AboutHero() {
         animate="visible"
         className="pointer-events-auto relative z-[1] flex items-start justify-between gap-10"
       >
-        <div className="flex max-w-sm shrink-0 flex-col">
+        {/* max-w-sm/shrink-0 only matter once the photo grid reappears
+            alongside it at `sm` (see its own `hidden ... sm:flex` below) —
+            below that, this is the row's only child, so it needs to be
+            `w-full`, not capped at 384px with shrinking disabled, or it
+            overflows the ~350px actually available inside container-main's
+            20px padding and causes the whole page to scroll horizontally. */}
+        <div className="flex w-full flex-col sm:max-w-sm sm:shrink-0">
           <motion.h1
             variants={fadeUp}
             className="mb-3 text-2xl font-medium text-neutral-900"

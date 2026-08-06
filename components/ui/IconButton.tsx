@@ -43,12 +43,18 @@ export function IconButton({ href, label, icon, size = 22, className, ...rest }:
           backgroundColor: "currentColor",
         }}
       />
+      {/* Hidden below `sm` — hover has no real meaning on touch, and this
+          tooltip's own `whitespace-nowrap` box still counts toward page
+          width even at opacity-0 (nothing clips it), so on a narrow
+          viewport the last icon in a row pushes it past the screen edge,
+          making the whole page horizontally scrollable for a label no
+          touch device could ever trigger anyway. */}
       <span
         aria-hidden="true"
-        className="pointer-events-none absolute bottom-full left-1/2 mb-1 origin-bottom
+        className="pointer-events-none absolute bottom-full left-1/2 mb-1 hidden origin-bottom
         -translate-x-1/2 scale-90 whitespace-nowrap rounded-[var(--radius-sm)] bg-neutral-900/90
         px-1.5 py-0.5 text-xs text-neutral-50 opacity-0 transition-[opacity,scale] duration-[var(--duration-slow)]
-        ease-[var(--ease-out)] group-hover:scale-100 group-hover:opacity-100 group-hover:delay-400"
+        ease-[var(--ease-out)] group-hover:scale-100 group-hover:opacity-100 group-hover:delay-400 sm:block"
       >
         {resolvedLabel}
       </span>
