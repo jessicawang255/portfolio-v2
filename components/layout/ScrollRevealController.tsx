@@ -51,7 +51,11 @@ export function ScrollRevealController({ frameId, heroId }: Props) {
       cleanupScroll()
 
       // Footer is only fixed from `sm` up (see Footer.tsx) — below that it's
-      // in normal flow, so there's nothing to reveal and no space to reserve.
+      // in normal flow, sitting directly after the frame with no overlap, so
+      // there's no space to reserve for it. The frame's bottom-corner radius
+      // still peels open as the footer is scrolled into view either way (see
+      // footerReveal below) — only the footer's own fade/scale and this
+      // padding reservation are desktop-only.
       const maxRadius = mql.matches ? DESKTOP_RADIUS : MOBILE_RADIUS
       document.body.style.paddingBottom = mql.matches ? `${footer!.offsetHeight}px` : ""
 
@@ -78,11 +82,14 @@ export function ScrollRevealController({ frameId, heroId }: Props) {
         // pinned to a stale, too-small value — compressing the footer's
         // reveal/fade/scale window into a barely-visible sliver right at the
         // very end of the scroll instead of its full natural range.
+        // footerReveal drives the frame's own bottom-corner radius below,
+        // which is wanted at every breakpoint (mirrors the top radius above,
+        // which is also unconditional) — only gated by `mql.matches` inside
+        // applyFooterFade itself, which is the mobile-desktop split for
+        // #site-footer's *own* fade/scale, not the frame's radius.
         const footerH = footer!.offsetHeight
         const footerAbsTop = document.documentElement.scrollHeight - footerH
-        const footerReveal = mql.matches
-          ? footerRatio(y, footerAbsTop, footerH, window.innerHeight)
-          : 0
+        const footerReveal = footerRatio(y, footerAbsTop, footerH, window.innerHeight)
         const bottom = footerReveal * maxRadius
         el.style.borderBottomLeftRadius  = `${bottom}px`
         el.style.borderBottomRightRadius = `${bottom}px`
