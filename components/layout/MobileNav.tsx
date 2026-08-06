@@ -4,6 +4,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion"
+import { spring } from "@/lib/motion"
 
 // The site's only mobile nav (see Nav.tsx, which renders nothing below `sm`,
 // and Footer.tsx, whose own Work/About/Resume links only surface once you've
@@ -31,11 +32,11 @@ function isCurrentSection(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(`${href}/`)
 }
 
-// Same on-screen-settle curve as Footer.tsx's Colophon popover and
-// TableOfContents' subsection reveal, so every "panel appears" moment on the
-// site shares one feel.
-const PANEL_EASE: [number, number, number, number] = [0.33, 1, 0.68, 1]
-const PANEL_DURATION = 0.3
+// Deliberately breaks from the calm ease shared by Footer.tsx's Colophon
+// popover and TableOfContents' subsection reveal — this panel is the one
+// place on the site a visitor is likely to trigger repeatedly while
+// navigating, so it gets `spring.snappy` (a mild bounce) instead, to feel
+// more energetic on open.
 
 function MenuIcon() {
   return (
@@ -97,7 +98,7 @@ export function MobileNav() {
     }
   }, [open])
 
-  const transition = reduce ? { duration: 0 } : { duration: PANEL_DURATION, ease: PANEL_EASE }
+  const transition = reduce ? { duration: 0 } : spring.snappy
 
   // Main ambient shadow — applied to both layers identically so it reads as
   // one shadow wrapping the whole combined shape (panel + chip) rather than
@@ -125,24 +126,42 @@ export function MobileNav() {
   return (
     <div ref={rootRef} className="fixed inset-x-5 bottom-5 z-40 sm:hidden">
       {/* Wrapper's own size is defined purely by the chip below (a normal
-          flow child) — the panel is `absolute`, so growing it never resizes
-          this wrapper or moves the chip. That's the whole point: the chip is
-          a fixed component that never changes, exactly like the Figma setup
-          this mirrors (a fixed chip frame in front, a separate hugging frame
-          behind it whose height is the only thing that animates). */}
+          flow child) — the panel is `absolute`, so it never resizes this
+          wrapper or moves the chip. That's the whole point: the chip is a
+          fixed component that never changes, exactly like the Figma setup
+          this mirrors (a fixed chip frame in front, a separate frame behind
+          it that fades and settles into place). */}
       <div className="relative">
         {/* Secondary links panel — neutral-75, anchored `PANEL_OVERLAP`px
             below the chip's own top edge (see the calc() comment above) so
             it's always tucked just behind the chip's top regardless of
-            height, growing upward only. z-0, under the chip's z-10. */}
+            height. z-0, under the chip's z-10.
+            Enters via transform + opacity, not height — the panel is laid
+            out at its real height the moment it mounts (AnimatePresence
+            keeps it out of the DOM entirely while closed) and just fades in
+            while rising the last bit up from near the chip into its resting
+            spot, rather than growing its whole height from zero. (Positive
+            translateY here means *closer to the chip*, since the panel's
+            resting position is already anchored well above it — animating
+            down to 0 is what reads as rising up out of the chip.) Two
+            reasons for transform over height: (1) `height` is a
+            layout-triggering property, so animating it forces a reflow
+            every frame — transform/opacity are compositor-only and stay off
+            the main thread; (2) the previous grow-from-nothing had a long
+            travel distance for a spring to cover, so its overshoot was
+            large enough in absolute pixels to read as stutter instead of a
+            tight settle. `translateY` is written as a literal `transform`
+            string, not Framer's `y` shorthand — `x`/`y`/`scale` fall back
+            to main-thread rAF and lose the hardware acceleration this is
+            meant to gain. */}
         <AnimatePresence initial={false}>
           {open && (
             <motion.nav
               key="secondary"
               aria-label="Secondary navigation"
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
+              initial={{ opacity: 0, transform: "translateY(12px)" }}
+              animate={{ opacity: 1, transform: "translateY(0px)" }}
+              exit={{ opacity: 0, transform: "translateY(12px)" }}
               transition={transition}
               // Bottom corners stay square — this edge is meant to be
               // hidden behind the chip; rounding it would let a curved
@@ -201,10 +220,19 @@ export function MobileNav() {
             real navigation (resets scroll, etc.) even though nothing
             actually changes. Plain text there instead, so a tap just
             bubbles to the chip's own toggle like tapping anywhere else on
-            it would. */}
+            it would.
+            .mobile-nav-chip (globals.css) scales it down slightly on press —
+            same --var-driven technique as the About hero photos, set
+            directly via style.setProperty rather than React state so it's
+            off the render path and feels instant. pointerLeave covers a
+            press that drags off the chip before release (no matching
+            pointerup fires there). */}
         <div
           onClick={() => setOpen((v) => !v)}
-          className="relative z-10 flex cursor-pointer items-center justify-between rounded-full bg-surface pl-6 pr-5 py-4.5"
+          onPointerDown={(e) => e.currentTarget.style.setProperty("--chip-press", "0.97")}
+          onPointerUp={(e) => e.currentTarget.style.removeProperty("--chip-press")}
+          onPointerLeave={(e) => e.currentTarget.style.removeProperty("--chip-press")}
+          className="mobile-nav-chip relative z-10 flex cursor-pointer items-center justify-between rounded-full bg-surface pl-6 pr-5 py-4.5"
           style={{ boxShadow: open ? `${chipLiftShadow}, ${mainShadow}` : mainShadow }}
         >
           {pathname === current.href ? (

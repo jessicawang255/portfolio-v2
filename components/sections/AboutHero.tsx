@@ -125,7 +125,7 @@ export function AboutHero() {
 
   return (
     <section
-      className="container-main pointer-events-none pt-[120px] pb-28"
+      className="container-main pointer-events-none pt-16 pb-12 sm:pt-[120px] sm:pb-20"
       aria-label="About introduction"
     >
       <motion.div
