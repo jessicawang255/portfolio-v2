@@ -4,7 +4,7 @@ import { Callout, Section } from "@/components/cs"
 
 export default function Glucal() {
   return (
-    <div className="flex flex-col gap-30">
+    <div className="flex flex-col gap-16 sm:gap-30">
       <section id="problem" className="flex flex-col items-start scroll-mt-12">
         <div className="flex items-start justify-between gap-16 w-full">
           <div className="max-w-xl">

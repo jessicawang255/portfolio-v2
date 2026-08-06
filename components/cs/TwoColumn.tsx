@@ -7,14 +7,16 @@ type TwoColumnProps = {
 }
 
 const ratioClasses: Record<Ratio, string> = {
-  "1/1": "grid-cols-2",
-  "3/2": "grid-cols-[3fr_2fr]",
-  "2/3": "grid-cols-[2fr_3fr]",
+  "1/1": "sm:grid-cols-2",
+  "3/2": "sm:grid-cols-[3fr_2fr]",
+  "2/3": "sm:grid-cols-[2fr_3fr]",
 }
 
+// Below `sm`, always stacks into a single column (two rows) regardless of
+// ratio — there's no room for side-by-side columns on mobile.
 export function TwoColumn({ left, right, ratio = "1/1" }: TwoColumnProps) {
   return (
-    <div className={`grid gap-6 items-start ${ratioClasses[ratio]}`}>
+    <div className={`grid grid-cols-1 gap-6 items-start ${ratioClasses[ratio]}`}>
       <div>{left}</div>
       <div>{right}</div>
     </div>

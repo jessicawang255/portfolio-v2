@@ -7,7 +7,12 @@
 //
 // Below `sm`, the hero stays in normal static flow instead (matching
 // HeroShell's mobile behavior) — no covering effect there, so no spacer is
-// needed either.
+// needed either. `height` also only applies from `sm` up there: below it,
+// the container is left at its natural (auto) height, which the foreground
+// screenshot's own in-flow height determines (see HeroForeground) and the
+// absolutely-positioned background matches — so #cs-content's frame butts
+// straight up against the bottom of the hero image instead of leaving the
+// fixed vh-based height's leftover space beneath it.
 //
 // Unlike HeroShell, `height` is a deterministic prop (a fixed vh-based
 // formula, not organic text content), so the spacer can be sized with a
@@ -21,8 +26,8 @@ export function CaseStudyHero({ height, children }: Props) {
   return (
     <>
       <div
-        className="static sm:fixed inset-x-0 top-0 overflow-hidden mt-[calc(-1*var(--nav-height))] sm:mt-0"
-        style={{ zIndex: 5, height }}
+        className="static sm:fixed inset-x-0 top-0 overflow-hidden mt-[calc(-1*var(--nav-height))] sm:mt-0 h-auto sm:h-[var(--cs-hero-height)]"
+        style={{ zIndex: 5, ["--cs-hero-height" as string]: height }}
       >
         {children}
       </div>

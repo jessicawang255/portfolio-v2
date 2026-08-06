@@ -4,7 +4,7 @@ import { Callout, Outcomes } from "@/components/cs"
 
 export default function Autumn() {
   return (
-    <div className="flex flex-col gap-30">
+    <div className="flex flex-col gap-16 sm:gap-30">
       <Section
         id="overview"
         tag="Overview"
