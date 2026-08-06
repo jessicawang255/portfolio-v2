@@ -277,13 +277,12 @@ body {
 .about-photo-shimmer-bar {
   position: absolute;
   inset: -60% -25%;
-  /* Softness comes entirely from the gradient's own wide stops — no
-     filter: blur() here. A live blur on an element this large, while it's
-     being transform-animated, hits a Chromium bug where the blur is
-     computed per GPU compositor tile: at certain sub-pixel positions the
-     tiles don't blend seamlessly, showing a straight hairline seam right
-     through the glare. Baking the softness into the gradient sidesteps it
-     entirely, since there's no runtime filter pass to tile. */
+  /* No filter: blur() and no mix-blend-mode here — both force this large,
+     transform-animated element into Chromium's isolated-compositing path,
+     which showed a straight hairline seam mid-sweep at certain sub-pixel
+     positions (confirmed by removing each independently). Softness comes
+     entirely from the gradient's own wide stops; the glow comes from a high
+     peak alpha over plain compositing instead of a screen blend. */
   background: linear-gradient(
     112deg,
     transparent 10%,
@@ -292,7 +291,6 @@ body {
     rgba(255, 255, 255, 0) 74%,
     transparent 90%
   );
-  mix-blend-mode: screen;
   pointer-events: none;
   transform: translateX(-120%);
 }
