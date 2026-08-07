@@ -155,7 +155,15 @@ export function CaseStudyLayout({ project, children, heroBackground }: Props) {
                 </h1>
 
                 {metaFields.length > 0 && (
-                  <div className="flex flex-wrap gap-x-14 gap-y-4 mt-9">
+                  // Below `sm`, a real 2-column grid — `flex flex-wrap` let
+                  // each row's second column start wherever the first
+                  // item's own content width happened to end (varies row to
+                  // row: "Role" vs "Team" render at different widths), so
+                  // "Timeline" and "Skills" never lined up. `grid-cols-2`'s
+                  // tracks are fixed and equal-width, so every column
+                  // aligns regardless of content length. Desktop's
+                  // single-row flex-wrap layout is unchanged from `sm` up.
+                  <div className="grid grid-cols-2 gap-x-14 gap-y-4 mt-9 sm:flex sm:flex-wrap">
                     {metaFields.map(({ label, value }) => (
                       <div key={label}>
                         <p className="font-mono text-sm text-neutral-400 mb-1">{label}</p>
