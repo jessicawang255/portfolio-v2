@@ -1,6 +1,6 @@
 import type { Variants } from "framer-motion"
 
-const easeOut = [0.23, 1, 0.32, 1] as const
+export const easeOut = [0.23, 1, 0.32, 1] as const
 
 export const fadeUp: Variants = {
   hidden:  { opacity: 0, y: 10 },

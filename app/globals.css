@@ -248,15 +248,41 @@ body {
   transition: transform 500ms cubic-bezier(0.3, 1.3, 0.5, 1), box-shadow 500ms var(--ease-out);
 }
 
-/* ─── Mobile nav chip — press state ───────────────────────────────────────
+/* ─── Mobile nav shell (chip + panel) — press state ───────────────────────
    Same --var-driven scale-down-on-press technique as .about-photo above
    (set directly on pointerdown/up via style.setProperty, not React state, so
    it's off the render path) — just its own quick, no-overshoot timing
    instead of that curve's soft spring settle, since a nav control's tap
-   feedback should read as instant, not springy. */
-.mobile-nav-chip {
+   feedback should read as instant, not springy.
+   Applied to the chip+panel's shared wrapper, not just the chip that's
+   actually pressed — a transform never moves an element relative to its own
+   descendants (including absolutely-positioned ones), so scaling this
+   shared ancestor keeps the panel and chip pixel-aligned at any scale.
+   Scaling only the chip would shrink it around its own center while the
+   panel stayed full-size, visibly cutting off the seam where they meet. */
+.mobile-nav-shell {
   transform: scale(var(--chip-press, 1));
   transition: transform var(--duration-fast) var(--ease-out);
+}
+
+/* Same press-scale technique as .mobile-nav-shell above, applied to the
+   case-study back button instead — a separate element/ref/variable since
+   it's a sibling of the shell, not a descendant, so it needs its own scale
+   that doesn't move in lockstep with the chip's. */
+.mobile-nav-back {
+  transform: scale(var(--back-press, 1));
+  transition: transform var(--duration-fast) var(--ease-out);
+}
+
+/* Same --var-driven technique, applied to the panel's own menu items: a
+   neutral-100 (#ECEDEF — hand-written CSS reads the hex directly, not
+   var(--color-neutral-100), since @theme color vars only reach :root when a
+   Tailwind class already references them) pill fades in behind the label on
+   press. Color, not a transform, so this is a plain background-color
+   transition rather than scale. */
+.mobile-nav-link {
+  background-color: var(--link-press-bg, transparent);
+  transition: background-color var(--duration-fast) var(--ease-out);
 }
 
 @media (hover: hover) and (pointer: fine) {
