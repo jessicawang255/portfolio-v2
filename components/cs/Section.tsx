@@ -1,7 +1,9 @@
 type SectionProps = {
   tag: string
   headline: string
-  body?: string
+  // ReactNode, not string — lets callers style inline spans (e.g. accent-
+  // colored <strong>s) inside the body copy instead of only plain text.
+  body?: React.ReactNode
   primary?: boolean
   id?: string
   children?: React.ReactNode
