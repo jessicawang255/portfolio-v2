@@ -25,7 +25,7 @@ export function IconButton({ href, label, icon, size = 22, className, ...rest }:
       aria-label={resolvedLabel}
       target={external ? "_blank" : undefined}
       rel={external ? "noopener noreferrer" : undefined}
-      className={`group relative inline-flex text-icon-social transition-[color,scale] duration-150 hover:scale-110 hover:text-nav-link-hover motion-safe:hover:animate-[icon-tick_var(--duration-slow)_var(--ease-out)] ${className ?? ""}`}
+      className={`group/icon relative inline-flex text-icon-social transition-[color,scale] duration-150 hover:scale-110 hover:text-nav-link-hover motion-safe:hover:animate-[icon-tick_var(--duration-slow)_var(--ease-out)] ${className ?? ""}`}
       {...rest}
     >
       <span
@@ -54,7 +54,7 @@ export function IconButton({ href, label, icon, size = 22, className, ...rest }:
         className="pointer-events-none absolute bottom-full left-1/2 mb-1 hidden origin-bottom
         -translate-x-1/2 scale-90 whitespace-nowrap rounded-[var(--radius-sm)] bg-neutral-900/90
         px-1.5 py-0.5 text-xs text-neutral-50 opacity-0 transition-[opacity,scale] duration-[var(--duration-slow)]
-        ease-[var(--ease-out)] group-hover:scale-100 group-hover:opacity-100 group-hover:delay-400 sm:block"
+        ease-[var(--ease-out)] group-hover/icon:scale-100 group-hover/icon:opacity-100 group-hover/icon:delay-400 sm:block"
       >
         {resolvedLabel}
       </span>

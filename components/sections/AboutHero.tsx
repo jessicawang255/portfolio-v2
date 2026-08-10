@@ -193,20 +193,28 @@ export function AboutHero() {
                 onPointerUp={(e) => e.currentTarget.style.removeProperty("--photo-press")}
                 onPointerLeave={(e) => e.currentTarget.style.removeProperty("--photo-press")}
                 aria-label={`${alt} — show next photo`}
-                className={`about-photo relative ${className} block shrink-0 cursor-pointer overflow-hidden rounded-2xl border border-neutral-100 bg-neutral-100`}
+                className={`about-photo relative ${className} block shrink-0 cursor-pointer rounded-[22px] border border-neutral-900/3 bg-neutral-100/50 p-1.5`}
                 style={{ ["--photo-rotate" as string]: `${rotate}deg` } as React.CSSProperties}
               >
-                <span
-                  className="about-photo-layers"
-                  ref={(el) => { layersRefs.current[i] = el }}
-                >
-                  <img
-                    ref={(el) => { baseImgRefs.current[i] = el }}
-                    src={srcs[indices[i]]}
-                    alt={alt}
-                    className="about-photo-layer"
-                  />
-                </span>
+                {/* Image well, inset by the frame's 6px padding above — its own
+                    rounded-2xl (16px) + the frame's 6px padding is what adds up
+                    to the frame's rounded-[22px]. Needs its own `relative` since
+                    .about-photo-layers is `position:absolute;inset:0` — without
+                    this, it'd resolve against the padded button and bleed under
+                    the frame padding instead of sitting inside this well. */}
+                <div className="relative h-full w-full overflow-hidden rounded-2xl border border-neutral-100 bg-neutral-100">
+                  <span
+                    className="about-photo-layers"
+                    ref={(el) => { layersRefs.current[i] = el }}
+                  >
+                    <img
+                      ref={(el) => { baseImgRefs.current[i] = el }}
+                      src={srcs[indices[i]]}
+                      alt={alt}
+                      className="about-photo-layer"
+                    />
+                  </span>
+                </div>
               </button>
             </motion.div>
           ))}
