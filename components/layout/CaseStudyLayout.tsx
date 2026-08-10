@@ -13,6 +13,11 @@ type Props = {
   // with mouse-driven noise, whatever the case study calls for. Falls back
   // to a plain color/gradient when a case study doesn't define one.
   heroBackground?: React.ComponentType<{ project: Project }> | null
+  // The hero foreground image's width/height ratio (see hero/*.tsx's
+  // `heroAspectRatio` export) — sizes the hero container to that image's
+  // real proportions instead of a fixed vh guess, see HERO_HEIGHT below.
+  // Undefined when a case study has no custom hero image to size against.
+  heroAspectRatio?: number
 }
 
 function ChevronLeft() {
@@ -35,21 +40,33 @@ const navLinks: { label: string; href: string; target?: string }[] = [
   { label: "Resume", href: "/JessicaWang_Resume.pdf", target: "_blank" },
 ]
 
-// Hero occupies 65vh of the viewport. It sits in flow but cancels out the
-// body's padding-top with a negative margin (see CaseStudyHero) so it still
-// starts flush at the viewport top, under the transparent nav.
-const HERO_HEIGHT = "65vh"
+// Fallback when a case study has no hero image to size against (plain
+// DefaultHeroBackground color/gradient, no intrinsic proportions) — a flat
+// 65vh guess, same as every case study used before heroAspectRatio existed.
+const FALLBACK_HERO_HEIGHT = "65vh"
 
-// The content card sits 80px further down than HERO_HEIGHT alone would put
-// it, so the hero's own flow height needs the same 80px added — otherwise
-// there's a step between the hero's bottom edge and the content card's top
-// edge with no background under it.
+// Extra height on the *fixed background container only* (see CaseStudyHero's
+// `height` vs `spacerHeight`) — not visible at rest, since #cs-content sits
+// flush against the hero image's real height and simply covers this sliver.
+// It exists purely as a buffer during the scroll-peel: without it, the
+// background would run out from behind the frame's still-rounding top
+// corner right before the reveal finishes, showing a flash of empty space.
 const HERO_BG_EXTRA = 80
 
-export function CaseStudyLayout({ project, children, heroBackground }: Props) {
+export function CaseStudyLayout({ project, children, heroBackground, heroAspectRatio }: Props) {
   const { title, name, role, timeline, team, skills, accent, toc = [] } = project
 
   const HeroBackground = heroBackground ?? DefaultHeroBackground
+
+  // The hero foreground image renders at `w-full` inside a full-viewport-width
+  // container (see HeroForeground/CaseStudyHero), so its real rendered height
+  // is always `100vw / aspectRatio` — a plain CSS calc, re-evaluated on every
+  // resize exactly like the old 65vh was, so it tracks width shrinking even
+  // when viewport height doesn't change (65vh alone never would). Falls back
+  // to the flat vh guess when there's no image (see FALLBACK_HERO_HEIGHT).
+  const HERO_HEIGHT = heroAspectRatio
+    ? `calc(100vw / ${heroAspectRatio})`
+    : FALLBACK_HERO_HEIGHT
 
   const metaFields = [
     { label: "Role",     value: role },
@@ -102,7 +119,15 @@ export function CaseStudyLayout({ project, children, heroBackground }: Props) {
             effect. Background + foreground are both owned by the
             per-case-study hero component (whatever it renders: gradient,
             image, canvas, plus its own foreground screenshot if any). */}
-        <CaseStudyHero height={`calc(${HERO_HEIGHT} + ${HERO_BG_EXTRA}px)`}>
+        <CaseStudyHero
+          height={`calc(${HERO_HEIGHT} + ${HERO_BG_EXTRA}px)`}
+          // #cs-content pulls itself up by `-var(--radius-frame)` (see its
+          // own marginTop below) so its rounded corner nests against the
+          // hero instead of leaving a hard seam — spacerHeight has to give
+          // that same amount back, or the pull-up bites into the image
+          // itself instead of into slack space above it.
+          spacerHeight={`calc(${HERO_HEIGHT} + var(--radius-frame))`}
+        >
           <HeroBackground project={project} />
         </CaseStudyHero>
 

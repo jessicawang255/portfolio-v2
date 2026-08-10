@@ -14,15 +14,26 @@
 // straight up against the bottom of the hero image instead of leaving the
 // fixed vh-based height's leftover space beneath it.
 //
-// Unlike HeroShell, `height` is a deterministic prop (a fixed vh-based
-// formula, not organic text content), so the spacer can be sized with a
-// plain CSS calc() instead of HeroShell's ResizeObserver measurement.
+// Unlike HeroShell, `height`/`spacerHeight` are deterministic props (CSS
+// calc() formulas, not organic text content), so the spacer can be sized
+// with a plain calc() instead of HeroShell's ResizeObserver measurement.
 type Props = {
+  // The *fixed background container's* own height — taller than
+  // `spacerHeight` by the scroll-peel buffer (see CaseStudyLayout's
+  // HERO_BG_EXTRA). Being `position: fixed`, this container is out of flow
+  // entirely, so its extra height costs nothing visually at rest — #cs-
+  // content (higher z-index) simply covers that extra sliver until the user
+  // scrolls, at which point it's there so the background doesn't run out
+  // from behind the frame's still-peeling corner.
   height: string
+  // Where #cs-content actually rests in flow — the hero image's own real
+  // height, no buffer added, so the frame's top edge lands flush against
+  // the bottom of the visible hero image instead of leaving a gap.
+  spacerHeight: string
   children: React.ReactNode
 }
 
-export function CaseStudyHero({ height, children }: Props) {
+export function CaseStudyHero({ height, spacerHeight, children }: Props) {
   return (
     <>
       <div
@@ -33,7 +44,7 @@ export function CaseStudyHero({ height, children }: Props) {
       </div>
       <div
         aria-hidden="true"
-        style={{ height: `calc(${height} - var(--nav-height))` }}
+        style={{ height: `calc(${spacerHeight} - var(--nav-height))` }}
         className="hidden sm:block"
       />
     </>
