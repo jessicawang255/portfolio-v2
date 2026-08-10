@@ -608,7 +608,7 @@ export function AboutContent({ spotifyPlaylist }: { spotifyPlaylist: Song[] | nu
   const panelKey = isFun ? "entry-fun" : panelEntry ? `entry-${displayId}` : `text-${panelText}`
 
   return (
-    <div className="container-main pt-5 pb-9 sm:pt-9">
+    <div className="container-main pt-9 pb-9">
       <div className="grid grid-cols-1 gap-x-[54px] lg:grid-cols-[minmax(0,min(586px,40%))_1fr]">
         {/* Left column — sections 1-4 */}
         <div className="flex flex-col gap-28">
