@@ -6,7 +6,7 @@ export default function Glucal() {
   return (
     <div className="flex flex-col gap-16 sm:gap-30">
       <section id="problem" className="flex flex-col items-start scroll-mt-12">
-        <div className="flex items-start justify-between gap-16 w-full">
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6 sm:gap-16 w-full">
           <div className="max-w-xl">
             <div className="flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-[var(--cs-accent)] shrink-0" aria-hidden="true" />
@@ -20,34 +20,32 @@ export default function Glucal() {
             </p>
           </div>
 
-          <div className="shrink-0 flex flex-col items-end">
+          <div className="w-full sm:w-auto shrink-0 flex flex-col items-start sm:items-end">
             <Image
               src="/images/case-studies/glucal/glucal-problem-1.png"
               alt="Pictogram of 75 million people who inject insulin daily, sourced from the National Center for Biotechnology Information"
               width={696}
               height={809}
-              className="w-72 h-auto"
+              className="w-full sm:w-72 h-auto"
             />
           </div>
         </div>
 
-        <div className="flex flex-col gap-9 mt-9 w-full">
-          <div className="flex items-center gap-10">
+        <div className="mt-9 w-full">
+          <h1 className="text-2xl font-normal leading-[1.2] text-primary mt-3">
+            Despite being a daily task, there&rsquo;s no straightforward tool that simplifies insulin calculation elegantly.
+          </h1>
+          <p className="text-base leading-normal text-neutral-500 mt-[18px]">
+            The process is <strong className="text-[var(--cs-accent)] font-semibold">tedious</strong>, <strong className="text-[var(--cs-accent)] font-semibold">monotonous</strong>, and <strong className="text-[var(--cs-accent)] font-semibold">complicated</strong>. No one wants to do math before each meal! Existing tools are either frustrating to use, or don&rsquo;t address the specific need.
+          </p>
+          <div className="flex flex-col gap-9 mt-9 w-full">
             <Image
               src="/images/case-studies/glucal/glucal-problem-2.png"
               alt=""
               width={306}
               height={484}
-              className="w-36 h-auto shrink-0"
+              className="hidden sm:block w-36 h-auto"
             />
-            <div className="max-w-2xl">
-              <h2 className="text-2xl font-medium text-neutral-800 leading-[1.2]">
-                Despite being a daily task, there&rsquo;s no straightforward tool that simplifies insulin calculation elegantly.
-              </h2>
-              <p className="text-base leading-normal text-neutral-500 mt-3">
-                The process is <strong className="text-[var(--cs-accent)] font-semibold">tedious</strong>, <strong className="text-[var(--cs-accent)] font-semibold">monotonous</strong>, and <strong className="text-[var(--cs-accent)] font-semibold">complicated</strong>. No one wants to do math before each meal! Existing tools are either frustrating to use, or don&rsquo;t address the specific need.
-              </p>
-            </div>
           </div>
         </div>
       </section>
