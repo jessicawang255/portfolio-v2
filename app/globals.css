@@ -471,8 +471,13 @@ body {
 [data-accent="autumn"]       { --cs-accent: #C89867; }
 [data-accent="glucal"]       { --cs-accent: #FF8F89; }
 
-/* ─── Text highlight — hex values directly; avoids @theme tree-shaking ──────── */
+/* ─── Text selection highlight — hex values directly; avoids @theme tree-shaking */
 :root {
-  --highlight-bg:   #E5F8ED;
-  --highlight-text: #2E8B57;
+  --selection-bg:   #E5F8ED;
+  --selection-text: #2E8B57;
+}
+
+::selection {
+  background-color: var(--selection-bg);
+  color: var(--selection-text);
 }

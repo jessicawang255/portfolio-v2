@@ -89,8 +89,8 @@ type PanelTextBlock =
 // photo. Files live at public/images/about/{row-id}/{row-id}-{n}.{jpg,png},
 // numbered by position in the entry's images array (e.g. hack-western-1.jpg).
 type PanelImage =
-  | { caption?: string; aspect: string; width?: string; src: string; alt: string }
-  | { caption?: string; aspect: string; width?: string; src?: undefined; alt?: never }
+  | { caption?: string; aspect: string; width?: string; src: string; alt: string; objectPosition?: string }
+  | { caption?: string; aspect: string; width?: string; src?: undefined; alt?: never; objectPosition?: string }
 
 type PanelEntry = { blocks: PanelTextBlock[]; images: PanelImage[] }
 
@@ -344,7 +344,11 @@ function PlaceholderBox({ className }: { className?: string }) {
 
 // 2px radius per spec. Renders the real photo once src/alt are set on the
 // PanelImage entry, otherwise falls back to an aspect-ratio placeholder.
-function AboutPanelImage({ caption, aspect, width, src, alt }: PanelImage) {
+// `objectPosition` overrides the crop anchor (default center) for photos
+// where the box's aspect ratio is wider than the source, so cropping the
+// overflow happens on one side only (e.g. "top" to keep a subject's head
+// framed instead of centering the crop).
+function AboutPanelImage({ caption, aspect, width, src, alt, objectPosition }: PanelImage) {
   return (
     <div style={{ width: width ?? "100%" }}>
       {src ? (
@@ -358,6 +362,7 @@ function AboutPanelImage({ caption, aspect, width, src, alt }: PanelImage) {
             fill
             sizes="(min-width: 1024px) 400px, 100vw"
             className="object-cover"
+            style={objectPosition ? { objectPosition } : undefined}
           />
         </div>
       ) : (
@@ -384,16 +389,24 @@ function FunPanelContent() {
   return (
     <div className="flex flex-col gap-9">
       <div>
-        <div className="flex gap-6">
+        {/* Top-aligned, independent heights — the left photo is cropped
+            shorter (389/493, anchored to the top) so its bottom edge sits
+            above the right photo's rather than lining up with it. */}
+        <div className="flex items-start gap-6">
           <div className="w-[29%] shrink-0">
             <AboutPanelImage
-              aspect="395/648"
-              src="/images/about/fun/fun-1.jpg"
+              aspect="389/455"
+              src="/images/about/for-fun/jessica-reperc.png"
               alt="Performing a cappella onstage"
+              objectPosition="top"
             />
           </div>
           <div className="flex-1">
-            <AboutPanelImage aspect="3/2" src="/images/about/fun/fun-2.jpg" alt="Repercussions a cappella team" />
+            <AboutPanelImage
+              aspect="3/2"
+              src="/images/about/for-fun/reperc-team.jpeg"
+              alt="Repercussions a cappella team"
+            />
           </div>
         </div>
         <p className="mt-2 text-sm leading-[1.5] text-neutral-400 italic">
