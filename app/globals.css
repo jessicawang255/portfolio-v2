@@ -44,6 +44,19 @@
   --color-nav-link-hover: var(--color-neutral-900);
   --color-icon-social:    var(--color-neutral-200);
 
+  /* Case study content column — where the TOC's reserved margin stops being
+     mirrored on the right (see CaseStudyLayout.tsx). Deliberately its own
+     registered breakpoint rather than an arbitrary `min-[1152px]:` bracket
+     value: Tailwind only sorts *registered* breakpoints (this scale, or
+     `sm`/`md`/`lg`/etc.) into the correct cascade order — an arbitrary
+     bracket value doesn't get slotted in by width, so `sm:`'s rule would
+     end up later in the stylesheet and silently win at every viewport,
+     including above this one. Sits between `lg` (1024px, where the column
+     would still be squeezed under the symmetric treatment) and `xl` (1280px,
+     further out than this needs to be) — nudge it directly if `lg`/`xl` ever
+     shift and this drifts out of that gap. */
+  --breakpoint-cs-toc: 72rem;
+
   /* Radii */
   --radius-sm:    4px;
   --radius-base:  8px;

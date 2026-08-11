@@ -146,20 +146,43 @@ export function CaseStudyLayout({ project, children, heroBackground, heroAspectR
             boxShadow: "0 -8px 40px rgba(0,0,0,0.07)",
           }}
         >
-          {/* The content column is truly centered (mx-auto) — its margins are
-              always equal, at any max-width. The TOC lives in the left
-              margin: it's absolutely positioned outside the column's own
-              left edge (left-[-17.5rem] = its w-60 + the gap), so it never
-              factors into the column's width or centering math at all. */}
+          {/* The content column is truly centered (mx-auto, equal margins on
+              both sides) from `cs-toc` (1152px, see globals.css) up — same as
+              it's always been. Below that, down to `sm`, is a squeezed tablet
+              zone the original symmetric split never accounted for: it
+              reserved an identical, unused block of whitespace on the right
+              (mirroring the TOC's left-side space) at *every* width, which
+              starves the column exactly where it can least afford it — a
+              ~900px viewport was down to a ~270px column. Between `sm` and
+              `cs-toc` the column instead gets a plain left margin (just the
+              TOC + gap) and eats every remaining pixel, no mirrored margin —
+              then `cs-toc`+ reverts to the original centered treatment, since
+              by then the symmetric column is already comfortable on its own.
+              This does mean a real jump at 1152px (content suddenly loses
+              the right-hand space it had a pixel below) rather than a smooth
+              taper — deliberate: interpolating the two would need a
+              continuous width formula instead of a breakpoint, and the seam
+              only ever lands on an already-workable column on both sides of
+              it (~800px just below, ~520px just above) rather than back in
+              badly-squeezed territory. */}
           <div className="container-main">
-            {/* min(...) guarantees the column's margin never drops below 17.5rem
-                (the TOC's w-60 + gap) — otherwise the TOC gets pushed off-screen
-                to the left on any viewport narrower than max-w + 2*17.5rem.
-                Only applied from `sm` up — below that there's no TOC to
-                reserve space for, and `calc(100% - 35rem)` goes negative on
-                narrow viewports, collapsing the whole column. */}
-            <div className="relative mx-auto max-w-full sm:max-w-[min(100rem,calc(100%-35rem))]">
-              <aside className="absolute top-0 h-full w-60 left-[-17.5rem]">
+            {/* min(...) guarantees the column's left margin never drops below
+                16rem in the `sm`–`cs-toc` tablet tier (17.5rem again at
+                `cs-toc`+, see the aside's own left offset below) — otherwise
+                the TOC gets pushed off-screen to the left on any viewport
+                narrower than max-w + that margin. Only applied from `sm` up
+                — below that there's no TOC to reserve space for, and a
+                positive left margin goes negative on narrow viewports,
+                collapsing the whole column.
+                The tablet tier's TOC↔content gap is tighter than `cs-toc`+'s
+                (16rem vs. 17.5rem, i.e. 16px vs. 40px between the TOC's own
+                w-60 and the column) — this tier is already reclaiming space
+                from the old mirrored right-margin bug, so the gap itself can
+                afford to give a little more of that space to the column too,
+                rather than sitting at the same width the roomier desktop
+                tier uses. */}
+            <div className="relative max-w-full sm:ml-[16rem] sm:max-w-[calc(100%-16rem)] cs-toc:mx-auto cs-toc:max-w-[min(100rem,calc(100%-35rem))]">
+              <aside className="absolute top-0 h-full w-60 left-[-17.5rem] sm:left-[-16rem] cs-toc:left-[-17.5rem]">
                 <div className="sticky top-0 pt-9 pb-16">
                   <Link
                     href="/"
