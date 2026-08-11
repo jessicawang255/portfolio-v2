@@ -13,7 +13,10 @@ export default function Autumn() {
         primary
       >
         <ImageBlock
-          height={400}
+          src="/images/case-studies/autumn/autumn-demo.gif"
+          alt="Screen recording of the Autumn Support Library"
+          width={2000}
+          height={1000}
         />
 
       <Outcomes
@@ -160,7 +163,10 @@ export default function Autumn() {
         primary
       >
         <ImageBlock
-          height={400}
+          src="/images/case-studies/autumn/autumn-demo.gif"
+          alt="Screen recording of the Autumn Support Library"
+          width={2000}
+          height={1000}
         />
       </Section>
 
