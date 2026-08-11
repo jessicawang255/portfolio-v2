@@ -30,7 +30,7 @@ export default function RootLayout({
         <ViewTransition name="page-content">{children}</ViewTransition>
         <Footer />
         <MobileNav />
-        <ScrollRevealController frameId="main-frame" heroId="hero-content" />
+        <ScrollRevealController frameId="main-frame" heroId="hero-content" heroFrameId="hero-content" />
       </body>
     </html>
   )

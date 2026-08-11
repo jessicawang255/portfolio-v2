@@ -36,8 +36,25 @@ type Props = {
 export function CaseStudyHero({ height, spacerHeight, children }: Props) {
   return (
     <>
+      {/* id="cs-hero-frame" + pointer-events-none: this box is purely
+          decorative (background + foreground screenshot, nothing
+          interactive), but with neither of those it was a real hazard —
+          being `position: fixed`, it's *always* present at this viewport
+          position, whether or not #cs-content currently covers it, and
+          without pointer-events-none it silently intercepted clicks meant
+          for whatever sat beneath it (the footer's own links, in the exact
+          overlap case below) even where it was invisible-looking to the eye.
+          pointer-events-none fixes that unconditionally, at any scroll
+          position. The id lets ScrollRevealController also force
+          visibility:hidden on it once #cs-content is guaranteed to have
+          fully covered it (see the `p >= 1` check there) — needed because,
+          unlike the foreground image (#cs-hero-content, faded/scaled below),
+          this outer box's background never fades on its own, so on a short
+          viewport where this box's height runs past the gap above the
+          footer, its background could otherwise paint straight over it. */}
       <div
-        className="static sm:fixed inset-x-0 top-0 overflow-hidden mt-[calc(-1*var(--nav-height))] sm:mt-0 h-auto sm:h-[var(--cs-hero-height)]"
+        id="cs-hero-frame"
+        className="static sm:fixed inset-x-0 top-0 overflow-hidden pointer-events-none mt-[calc(-1*var(--nav-height))] sm:mt-0 h-auto sm:h-[var(--cs-hero-height)]"
         style={{ zIndex: 5, ["--cs-hero-height" as string]: height }}
       >
         {children}

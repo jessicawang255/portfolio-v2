@@ -28,8 +28,23 @@ export function applyFooterFade(footerEl: HTMLElement, footerReveal: number, anc
   if (!desktop) {
     footerEl.style.opacity = ""
     footerEl.style.transform = ""
+    footerEl.style.visibility = ""
     return
   }
+
+  // #site-footer is `position: fixed` from the moment its own breakpoint
+  // applies — painted at the same viewport-anchored spot regardless of
+  // scroll position, same as the hero (see ScrollRevealController's
+  // heroFrameId handling). footerReveal reaching down to exactly 0 (not
+  // just close to it — footerRatio clamps) means the page is nowhere near
+  // its end, so the footer has no business being visible at all yet — but
+  // FADE_FLOOR below only ever fades it to 5% opacity, not 0, which reads
+  // as a genuine ghost-image bug (not a subtle hint of what's coming) on a
+  // short viewport where the footer's fixed box overlaps the hero's: same
+  // failure as the hero-into-footer case, just the other direction.
+  // visibility:hidden removes it from paint entirely for that whole span,
+  // restored the instant footerReveal ticks up off of 0.
+  footerEl.style.visibility = footerReveal > 0 ? "" : "hidden"
 
   const fadeRatio  = 1 - easeInReveal(footerReveal, FADE_EASE_POWER)
   const scaleRatio = 1 - easeInReveal(footerReveal, SCALE_EASE_POWER)
@@ -58,4 +73,5 @@ export function resetFooterFade(footerEl: HTMLElement) {
   footerEl.style.opacity = ""
   footerEl.style.transform = ""
   footerEl.style.transformOrigin = ""
+  footerEl.style.visibility = ""
 }

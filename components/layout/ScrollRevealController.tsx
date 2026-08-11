@@ -23,6 +23,18 @@ type Props = {
   /** The hero content that fades + scales as the frame covers it —
    *  #hero-content on Work/About, #cs-hero-content on case study pages. */
   heroId: string
+  /** The hero's own outer fixed-position box, forced to `visibility: hidden`
+   *  once the frame has fully covered it (`p >= 1` — see the check below).
+   *  On Work/About this is the same element as `heroId` (a single box, no
+   *  background/foreground split) — passed as its own prop rather than
+   *  reused implicitly so the two concerns (continuous fade vs. the binary
+   *  "fully covered, stop painting" cutoff) stay distinct even where they
+   *  happen to share a target. Case studies split the two for real
+   *  (CaseStudyHero.tsx/HeroForeground.tsx): `heroId` only covers the
+   *  foreground image, which is what's meant to visibly fade + scale during
+   *  a normal reveal, so the background — which never fades on its own —
+   *  couldn't be reached through it otherwise. */
+  heroFrameId?: string
 }
 
 // Drives every scroll-tied animation shared between a page's content frame,
@@ -33,7 +45,7 @@ type Props = {
 // studies), parameterized by which frame/hero elements it targets — see
 // headerFade.ts and footerFade.ts for the actual reveal math, shared here so
 // both instances can't drift out of timing sync with each other again.
-export function ScrollRevealController({ frameId, heroId }: Props) {
+export function ScrollRevealController({ frameId, heroId, heroFrameId }: Props) {
   const pathname = usePathname()
 
   useEffect(() => {
@@ -89,7 +101,21 @@ export function ScrollRevealController({ frameId, heroId }: Props) {
         // #site-footer's *own* fade/scale, not the frame's radius.
         const footerH = footer!.offsetHeight
         const footerAbsTop = document.documentElement.scrollHeight - footerH
-        const footerReveal = footerRatio(y, footerAbsTop, footerH, window.innerHeight)
+        // The reveal's own scroll distance is widened by REVEAL_EXTRA beyond
+        // just footerH (ramp starts REVEAL_EXTRA px earlier, still finishes
+        // exactly at the same scroll-to-bottom point — see footerRatio's
+        // math, this only shifts where it *starts*) — footerH alone (a
+        // typical footer's ~190px) is a sliver against a page that can run
+        // several thousand px tall, easy to stop a scroll gesture in the
+        // middle of and land on a half-peeled corner over a half-opaque
+        // footer, exactly the "stuck mid-transition" look this widens away
+        // from. Case studies with a shorter total page (e.g. a wide tablet
+        // column with little text wrap) make that narrow window a bigger
+        // fraction of the scrollable distance, so a normal scroll is more
+        // likely to land inside it — this isn't tablet-specific in the math,
+        // just easier to hit there.
+        const REVEAL_EXTRA = 400
+        const footerReveal = footerRatio(y, footerAbsTop - REVEAL_EXTRA, footerH + REVEAL_EXTRA, window.innerHeight)
         const bottom = footerReveal * maxRadius
         el.style.borderBottomLeftRadius  = `${bottom}px`
         el.style.borderBottomRightRadius = `${bottom}px`
@@ -105,6 +131,26 @@ export function ScrollRevealController({ frameId, heroId }: Props) {
         if (heroEl) {
           heroEl.style.opacity = mql.matches ? `${fadeOpacity(p)}` : ""
           heroEl.style.transform = mql.matches ? `scale(${fadeScale(p)})` : ""
+        }
+
+        // p reaching 1 means the frame has fully covered the hero from the
+        // top and — since headerProgress is monotonic in scrollY — stays at
+        // 1 for the rest of the downward scroll, including the footer-
+        // reveal window at the very bottom. That makes it the exact signal
+        // for "the hero can never legitimately be visible again until the
+        // user scrolls back up past this point": forcing visibility:hidden
+        // here removes the hero from painting *and* hit-testing for that
+        // whole span, so it can neither bleed its background over the
+        // footer nor steal clicks meant for it on a short viewport where the
+        // two would otherwise overlap (see CaseStudyHero.tsx) — cheaper than
+        // unmounting (no remount cost scrolling back and forth near the
+        // threshold) and than animating height (visibility doesn't trigger
+        // reflow). Gated to `mql.matches` like the fade/scale above: below
+        // `sm` the hero is `static`, not `fixed` — it scrolls away in normal
+        // flow and can't overlap the footer this way regardless.
+        if (heroFrameId) {
+          const heroFrame = document.getElementById(heroFrameId)
+          if (heroFrame) heroFrame.style.visibility = mql.matches && p >= 1 ? "hidden" : ""
         }
 
         // Same fade + scale, shared via footerFade.ts, so #site-footer —

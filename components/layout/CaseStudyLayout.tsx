@@ -110,7 +110,7 @@ export function CaseStudyLayout({ project, children, heroBackground, heroAspectR
       </header>
 
       <main className="flex-1 flex flex-col">
-        <ScrollRevealController frameId="cs-content" heroId="cs-hero-content" />
+        <ScrollRevealController frameId="cs-content" heroId="cs-hero-content" heroFrameId="cs-hero-frame" />
 
         {/* Hero — pinned to the viewport from `sm` up (see CaseStudyHero), so
             #cs-content can visually slide up and cover it, same as
