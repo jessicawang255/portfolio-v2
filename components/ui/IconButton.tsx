@@ -20,12 +20,15 @@ export function IconButton({ href, label, icon, size = 22, className, ...rest }:
   const resolvedLabel = label ?? getIconTooltip(icon, href)
 
   return (
+    // `before:inset-[-11px]` pads the link's hit area out to ~44px square
+    // (the Apple HIG / Material touch-target minimum) without growing the
+    // visible icon — same trick iOS uses for its own small glyph buttons.
     <a
       href={href}
       aria-label={resolvedLabel}
       target={external ? "_blank" : undefined}
       rel={external ? "noopener noreferrer" : undefined}
-      className={`group/icon relative inline-flex text-icon-social transition-[color,scale] duration-150 hover:scale-110 hover:text-nav-link-hover motion-safe:hover:animate-[icon-tick_var(--duration-slow)_var(--ease-out)] ${className ?? ""}`}
+      className={`group/icon relative inline-flex text-icon-social transition-[color,scale] duration-150 before:absolute before:inset-[-11px] before:content-[''] hover:scale-110 hover:text-nav-link-hover motion-safe:hover:animate-[icon-tick_var(--duration-slow)_var(--ease-out)] ${className ?? ""}`}
       {...rest}
     >
       <span
