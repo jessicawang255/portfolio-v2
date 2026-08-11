@@ -5,6 +5,7 @@ import { MoreCaseStudies } from "@/components/ui/MoreCaseStudies"
 import { ScrollRevealController } from "@/components/layout/ScrollRevealController"
 import { CaseStudyHero } from "@/components/layout/CaseStudyHero"
 import { DefaultHeroBackground } from "@/components/layout/DefaultHeroBackground"
+import { CaseStudyMeta, type MetaField } from "@/components/layout/CaseStudyMeta"
 
 type Props = {
   project: Project
@@ -68,12 +69,13 @@ export function CaseStudyLayout({ project, children, heroBackground, heroAspectR
     ? `calc(100vw / ${heroAspectRatio})`
     : FALLBACK_HERO_HEIGHT
 
-  const metaFields = [
+  const metaFieldCandidates: { label: string; value: string | string[] | undefined }[] = [
     { label: "Role",     value: role },
     { label: "Timeline", value: timeline },
     { label: "Team",     value: team },
     { label: "Skills",   value: skills },
-  ].filter(f => f.value)
+  ]
+  const metaFields = metaFieldCandidates.filter((f): f is MetaField => Boolean(f.value))
 
   return (
     <>
@@ -202,32 +204,7 @@ export function CaseStudyLayout({ project, children, heroBackground, heroAspectR
                   {title}
                 </h1>
 
-                {metaFields.length > 0 && (
-                  // Below `sm`, a real 2-column grid — `flex flex-wrap` let
-                  // each row's second column start wherever the first
-                  // item's own content width happened to end (varies row to
-                  // row: "Role" vs "Team" render at different widths), so
-                  // "Timeline" and "Skills" never lined up. `grid-cols-2`'s
-                  // tracks are fixed and equal-width, so every column
-                  // aligns regardless of content length. Desktop's
-                  // single-row flex-wrap layout is unchanged from `sm` up.
-                  <div className="grid grid-cols-2 gap-x-14 gap-y-4 mt-9 sm:flex sm:flex-wrap">
-                    {metaFields.map(({ label, value }) => (
-                      <div key={label}>
-                        <p className="font-mono text-sm text-neutral-400 mb-1">{label}</p>
-                        {Array.isArray(value) ? (
-                          <div className="text-base text-neutral-500">
-                            {value.map((item, i) => (
-                              <p key={i} className="m-0">{item}</p>
-                            ))}
-                          </div>
-                        ) : (
-                          <p className="text-base text-neutral-500">{value}</p>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                )}
+                <CaseStudyMeta fields={metaFields} />
 
                 <hr className="mt-10 border-divider" />
 
