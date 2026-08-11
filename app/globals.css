@@ -57,6 +57,18 @@
      shift and this drifts out of that gap. */
   --breakpoint-cs-toc: 72rem;
 
+  /* About hero — where the photo trio has room to sit beside the intro text
+     again instead of stacked beneath it (see AboutHero.tsx). Below this, text
+     (full width) + a fixed 40px gap + the photo row (830px at their real
+     desktop size, including gaps) would need 1254px of content space just to
+     avoid re-clipping the way F-01 originally did — plus container-main's
+     72px of horizontal padding at `sm`+, that's ~1326px of actual viewport.
+     Rounded up to a clean 84rem (1344px) for a little breathing room, not the
+     bare minimum. Its own registered breakpoint for the same reason as
+     `cs-toc` above: an arbitrary `min-[1344px]:` bracket doesn't get sorted
+     into cascade order by width, so `sm:`'s rule would silently win here too. */
+  --breakpoint-about-photos: 84rem;
+
   /* Radii */
   --radius-sm:    4px;
   --radius-base:  8px;

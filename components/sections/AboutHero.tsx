@@ -12,6 +12,20 @@ const socials = [
   { label: "GitHub",   href: "https://github.com/jessicawang255", icon: "/icons/github.svg" },
 ]
 
+// Three structural tiers now — phone gets its own 2-up-plus-centered grid
+// (see the row's own comment below for why that also makes each photo
+// noticeably bigger, not just rearranged), tablet keeps the single fluid
+// row, desktop is unchanged from the original design. `aspect-[W/H]` and
+// `max-w-[Npx]` (each photo's own original desktop dimensions) apply at
+// every tier below `about-photos` regardless of display mode — height
+// always follows width, and growth never overshoots the real design size.
+// What DOES change per tier is what actually drives the width in the first
+// place: grid's own column-track stretch on phone (no flex-grow involved —
+// grid ignores it entirely), `flex-[N]` weighted to that same original
+// width from `sm` up (flex-grow only applies to a flex container's direct
+// children, so it has to be re-declared once the row switches away from
+// grid), and the fixed `about-photos:w-[Npx]` from the original design
+// past that.
 const photos = [
   {
     id: "photo-1",
@@ -23,7 +37,7 @@ const photos = [
     ],
     alt: "Jessica at her desk",
     rotate: 5.5,
-    className: "w-[220px] h-[222px]",
+    className: "aspect-[220/222] max-w-[220px] sm:flex-[220] about-photos:flex-none about-photos:w-[220px] about-photos:h-[222px]",
   },
   {
     id: "photo-2",
@@ -34,7 +48,7 @@ const photos = [
     ],
     alt: "Jessica outside in autumn",
     rotate: -7.5,
-    className: "w-[218px] h-[222px]",
+    className: "aspect-[218/222] max-w-[218px] sm:flex-[218] about-photos:flex-none about-photos:w-[218px] about-photos:h-[222px]",
   },
   {
     id: "photo-3",
@@ -45,7 +59,17 @@ const photos = [
     ],
     alt: "Jessica's cat",
     rotate: -1.7,
-    className: "w-[280px] h-[192px]",
+    // The one photo with its own per-tier layout properties, not just
+    // sizing — `col-span-2 mx-auto w-full` puts it on its own centered row
+    // in the phone grid (see the row's own comment below), all three reset
+    // at `sm` where the row goes back to one flex line and this needs to
+    // behave like photo-1/2 again. `sm:mx-0` specifically (not just
+    // relying on `sm:flex-[280]`'s own basis:0% to out-rank a stray
+    // `w-full`) — auto margins on a flex item consume free space *before*
+    // flex-grow gets any of it, so left over from the grid tier, this
+    // would quietly win the whole row's free space for itself instead of
+    // growing in proportion with photo-1/2 the way `flex-[280]` intends.
+    className: "col-span-2 mx-auto w-full aspect-[280/192] max-w-[280px] sm:mx-0 sm:w-auto sm:flex-[280] about-photos:flex-none about-photos:w-[280px] about-photos:h-[192px]",
   },
 ]
 
@@ -132,15 +156,23 @@ export function AboutHero() {
         variants={stagger}
         initial={reduce ? "visible" : "hidden"}
         animate="visible"
-        className="pointer-events-auto relative z-[1] flex items-start justify-between gap-10"
+        // Stacked (text above, photos below) from phone through tablet —
+        // `about-photos` is the first width with room for both the text
+        // column and the photo row's real desktop size side by side (see
+        // that breakpoint's own comment in globals.css). Below it, `flex-col`
+        // needs neither `items-start` nor `justify-between`: both only
+        // matter for the row layout (top-aligning the two flex items instead
+        // of one stretching to match the other's height, and pushing them to
+        // opposite ends) — a column's single-file children don't need either.
+        className="pointer-events-auto relative z-[1] flex flex-col gap-14 about-photos:flex-row about-photos:items-start about-photos:justify-between about-photos:gap-10"
       >
-        {/* max-w-sm/shrink-0 only matter once the photo grid reappears
-            alongside it at `sm` (see its own `hidden ... sm:flex` below) —
-            below that, this is the row's only child, so it needs to be
-            `w-full`, not capped at 384px with shrinking disabled, or it
-            overflows the ~350px actually available inside container-main's
-            20px padding and causes the whole page to scroll horizontally. */}
-        <div className="flex w-full flex-col sm:max-w-sm sm:shrink-0">
+        {/* max-w-sm/shrink-0 only matter once the row layout kicks in at
+            `about-photos` — below that this is a full-width column child
+            stacked above the photo row (see the row's own comment below),
+            not competing with it for horizontal space, so it stays `w-full`
+            all the way through the tablet tier instead of capping at 384px
+            with shrinking disabled. */}
+        <div className="flex w-full flex-col about-photos:max-w-sm about-photos:shrink-0">
           <motion.h1
             variants={fadeUp}
             className="mb-3 text-2xl font-medium text-neutral-900"
@@ -180,12 +212,41 @@ export function AboutHero() {
           </motion.div>
         </div>
 
+        {/* Visible at every width (F-01: this used to be `hidden … sm:flex`,
+            invisible below `sm` and clipped off-screen from `sm` up to
+            ~1326px). A 2-column grid on phone, not a 3-across flex row —
+            photo-1 and photo-2 fall into row one automatically (plain grid
+            auto-placement), photo-3 spans both columns and centers itself
+            on row two (see its own `col-span-2 mx-auto` above). The real
+            point isn't the rearrangement, it's what it buys each photo:
+            splitting the row's width across 2 items instead of 3 (2 gaps
+            become 1 in row one, none at all for photo-3 alone in row two)
+            means each one can grow noticeably larger before hitting its own
+            `max-w-[Npx]` cap, at every phone width — not just a side effect
+            of the wrap, the actual reason for it.
+            `flex sm:` — back to one row from `sm` up, same fluid-grow
+            single line as before (see the `photos` array above for why
+            `flex-[N]` has to be re-declared there instead of carrying over).
+            `w-full` gives that row real width to grow into — without it,
+            it'd just shrink-wrap to content like it does at `about-photos`+
+            — reverts to `w-auto` there for the same reason in reverse: side
+            by side with the text column, it goes back to sizing off its
+            now-fixed-size children instead of stretching into the column's
+            leftover width. `pt-2` — nudging the row down to align with the
+            text's own baseline — only makes sense once they're side by side too. */}
         <motion.div
           variants={stagger}
-          className="hidden items-center gap-14 pt-2 sm:flex"
+          className="grid grid-cols-2 w-full items-center gap-4.5 sm:flex sm:gap-9 about-photos:w-auto about-photos:gap-14 about-photos:pt-2"
         >
           {photos.map(({ id, srcs, alt, rotate, className }, i) => (
-            <motion.div key={id} variants={fadeUp}>
+            // The `flex-[N]`/`aspect-[…]`/`max-w-[…]` sizing lives here, not
+            // on the button below — this motion.div, not its child, is the
+            // row's actual flex item (flex-grow only ever applies to a flex
+            // container's *direct* children), so putting it one level too
+            // deep silently no-ops: the button would fall back to shrinking
+            // to its own content's minimum instead of growing to fill the
+            // row at all.
+            <motion.div key={id} variants={fadeUp} className={className}>
               <button
                 type="button"
                 onClick={() => advance(i)}
@@ -193,7 +254,7 @@ export function AboutHero() {
                 onPointerUp={(e) => e.currentTarget.style.removeProperty("--photo-press")}
                 onPointerLeave={(e) => e.currentTarget.style.removeProperty("--photo-press")}
                 aria-label={`${alt} — show next photo`}
-                className={`about-photo relative ${className} block shrink-0 cursor-pointer rounded-[22px] border border-neutral-900/3 bg-neutral-100/50 p-1.5`}
+                className="about-photo relative block h-full w-full cursor-pointer rounded-[22px] border border-neutral-900/3 bg-neutral-100/50 p-1.5"
                 style={{ ["--photo-rotate" as string]: `${rotate}deg` } as React.CSSProperties}
               >
                 {/* Image well, inset by the frame's 6px padding above — its own
