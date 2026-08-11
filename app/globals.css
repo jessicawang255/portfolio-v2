@@ -470,3 +470,9 @@ body {
 [data-accent="retrospect"]   { --cs-accent: #8051BA; }
 [data-accent="autumn"]       { --cs-accent: #C89867; }
 [data-accent="glucal"]       { --cs-accent: #FF8F89; }
+
+/* ─── Text highlight — hex values directly; avoids @theme tree-shaking ──────── */
+:root {
+  --highlight-bg:   #E5F8ED;
+  --highlight-text: #2E8B57;
+}
