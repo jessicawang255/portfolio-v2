@@ -18,7 +18,14 @@ const socialLinks = [
   { label: "GitHub",   href: "https://github.com/jessicawang255" },
 ]
 
-const FOOTER_LINK_CLASS = "text-base font-normal text-nav-link hover:text-nav-link-hover transition-colors duration-150"
+// `before:inset-[…]` pads each link's hit area out toward the 44px touch-
+// target minimum (see IconButton's own `::before` for the same trick) —
+// vertical inset only reaches -10px (not the full -11px+ that'd fully clear
+// 44px) since these rows are stacked with just a 4px gap (`gap-1` below);
+// going further would overlap more than it already does. Horizontal goes
+// wider (-16px) since it costs nothing here — nothing else sits beside a
+// stacked link — and single-character labels like "X" need it most.
+const FOOTER_LINK_CLASS = "relative text-base font-normal text-nav-link hover:text-nav-link-hover transition-colors duration-150 before:absolute before:inset-x-[-16px] before:inset-y-[-10px] before:content-['']"
 
 // Popover reveal — same on-screen-settle curve as TableOfContents' subsection reveal.
 const PANEL_EASE: [number, number, number, number] = [0.33, 1, 0.68, 1]
@@ -105,7 +112,10 @@ function LikeButton() {
       type="button"
       onClick={() => setLiked((v) => !v)}
       aria-pressed={liked}
-      className={`inline-flex cursor-pointer items-center gap-1.5 text-base font-normal transition-colors duration-150 ${
+      // Same invisible padded hit area as FOOTER_LINK_CLASS above — this
+      // button doesn't share that constant (its color logic is stateful),
+      // so the before: classes are repeated here.
+      className={`relative inline-flex cursor-pointer items-center gap-1.5 text-base font-normal transition-colors duration-150 before:absolute before:inset-x-[-16px] before:inset-y-[-10px] before:content-[''] ${
         liked ? "text-neutral-900" : "text-nav-link hover:text-nav-link-hover"
       }`}
     >
