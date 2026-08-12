@@ -18,6 +18,10 @@ type Props = {
   // Discover More, whose 4 columns need more room before `sm` stops being
   // too narrow). Only meaningful alongside mobileImageRatio.
   mobileBreakpoint?: "sm" | "wide"
+  // Where a cropped video thumbnail anchors within its box — `center`
+  // (default) or `top` to keep the top of the frame intact and crop from
+  // the bottom instead. No effect on images or on boxes that don't crop.
+  videoPosition?: "center" | "top"
 }
 
 export function ArrowUpRight() {
@@ -51,7 +55,7 @@ export function Separator({ children, className = "" }: { children: ReactNode; c
   )
 }
 
-export function CaseStudyCard({ project, imageRatio, mobileImageRatio, mobileBreakpoint = "sm" }: Props) {
+export function CaseStudyCard({ project, imageRatio, mobileImageRatio, mobileBreakpoint = "sm", videoPosition = "center" }: Props) {
   const { slug, title, name, status, disciplines, bg, thumbnail, thumbnailWidth, thumbnailHeight, href } = project
 
   const isGradient = bg.startsWith("linear-gradient")
@@ -105,11 +109,12 @@ export function CaseStudyCard({ project, imageRatio, mobileImageRatio, mobileBre
               muted
               playsInline
               className={
-                usesThumbnailRatio
+                (usesThumbnailRatio
                   ? isWideMobile
                     ? "absolute inset-0 h-full w-full object-cover discover-wide:object-contain"
                     : "absolute inset-0 h-full w-full object-cover sm:object-contain"
-                  : "absolute inset-0 h-full w-full object-cover"
+                  : "absolute inset-0 h-full w-full object-cover") +
+                (videoPosition === "top" ? " object-top" : "")
               }
             />
           )}
@@ -144,7 +149,7 @@ export function CaseStudyCard({ project, imageRatio, mobileImageRatio, mobileBre
           </div>
 
           {hasMetadata && (
-            <p className="font-mono text-sm text-neutral-300">
+            <p className="font-mono text-sm text-neutral-400">
               {name}
               {name && (status || disciplines?.length) && <Separator className="mx-1.5">•</Separator>}
               {status}
