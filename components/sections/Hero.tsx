@@ -7,7 +7,7 @@ import { IconButton } from "@/components/ui/IconButton"
 const socials = [
   { label: "LinkedIn", href: "https://www.linkedin.com/in/jwang255/", icon: "/icons/linkedin.svg" },
   { label: "X",        href: "https://x.com/jossici", icon: "/icons/x.svg" },
-  { label: "Copy Email",    href: "mailto:jessica.wang255@gmail.com", icon: "/icons/mail.svg" },
+  { label: "Copy Email",    href: "mailto:jessica.wang255@gmail.com", icon: "/icons/mail.svg", copyText: "jessica.wang255@gmail.com" },
   { label: "GitHub",   href: "https://github.com/jessicawang255", icon: "/icons/github.svg" },
 ]
 
@@ -47,8 +47,8 @@ export function Hero() {
         </motion.p>
 
         <motion.div variants={fadeUp} className="flex items-center gap-4">
-          {socials.map(({ label, href, icon }) => (
-            <IconButton key={label} href={href} label={label} icon={icon} />
+          {socials.map(({ label, href, icon, copyText }) => (
+            <IconButton key={label} href={href} label={label} icon={icon} copyText={copyText} />
           ))}
         </motion.div>
       </motion.div>

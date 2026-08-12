@@ -69,6 +69,17 @@
      into cascade order by width, so `sm:`'s rule would silently win here too. */
   --breakpoint-about-photos: 84rem;
 
+  /* Discover More — where the 2x2 mobile grid switches to a single row of
+     4 (see DiscoverMore.tsx). Deliberately later than `sm` (640px): right
+     above `sm`, container-main's fixed 72px of padding + 3 gap-6 gaps (72px)
+     leaves each of 4 columns only ~130px, too narrow for titles like "Google
+     Calendar enhanced task management" — they wrap word-by-word. 60rem
+     (960px) gives each column ~200px, enough room for 2-3 comfortable line
+     breaks instead. Its own registered breakpoint for the same reason as
+     `cs-toc`/`about-photos` above, and so this can be retuned independently
+     of `sm`/`lg` without affecting anything else using those. */
+  --breakpoint-discover-wide: 60rem;
+
   /* Radii */
   --radius-sm:    4px;
   --radius-base:  8px;
@@ -214,17 +225,26 @@ body {
 /* ─── Case study card — base transition states ──────────────────────────────── */
 
 /* Thumbnail box scales; default = no transform. Ratio comes from whichever
-   --thumb-ratio-* custom property CaseStudyCard sets: below `sm`, use
-   --thumb-ratio-mobile if a section opted in (Discover More), otherwise fall
-   back to the card's own desktop ratio; at `sm` and up, always the card's
-   own ratio. */
+   --thumb-ratio-* custom property CaseStudyCard sets: below the release
+   breakpoint, use --thumb-ratio-mobile if a section opted in, otherwise fall
+   back to the card's own desktop ratio; at/above it, always the card's own
+   ratio. Plain `.card-thumb` releases at `sm` (640px — Case Studies);
+   `.card-thumb-mobile-wide` releases later, at 60rem/960px (Discover More;
+   matches --breakpoint-discover-wide above — keep the two in sync), since
+   4 columns right at `sm` leaves each one too narrow. */
 .card-thumb {
   transition: transform 400ms cubic-bezier(0.22, 1, 0.36, 1);
   aspect-ratio: var(--thumb-ratio-mobile, var(--thumb-ratio-desktop));
 }
 
 @media (min-width: 640px) {
-  .card-thumb {
+  .card-thumb:not(.card-thumb-mobile-wide) {
+    aspect-ratio: var(--thumb-ratio-desktop);
+  }
+}
+
+@media (min-width: 960px) {
+  .card-thumb-mobile-wide {
     aspect-ratio: var(--thumb-ratio-desktop);
   }
 }
