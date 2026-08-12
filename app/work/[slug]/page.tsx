@@ -10,7 +10,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params
   const project = projects.find((p) => p.slug === slug)
   if (!project) return {}
-  return { title: `${project.title} — Jessica Wang` }
+  return { title: project.name }
 }
 
 export default async function CaseStudyPage({

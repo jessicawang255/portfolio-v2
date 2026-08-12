@@ -1,5 +1,10 @@
+import type { Metadata } from "next"
 import { AboutContent } from "@/components/sections/AboutContent"
 import { getTracksByUrls } from "@/lib/spotify"
+
+export const metadata: Metadata = {
+  title: "About",
+}
 
 const PLAYLIST_URLS = [
   "https://open.spotify.com/track/3heQu7YLQFf0WY4Z2giXhk",
