@@ -224,7 +224,7 @@ body {
    to `aspect-ratio` (set inline per-card in CaseStudyCard) so the box scales
    proportionally with its fluid grid-column width instead of stretching. */
 .card-thumb-fixed {
-  height: 200px;
+  height: 260px;
 }
 
 @media (min-width: 640px) {
