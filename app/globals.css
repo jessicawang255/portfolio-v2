@@ -213,23 +213,19 @@ body {
 
 /* ─── Case study card — base transition states ──────────────────────────────── */
 
-/* Thumbnail box scales; default = no transform */
+/* Thumbnail box scales; default = no transform. Ratio comes from whichever
+   --thumb-ratio-* custom property CaseStudyCard sets: below `sm`, use
+   --thumb-ratio-mobile if a section opted in (Discover More), otherwise fall
+   back to the card's own desktop ratio; at `sm` and up, always the card's
+   own ratio. */
 .card-thumb {
   transition: transform 400ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-/* Every card gets a single uniform mobile height, regardless of its desktop
-   aspect ratio — bespoke/natural desktop ratios read as oddly tall/narrow
-   crops on a full-width mobile card. At `sm` and up, height is released back
-   to `aspect-ratio` (set inline per-card in CaseStudyCard) so the box scales
-   proportionally with its fluid grid-column width instead of stretching. */
-.card-thumb-fixed {
-  height: 260px;
+  aspect-ratio: var(--thumb-ratio-mobile, var(--thumb-ratio-desktop));
 }
 
 @media (min-width: 640px) {
-  .card-thumb-fixed {
-    height: auto;
+  .card-thumb {
+    aspect-ratio: var(--thumb-ratio-desktop);
   }
 }
 

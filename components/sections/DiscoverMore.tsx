@@ -5,6 +5,11 @@ import { discoverItems } from "@/content/work"
 import { CaseStudyCard } from "@/components/ui/CaseStudyCard"
 import { stagger, fadeUp } from "@/lib/motion"
 
+// Mobile 2x2 tiles share this ratio rather than Google Calendar's own raw
+// thumbnail dimensions (260/140 ≈ 1.86, quite short) — pulled slightly
+// taller so the tiles read less squat in a two-column grid.
+const MOBILE_DISCOVER_RATIO: [number, number] = [260, 165]
+
 export function DiscoverMore() {
   const reduce = useReducedMotion()
 
@@ -23,10 +28,18 @@ export function DiscoverMore() {
         Discover More
       </motion.h2>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 items-start">
+      {/* Mobile thumbnails all match the first item's (Google Calendar)
+          ratio so the 2x2 grid reads as one uniform set of tiles; at `sm`
+          and up each card reverts to its own natural thumbnail ratio for
+          the bento-style 4-col single-row layout. Jumps straight from 2 to
+          4 columns at `sm` (no intermediate stop through tablet widths) —
+          each column is still a plain 1fr share of the row, so cards narrow
+          together and stay their own aspect ratio; nothing stretches to
+          compensate. */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 items-start">
         {discoverItems.map((item) => (
           <motion.div key={item.slug} variants={fadeUp}>
-            <CaseStudyCard project={item} />
+            <CaseStudyCard project={item} mobileImageRatio={MOBILE_DISCOVER_RATIO} />
           </motion.div>
         ))}
       </div>

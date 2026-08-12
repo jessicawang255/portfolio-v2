@@ -5,6 +5,10 @@ import { projects } from "@/content/work"
 import { CaseStudyCard } from "@/components/ui/CaseStudyCard"
 import { fadeUp } from "@/lib/motion"
 
+// Shared mobile ratio for every card below `sm` (Hack Western's own desktop
+// ratio) — see DiscoverMore's identical use of mobileImageRatio.
+const MOBILE_RATIO: [number, number] = [740, 504]
+
 export function CaseStudies() {
   const [p0, p1, p2, p3] = projects
   const reduce = useReducedMotion()
@@ -31,10 +35,10 @@ export function CaseStudies() {
           viewport={{ once: true, margin: "-80px" }}
         >
           <motion.div variants={fadeUp}>
-            <CaseStudyCard project={p0} imageRatio={[740, 504]} />
+            <CaseStudyCard project={p0} imageRatio={[740, 504]} mobileImageRatio={MOBILE_RATIO} />
           </motion.div>
           <motion.div variants={fadeUp}>
-            <CaseStudyCard project={p1} imageRatio={[592, 388]} />
+            <CaseStudyCard project={p1} imageRatio={[592, 388]} mobileImageRatio={MOBILE_RATIO} />
           </motion.div>
         </motion.div>
 
@@ -46,10 +50,10 @@ export function CaseStudies() {
           viewport={{ once: true, margin: "-80px" }}
         >
           <motion.div variants={fadeUp}>
-            <CaseStudyCard project={p3} imageRatio={[533, 400]} />
+            <CaseStudyCard project={p3} imageRatio={[533, 400]} mobileImageRatio={MOBILE_RATIO} />
           </motion.div>
           <motion.div variants={fadeUp}>
-            <CaseStudyCard project={p2} imageRatio={[799, 475]} />
+            <CaseStudyCard project={p2} imageRatio={[799, 475]} mobileImageRatio={MOBILE_RATIO} />
           </motion.div>
         </motion.div>
       </div>

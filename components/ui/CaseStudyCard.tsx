@@ -1,13 +1,18 @@
 import Image from "next/image"
 import Link from "next/link"
 import type { Project } from "@/content/work"
-import type { ReactNode } from "react"
+import type { CSSProperties, ReactNode } from "react"
 
 type Props = {
   project: Project
   // Explicit [width, height] box ratio for cards without a real thumbnail
   // image (bento layout on the home page). Overrides thumbnailWidth/Height.
   imageRatio?: [number, number]
+  // Overrides the box ratio below `sm` only (see --thumb-ratio-mobile in
+  // globals.css) — lets a grid of cards with different natural ratios
+  // (Discover More) line up to one shared ratio on mobile while each card
+  // keeps its own ratio at `sm` and up.
+  mobileImageRatio?: [number, number]
 }
 
 export function ArrowUpRight() {
@@ -41,7 +46,7 @@ export function Separator({ children, className = "" }: { children: ReactNode; c
   )
 }
 
-export function CaseStudyCard({ project, imageRatio }: Props) {
+export function CaseStudyCard({ project, imageRatio, mobileImageRatio }: Props) {
   const { slug, title, name, status, disciplines, bg, thumbnail, thumbnailWidth, thumbnailHeight, href } = project
 
   const isGradient = bg.startsWith("linear-gradient")
@@ -58,12 +63,17 @@ export function CaseStudyCard({ project, imageRatio }: Props) {
 
   // aspect-ratio (not a pixel height) so the box scales proportionally with
   // its fluid grid-column width instead of stretching width while height
-  // stays fixed.
+  // stays fixed. Set as CSS custom properties rather than `aspectRatio`
+  // directly so globals.css can swap in `--thumb-ratio-mobile` below `sm`
+  // when a section (Discover More) opts every card into one shared ratio.
   const thumbStyle = {
-    ...(ratio ? { aspectRatio: `${ratio[0]} / ${ratio[1]}` } : {}),
+    ...(ratio ? { "--thumb-ratio-desktop": `${ratio[0]} / ${ratio[1]}` } : {}),
+    ...(mobileImageRatio
+      ? { "--thumb-ratio-mobile": `${mobileImageRatio[0]} / ${mobileImageRatio[1]}` }
+      : {}),
     borderRadius: 16,
     ...bgStyle,
-  }
+  } as CSSProperties
 
   return (
     <article className="case-study-card">
@@ -73,12 +83,12 @@ export function CaseStudyCard({ project, imageRatio }: Props) {
         rel={isExternal ? "noopener noreferrer" : undefined}
         className="flex flex-col gap-4 sm:gap-3 rounded-[--radius-xl] outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-4"
       >
-        {/* Thumbnail — card-thumb-fixed always applies so every card is the
-            same height on mobile (below `sm`, height is fixed at 200px; at
-            `sm` and up it defers to the aspect-ratio set in thumbStyle so
-            the box scales proportionally instead of stretching). */}
+        {/* Thumbnail — aspect-ratio (set in thumbStyle) governs the box at
+            every width, mobile included, so height shrinks with width
+            instead of the box holding a fixed mobile height and letting the
+            crop vary card-to-card. */}
         <div
-          className="card-thumb card-thumb-fixed relative w-full overflow-hidden"
+          className="card-thumb relative w-full overflow-hidden"
           style={thumbStyle}
         >
           {thumbnail && isVideo && (
