@@ -8,11 +8,16 @@ type Props = {
   // Explicit [width, height] box ratio for cards without a real thumbnail
   // image (bento layout on the home page). Overrides thumbnailWidth/Height.
   imageRatio?: [number, number]
-  // Overrides the box ratio below `sm` only (see --thumb-ratio-mobile in
-  // globals.css) — lets a grid of cards with different natural ratios
-  // (Discover More) line up to one shared ratio on mobile while each card
-  // keeps its own ratio at `sm` and up.
+  // Overrides the box ratio below `mobileBreakpoint` only (see
+  // --thumb-ratio-mobile in globals.css) — lets a grid of cards with
+  // different natural ratios line up to one shared ratio on mobile while
+  // each card keeps its own ratio above that breakpoint.
   mobileImageRatio?: [number, number]
+  // Which breakpoint releases the box back to its own ratio: `sm` (640px,
+  // default — Case Studies) or `wide` (--breakpoint-discover-wide, 960px —
+  // Discover More, whose 4 columns need more room before `sm` stops being
+  // too narrow). Only meaningful alongside mobileImageRatio.
+  mobileBreakpoint?: "sm" | "wide"
 }
 
 export function ArrowUpRight() {
@@ -46,7 +51,7 @@ export function Separator({ children, className = "" }: { children: ReactNode; c
   )
 }
 
-export function CaseStudyCard({ project, imageRatio, mobileImageRatio }: Props) {
+export function CaseStudyCard({ project, imageRatio, mobileImageRatio, mobileBreakpoint = "sm" }: Props) {
   const { slug, title, name, status, disciplines, bg, thumbnail, thumbnailWidth, thumbnailHeight, href } = project
 
   const isGradient = bg.startsWith("linear-gradient")
@@ -54,6 +59,7 @@ export function CaseStudyCard({ project, imageRatio, mobileImageRatio }: Props) 
   const isVideo = thumbnail?.endsWith(".mp4") || thumbnail?.endsWith(".webm")
   const hasMetadata = name || status || (disciplines && disciplines.length > 0)
   const isExternal = Boolean(href)
+  const isWideMobile = mobileBreakpoint === "wide"
 
   // With no explicit imageRatio, size the box to the thumbnail's own aspect
   // ratio instead of forcing a uniform crop — lets Discover More's bento
@@ -88,7 +94,7 @@ export function CaseStudyCard({ project, imageRatio, mobileImageRatio }: Props) 
             instead of the box holding a fixed mobile height and letting the
             crop vary card-to-card. */}
         <div
-          className="card-thumb relative w-full overflow-hidden"
+          className={`card-thumb relative w-full overflow-hidden${isWideMobile ? " card-thumb-mobile-wide" : ""}`}
           style={thumbStyle}
         >
           {thumbnail && isVideo && (
@@ -100,7 +106,9 @@ export function CaseStudyCard({ project, imageRatio, mobileImageRatio }: Props) 
               playsInline
               className={
                 usesThumbnailRatio
-                  ? "absolute inset-0 h-full w-full object-cover sm:object-contain"
+                  ? isWideMobile
+                    ? "absolute inset-0 h-full w-full object-cover discover-wide:object-contain"
+                    : "absolute inset-0 h-full w-full object-cover sm:object-contain"
                   : "absolute inset-0 h-full w-full object-cover"
               }
             />
@@ -112,7 +120,9 @@ export function CaseStudyCard({ project, imageRatio, mobileImageRatio }: Props) 
               fill
               className={
                 usesThumbnailRatio
-                  ? "object-cover sm:object-contain"
+                  ? isWideMobile
+                    ? "object-cover discover-wide:object-contain"
+                    : "object-cover sm:object-contain"
                   : "object-cover"
               }
               sizes="(max-width: 768px) 100vw, 50vw"
