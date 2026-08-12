@@ -50,10 +50,10 @@ export function CaseStudies() {
           viewport={{ once: true, margin: "-80px" }}
         >
           <motion.div variants={fadeUp}>
-            <CaseStudyCard project={p3} imageRatio={[533, 400]} mobileImageRatio={MOBILE_RATIO} />
+            <CaseStudyCard project={p3} imageRatio={[719, 475]} mobileImageRatio={MOBILE_RATIO} />
           </motion.div>
           <motion.div variants={fadeUp}>
-            <CaseStudyCard project={p2} imageRatio={[799, 475]} mobileImageRatio={MOBILE_RATIO} />
+            <CaseStudyCard project={p2} imageRatio={[719, 475]} mobileImageRatio={MOBILE_RATIO} />
           </motion.div>
         </motion.div>
       </div>
