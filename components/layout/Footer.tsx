@@ -32,7 +32,10 @@ const PANEL_EASE: [number, number, number, number] = [0.33, 1, 0.68, 1]
 const PANEL_WIDTH = 256 // matches w-64
 const PANEL_VIEWPORT_MARGIN = 16
 
-function TimeIcon({ src }: { src: string }) {
+// Renders any single-color icon from public/icons via a mask, so it
+// inherits `currentColor` like a native SVG stroke/fill would. Shared by the
+// time-of-day icon in LiveClock and the eye icon in ViewCounter below.
+function MaskIcon({ src }: { src: string }) {
   return (
     <span
       aria-hidden="true"
@@ -52,10 +55,10 @@ function TimeIcon({ src }: { src: string }) {
 }
 
 function getTimeIcon(hour: number) {
-  if (hour >= 5  && hour < 8)  return <TimeIcon src="/icons/sun-foggy-fill.svg" /> // dawn
-  if (hour >= 8  && hour < 18) return <TimeIcon src="/icons/sun-fill.svg" />       // day
-  if (hour >= 18 && hour < 21) return <TimeIcon src="/icons/sun-foggy-fill.svg" /> // dusk
-  return <TimeIcon src="/icons/moon-clear-fill.svg" />                            // night
+  if (hour >= 5  && hour < 8)  return <MaskIcon src="/icons/sun-foggy-fill.svg" /> // dawn
+  if (hour >= 8  && hour < 18) return <MaskIcon src="/icons/sun-fill.svg" />       // day
+  if (hour >= 18 && hour < 21) return <MaskIcon src="/icons/sun-foggy-fill.svg" /> // dusk
+  return <MaskIcon src="/icons/moon-clear-fill.svg" />                            // night
 }
 
 function LiveClock() {
@@ -91,17 +94,7 @@ function LiveClock() {
 }
 
 function EyeIcon() {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true" className="h-3.5 w-3.5 shrink-0">
-      <path
-        d="M1 12s4.2-7 11-7 11 7 11 7-4.2 7-11 7-11-7-11-7z"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth={1.6}
-      />
-      <circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" strokeWidth={1.6} />
-    </svg>
-  )
+  return <MaskIcon src="/icons/eye-line.svg" />
 }
 
 // Sitewide total, persisted server-side (see app/api/views/route.ts) — the
