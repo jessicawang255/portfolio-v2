@@ -90,38 +90,58 @@ function LiveClock() {
   )
 }
 
-function HeartIcon({ filled }: { filled: boolean }) {
+function EyeIcon() {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true" className="h-3.5 w-3.5 shrink-0">
       <path
-        d="M12 20s-7.5-4.6-10-9.3C.5 7 2.2 3.6 5.6 3.1c2-.3 3.9.6 5 2.2 1.1-1.6 3-2.5 5-2.2 3.4.5 5.1 3.9 3.6 7.6C19.5 15.4 12 20 12 20z"
-        fill={filled ? "currentColor" : "none"}
+        d="M1 12s4.2-7 11-7 11 7 11 7-4.2 7-11 7-11-7-11-7z"
+        fill="none"
         stroke="currentColor"
         strokeWidth={1.6}
       />
+      <circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" strokeWidth={1.6} />
     </svg>
   )
 }
 
-// Local-only for now — not wired to a persisted count yet.
-function LikeButton() {
-  const [liked, setLiked] = useState(false)
+// Sitewide total, persisted server-side (see app/api/views/route.ts) — the
+// footer is a fixture in the root layout, so there's one count, not a
+// per-page one. Counted at most once per browser session: a fresh session
+// POSTs (increment + return new total) and flags itself in sessionStorage;
+// any later read in the same session just GETs the current total instead of
+// re-incrementing it.
+const VIEW_SESSION_FLAG = "site-view-counted"
+
+function ViewCounter() {
+  const [count, setCount] = useState<number | null>(null)
+
+  useEffect(() => {
+    let cancelled = false
+    const alreadyCounted = sessionStorage.getItem(VIEW_SESSION_FLAG) === "1"
+
+    fetch("/api/views", { method: alreadyCounted ? "GET" : "POST" })
+      .then((res) => res.json())
+      .then((data: { count: number }) => {
+        if (cancelled) return
+        setCount(data.count)
+        if (!alreadyCounted) sessionStorage.setItem(VIEW_SESSION_FLAG, "1")
+      })
+      .catch(() => {})
+
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
+  if (count === null) return null
 
   return (
-    <button
-      type="button"
-      onClick={() => setLiked((v) => !v)}
-      aria-pressed={liked}
-      // Same invisible padded hit area as FOOTER_LINK_CLASS above — this
-      // button doesn't share that constant (its color logic is stateful),
-      // so the before: classes are repeated here.
-      className={`relative inline-flex cursor-pointer items-center gap-1.5 text-base font-normal transition-colors duration-150 before:absolute before:inset-x-[-16px] before:inset-y-[-10px] before:content-[''] ${
-        liked ? "text-neutral-900" : "text-nav-link hover:text-nav-link-hover"
-      }`}
-    >
-      <HeartIcon filled={liked} />
-      <span className="font-mono text-sm tabular-nums">{liked ? 129 : 128}</span>
-    </button>
+    // Same invisible padded hit area as FOOTER_LINK_CLASS above, minus the
+    // hover/interactive styling — this isn't a button, just a stat.
+    <span className="relative inline-flex items-center gap-1.5 text-base font-normal text-nav-link before:absolute before:inset-x-[-16px] before:inset-y-[-10px] before:content-['']">
+      <EyeIcon />
+      <span className="font-mono text-sm tabular-nums">{count}</span>
+    </span>
   )
 }
 
@@ -276,7 +296,7 @@ export function Footer() {
           </ul>
         </nav>
 
-        {/* Colophon, design system teaser, like count */}
+        {/* Colophon, design system teaser, view count */}
         <div className="flex flex-col items-start gap-1 sm:items-end sm:justify-between">
           <div className="flex flex-col items-start gap-1 sm:items-end">
             <ColophonButton />
@@ -284,7 +304,7 @@ export function Footer() {
               Design system
             </Link>
           </div>
-          <LikeButton />
+          <ViewCounter />
         </div>
       </div>
     </footer>
