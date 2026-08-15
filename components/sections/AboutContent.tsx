@@ -636,15 +636,13 @@ export function AboutContent({ spotifyPlaylist }: { spotifyPlaylist: Song[] | nu
               <SectionHeader
                 label="MY JOURNEY THUS FAR"
                 action={
-                  <a
+                  <IconButton
                     href="/JessicaWang_Resume.pdf"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-sm text-neutral-400 hover:text-nav-link-hover transition-colors duration-150"
-                  >
-                    View resume
-                    <ArrowUpRight />
-                  </a>
+                    label="View resume"
+                    icon="/icons/arrow-right-up-line.svg"
+                  />
                 }
               />
             </motion.div>
