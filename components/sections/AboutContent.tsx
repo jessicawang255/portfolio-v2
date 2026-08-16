@@ -857,7 +857,7 @@ export function AboutContent({ spotifyPlaylist }: { spotifyPlaylist: Song[] | nu
             arbitrary breakpoints. Re-measure if playlist content changes
             meaningfully (was previously measured against "Play on Spotify",
             now just the icon — may tolerate a narrower threshold, unverified). */}
-        <div className="flex flex-col min-[960px]:grid min-[960px]:grid-flow-col min-[960px]:grid-rows-5 min-[960px]:gap-x-12 min-[1360px]:grid-rows-3 min-[1360px]:gap-x-16">
+        <div className="flex flex-col min-[960px]:grid min-[960px]:grid-flow-col min-[960px]:grid-cols-2 min-[960px]:grid-rows-5 min-[960px]:gap-x-12 min-[1360px]:grid-cols-3 min-[1360px]:grid-rows-3 min-[1360px]:gap-x-16">
           {playlist.map((item, index) => (
             <motion.div key={item.id} variants={fadeUp}>
               <SongRow item={item} flowerIdx={index} />
