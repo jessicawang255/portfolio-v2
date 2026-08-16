@@ -183,7 +183,7 @@ export function CaseStudyLayout({ project, children, heroBackground, heroAspectR
                 afford to give a little more of that space to the column too,
                 rather than sitting at the same width the roomier desktop
                 tier uses. */}
-            <div className="relative max-w-full sm:ml-[16rem] sm:max-w-[calc(100%-16rem)] cs-toc:mx-auto cs-toc:max-w-[min(100rem,calc(100%-35rem))]">
+            <div className="relative max-w-full sm:ml-[16rem] sm:max-w-[calc(100%-16rem)] cs-toc:mx-auto cs-toc:max-w-[min(120rem,calc(100%-35rem))]">
               <aside className="absolute top-0 h-full w-60 left-[-17.5rem] sm:left-[-16rem] cs-toc:left-[-17.5rem]">
                 <div className="sticky top-0 pt-9 pb-16">
                   <Link
@@ -197,7 +197,7 @@ export function CaseStudyLayout({ project, children, heroBackground, heroAspectR
                 </div>
               </aside>
 
-              {/* max-w-[100rem] above caps the content column — tune it freely, it never affects the TOC's own w-60 */}
+              {/* max-w-[120rem] above caps the content column — tune it freely, it never affects the TOC's own w-60 */}
               <div className="cs-header-content pt-9 pb-16">
                 <p className="font-mono text-sm uppercase leading-[1.2] text-neutral-400 mb-4.5">{name}</p>
                 <h1 className="text-4xl font-medium text-primary leading-[1.2] w-full">

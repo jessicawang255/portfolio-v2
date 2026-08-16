@@ -201,22 +201,22 @@ body {
 /* Frames (#main-frame, the fixed nav/footer bars, hero shells) always
    stretch edge-to-edge — these two utilities are what every frame uses to
    hold its actual content, so capping + centering here is enough to cover
-   all of them without touching each one individually. 100rem (1600px)
+   all of them without touching each one individually. 120rem (1920px)
    reuses the same cap CaseStudyLayout already puts on its own content
-   column (see its cs-toc:max-w-[min(100rem,...)] div) so very wide screens
+   column (see its cs-toc:max-w-[min(120rem,...)] div) so very wide screens
    read as one consistent width sitewide instead of each section picking
    its own. Below that width margin-inline:auto is a no-op, so nothing
    changes until a screen is actually wide enough to need it. */
 @utility container-main {
   width: 100%;
-  max-width: 100rem;
+  max-width: 120rem;
   margin-inline: auto;
   padding-inline: 20px;
 }
 
 @utility container-chrome {
   width: 100%;
-  max-width: 100rem;
+  max-width: 120rem;
   margin-inline: auto;
   padding-inline: 20px;
 }
