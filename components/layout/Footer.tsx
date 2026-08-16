@@ -1,10 +1,12 @@
 "use client"
 
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
 import { createPortal } from "react-dom"
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion"
 import { TertiaryLink } from "@/components/ui/TertiaryLink"
+import { samePageReload } from "@/lib/samePageNav"
 
 const navLinks: { label: string; href: string; target?: string }[] = [
   { label: "Work",   href: "/" },
@@ -314,6 +316,8 @@ function ColophonButton() {
 // ScrollRevealController, which animates that peel and reserves body
 // padding-bottom for it at the desktop breakpoint).
 export function Footer() {
+  const pathname = usePathname()
+
   return (
     <footer id="site-footer" className="static sm:fixed sm:inset-x-0 sm:bottom-0 sm:z-0 bg-chrome">
       {/* First three columns hug their own content (`max-content`) instead
@@ -329,6 +333,7 @@ export function Footer() {
         <div className="flex flex-col gap-1">
           <Link
             href="/"
+            onClick={samePageReload(pathname, "/")}
             className="relative w-fit text-[18px] font-medium text-neutral-900 hover:text-nav-link-hover transition-colors duration-150 before:absolute before:inset-x-[-16px] before:inset-y-[-10px] before:content-['']"
           >
             Jessica Wang
@@ -345,6 +350,7 @@ export function Footer() {
                   href={href}
                   target={target}
                   rel={target === "_blank" ? "noopener noreferrer" : undefined}
+                  onClick={samePageReload(pathname, href)}
                   className={FOOTER_LINK_CLASS}
                 >
                   {label}

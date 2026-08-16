@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { samePageReload } from "@/lib/samePageNav"
 
 const links: { label: string; href: string; target?: string }[] = [
   { label: "Work",   href: "/" },
@@ -31,6 +32,7 @@ export function Nav() {
       >
         <Link
           href="/"
+          onClick={samePageReload(pathname, "/")}
           className="text-base font-normal text-nav-link hover:text-nav-link-hover transition-colors duration-150"
         >
           Jessica Wang
@@ -43,6 +45,7 @@ export function Nav() {
                 href={href}
                 target={target}
                 rel={target === "_blank" ? "noopener noreferrer" : undefined}
+                onClick={samePageReload(pathname, href)}
                 className={`text-base font-normal transition-colors duration-150 hover:text-nav-link-hover ${
                   isActive(pathname, href) ? "text-neutral-900" : "text-nav-link"
                 }`}
