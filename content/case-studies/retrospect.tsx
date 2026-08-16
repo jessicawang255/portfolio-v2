@@ -67,15 +67,15 @@ export default function Retrospect() {
 
                 <TwoColumn
                     left={
-                        <h2 className="text-xl font-medium text-neutral-800 leading-[1.2]">1. People want apps that help them connect with friends in a real and relaxed way.</h2>
+                        <h2 className="text-balance text-xl font-medium text-neutral-800 leading-[1.2]">1. People want apps that help them connect with friends in a real and relaxed way.</h2>
                         
                     }
                     right={
-                        <h2 className="text-xl font-medium text-neutral-800 leading-[1.2]">2. Sharing is central to how users engage with niche social apps.</h2>
+                        <h2 className="text-balance text-xl font-medium text-neutral-800 leading-[1.2]">2. Sharing is central to how users engage with niche social apps.</h2>
                     }
                 />
 
-                <h2 className="text-xl font-medium text-neutral-800 leading-[1.2]">From these learnings, my team set on creating a digital time capsule that lets users create personalized and shared memories to open in the future.</h2>
+                <h2 className="text-balance text-xl font-medium text-neutral-800 leading-[1.2]">From these learnings, my team set on creating a digital time capsule that lets users create personalized and shared memories to open in the future.</h2>
 
             </Section>
 
@@ -93,7 +93,7 @@ export default function Retrospect() {
                     height={1705}
                     caption="Existing competitors"
                 />
-                <h2 className="text-xl font-medium text-neutral-800 leading-[1.2]">With our app concept and research locked in, I jumped into designing the experience.</h2>
+                <h2 className="text-balance text-xl font-medium text-neutral-800 leading-[1.2]">With our app concept and research locked in, I jumped into designing the experience.</h2>
             </Section>
 
             <Section
@@ -149,7 +149,7 @@ export default function Retrospect() {
                     height={904}
                     caption="Consolidated capsule creation flow, with carousels"
                 />
-                <h2 className="text-xl font-medium text-neutral-800 leading-[1.2]">I made one exception to the carousel layout for the song media type.</h2>
+                <h2 className="text-balance text-xl font-medium text-neutral-800 leading-[1.2]">I made one exception to the carousel layout for the song media type.</h2>
                 <p className="text-base text-neutral-500 leading-normal">
                     During user testing, participants said that while the carousel worked well for other media, it didn’t capture the overall "feeling" of a group of songs together. They wanted to see multiple tracks together, similar to how playlists feel. Based on this insight, I used a list view for songs instead of the carousel.
                 </p>

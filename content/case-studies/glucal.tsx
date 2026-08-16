@@ -12,10 +12,10 @@ export default function Glucal() {
               <span className="w-1.5 h-1.5 rounded-full bg-[var(--cs-accent)] shrink-0" aria-hidden="true" />
               <p className="text-sm font-mono uppercase leading-[1.2] text-neutral-400">The Problem</p>
             </div>
-            <h1 className="text-2xl font-normal leading-[1.2] text-primary mt-3">
+            <h1 className="text-balance text-2xl font-normal leading-[1.2] text-primary mt-3">
               75 million people worldwide inject insulin daily.
             </h1>
-            <p className="text-base leading-normal text-neutral-500 mt-[18px]">
+            <p className="text-balance text-base leading-normal text-neutral-500 mt-[18px]">
               This involves counting carbohydrates and calculating personalized doses, every time they eat. 5+ times a day. Every. Single. Day.
             </p>
           </div>
@@ -32,10 +32,10 @@ export default function Glucal() {
         </div>
 
         <div className="mt-9 w-full">
-          <h1 className="text-2xl font-normal leading-[1.2] text-primary mt-3">
+          <h1 className="text-balance text-2xl font-normal leading-[1.2] text-primary mt-3">
             Despite being a daily task, there&rsquo;s no straightforward tool that simplifies insulin calculation elegantly.
           </h1>
-          <p className="text-base leading-normal text-neutral-500 mt-[18px]">
+          <p className="text-balance text-base leading-normal text-neutral-500 mt-[18px]">
             The process is <strong className="text-[var(--cs-accent)] font-semibold">tedious</strong>, <strong className="text-[var(--cs-accent)] font-semibold">monotonous</strong>, and <strong className="text-[var(--cs-accent)] font-semibold">complicated</strong>. No one wants to do math before each meal! Existing tools are either frustrating to use, or don&rsquo;t address the specific need.
           </p>
           <div className="flex flex-col gap-9 mt-9 w-full">

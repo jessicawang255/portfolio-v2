@@ -27,7 +27,7 @@ export function Hero() {
       >
         <motion.h1
           variants={fadeUp}
-          className="mb-3 font-medium text-neutral-900 text-2xl"
+          className="mb-3 text-balance font-medium text-neutral-900 text-2xl"
         >
           Hi, I&rsquo;m Jessica.
         </motion.h1>

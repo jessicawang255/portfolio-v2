@@ -67,10 +67,10 @@ export async function MoreCaseStudies({ currentSlug }: Props) {
                 </div>
 
                 <div className="min-w-0">
-                  <h3 className="text-base font-medium leading-[1.4] text-neutral-800">
+                  <h3 className="text-balance text-base font-medium leading-[1.4] text-neutral-800">
                     {title}
                   </h3>
-                  <p className="mt-1 font-mono text-sm text-neutral-300">
+                  <p className="mt-1 text-balance font-mono text-sm text-neutral-300">
                     {name}
                     {name && status && <Separator className="mx-1.5">•</Separator>}
                     {status}

@@ -491,8 +491,8 @@ function JourneyRow({
       className="-mx-3 flex items-center justify-between gap-6 border-x border-x-transparent border-y border-y-transparent px-3 py-3 transition-colors duration-100 lg:hover:cursor-help lg:hover:border-y-neutral-900/3 lg:hover:bg-neutral-75 lg:hover:duration-0"
     >
       <div>
-        <p className="text-base font-medium text-neutral-900">{item.company}</p>
-        <p className="text-base text-neutral-500">{item.role}</p>
+        <p className="text-balance text-base font-medium text-neutral-900">{item.company}</p>
+        <p className="text-balance text-base text-neutral-500">{item.role}</p>
       </div>
       <span className="shrink-0 font-mono text-sm uppercase text-neutral-400">{item.period}</span>
     </div>
@@ -520,8 +520,8 @@ function CommunityRow({
           style={{ backgroundImage: `url(${item.logo})` }}
         />
         <div>
-          <p className="text-base font-medium text-neutral-900">{item.name}</p>
-          <p className="text-base text-neutral-500">{item.description}</p>
+          <p className="text-balance text-base font-medium text-neutral-900">{item.name}</p>
+          <p className="text-balance text-base text-neutral-500">{item.description}</p>
         </div>
       </div>
       <IconButton
@@ -579,8 +579,8 @@ function SongRow({ item, flowerIdx }: { item: Song; flowerIdx: number }) {
       <div className="flex items-center gap-6">
         <SongArt flowerIdx={flowerIdx} isHovered={isHovered} />
         <div>
-          <p className="text-base font-medium text-neutral-900">{item.title}</p>
-          <p className="text-base text-neutral-500">{item.artist}</p>
+          <p className="text-balance text-base font-medium text-neutral-900">{item.title}</p>
+          <p className="text-balance text-base text-neutral-500">{item.artist}</p>
         </div>
       </div>
       {/* Hidden below the single-column breakpoint: reserving its width there
