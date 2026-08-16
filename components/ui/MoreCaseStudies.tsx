@@ -2,7 +2,7 @@ import Link from "next/link"
 import Image from "next/image"
 import type { StaticImageData } from "next/image"
 import { projects } from "@/content/work"
-import { ArrowUpRight, Separator } from "@/components/ui/CaseStudyCard"
+import { Separator } from "@/components/ui/CaseStudyCard"
 
 type Props = {
   currentSlug: string
@@ -78,12 +78,26 @@ export async function MoreCaseStudies({ currentSlug }: Props) {
                 </div>
               </div>
 
+              {/* Same icon sizing as IconButton (24) but with no hover
+                  interaction of its own — rendered as a plain span, not a
+                  nested IconButton <a>, since the whole row above is
+                  already a Link (nested <a> tags are invalid HTML). Reveals
+                  with the row's existing group-hover opacity fade. */}
               <span
-                className="hidden shrink-0 items-center leading-none text-neutral-400 opacity-0 transition-opacity duration-150 group-hover:opacity-100 sm:flex"
+                className="hidden shrink-0 items-center leading-none text-neutral-200 opacity-0 transition-opacity duration-150 group-hover:opacity-100 sm:flex"
                 aria-hidden="true"
-              >
-                <ArrowUpRight />
-              </span>
+                style={{
+                  width: 24,
+                  height: 24,
+                  WebkitMaskImage: "url(/icons/arrow-right-up-line.svg)",
+                  maskImage: "url(/icons/arrow-right-up-line.svg)",
+                  WebkitMaskSize: "contain",
+                  maskSize: "contain",
+                  WebkitMaskRepeat: "no-repeat",
+                  maskRepeat: "no-repeat",
+                  backgroundColor: "currentColor",
+                }}
+              />
             </Link>
           )
         })}

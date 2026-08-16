@@ -25,7 +25,7 @@ const COPIED_RESET_MS = 1600
 // label tooltip that fades in after a beat of sustained hover and drops
 // out instantly on mouse-leave (group-hover:delay-400 has no matching
 // delay on the base rule, so leaving skips straight to the fast fade-out).
-export function IconButton({ href, label, icon, size = 22, className, copyText, onClick, ...rest }: Props) {
+export function IconButton({ href, label, icon, size = 24, className, copyText, onClick, ...rest }: Props) {
   const external = href.startsWith("http")
   const resolvedLabel = label ?? getIconTooltip(icon, href)
   const [copied, setCopied] = useState(false)

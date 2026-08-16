@@ -33,8 +33,8 @@ export function ArrowUpRight() {
         verticalAlign: "middle",
         position: "relative",
         top: 2,
-        width: 16,
-        height: 16,
+        width: 24,
+        height: 24,
         WebkitMaskImage: "url(/icons/arrow-right-up-line.svg)",
         maskImage: "url(/icons/arrow-right-up-line.svg)",
         WebkitMaskSize: "contain",
@@ -143,7 +143,7 @@ export function CaseStudyCard({ project, imageRatio, mobileImageRatio, mobileBre
             </h3>
             {/* Hover-reveal arrow — desktop only (see `hover: hover` gate in
                 globals.css); dropped on mobile since there's no hover to reveal it. */}
-            <span className="card-arrow hidden shrink-0 leading-none text-neutral-400 sm:inline" aria-hidden="true">
+            <span className="card-arrow hidden shrink-0 leading-none text-neutral-200 sm:inline" aria-hidden="true">
               <ArrowUpRight />
             </span>
           </div>

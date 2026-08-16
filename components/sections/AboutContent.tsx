@@ -301,19 +301,21 @@ const FALLBACK_PLAYLIST: Song[] = [
   { id: "song-dustcutter-2",     title: "DUSTCUTTER",        artist: "Quadeca",               art: "", href: "#" },
 ]
 
-function ArrowUpRight() {
+// Identifies the destination platform (like CommunityRow's per-item icon)
+// rather than a generic "leaves the site" arrow — SongRow always links out
+// to Spotify, so the icon itself carries that information now that the
+// "Play on Spotify" label is gone.
+function SpotifyIcon() {
   return (
     <span
       aria-hidden="true"
       style={{
         display: "inline-block",
         verticalAlign: "middle",
-        position: "relative",
-        top: 2,
-        width: 16,
-        height: 16,
-        WebkitMaskImage: "url(/icons/arrow-right-up-line.svg)",
-        maskImage: "url(/icons/arrow-right-up-line.svg)",
+        width: 24,
+        height: 24,
+        WebkitMaskImage: "url(/icons/spotify.svg)",
+        maskImage: "url(/icons/spotify.svg)",
         WebkitMaskSize: "contain",
         maskSize: "contain",
         WebkitMaskRepeat: "no-repeat",
@@ -524,7 +526,6 @@ function CommunityRow({
       <IconButton
         href={item.href}
         icon={item.icon}
-        size={24}
         className="shrink-0"
       />
     </div>
@@ -583,10 +584,31 @@ function SongRow({ item, flowerIdx }: { item: Song; flowerIdx: number }) {
       </div>
       {/* Hidden below the single-column breakpoint: reserving its width there
           would force the title to wrap, and touch/mobile has no hover to
-          reveal it anyway. */}
-      <span className="hidden shrink-0 items-center gap-1 whitespace-nowrap text-sm text-neutral-400 opacity-0 transition-opacity duration-150 min-[960px]:flex group-hover:opacity-100">
-        Play on Spotify
-        <ArrowUpRight />
+          reveal it anyway. Icon-only (no "Play on Spotify" label) — the
+          Spotify mark itself carries that information, same as CommunityRow's
+          per-item platform icons (Instagram/website) rather than a generic
+          external-link arrow. */}
+      <span className="hidden shrink-0 items-center text-neutral-200 opacity-0 transition-opacity duration-150 min-[960px]:flex group-hover:opacity-100">
+        {/* group/icon is scoped to just this icon (not the row's own
+            `group`), so the tint/scale/tick and tooltip below only react to
+            a hover precise enough to land on the 24px mark itself — same
+            split, and the same hover treatment, as IconButton (hand-matched
+            rather than nesting a real IconButton <a> inside this row's own
+            <a>, which would be invalid HTML). */}
+        <span
+          className="group/icon relative inline-flex transition-[color,scale] duration-150 before:absolute before:inset-[-11px] before:content-[''] hover:scale-110 hover:text-nav-link-hover motion-safe:hover:animate-[icon-tick_var(--duration-slow)_var(--ease-out)]"
+          aria-hidden="true"
+        >
+          <SpotifyIcon />
+          <span
+            className="pointer-events-none absolute bottom-full left-1/2 mb-1 hidden origin-bottom
+            -translate-x-1/2 scale-90 whitespace-nowrap rounded-[var(--radius-sm)] bg-neutral-900/90
+            px-1.5 py-0.5 text-xs text-neutral-50 opacity-0 transition-[opacity,scale] duration-[var(--duration-slow)]
+            ease-[var(--ease-out)] group-hover/icon:scale-100 group-hover/icon:opacity-100 group-hover/icon:delay-400 sm:block"
+          >
+            Spotify
+          </span>
+        </span>
       </span>
     </a>
   )
@@ -803,9 +825,11 @@ export function AboutContent({ spotifyPlaylist }: { spotifyPlaylist: Song[] | nu
           </p>
         </motion.div>
         {/* Column count steps down (3 → 2 → 1) before a row is narrow enough
-            to force "Title" and "Play on Spotify" into conflict — thresholds
-            are measured against the longest current title, not arbitrary
-            breakpoints. Re-measure if playlist content changes meaningfully. */}
+            to force the title into conflict with the trailing icon —
+            thresholds are measured against the longest current title, not
+            arbitrary breakpoints. Re-measure if playlist content changes
+            meaningfully (was previously measured against "Play on Spotify",
+            now just the icon — may tolerate a narrower threshold, unverified). */}
         <div className="flex flex-col min-[960px]:grid min-[960px]:grid-flow-col min-[960px]:grid-rows-5 min-[960px]:gap-x-12 min-[1360px]:grid-rows-3 min-[1360px]:gap-x-16">
           {playlist.map((item, index) => (
             <motion.div key={item.id} variants={fadeUp}>
