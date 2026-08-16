@@ -61,7 +61,7 @@ function TocLink({
         onNavigate(id)
       }}
       className={`text-base transition-colors duration-150 ${
-        isActive ? "text-neutral-700" : "font-normal text-subtle hover:text-muted"
+        isActive ? "text-primary" : "font-normal text-neutral-400 hover:text-neutral-600"
       }`}
     >
       {title}

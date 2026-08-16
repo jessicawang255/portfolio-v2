@@ -2,6 +2,7 @@ import { Section } from "@/components/cs/Section"
 import { Callout } from "@/components/cs/Callout"
 import { TwoColumn } from "@/components/cs/TwoColumn"
 import { ImageBlock } from "@/components/cs/ImageBlock"
+import { IterationCarousel } from "@/components/cs/IterationCarousel"
 import { Outcomes } from "@/components/cs/Outcomes"
 
 export default function HackWestern() {
@@ -60,7 +61,7 @@ export default function HackWestern() {
         />
 
         <Callout
-          label="We landed on..."
+          label="Solution"
           heading="Hack Western 12: The world is your canvas."
         />
       </Section>
@@ -88,19 +89,23 @@ export default function HackWestern() {
         headline="I simplified the application flow from past years and mapped out where to add each of the new delight features."
         body="In previous years, technical constraints required an extra &ldquo;application dashboard&rdquo; page between logging in and filling out the form. With those limitations removed, users could now go straight from signing in to their application, returning directly where they left off."
       >
-        <ImageBlock
-          src="/images/case-studies/hack-western/hw-ideation-2.png"
-          alt="Initial application user flow with an annotation to remove the redundant applicant dashboard step after login"
-          width={2400}
-          height={1001}
-          caption="Initial Application Flow"
-        />
-        <ImageBlock
-          src="/images/case-studies/hack-western/hw-ideation-3.png"
-          alt="Revised user flow adding an avatar creation step and a draw-something step, plus an edit-and-share-stickers step after submission"
-          width={2400}
-          height={769}
-          caption="Revamped Application Flow"
+        <IterationCarousel
+            items={[
+                {
+                    src: "/images/case-studies/hack-western/hw-ideation-2.png",
+                    alt: "Initial application user flow with an annotation to remove the redundant applicant dashboard step after login",
+                    width: 2400,
+                    height: 1001,
+                    caption: "Initial Application Flow",
+                },
+                {
+                    src: "/images/case-studies/hack-western/hw-ideation-3.png",
+                    alt: "Revised user flow adding an avatar creation step and a draw-something step, plus an edit-and-share-stickers step after submission",
+                    width: 2400,
+                    height: 769,
+                    caption: "Revamped Application Flow",
+                },
+            ]}
         />
       </Section>
 
@@ -118,10 +123,19 @@ export default function HackWestern() {
           caption="Wireframe Explorations"
         />
         <p className="text-base text-neutral-600">I decided on a side panel, with the stickers stacked at the back for a few key reasons:</p>
-        <ol className="text-base text-neutral-600">
+
+          <Callout
+            label="Reflecting Figma's interface"
+            heading="The side panel navigation mirrors Figma’s user interface, aligning with our infinite canvas theme and keeping navigation familiar."
+          />
+          <Callout
+            label="Reducing visual clutter"
+            heading="With side panel navigation, a fixed sticker book made the layout feel cramped, while scattered stickers better reinforced the sense of openness and creativity."
+          />
+          
           <li><b className="font-semibold">1. Reflecting Figma's interface</b> - The side panel navigation mirrors Figma’s user interface, aligning with our infinite canvas theme and keeping navigation familiar.</li>
           <li><b className="font-semibold">2. Reducing visual clutter</b> - With side panel navigation, a fixed sticker book made the layout feel cramped, while scattered stickers better reinforced the sense of openness and creativity.</li>
-        </ol>
+
       </Section>
 
       <Section
@@ -156,7 +170,7 @@ export default function HackWestern() {
         <TwoColumn
           left={
             <Callout
-              label="Key Discovery"
+              label="Discovery"
               heading="During prototype testing, users often missed the sticker drawer since the generic button gave little reason to click it."
               body="To make it more discoverable and fun, we set the drawer icon to display the last sticker a user earned."
             />

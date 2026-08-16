@@ -7,11 +7,14 @@ type CalloutProps = {
 
 export function Callout({ label, heading, body, children }: CalloutProps) {
   return (
-    <div className="border-l-2 border-[var(--cs-accent)] pl-6 h-fit">
-      <p className="text-base text-[var(--cs-accent)]">{label}</p>
-      <h2 className="text-balance text-xl font-normal text-neutral-800 mt-3 leading-[1.2]">{heading}</h2>
+    <div className="h-fit rounded-[8px] bg-[var(--cs-accent)]/6 px-6 py-5">
+      <h2 className="text-balance text-xl font-medium text-neutral-800 leading-[1.4]">
+        <span className="text-sm font-mono font-normal uppercase text-[var(--cs-accent)]">{label}</span>
+        <span className="mx-2 text-[var(--cs-accent)]">·</span>
+        {heading}
+      </h2>
       {body && (
-        <p className="text-balance text-base text-neutral-600 leading-normal mt-1.5">{body}</p>
+        <p className="text-balance text-base text-neutral-600 leading-normal mt-2">{body}</p>
       )}
       {children && <div className="mt-3">{children}</div>}
     </div>

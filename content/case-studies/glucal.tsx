@@ -12,7 +12,7 @@ export default function Glucal() {
               <span className="w-1.5 h-1.5 rounded-full bg-[var(--cs-accent)] shrink-0" aria-hidden="true" />
               <p className="text-sm font-mono uppercase leading-[1.2] text-neutral-400">The Problem</p>
             </div>
-            <h1 className="text-balance text-3xl font-normal leading-[1.2] text-primary mt-4">
+            <h1 className="text-balance text-3xl font-medium leading-[1.2] text-primary mt-4">
               75 million people worldwide inject insulin daily.
             </h1>
             <p className="text-balance text-base leading-normal text-neutral-600 mt-7">
@@ -32,7 +32,7 @@ export default function Glucal() {
         </div>
 
         <div className="mt-9 w-full">
-          <h1 className="text-balance text-3xl font-normal leading-[1.2] text-primary mt-4">
+          <h1 className="text-balance text-3xl font-medium leading-[1.2] text-primary mt-4">
             Despite being a daily task, there&rsquo;s no straightforward tool that simplifies insulin calculation elegantly.
           </h1>
           <p className="text-balance text-base leading-normal text-neutral-600 mt-7">
@@ -74,7 +74,7 @@ export default function Glucal() {
         />
 
         <Callout
-          label="From this information, I asked:"
+          label="Question"
           heading="How might we make calculating insulin doses easier and less frustrating for people with diabetes?"
         />
 
@@ -94,7 +94,7 @@ export default function Glucal() {
         />
 
         <Callout
-          label="Key finding"
+          label="Finding"
           heading="Existing diabetes tools fall short for users seeking a simple, focused solution, without the complexity of broader management systems."
         />
       </Section>

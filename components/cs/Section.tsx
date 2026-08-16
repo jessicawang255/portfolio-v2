@@ -25,7 +25,7 @@ export function Section({ tag, headline, body, primary = false, id, children }: 
         <p className="text-balance text-base leading-normal text-neutral-600 mt-7">{body}</p>
       )}
       {children && (
-        <div className="flex flex-col gap-9 mt-12 w-full">
+        <div className="flex flex-col gap-9 mt-9 w-full">
           {children}
         </div>
       )}

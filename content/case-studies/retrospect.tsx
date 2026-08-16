@@ -76,8 +76,6 @@ export default function Retrospect() {
                     }
                 />
 
-                <h2 className="text-balance text-xl font-medium text-neutral-800 leading-[1.2]">From these learnings, my team set on creating a digital time capsule that lets users create personalized and shared memories to open in the future.</h2>
-
             </Section>
 
             <Section

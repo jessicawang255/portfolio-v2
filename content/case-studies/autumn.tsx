@@ -44,7 +44,7 @@ export default function Autumn() {
         />
 
         <Callout
-          label="This understanding led us to ask:"
+          label="Question"
           heading="How might we create meaningful connections with users beyond our core service?"
         />
       </Section>
@@ -52,7 +52,7 @@ export default function Autumn() {
       <Section
         id="understanding-the-market"
         tag="Understanding the Market"
-        headline="Let’s take a look at what others are doing to tackle this challenge."
+        headline="Successful low-frequency marketplaces create auxiliary content/tools that provide value outside their core product."
         primary
       >
         <ImageBlock
@@ -62,10 +62,6 @@ export default function Autumn() {
           height={986}
         />
 
-        <Callout
-          label="Key finding:"
-          heading="Successful low-frequency marketplaces create auxiliary content/tools that provide value outside their core product."
-        />
       </Section>
 
       <Section
