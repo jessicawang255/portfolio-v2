@@ -249,7 +249,12 @@ export function Footer() {
       <div className="container-chrome grid grid-cols-1 gap-8 pt-9 pb-12 sm:grid-cols-4">
         {/* Name + clock */}
         <div className="flex flex-col gap-1">
-          <span className="text-[18px] font-medium text-neutral-900">Jessica Wang</span>
+          <Link
+            href="/"
+            className="relative w-fit text-[18px] font-medium text-neutral-900 hover:text-nav-link-hover transition-colors duration-150 before:absolute before:inset-x-[-16px] before:inset-y-[-10px] before:content-['']"
+          >
+            Jessica Wang
+          </Link>
           <LiveClock />
         </div>
 
