@@ -6,6 +6,7 @@ import { Nav } from "@/components/layout/Nav"
 import { MobileNav } from "@/components/layout/MobileNav"
 import { Footer } from "@/components/layout/Footer"
 import { ScrollRevealController } from "@/components/layout/ScrollRevealController"
+import { ScrollToTop } from "@/components/layout/ScrollToTop"
 import "./globals.css"
 
 const robotoMono = Roboto_Mono({
@@ -34,6 +35,7 @@ export default function RootLayout({
         <Footer />
         <MobileNav />
         <ScrollRevealController frameId="main-frame" heroId="hero-content" heroFrameId="hero-content" />
+        <ScrollToTop />
       </body>
     </html>
   )
