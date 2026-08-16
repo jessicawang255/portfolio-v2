@@ -2,6 +2,7 @@ import { Section } from "@/components/cs/Section"
 import { Callout } from "@/components/cs/Callout"
 import { TwoColumn } from "@/components/cs/TwoColumn"
 import { ImageBlock } from "@/components/cs/ImageBlock"
+import { IterationCarousel } from "@/components/cs/IterationCarousel"
 import { h2 } from "framer-motion/client"
 
 export default function Retrospect() {
@@ -169,19 +170,23 @@ export default function Retrospect() {
                 headline="When exploring how collaboration should work for a shared time capsule, I identified two main user flow variations."
                 body="While both flows follow the same general process of adding items and sealing the capsule, they differ in who controls the final capsule sealing — either each contributor individually, or the owner on behalf of everyone. This distinction affects how ownership and coordination are experienced by collaborators."
                 >
-                <ImageBlock
-                    src="/images/case-studies/retrospect/retrospect-flows-7.png"
-                    alt="Collaboration flow where each contributor individually seals the capsule after adding their items"
-                    width={2400}
-                    height={1897}
-                    caption="Everyone individually seals the capsule when they're done adding items"
-                />
-                <ImageBlock
-                    src="/images/case-studies/retrospect/retrospect-flows-8.png"
-                    alt="Collaboration flow where the owner waits for all collaborators to finish before sealing the capsule for everyone"
-                    width={2400}
-                    height={1969}
-                    caption="A shared screen shows everyone’s status, and the owner seals the capsule once all items are added."
+                <IterationCarousel
+                    items={[
+                        {
+                            src: "/images/case-studies/retrospect/retrospect-flows-7.png",
+                            alt: "Collaboration flow where each contributor individually seals the capsule after adding their items",
+                            width: 2400,
+                            height: 1897,
+                            caption: "Everyone individually seals the capsule when they're done adding items",
+                        },
+                        {
+                            src: "/images/case-studies/retrospect/retrospect-flows-8.png",
+                            alt: "Collaboration flow where the owner waits for all collaborators to finish before sealing the capsule for everyone",
+                            width: 2400,
+                            height: 1969,
+                            caption: "A shared screen shows everyone’s status, and the owner seals the capsule once all items are added.",
+                        },
+                    ]}
                 />
                 {/* NEED NEW COMPONENT FOR TABS HERE - REDESIGN */}
                 {/* and add more stuff here */}
