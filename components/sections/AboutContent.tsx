@@ -382,9 +382,10 @@ function AboutPanelImage({ caption, aspect, width, src, alt, objectPosition }: P
   )
 }
 
-// Shown in the sticky panel whenever the "fun" section is in the viewport —
-// unlike journey/communities, "fun" has no hoverable rows, so this content
-// isn't hover-triggered. Custom layout (shared caption spanning the first
+// Shown in the sticky panel while the "fun" section's content is hovered —
+// same hover-triggered behavior as journey/communities, just keyed off the
+// whole content block instead of individual rows (see the onMouseEnter wired
+// up where this is used). Custom layout (shared caption spanning the first
 // pair of photos) doesn't fit the generic masonry PanelContentView renders,
 // so it's hand-built here instead of going through panelContent.
 function FunPanelContent() {
@@ -638,7 +639,12 @@ export function AboutContent({ spotifyPlaylist }: { spotifyPlaylist: Song[] | nu
 
   const displayId = hoveredId ?? activeId
   const panelText = "Hover on an item to learn more…"
-  const isFun = displayId === "fun"
+  // Unlike journey/communities, "fun" has no hoverable rows to key off of —
+  // the whole section's content div is the hover target (wired below) — so
+  // this checks hoveredId directly rather than falling back to activeId.
+  // Falling back would make the fun panel appear just from scrolling the
+  // section into view, same as the old (undesired) behavior.
+  const isFun = hoveredId === "fun"
   const panelEntry = displayId ? panelContent[displayId] : undefined
   const panelKey = isFun ? "entry-fun" : panelEntry ? `entry-${displayId}` : `text-${panelText}`
 
@@ -714,7 +720,11 @@ export function AboutContent({ spotifyPlaylist }: { spotifyPlaylist: Song[] | nu
             <motion.div variants={fadeUp}>
               <SectionHeader label="WHAT I DO FOR FUN" />
             </motion.div>
-            <div className="flex flex-col gap-8 text-base leading-relaxed text-neutral-900">
+            <div
+              onMouseEnter={() => setHoveredId("fun")}
+              onMouseLeave={() => setHoveredId(null)}
+              className="flex flex-col gap-8 text-base leading-relaxed text-neutral-900 lg:hover:cursor-help"
+            >
               <motion.p variants={fadeUp}>
                 I love making music. I sing and produce my own songs (jossici on
                 all platforms), and I&rsquo;m on a{" "}
