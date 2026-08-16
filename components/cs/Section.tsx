@@ -18,11 +18,11 @@ export function Section({ tag, headline, body, primary = false, id, children }: 
         )}
         <p className="text-sm font-mono uppercase leading-[1.2] text-neutral-400">{tag}</p>
       </div>
-      <h1 className="text-balance text-3xl font-normal leading-[1.2] text-primary mt-8">
+      <h1 className="text-balance text-3xl font-medium leading-[1.2] text-primary mt-4">
         {headline}
       </h1>
       {body && (
-        <p className="text-balance text-base leading-normal text-neutral-500 mt-7">{body}</p>
+        <p className="text-balance text-base leading-normal text-neutral-600 mt-7">{body}</p>
       )}
       {children && (
         <div className="flex flex-col gap-9 mt-12 w-full">

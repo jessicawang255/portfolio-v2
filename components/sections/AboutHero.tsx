@@ -187,7 +187,7 @@ export function AboutHero() {
         <div className="flex w-full flex-col about-photos:max-w-[800px]">
           <motion.h1
             variants={fadeUp}
-            className="mb-3 text-balance text-2xl font-medium text-neutral-900"
+            className="mb-3 text-balance text-3xl font-medium text-neutral-900"
           >
             Let&rsquo;s get acquainted!
           </motion.h1>

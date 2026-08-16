@@ -37,7 +37,7 @@ export default function Retrospect() {
                     height={756}
                 />
 
-                <p className="text-base text-neutral-500 leading-normal">
+                <p className="text-base text-neutral-600 leading-normal">
                     With Retrospect, my team and I wanted to focus on two trends inspired by these existing apps:
                 </p>
 
@@ -62,7 +62,7 @@ export default function Retrospect() {
                     caption="App Store reviews for Lapse, BeReal, and Locket"
                 />
 
-                <p className="text-base text-neutral-500 leading-normal">
+                <p className="text-base text-neutral-600 leading-normal">
                     The team's research revealed two key findings about trends in the consumer app space:
                 </p>
 
@@ -133,7 +133,7 @@ export default function Retrospect() {
                     height={1059}
                     caption="Initial capsule creation flow and screens"
                 />
-                <p className="text-base text-neutral-500 leading-normal">
+                <p className="text-base text-neutral-600 leading-normal">
                     I recieved two main pieces of feedback from testers:
                 </p>
 
@@ -151,7 +151,7 @@ export default function Retrospect() {
                     caption="Consolidated capsule creation flow, with carousels"
                 />
                 <h2 className="text-balance text-xl font-medium text-neutral-800 leading-[1.2]">I made one exception to the carousel layout for the song media type.</h2>
-                <p className="text-base text-neutral-500 leading-normal">
+                <p className="text-base text-neutral-600 leading-normal">
                     During user testing, participants said that while the carousel worked well for other media, it didn’t capture the overall "feeling" of a group of songs together. They wanted to see multiple tracks together, similar to how playlists feel. Based on this insight, I used a list view for songs instead of the carousel.
                 </p>
 
