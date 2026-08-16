@@ -5,17 +5,34 @@ import { useReducedMotion } from "framer-motion"
 
 
 // ─── Config ────────────────────────────────────────────────────────────────────
-const GRID            = 28
-const DOT             = 1.2
 const GREY            = "#AAAFB5"  // base dot colour
-const INFLUENCE       = 140    // px — illumination radius
-const SIZE_BOOST      = .8   // max extra radius added at full proximity
 const STIFFNESS       = 1   // primary spring (lower = more lag) (how snappy the cursor tracking feels)
 const DAMPING         = 0.1   // primary spring (lower = more oscillation) (boioioing)
 const TRAIL_STIFFNESS = 0.15  // trail lags ~2× more than primary
 const TRAIL_DAMPING   = .5
 const TRAIL_STRENGTH  = .6   // trail halo intensity relative to primary
 const ACCENT_COLOR    = "#AAAFB5"  // default hover/glow colour
+
+// Dot size/spacing/glow-radius per screen breakpoint — keeps the field at a
+// consistent visual density instead of looking coarse on phones or overly
+// fine on very large monitors. `minWidth` checks against window.innerWidth;
+// breakpoints match Tailwind's default sm/lg/2xl scale. The lg tier (1024px)
+// is the original fixed values this component always used.
+type Tier = { minWidth: number; grid: number; dot: number; influence: number; sizeBoost: number }
+const TIERS: Tier[] = [
+  { minWidth: 0,    grid: 20, dot: 1.0, influence: 100, sizeBoost: .6 },  // phones
+  { minWidth: 640,  grid: 24, dot: 1.1, influence: 120, sizeBoost: .7 },  // sm — tablets
+  { minWidth: 1024, grid: 28, dot: 1.2, influence: 140, sizeBoost: .8 },  // lg — laptops/desktops
+  { minWidth: 1536, grid: 34, dot: 1.4, influence: 170, sizeBoost: 1.0 }, // 2xl — large monitors
+]
+
+function tierFor(width: number): Tier {
+  let tier = TIERS[0]
+  for (const t of TIERS) {
+    if (width >= t.minWidth) tier = t
+  }
+  return tier
+}
 
 function smoothstep(t: number) {
   const c = Math.max(0, Math.min(1, t))
@@ -92,10 +109,17 @@ export function DotField({
     let dots: { x: number; y: number; baseAlpha: number }[] = []
     let staticLayer: HTMLCanvasElement | null = null
 
+    // Active tier's values — reassigned in resize() as the breakpoint
+    // changes; everything else reads these instead of fixed constants.
+    let grid       = TIERS[0].grid
+    let dotRadius  = TIERS[0].dot
+    let haloRadius = TIERS[0].influence
+    let sizeBoost  = TIERS[0].sizeBoost
+
     function buildDots() {
       dots = []
-      for (let y = 0; y <= H; y += GRID) {
-        for (let x = 0; x <= W; x += GRID) {
+      for (let y = 0; y <= H; y += grid) {
+        for (let x = 0; x <= W; x += grid) {
           dots.push({ x, y, baseAlpha: 0.38 })
         }
       }
@@ -111,7 +135,7 @@ export function DotField({
       for (const { x, y, baseAlpha } of dots) {
         sCtx.fillStyle = `rgba(${GREY_RGB[0]},${GREY_RGB[1]},${GREY_RGB[2]},${baseAlpha.toFixed(2)})`
         sCtx.beginPath()
-        sCtx.arc(x, y, DOT, 0, Math.PI * 2)
+        sCtx.arc(x, y, dotRadius, 0, Math.PI * 2)
         sCtx.fill()
       }
       staticLayer = sl
@@ -119,6 +143,10 @@ export function DotField({
 
     function resize() {
       if (viewport) {
+        // Tracks the current viewport each time this runs. Grid spacing
+        // is a fixed pixel value per tier, never derived from W/H, so
+        // growing the window tiles in new rows/columns of dots at the same
+        // size rather than scaling the existing ones up.
         W = window.innerWidth
         H = window.innerHeight
       } else {
@@ -126,9 +154,16 @@ export function DotField({
         W = rect.width
         H = rect.height
       }
+      const tier = tierFor(window.innerWidth)
+      grid       = tier.grid
+      dotRadius  = tier.dot
+      haloRadius = tier.influence
+      sizeBoost  = tier.sizeBoost
       dpr = window.devicePixelRatio || 1
       canvas!.width  = Math.round(W * dpr)
       canvas!.height = Math.round(H * dpr)
+      canvas!.style.width  = `${W}px`
+      canvas!.style.height = `${H}px`
       ctx!.setTransform(dpr, 0, 0, dpr, 0, 0)
       buildDots()
       buildStaticLayer()
@@ -186,16 +221,16 @@ export function DotField({
         const dx1   = x - springX
         const dy1   = y - springY
         const dist1 = Math.sqrt(dx1 * dx1 + dy1 * dy1)
-        const prox1 = dist1 < INFLUENCE
-          ? smoothstep(1 - dist1 / INFLUENCE) * influence
+        const prox1 = dist1 < haloRadius
+          ? smoothstep(1 - dist1 / haloRadius) * influence
           : 0
 
         // Trail halo — same radius, reduced intensity, spatially offset
         const dx2   = x - trailX
         const dy2   = y - trailY
         const dist2 = Math.sqrt(dx2 * dx2 + dy2 * dy2)
-        const prox2 = dist2 < INFLUENCE
-          ? smoothstep(1 - dist2 / INFLUENCE) * influence * TRAIL_STRENGTH
+        const prox2 = dist2 < haloRadius
+          ? smoothstep(1 - dist2 / haloRadius) * influence * TRAIL_STRENGTH
           : 0
 
         // Dominant contribution per dot — primary wins in its zone, trail glows
@@ -208,7 +243,7 @@ export function DotField({
         const b = (GREY_RGB[2] + (animB - GREY_RGB[2]) * prox) | 0
         const a = (baseAlpha + (1 - baseAlpha) * prox).toFixed(2)
 
-        const radius = DOT + SIZE_BOOST * prox
+        const radius = dotRadius + sizeBoost * prox
         ctx!.fillStyle = `rgba(${r},${g},${b},${a})`
         ctx!.beginPath()
         ctx!.arc(x, y, radius, 0, Math.PI * 2)
@@ -290,6 +325,10 @@ export function DotField({
     // ── Mount ─────────────────────────────────────────────────────────────────
 
     if (viewport) {
+      // Anchored to the top-left at all times (see canvas style below), and
+      // re-tiled on resize: canvas.width/height (the pixel backing buffer)
+      // and canvas.style.width/height are set together in resize() so the
+      // CSS box never scales ahead of the redrawn bitmap.
       window.addEventListener("resize", resize)
       resize()
       if (!reduced && isDesktop) {
@@ -331,7 +370,7 @@ export function DotField({
       ref={canvasRef}
       aria-hidden="true"
       style={viewport
-        ? { position: "fixed", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }
+        ? { position: "fixed", top: 0, left: 0, pointerEvents: "none" }
         : { display: "block", width: "100%", height: "100%", pointerEvents: "none" }
       }
     />
