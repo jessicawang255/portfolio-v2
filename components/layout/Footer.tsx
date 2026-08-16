@@ -101,7 +101,7 @@ function LiveClock() {
 }
 
 function EyeIcon() {
-  return <MaskIcon src="/icons/eye-line.svg" />
+  return <MaskIcon src="/icons/eye-fill.svg" />
 }
 
 // Sitewide total, persisted server-side (see app/api/views/route.ts) — the
@@ -138,9 +138,9 @@ function ViewCounter() {
   return (
     // Same invisible padded hit area as FOOTER_LINK_CLASS above, minus the
     // hover/interactive styling — this isn't a button, just a stat.
-    <span className="relative inline-flex items-center gap-1.5 text-base font-normal text-nav-link before:absolute before:inset-x-[-16px] before:inset-y-[-10px] before:content-['']">
+    <span className="relative inline-flex items-center gap-1.5 text-sm font-normal text-neutral-400 before:absolute before:inset-x-[-16px] before:inset-y-[-10px] before:content-['']">
       <EyeIcon />
-      <span className="font-mono text-sm tabular-nums">{count}</span>
+      {count} {count === 1 ? "visitor" : "visitors"}
     </span>
   )
 }
@@ -316,7 +316,15 @@ function ColophonButton() {
 export function Footer() {
   return (
     <footer id="site-footer" className="static sm:fixed sm:inset-x-0 sm:bottom-0 sm:z-0 bg-chrome">
-      <div className="container-chrome grid grid-cols-1 gap-8 pt-9 pb-12 sm:grid-cols-4">
+      {/* First three columns hug their own content (`max-content`) instead
+          of stretching to an equal 1/4 of container-chrome's 120rem cap —
+          on a wide screen that stretch was what made "Work" and "Email"
+          read as stranded in mostly-empty tracks. The last column keeps
+          `1fr`, absorbing the leftover space so Colophon/view count stay
+          anchored to the right edge as before. Column gap also trimmed
+          from the row gap's 32px (gap-8) down to 24px (gap-x-6), now that
+          it's the only thing separating adjacent columns. */}
+      <div className="container-chrome grid grid-cols-1 gap-8 pt-9 pb-12 sm:grid-cols-[max-content_max-content_max-content_1fr] sm:gap-x-24">
         {/* Name + clock */}
         <div className="flex flex-col gap-1">
           <Link
@@ -368,9 +376,10 @@ export function Footer() {
         <div className="flex flex-col items-start gap-1 sm:items-end sm:justify-between">
           <div className="flex flex-col items-start gap-1 sm:items-end">
             <ColophonButton />
-            <Link href="/design" className={FOOTER_LINK_CLASS}>
+            {/* Design system link — hidden for now, adding this back later. Route stays live. */}
+            {/* <Link href="/design" className={FOOTER_LINK_CLASS}>
               Design system
-            </Link>
+            </Link> */}
           </div>
           <ViewCounter />
         </div>
