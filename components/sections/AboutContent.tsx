@@ -425,7 +425,7 @@ function FunPanelContent() {
         <div className="flex-1">
           <AboutPanelImage
             aspect="427/487"
-            src="/images/about/fun/fun-3.jpg"
+            src="/images/about/for-fun/twenty.jpg"
             alt="My cat, Twenty"
             caption="My cat, Twenty"
           />
@@ -723,7 +723,12 @@ export function AboutContent({ spotifyPlaylist }: { spotifyPlaylist: Song[] | nu
             <div
               onMouseEnter={() => setHoveredId("fun")}
               onMouseLeave={() => setHoveredId(null)}
-              className="flex flex-col gap-8 text-base leading-relaxed text-neutral-900 lg:hover:cursor-help"
+              // Same hover treatment as JourneyRow/CommunityRow (border-y +
+              // bg tint on hover), but since this block isn't a row in a
+              // list with its own baked-in padding, the -m-3/p-3 pair
+              // cancels out at rest — the padding only becomes visible as
+              // hover breathing room, it doesn't shift the unhovered text.
+              className="-m-3 flex flex-col gap-8 border-x border-x-transparent border-y border-y-transparent p-3 text-base leading-relaxed text-neutral-900 transition-colors duration-100 lg:hover:cursor-help lg:hover:border-y-neutral-900/3 lg:hover:bg-neutral-75 lg:hover:duration-0"
             >
               <motion.p variants={fadeUp}>
                 I love making music. I sing and produce my own songs (jossici on
