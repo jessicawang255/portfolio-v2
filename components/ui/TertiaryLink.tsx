@@ -28,7 +28,7 @@ export function TertiaryLink({ href, children, icon = { type: "none" }, classNam
   return (
     <a
       href={href}
-      className={`group inline-flex items-center gap-1 text-neutral-600 transition-colors duration-150 hover:text-neutral-900 ${className ?? ""}`}
+      className={`group ${iconSrc ? "inline-flex items-center gap-1" : "inline"} text-neutral-600 transition-colors duration-150 hover:text-neutral-900 ${className ?? ""}`}
       {...rest}
     >
       {iconSrc && (
