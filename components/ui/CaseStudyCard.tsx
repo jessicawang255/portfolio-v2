@@ -136,27 +136,28 @@ export function CaseStudyCard({ project, imageRatio, mobileImageRatio, mobileBre
         </div>
 
         {/* Text block */}
-        <div className="card-text flex flex-col gap-0 sm:gap-1 px-0 sm:px-3.5">
-          <div className="flex items-start justify-between gap-3">
-            <h3 className="text-base font-medium leading-[1.4] text-neutral-800">
+        <div className="card-text flex items-start justify-between gap-6 px-0 sm:px-3.5">
+          <div className="flex flex-col gap-0 sm:gap-1">
+            <h3 className="text-balance text-base font-medium leading-[1.4] text-neutral-800">
               {title}
             </h3>
-            {/* Hover-reveal arrow — desktop only (see `hover: hover` gate in
-                globals.css); dropped on mobile since there's no hover to reveal it. */}
-            <span className="card-arrow hidden shrink-0 leading-none text-neutral-200 sm:inline" aria-hidden="true">
-              <ArrowUpRight />
-            </span>
+
+            {hasMetadata && (
+              <p className="text-balance font-mono text-sm text-neutral-400">
+                {name}
+                {name && (status || disciplines?.length) && <Separator className="mx-1.5">•</Separator>}
+                {status}
+                {status && disciplines?.length && <Separator className="mx-2">/</Separator>}
+                {disciplines?.join(" / ")}
+              </p>
+            )}
           </div>
 
-          {hasMetadata && (
-            <p className="font-mono text-sm text-neutral-400">
-              {name}
-              {name && (status || disciplines?.length) && <Separator className="mx-1.5">•</Separator>}
-              {status}
-              {status && disciplines?.length && <Separator className="mx-2">/</Separator>}
-              {disciplines?.join(" / ")}
-            </p>
-          )}
+          {/* Hover-reveal arrow — desktop only (see `hover: hover` gate in
+              globals.css); dropped on mobile since there's no hover to reveal it. */}
+          <span className="card-arrow hidden shrink-0 leading-none text-neutral-200 sm:inline" aria-hidden="true">
+            <ArrowUpRight />
+          </span>
         </div>
       </Link>
     </article>
