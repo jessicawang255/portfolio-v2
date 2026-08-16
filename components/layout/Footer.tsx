@@ -4,6 +4,7 @@ import Link from "next/link"
 import { useEffect, useRef, useState } from "react"
 import { createPortal } from "react-dom"
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion"
+import { TertiaryLink } from "@/components/ui/TertiaryLink"
 
 const navLinks: { label: string; href: string; target?: string }[] = [
   { label: "Work",   href: "/" },
@@ -29,7 +30,13 @@ const FOOTER_LINK_CLASS = "relative text-base font-normal text-nav-link hover:te
 
 // Popover reveal — same on-screen-settle curve as TableOfContents' subsection reveal.
 const PANEL_EASE: [number, number, number, number] = [0.33, 1, 0.68, 1]
-const PANEL_WIDTH = 256 // matches w-64
+// Sized to the widest colophon row ("Built on Next.js, TypeScript, and
+// Tailwind.") plus padding, so that row never wraps — a wrapped line with
+// text-balance looks intentional (roughly even lines) only when there IS a
+// second line to balance against; forcing this one to stay single-line
+// avoids the alternative of a short balanced first line trailing off with a
+// visible gap before the panel's edge.
+const PANEL_WIDTH = 352
 const PANEL_VIEWPORT_MARGIN = 16
 
 // Renders any single-color icon from public/icons via a mask, so it
@@ -149,7 +156,7 @@ function ColophonButton() {
   // `document.body` is never touched during SSR or the hydration render.
   // Once true it stays true; AnimatePresence handles hide/show from then on.
   const [hasOpenedOnce, setHasOpenedOnce] = useState(false)
-  const [coords, setCoords] = useState<{ bottom: number; left: number } | null>(null)
+  const [coords, setCoords] = useState<{ bottom: number; left?: number; right?: number } | null>(null)
   const btnRef = useRef<HTMLButtonElement>(null)
   const panelRef = useRef<HTMLDivElement>(null)
   const reduce = useReducedMotion()
@@ -157,15 +164,25 @@ function ColophonButton() {
   function openPanel() {
     const rect = btnRef.current?.getBoundingClientRect()
     if (!rect) return
-    // The trigger sits at the left edge of its column on mobile but the
-    // right edge on desktop (`items-start` / `sm:items-end`) — anchor by
-    // `left` either way and clamp so the panel always stays on-screen
-    // instead of assuming one fixed side.
-    const left = Math.min(
-      Math.max(rect.left, PANEL_VIEWPORT_MARGIN),
-      window.innerWidth - PANEL_WIDTH - PANEL_VIEWPORT_MARGIN
-    )
-    setCoords({ bottom: window.innerHeight - rect.top + 12, left })
+    // The trigger sits at the left edge of its column on mobile
+    // (`items-start`) but the right edge on desktop (`sm:items-end`) — below
+    // `sm`, anchor the panel's left edge to the button's left edge like
+    // before; from `sm` up, anchor its *right* edge to the button's right
+    // edge instead, so the panel lines up with the column's right edge
+    // (every child in the column shares that edge) rather than trailing off
+    // whichever `left` the word "Colophon" itself happens to start at.
+    const isDesktop = window.innerWidth >= 640 // Tailwind `sm`
+    const bottom = window.innerHeight - rect.top + 12
+    if (isDesktop) {
+      const right = Math.max(window.innerWidth - rect.right, PANEL_VIEWPORT_MARGIN)
+      setCoords({ bottom, right })
+    } else {
+      const left = Math.min(
+        Math.max(rect.left, PANEL_VIEWPORT_MARGIN),
+        window.innerWidth - PANEL_WIDTH - PANEL_VIEWPORT_MARGIN
+      )
+      setCoords({ bottom, left })
+    }
     setOpen(true)
     setHasOpenedOnce(true)
   }
@@ -220,15 +237,68 @@ function ColophonButton() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: reduce ? 0 : 4 }}
               transition={reduce ? { duration: 0 } : { duration: 0.16, ease: PANEL_EASE }}
-              style={{ position: "fixed", bottom: coords.bottom, left: coords.left, width: PANEL_WIDTH }}
+              style={{
+                position: "fixed",
+                bottom: coords.bottom,
+                left: coords.left,
+                right: coords.right,
+                width: PANEL_WIDTH,
+              }}
               className="z-50 rounded-lg bg-surface p-4 text-sm text-secondary shadow-[0_12px_32px_-18px_rgba(0,0,0,0.35),0_0_0_1px_rgba(0,0,0,0.06)]"
             >
-              <p className="mb-2 font-medium text-neutral-900">Colophon</p>
-              <p>
-                Built with Next.js, React, and Tailwind CSS. Set in Avenir Next
-                W1G, with Roboto Mono for numerals. Animated with Framer Motion.
-              </p>
-              <p className="mt-2 text-muted">Designed &amp; built by Jessica Wang.</p>
+              <p className="mb-2 font-mono text-sm uppercase leading-[1.2] text-neutral-400">Colophon</p>
+              <div className="flex flex-col gap-1">
+                <p className="text-balance font-normal text-base">
+                  Designed in{" "}
+                  <TertiaryLink href="https://www.figma.com/" target="_blank" rel="noopener noreferrer">
+                    Figma
+                  </TertiaryLink>
+                  .
+                </p>
+                <p className="text-balance font-normal text-base">
+                  Motion from{" "}
+                  <TertiaryLink href="https://www.lottielab.com/" target="_blank" rel="noopener noreferrer">
+                    LottieLab
+                  </TertiaryLink>
+                  .
+                </p>
+                <p className="text-balance font-normal text-base">
+                  Built on{" "}
+                  <TertiaryLink href="https://nextjs.org/" target="_blank" rel="noopener noreferrer">
+                    Next.js
+                  </TertiaryLink>
+                  ,{" "}
+                  <TertiaryLink href="https://www.typescriptlang.org/" target="_blank" rel="noopener noreferrer">
+                    TypeScript
+                  </TertiaryLink>
+                  , and{" "}
+                  <TertiaryLink href="https://tailwindcss.com/" target="_blank" rel="noopener noreferrer">
+                    Tailwind
+                  </TertiaryLink>
+                  .
+                </p>
+                <p className="text-balance font-normal text-base">
+                  Hosted on{" "}
+                  <TertiaryLink href="https://vercel.com/" target="_blank" rel="noopener noreferrer">
+                    Vercel
+                  </TertiaryLink>
+                  .
+                </p>
+                <p className="text-balance font-normal text-base">
+                  Source on{" "}
+                  <TertiaryLink href="https://github.com/" target="_blank" rel="noopener noreferrer">
+                    GitHub
+                  </TertiaryLink>
+                  .
+                </p>
+                <p className="text-balance font-normal text-base">
+                  With help from{" "}
+                  <TertiaryLink href="https://claude.com/product/claude-code" target="_blank" rel="noopener noreferrer">
+                    Claude Code
+                  </TertiaryLink>
+                  .
+                </p>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>,
