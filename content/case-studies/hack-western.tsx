@@ -124,18 +124,22 @@ export default function HackWestern() {
         />
         <p className="text-base text-neutral-600">I decided on a side panel, with the stickers stacked at the back for a few key reasons:</p>
 
-          <Callout
-            label="Reflecting Figma's interface"
-            heading="The side panel navigation mirrors Figma’s user interface, aligning with our infinite canvas theme and keeping navigation familiar."
-          />
-          <Callout
-            label="Reducing visual clutter"
-            heading="With side panel navigation, a fixed sticker book made the layout feel cramped, while scattered stickers better reinforced the sense of openness and creativity."
-          />
-          
-          <li><b className="font-semibold">1. Reflecting Figma's interface</b> - The side panel navigation mirrors Figma’s user interface, aligning with our infinite canvas theme and keeping navigation familiar.</li>
-          <li><b className="font-semibold">2. Reducing visual clutter</b> - With side panel navigation, a fixed sticker book made the layout feel cramped, while scattered stickers better reinforced the sense of openness and creativity.</li>
-
+        <TwoColumn
+          left={
+            <Callout
+              label="1"
+              heading="Reflecting Figma's interface"
+              body="The side panel navigation mirrors Figma’s user interface, aligning with our infinite canvas theme and keeping navigation familiar."
+            />
+          }
+          right={
+            <Callout
+              label="2"
+              heading="Reducing visual clutter"
+              body="With side panel navigation, a fixed sticker book made the layout feel cramped, while scattered stickers better reinforced the sense of openness and creativity."
+            />
+          }
+        />
       </Section>
 
       <Section
