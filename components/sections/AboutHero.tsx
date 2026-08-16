@@ -164,15 +164,27 @@ export function AboutHero() {
         // matter for the row layout (top-aligning the two flex items instead
         // of one stretching to match the other's height, and pushing them to
         // opposite ends) — a column's single-file children don't need either.
-        className="pointer-events-auto relative z-[1] flex flex-col gap-14 about-photos:flex-row about-photos:items-start about-photos:justify-between about-photos:gap-10"
+        className="pointer-events-auto relative z-[1] flex flex-col gap-14 about-photos:flex-row about-photos:items-start about-photos:justify-between about-photos:gap-24"
       >
-        {/* max-w-sm/shrink-0 only matter once the row layout kicks in at
+        {/* max-w-[800px] only matters once the row layout kicks in at
             `about-photos` — below that this is a full-width column child
             stacked above the photo row (see the row's own comment below),
             not competing with it for horizontal space, so it stays `w-full`
-            all the way through the tablet tier instead of capping at 384px
-            with shrinking disabled. */}
-        <div className="flex w-full flex-col about-photos:max-w-sm about-photos:shrink-0">
+            all the way through the tablet tier instead of capping at 800px.
+            Deliberately left shrinkable (no `shrink-0`) rather than pinned at
+            800px: the photo row is `flex-none` (fixed size) and the parent's
+            `gap-16` is a fixed minimum, so if this max-width is ever pushed
+            past what the viewport has room for, flex-shrink is what keeps
+            the photos on-screen — this column gives way (wrapping onto more
+            lines) instead of shoving them past the container's right edge.
+            `justify-between` on the parent still does the normal-case work:
+            whenever this column doesn't need its full 800px, the leftover
+            space becomes gap on top of that 64px minimum, keeping text
+            left-aligned and photos right-aligned rather than them drifting
+            toward the middle. At container-main's 1848px content-width
+            ceiling (120rem minus its own padding) that leaves ~218px of
+            breathing room before the 830px-wide photo row. */}
+        <div className="flex w-full flex-col about-photos:max-w-[800px]">
           <motion.h1
             variants={fadeUp}
             className="mb-3 text-2xl font-medium text-neutral-900"
