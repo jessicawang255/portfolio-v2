@@ -1,6 +1,6 @@
 import { Section } from "@/components/cs/Section"
 import { ImageBlock } from "@/components/cs/ImageBlock"
-import { Callout, Outcomes } from "@/components/cs"
+import { Callout, Outcomes, IterationCarousel } from "@/components/cs"
 
 export default function Autumn() {
   return (
@@ -138,21 +138,23 @@ export default function Autumn() {
           body="I split the knowledge hub design into several phases that could be introduced gradually as the platform grew."
         />
 
-        <ImageBlock
-          src="/images/case-studies/autumn/autumn-design-2.png"
-          alt="Refined Knowledge Hub flow: a simplified categories-overview-to-individual-category structure, with the Support Library page followed by all articles sorted by category and a closing call-to-action"
-          width={2000}
-          height={3584}
-          caption="All content streamlined into one landing page. A bare bones site, suitable for minimal content."
-        />
-        <ImageBlock
-          src="/images/case-studies/autumn/autumn-design-3.png"
-          alt="Refined Knowledge Hub flow: a simplified categories-overview-to-individual-category structure, with the Support Library page followed by all articles sorted by category and a closing call-to-action"
-          width={2000}
-          height={3584}
-          caption="Expanded landing page to accommodate for different categories and location-specific articles.
-
-"
+        <IterationCarousel
+          items={[
+            {
+              src: "/images/case-studies/autumn/autumn-design-2.png",
+              alt: "Refined Knowledge Hub flow: a simplified categories-overview-to-individual-category structure, with the Support Library page followed by all articles sorted by category and a closing call-to-action",
+              width: 2000,
+              height: 3584,
+              caption: "Phase 1: Core functionalities streamlined into one landing page.",
+            },
+            {
+              src: "/images/case-studies/autumn/autumn-design-3.png",
+              alt: "Refined Knowledge Hub flow: a simplified categories-overview-to-individual-category structure, with the Support Library page followed by all articles sorted by category and a closing call-to-action",
+              width: 2000,
+              height: 3584,
+              caption: "Phase 2: Expanded landing page to accommodate for more categories and location-specific articles.",
+            },
+          ]}
         />
       </Section>
 

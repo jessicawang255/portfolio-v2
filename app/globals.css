@@ -277,6 +277,25 @@ body {
     transform 400ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+/* A flat opacity fade, not a transform — the earlier scale(0.99) sink (same
+   effect as .card-thumb below) fought the slide's own fixed viewport clip
+   and fade overlay: a scaling image shrinks toward its own center while the
+   hard clip edge and the (non-scaling) fade layered on top of it both stay
+   put, so the visible sliver's edge shifted relative to its own mask rather
+   than reading as one object moving. A flat scrim has no such mismatch — it
+   doesn't move or resize, so it looks right regardless of how much of the
+   slide is actually visible.
+   Darkens (neutral-900) rather than lightens — these mockups already sit
+   close to white, so a white scrim had almost no headroom to register
+   against them and doubled up confusingly with the fade gradient on the
+   same edge. Darkening moves the opposite direction from an already-light
+   surface, so it reads at a much lower, subtler opacity — the same "state
+   layer" convention most design systems use: darken hover/press states on
+   light surfaces, lighten them on dark ones. */
+.iteration-slide-overlay {
+  transition: opacity 300ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
 /* ─── Card hover — only on pointer devices ──────────────────────────────────── */
 @media (hover: hover) and (pointer: fine) {
   /* Thumbnail sinks back */
@@ -293,6 +312,14 @@ body {
   .case-study-card:hover .card-arrow {
     opacity: 1;
     transform: translateY(0);
+  }
+
+  /* [aria-current="false"] excludes the active slide, which already fills
+     the view and has nothing to invite a click toward. 0.08 — enough to
+     register as a deliberate darkening against a light mockup without
+     reading as a shadow or a rendering artifact. */
+  .iteration-slide[aria-current="false"]:hover .iteration-slide-overlay {
+    opacity: 0.08;
   }
 }
 
@@ -479,6 +506,19 @@ body {
 .cs-header-content > *:nth-child(3) { animation-delay: 300ms; }
 .cs-header-content > *:nth-child(4) { animation-delay: 340ms; }
 
+/* ─── Scrollbar-hidden track — IterationCarousel's own horizontal scroller.
+   `scrollbar-width: none` covers Firefox; the pseudo-element below covers
+   Chrome/Safari. The track still scrolls (via drag or the prev/next
+   buttons' scrollIntoView) — this only hides the OS scrollbar chrome, which
+   would otherwise sit awkwardly under a set of images that already have
+   their own affordance for moving between them. ─────────────────────────── */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 /* ─── Reduced motion ────────────────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   html,
@@ -486,7 +526,8 @@ body {
   .card-thumb,
   .card-text,
   .card-arrow,
-  .about-photo {
+  .about-photo,
+  .iteration-slide-overlay {
     transition: none !important;
   }
 
