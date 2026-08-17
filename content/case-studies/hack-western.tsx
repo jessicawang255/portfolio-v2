@@ -4,6 +4,8 @@ import { TwoColumn } from "@/components/cs/TwoColumn"
 import { ImageBlock } from "@/components/cs/ImageBlock"
 import { IterationCarousel } from "@/components/cs/IterationCarousel"
 import { Outcomes } from "@/components/cs/Outcomes"
+import { MediaFrame } from "@/components/cs/MediaFrame"
+import { StickerAnimation } from "@/components/cs/StickerAnimation"
 
 export default function HackWestern() {
   return (
@@ -152,7 +154,10 @@ export default function HackWestern() {
           ratio="3/2"
           left={
             <ImageBlock
-              height={300}
+              src="/images/case-studies/hack-western/hw-mobile-1.gif"
+              alt="Desktop application form surrounded by unlocked stickers, including a University of Toronto Mississauga badge, a Hack Western Newcomer ribbon, and a Novice Hacker name tag"
+              width={2384}
+              height={1397}
             />
           }
           right={
@@ -168,19 +173,45 @@ export default function HackWestern() {
           sticker icon in the navigation. This allowed users to view their collected stickers without
           cluttering the smaller mobile layout.
         </p>
-        <ImageBlock 
-          height={450}
-          caption="Mobile Sticker Drawer" />
-        <TwoColumn
-          left={
-            <Callout
-              label="Discovery"
-              heading="During prototype testing, users often missed the sticker drawer since the generic button gave little reason to click it."
-              body="To make it more discoverable and fun, we set the drawer icon to display the last sticker a user earned."
+        <MediaFrame height={450} caption="Mobile Sticker Drawer">
+          <video
+            src="/images/case-studies/hack-western/hw-mobile-2.mp4"
+            autoPlay
+            loop
+            muted
+            playsInline
+            aria-label="Screen recording of the mobile sticker drawer sliding up over the application form and revealing collected stickers"
+            width={442}
+            height={960}
+            className="h-[80%] w-auto rounded-[8px] shadow-[0_1px_3px_rgba(0,0,0,0.08),0_8px_24px_rgba(0,0,0,0.08)]"
+          />
+        </MediaFrame>
+        {/* Not a TwoColumn — that component splits the row by a fixed fr
+            ratio, but the sticker here has no frame/background to size a
+            column around (see StickerAnimation). Instead the Callout grows
+            to fill whatever width the sticker doesn't need (sm:flex-1),
+            and the sticker sits at a fixed content size next to it. */}
+        <div className="flex flex-col items-stretch gap-6 sm:flex-row">
+          <Callout
+            className="sm:flex-1"
+            label="Discovery"
+            heading="During prototype testing, users often missed the sticker drawer since the generic button gave little reason to click it."
+            body="To make it more discoverable and fun, we set the drawer icon to display the last sticker a user earned."
+          />
+          {/* Sized here on the wrapper, not on StickerAnimation itself —
+              lottie-react injects its own `.lottie-display { width/height:
+              100% }` rule into a CSS @layer at mount time, and a JS-injected
+              layer always outranks Tailwind's `utilities` layer regardless
+              of selector specificity, so a size class on the Lottie element
+              would silently lose that fight. The library's 100%/100%
+              default fills whatever box it's given, so sizing the box here
+              works with that default instead of fighting it. */}
+          <div className="flex h-40 w-40 shrink-0 items-center justify-center sm:h-48 sm:w-48">
+            <StickerAnimation
+              alt="Animation cycling through a user's earned stickers, the kind that appears on the sticker drawer icon"
             />
-          }
-          right={<ImageBlock height={200} />}
-        />
+          </div>
+        </div>
       </Section>
 
       <Section
