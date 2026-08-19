@@ -173,7 +173,7 @@ export default function HackWestern() {
           sticker icon in the navigation. This allowed users to view their collected stickers without
           cluttering the smaller mobile layout.
         </p>
-        <MediaFrame height={450} caption="Mobile Sticker Drawer">
+        <MediaFrame height={550} caption="Mobile Sticker Drawer">
           <video
             src="/images/case-studies/hack-western/hw-mobile-2.mp4"
             autoPlay
@@ -183,7 +183,7 @@ export default function HackWestern() {
             aria-label="Screen recording of the mobile sticker drawer sliding up over the application form and revealing collected stickers"
             width={442}
             height={960}
-            className="h-[80%] w-auto rounded-[8px] shadow-[0_1px_3px_rgba(0,0,0,0.08),0_8px_24px_rgba(0,0,0,0.08)]"
+            className="h-[90%] w-auto rounded-[8px] shadow-[0_1px_3px_rgba(0,0,0,0.08),0_8px_24px_rgba(0,0,0,0.08)]"
           />
         </MediaFrame>
         {/* Not a TwoColumn — that component splits the row by a fixed fr
@@ -250,9 +250,22 @@ export default function HackWestern() {
         id="reflections"
         tag="it's done! what did i learn?"
         headline="A good design system leaves nothing unsaid"
-        body="I learned that a good design system is more than just a set of components and rules. It should also include clear documentation and examples, so that anyone can understand how to use it effectively. This ensures consistency and quality across the product, even when different designers or developers are working on it."
+        headingLevel={2}
         primary
-      />
+      >
+        <TwoColumn
+          left={
+            <p className="text-base text-neutral-600">
+              I learned that a good design system is more than just a set of components and rules. It should also include clear documentation and examples, so that anyone can understand how to use it effectively. This ensures consistency and quality across the product, even when different designers or developers are working on it.
+            </p>
+          }
+          right={
+            <p className="text-base text-neutral-600">
+              Placeholder reflection — add a second takeaway here.
+            </p>
+          }
+        />
+      </Section>
     </div>
   )
 }

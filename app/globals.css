@@ -527,7 +527,11 @@ body {
   .card-text,
   .card-arrow,
   .about-photo,
-  .iteration-slide-overlay {
+  .iteration-slide-overlay,
+  .screen-tab,
+  .screen-tab-indicator,
+  .screen-chip,
+  .screen-thumb {
     transition: none !important;
   }
 
