@@ -80,6 +80,27 @@
      of `sm`/`lg` without affecting anything else using those. */
   --breakpoint-discover-wide: 60rem;
 
+  /* ScreenSpotlight — where the flow tabs + phone card + rationale +
+     screen-index thumbnails switch from the stacked mobile treatment to
+     the side-by-side desktop one (see ScreenSpotlight.tsx). Deliberately
+     much later than `sm` (640px): tested live against the component's own
+     worst case (an 8-screen flow, e.g. Retrospect's "Opening a capsule")
+     at a range of widths — anywhere from `sm` up to ~800px, the flow-tab
+     row's own label ("Opening a capsule") gets clipped past the viewport
+     edge and the thumbnail row runs out of room for its own
+     THUMB_MIN_WIDTH floor, well before the mobile-only wrapping-pill
+     treatment would ever look cramped at the same width. ~850px is where
+     it stops visibly breaking; 60rem (960px) — the same value as
+     `discover-wide` above by coincidence, not by reuse; keep it a separate
+     token so retuning one can't silently move the other — gives that a bit
+     of the same "not the bare minimum" buffer the other breakpoints here
+     get, comfortable rather than just barely passing. Its own registered
+     breakpoint for the same reason as `cs-toc`/`about-photos`/
+     `discover-wide` above: an arbitrary `min-[960px]:` bracket doesn't get
+     sorted into cascade order by width, so `sm:`'s rule would silently win
+     here too. */
+  --breakpoint-cs-screens: 60rem;
+
   /* Radii */
   --radius-sm:    4px;
   --radius-base:  8px;

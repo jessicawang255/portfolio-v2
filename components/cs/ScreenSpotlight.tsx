@@ -1,7 +1,10 @@
 "use client"
 
-import { useLayoutEffect, useRef, useState } from "react"
+import { useEffect, useLayoutEffect, useRef, useState } from "react"
 import Image from "next/image"
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion"
+import type { Variants } from "framer-motion"
+import { IPhoneFrame, IPHONE_SCREEN_WIDTH, IPHONE_SCREEN_HEIGHT, IPHONE_FRAME_HEIGHT } from "./IPhoneFrame"
 
 type Screen = {
   src: string
@@ -35,21 +38,131 @@ type ScreenSpotlightProps = {
 
 // The phone screen's own fixed window — constant across every crop
 // regardless of its real aspect ratio (see the scroll container below).
-const PHONE_WIDTH = 219
-const PHONE_HEIGHT = 474
+// Reuses IPhoneFrame's own screen-cutout size rather than a second,
+// possibly-drifting constant, since the two have to match exactly.
+const PHONE_WIDTH = IPHONE_SCREEN_WIDTH
+const PHONE_HEIGHT = IPHONE_SCREEN_HEIGHT
+
+// The floor the screen-index thumbnail row (52px design width, 52:112
+// aspect-ratio — both set directly on the buttons below, this constant
+// isn't the design width itself) is allowed to shrink to before the phone
+// card starts giving up width instead — see the flex-basis/min-width split
+// between the two below.
+const THUMB_MIN_WIDTH = 36
+
+// The card wrapping IPhoneFrame — frame height plus this card's own
+// vertical padding (see its py-[34px] below, mirrored here as a constant
+// so the two can't drift apart). Everything inside that card (frame image,
+// status bar, screen window) is laid out in real px against this exact
+// 316-wide design, not percentages — so shrinking the card's own CSS width
+// alone wouldn't shrink any of them, just clip or overflow past it. The
+// fluid-scale effect below instead measures how much narrower the card is
+// rendering than this native size and scales the whole card down by that
+// same factor via `transform`, so frame/status-bar/screen-window all shrink
+// together, in proportion, exactly like the fixed 316px version just
+// smaller — rather than the card scrolling, wrapping, or clipping past a
+// column too narrow for its designed size.
+const PHONE_CARD_WIDTH = 316
+const PHONE_CARD_VERTICAL_PADDING = 34
+const PHONE_CARD_HEIGHT = IPHONE_FRAME_HEIGHT + PHONE_CARD_VERTICAL_PADDING * 2
 
 function clampIndex(i: number, length: number) {
   if (length <= 0) return 0
   return Math.max(0, Math.min(length - 1, i))
 }
 
+type ScreenPosition = { flow: number; set: number; idx: number }
+
+// Prev/next don't stop at the current set's edge — they walk forward/back
+// across sets, then across flows, landing on the next (or previous) set
+// that actually has screens (Songs/Audio bytes/etc. are still empty
+// placeholders and get stepped over rather than landed on, same as they
+// already aren't reachable via their own thumbnail row).
+function nextScreenPosition(flows: Flow[], pos: ScreenPosition): ScreenPosition | null {
+  const currentSets = flows[pos.flow].sets
+  if (pos.idx < currentSets[pos.set].screens.length - 1) {
+    return { flow: pos.flow, set: pos.set, idx: pos.idx + 1 }
+  }
+  for (let s = pos.set + 1; s < currentSets.length; s++) {
+    if (currentSets[s].screens.length > 0) return { flow: pos.flow, set: s, idx: 0 }
+  }
+  for (let f = pos.flow + 1; f < flows.length; f++) {
+    for (let s = 0; s < flows[f].sets.length; s++) {
+      if (flows[f].sets[s].screens.length > 0) return { flow: f, set: s, idx: 0 }
+    }
+  }
+  return null
+}
+
+function prevScreenPosition(flows: Flow[], pos: ScreenPosition): ScreenPosition | null {
+  if (pos.idx > 0) {
+    return { flow: pos.flow, set: pos.set, idx: pos.idx - 1 }
+  }
+  const currentSets = flows[pos.flow].sets
+  for (let s = pos.set - 1; s >= 0; s--) {
+    const length = currentSets[s].screens.length
+    if (length > 0) return { flow: pos.flow, set: s, idx: length - 1 }
+  }
+  for (let f = pos.flow - 1; f >= 0; f--) {
+    const sets = flows[f].sets
+    for (let s = sets.length - 1; s >= 0; s--) {
+      const length = sets[s].screens.length
+      if (length > 0) return { flow: f, set: s, idx: length - 1 }
+    }
+  }
+  return null
+}
+
+// The swappable screen + rationale copy cross-fade with the same blur
+// AboutContent.tsx's hover sticky panel uses for its own content swap —
+// blur(2px)<->blur(0px), 100ms, easeOut, identical in and out — for every
+// trigger (tab, chip, thumbnail, prev/next) rather than singling out tab
+// switches for something more prominent. (A second, "bigger" tier for tab
+// switches — first a directional slide, then a section-entrance lift — was
+// tried and dropped in favor of one consistent transition everywhere.)
+// The rationale copy skips this transition specifically when consecutive
+// screens share the same body text — see rationaleKey below.
+const screenTransitionVariants: Variants = {
+  hidden: { opacity: 0, filter: "blur(2px)" },
+  visible: { opacity: 1, filter: "blur(0px)", transition: { duration: 0.1, ease: "easeOut" } },
+  exit: { opacity: 0, filter: "blur(2px)", transition: { duration: 0.1, ease: "easeOut" } },
+}
+
+// Reused for both the chip row's own mount/unmount and the layout shift it
+// causes below it — same --duration-base/--ease-out already driving the
+// tab indicator's slide a few lines up in the DOM, so a flow switch that
+// gains or loses the chip row moves at the same pace as the underline
+// tracking it.
+const LAYOUT_TRANSITION = { duration: 0.2, ease: [0.16, 1, 0.3, 1] as const }
+
+// The chip row's own fade is a second, independent layer nested inside the
+// height/margin slide above — not the same opacity value driving both.
+// Tying one opacity keyframe to the same 0–1 progress as the height grow
+// means the visible sliver is only ever as opaque as it is tall (13%
+// opacity at 25% height, and so on), which reads as the box growing, not
+// as anything fading. --duration-fast (already used for every other
+// color/opacity transition in this component) finishes before the slide
+// does, so the chips are at full opacity partway through and the rest of
+// the slide reads as its own, separate motion.
+const CHIP_FADE_TRANSITION = { duration: 0.15, ease: [0.16, 1, 0.3, 1] as const }
+
 // ScreenSpotlight: a flow-tabbed screen spotlight for a case study's final-product section:
 // pick a flow, optionally narrow to a set within it, and step through that
 // set's screens one at a time with a phone-frame mockup + rationale copy.
-// State is three raw indices (flow/set/idx) rather than resolved objects —
-// switching flows or sets doesn't reset the others, so e.g. stepping to
-// screen 3 of one flow and then tabbing to a shorter flow lands on whatever
-// screen 3 clamps to there, rather than always snapping back to the start.
+// State is three raw indices (flow/set/idx) rather than resolved objects.
+// A tab or chip click (goToFlow/goToSet below) resets idx (and, for a flow
+// switch, set) back to 0 — each flow/set is its own story, so switching to
+// one lands on its own start, the same way switching a browser or docs-site
+// tab always shows that tab's own top rather than wherever a *different*
+// tab happened to be scrolled to. This used to carry the raw idx over
+// instead (stepping to screen 3 of one flow, then tabbing elsewhere, landed
+// on whatever screen 3 clamped to over there) — technically never broken,
+// since clampIndex always kept it in range, but landing on an arbitrary
+// mid-flow screen with no relation to the new flow's own narrative read as
+// janky rather than intentional. Direct stepping (goTo, prev/next) is
+// unaffected — walking continuously across a flow/set boundary is a
+// different action from jumping to a different one, and keeps landing on
+// whatever specific screen that walk actually reaches.
 export function ScreenSpotlight({ flows, className }: ScreenSpotlightProps) {
   const [flow, setFlow] = useState(0)
   const [set, setSet] = useState(0)
@@ -61,6 +174,139 @@ export function ScreenSpotlight({ flows, className }: ScreenSpotlightProps) {
   const hasScreens = activeSet.screens.length > 0
   const activeIdx = clampIndex(idx, activeSet.screens.length)
   const activeScreen = hasScreens ? activeSet.screens[activeIdx] : undefined
+
+  const reduce = useReducedMotion()
+  // Changes exactly when the visible screen changes, regardless of which
+  // index moved — what the screen-crop AnimatePresence below swaps on.
+  const contentKey = `${flow}-${activeSetIdx}-${activeIdx}`
+
+  // The rationale panel swaps on its own key instead: scoped to flow+set
+  // (so it still resets on a tab/chip change even if two flows happen to
+  // reuse the same sentence) but keyed on the body text itself rather than
+  // the index. Several screens in a row that share one description — e.g.
+  // photos-1/photos-2 both read "Add photos to your capsule." — resolve to
+  // the same key, so React leaves that motion.div mounted across the step
+  // instead of exiting and re-entering it; the copy just sits still while
+  // the phone crop beside it still cross-fades on every step via
+  // contentKey. Falls back to contentKey when there's no screen (the
+  // "crop not exported yet" placeholder has no body to key on).
+  const rationaleKey = activeScreen ? `${flow}-${activeSetIdx}-${activeScreen.body}` : contentKey
+
+  // Resolved once per render off the *active* (clamped) position, not the
+  // raw flow/set/idx state — prev/next should walk from what's actually on
+  // screen. null means there's nothing further that way (start/end of the
+  // whole spotlight), which is what disables each button.
+  const activeFlowIdx = clampIndex(flow, flows.length)
+  const activePosition: ScreenPosition = { flow: activeFlowIdx, set: activeSetIdx, idx: activeIdx }
+  const nextPosition = nextScreenPosition(flows, activePosition)
+  const prevPosition = prevScreenPosition(flows, activePosition)
+
+  function goTo(position: ScreenPosition) {
+    setFlow(position.flow)
+    setSet(position.set)
+    setIdx(position.idx)
+  }
+
+  // Tab/chip clicks — unlike goTo above, these deliberately don't carry the
+  // current idx (or, for a flow switch, set) over: picking a different flow
+  // or set is choosing a different story to look at, not stepping further
+  // through the current one, so it should land on that story's own start —
+  // same as switching a browser tab or a docs-site tab always shows that
+  // tab's own top, never wherever a *different* tab happened to scroll to.
+  // See the component doc comment above for why this isn't just "keep
+  // whatever idx clamps to."
+  function goToFlow(i: number) {
+    setFlow(i)
+    setSet(0)
+    setIdx(0)
+  }
+
+  function goToSet(i: number) {
+    setSet(i)
+    setIdx(0)
+  }
+
+  // The device frame itself (bezel, status bar, Dynamic Island) is fixed —
+  // it never re-renders let alone animates between screens, tabs, or flows.
+  // Only screenContent, its children, swaps and gets the blur cross-fade;
+  // everything about the physical phone stays exactly where it is the
+  // entire time you're browsing the spotlight.
+  const screenContent = activeScreen ? (
+    // IPhoneFrame's own screen window is a fixed 219×474 area regardless of
+    // the crop's own aspect ratio — most crops fill it exactly, but a few
+    // (Home's, for one) are taller than a single phone screen. Rather than
+    // shrinking those down to fit (which would render their text noticeably
+    // smaller than every other screen), the image renders at the same
+    // fixed width as the rest and that window scrolls to reveal the
+    // remainder, so the frame itself never changes size between screens.
+    <Image
+      src={activeScreen.src}
+      alt={activeScreen.alt}
+      width={activeScreen.width}
+      height={activeScreen.height}
+      draggable={false}
+      className="select-none"
+      style={{ width: PHONE_WIDTH, height: "auto", display: "block" }}
+    />
+  ) : (
+    // TEMPORARY: comes out once every screen in `flows` below has a real
+    // exported crop — this branch only exists because Songs/Audio bytes
+    // are placeholders for now. Sits inside the frame's own screen cutout
+    // (hence the dark styling, not the light card it used to sit in as a
+    // standalone box) now that the frame itself is always present.
+    <div
+      className="flex h-full items-center justify-center text-center font-mono text-[10px] uppercase text-neutral-500"
+      style={{ width: PHONE_WIDTH, height: PHONE_HEIGHT }}
+    >
+      Crop not exported yet
+    </div>
+  )
+
+  // max-w-[370px]/[340px] only apply from `cs-screens` up, where this text
+  // shares a row with the phone card and the cap is doing real work — a
+  // comfortable reading measure rather than however wide the leftover flex
+  // space happens to be. Below `cs-screens` the rationale sits in its own
+  // full-width row under the phone (see the main row's cs-screens:flex-row
+  // below), so the same cap would just wrap it into a narrow column inside
+  // an otherwise full-width case-study page for no reason — max-w-full
+  // there lets it use the whole column instead.
+  const rationaleContent = activeScreen ? (
+    <>
+      <p
+        className="max-w-full text-base leading-normal text-neutral-600 cs-screens:max-w-[370px]"
+        style={{ textWrap: "pretty" }}
+      >
+        {activeScreen.body}
+      </p>
+      {activeScreen.note && (
+        <p className="mt-[18px] max-w-full text-xs italic text-neutral-300 cs-screens:max-w-[340px]">
+          {activeScreen.note}
+        </p>
+      )}
+    </>
+  ) : null
+
+  // Pulled out for the same reason as screenContent/rationaleContent above —
+  // reused identically by the reduced-motion and animated branches of the
+  // chip row below.
+  const chipButtons = activeFlow.sets.map((s, i) => {
+    const active = i === activeSetIdx
+    return (
+      <button
+        key={s.label}
+        type="button"
+        onClick={() => setSet(i)}
+        aria-current={active}
+        className={`screen-chip rounded-full border px-3.5 py-[7px] text-xs transition-colors duration-fast ease-out ${
+          active
+            ? "border-[var(--cs-accent)]/35 bg-[var(--cs-accent)]/6 text-[var(--cs-accent)]"
+            : "border-transparent bg-neutral-75 text-neutral-500 hover:border-neutral-900/3 hover:text-primary"
+        }`}
+      >
+        {s.label}
+      </button>
+    )
+  })
 
   // A single shared underline that slides/resizes between tabs, rather than
   // each tab owning its own indicator that just appears/disappears — measured
@@ -83,10 +329,107 @@ export function ScreenSpotlight({ flows, className }: ScreenSpotlightProps) {
     return () => window.removeEventListener("resize", measure)
   }, [flow, flows.length])
 
+  // Fluid-scale for the phone card — see PHONE_CARD_WIDTH above and the
+  // width rules in the JSX below. Below `cs-screens` the card is w-full
+  // (capped at max-w-[316px]); from `cs-screens` up it's flex-basis-driven,
+  // shrinking below 316px only once the rationale column beside it has
+  // already given up all it can (see that column's own note on the flex
+  // priority) — so resizing a desktop window narrower visibly shrinks it
+  // too, not just the rationale column.
+  // A ResizeObserver on the card itself, not a window-resize listener like
+  // the indicator above: this card's own rendered width also changes
+  // whenever the *rationale column* beside it reflows (a longer/shorter
+  // caption, the chip row appearing/disappearing) even when the window
+  // itself hasn't been resized, and only a direct observer on the card
+  // catches that.
+  const phoneCardRef = useRef<HTMLDivElement>(null)
+  const [frameScale, setFrameScale] = useState(1)
+
+  useLayoutEffect(() => {
+    const el = phoneCardRef.current
+    if (!el) return
+    function measure() {
+      if (!el) return
+      // No Math.min(1, …) clamp — below `sm` the card is meant to scale up
+      // on a wide phone too, not just down on a narrow one, so it always
+      // reads as the same proportion of the column rather than a fixed
+      // design size with a shrink-only escape hatch.
+      setFrameScale(el.getBoundingClientRect().width / PHONE_CARD_WIDTH)
+    }
+    measure()
+    const observer = new ResizeObserver(measure)
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [])
+
+  // Screen-index thumbnail row, mobile only (below `cs-screens` — see the
+  // thumbnail buttons' own className further down): fixed at THUMB_WIDTH
+  // instead of shrinking, scrolling horizontally instead. Unlike the flow
+  // tabs (a small, finite set you want fully visible at once — that's why
+  // *those* became wrapping pills, not a scroll, on mobile), this row is a
+  // sequential filmstrip already paired with prev/next + a counter, and
+  // this codebase already treats that shape as scroll-native
+  // (IterationCarousel's own track) — plus a fixed size actually protects
+  // the thing THUMB_MIN_WIDTH was already a compromise on: staying legible.
+  // Two behaviors this needs that the old shrink-to-fit version didn't:
+  const thumbTrackRef = useRef<HTMLDivElement>(null)
+  const thumbButtonRefs = useRef<(HTMLButtonElement | null)[]>([])
+  const [thumbAtEnd, setThumbAtEnd] = useState(false)
+
+  // 1. The right-edge fade (below, next to the track in the JSX) has to
+  // know when to disappear — a real scrollable row, unlike IterationCarousel's
+  // one-slide-always-peeking track, can genuinely run out of content to
+  // hint at, and a fade with nothing left to fade into just reads as a
+  // stuck smudge over the last thumbnail.
+  useEffect(() => {
+    const el = thumbTrackRef.current
+    if (!el) return
+    function update() {
+      if (!el) return
+      setThumbAtEnd(el.scrollLeft + el.clientWidth >= el.scrollWidth - 2)
+    }
+    update()
+    el.addEventListener("scroll", update, { passive: true })
+    window.addEventListener("resize", update)
+    return () => {
+      el.removeEventListener("scroll", update)
+      window.removeEventListener("resize", update)
+    }
+  }, [activeFlowIdx, activeSetIdx])
+
+  // 2. Stepping with prev/next (or a chip/tab switch) moves activeIdx
+  // without touching this row's own scroll position — without this, the
+  // active/highlighted thumbnail can silently scroll out of view, leaving
+  // only the "n/total" counter to tell you where you are. Scrolls just far
+  // enough to bring it back on-screen (not to the row's own start/center)
+  // so stepping through several screens in a row doesn't jitter the strip
+  // more than it has to.
+  useEffect(() => {
+    const track = thumbTrackRef.current
+    const btn = thumbButtonRefs.current[activeIdx]
+    if (!track || !btn) return
+    const trackRect = track.getBoundingClientRect()
+    const btnRect = btn.getBoundingClientRect()
+    if (btnRect.left < trackRect.left) {
+      track.scrollBy({ left: btnRect.left - trackRect.left, behavior: "smooth" })
+    } else if (btnRect.right > trackRect.right) {
+      track.scrollBy({ left: btnRect.right - trackRect.right, behavior: "smooth" })
+    }
+  }, [activeIdx, activeFlowIdx, activeSetIdx])
+
   return (
     <div className={`flex flex-col ${className ?? ""}`}>
-      {/* Tab row — one tab per flow. Horizontally scrollable + no-scrollbar
-          below `sm`, same as the rest of the case study handles overflow.
+      {/* Tab row — one tab per flow, `cs-screens`+ only (see that
+          breakpoint's own comment in globals.css for why it's much later
+          than `sm`: tested live, this side-by-side treatment stays
+          genuinely cramped — tab labels clipped past the viewport edge,
+          the thumbnail row below running out of room — well past `sm`
+          itself). Used to be horizontally scrollable + no-scrollbar below
+          `sm`, but on a real mobile column the labels alone (~440px, four
+          flows) run well past the ~336px available, and overflow-x-auto
+          with no scrollbar leaves no on-screen cue there's more to drag to
+          — see the wrapping pill row just below, which replaces this below
+          `cs-screens`.
           The gray divider is a separate absolute strip rather than a border
           on this container, and the purple indicator is one shared absolute
           div (positioned/sized off the measurement above) rather than each
@@ -100,7 +443,7 @@ export function ScreenSpotlight({ flows, className }: ScreenSpotlightProps) {
           align-items) to the container's cross-size, so a button's own
           bottom edge is geometrically identical to the container's,
           guaranteeing every strip lands on the same pixel row. */}
-      <div className="relative flex gap-[26px] overflow-x-auto no-scrollbar">
+      <div className="relative hidden gap-[18px] cs-screens:flex">
         <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-neutral-100" />
         {indicator && (
           <div
@@ -125,7 +468,7 @@ export function ScreenSpotlight({ flows, className }: ScreenSpotlightProps) {
               onClick={() => setFlow(i)}
               aria-current={active}
               className={`screen-tab shrink-0 whitespace-nowrap px-0.5 pb-3 text-sm leading-[1.5] transition-colors duration-fast ease-out ${
-                active ? "font-medium text-primary" : "text-neutral-400 hover:text-primary"
+                active ? "text-primary" : "text-neutral-400 hover:text-neutral-600"
               }`}
             >
               {f.label}
@@ -134,125 +477,347 @@ export function ScreenSpotlight({ flows, className }: ScreenSpotlightProps) {
         })}
       </div>
 
-      {/* Chip row — only when the active flow has more than one set. */}
-      {activeFlow.sets.length > 1 && (
-        <div className="mt-[22px] flex flex-wrap gap-2">
-          {activeFlow.sets.map((s, i) => {
-            const active = i === activeSetIdx
-            return (
-              <button
-                key={s.label}
-                type="button"
-                onClick={() => setSet(i)}
-                aria-current={active}
-                className={`screen-chip rounded-full border px-3.5 py-[7px] font-mono text-[12px] uppercase transition-colors duration-fast ease-out ${
-                  active
-                    ? "border-[var(--cs-accent)]/35 bg-[var(--cs-accent)]/8 text-[var(--cs-accent)]"
-                    : "border-neutral-100 text-neutral-600 hover:text-primary"
-                }`}
-              >
-                {s.label}
-              </button>
-            )
-          })}
-        </div>
+      {/* Mobile flow nav, below `cs-screens` — filled pills that wrap instead of
+          scrolling, the same fix the chip row below already uses
+          (flex-wrap, no scroll) for its own set-level nav, just applied one
+          level up. text-sm/leading-[1.5] matches screen-tab's own font
+          exactly — same top-level nav, just a pill on mobile instead of an
+          underline, so the type should read as one nav rather than two
+          differently-scaled ones. The active fill is solid
+          bg-[var(--cs-accent)] (not the chip row's accent-*tint*) — still
+          reads as its own, higher level than the chips on flows like
+          "Creating a capsule" that show both rows at once, since a solid
+          fill and a light tint are visually distinct even sharing one hue.
+          No sliding indicator here — an active pill's own fill already
+          marks it, so there's nothing for an underline to add. */}
+      <div className="flex flex-wrap gap-2 cs-screens:hidden">
+        {flows.map((f, i) => {
+          const active = i === flow
+          return (
+            <button
+              key={f.id}
+              type="button"
+              onClick={() => setFlow(i)}
+              aria-current={active}
+              className={`rounded-full border px-3.5 py-[7px] text-sm leading-[1.5] transition-colors duration-fast ease-out ${
+                active
+                  ? "border-transparent bg-[var(--cs-accent)] text-neutral-50"
+                  : "border-transparent bg-neutral-75 text-neutral-500 hover:border-neutral-900/3 hover:text-primary"
+              }`}
+            >
+              {f.label}
+            </button>
+          )
+        })}
+      </div>
+
+      {/* Chip row — only when the active flow has more than one set. Every
+          chip stays a filled pill (not just the active one) — a borderless
+          treatment here would read as a continuation of the borderless tab
+          row right above it, rather than its own distinct level of
+          navigation. bg-[var(--cs-accent)]/6 reuses Callout's own tint
+          rather than introducing a new opacity value. */}
+      {reduce ? (
+        activeFlow.sets.length > 1 && (
+          <div className="mt-[22px] flex flex-wrap gap-2">{chipButtons}</div>
+        )
+      ) : (
+        // AnimatePresence itself stays mounted continuously — only its
+        // child is conditional — so it's still around to play the exit
+        // animation on the render where a flow with chips loses them, not
+        // just the enter animation on the render where one gains them.
+        // `layout` (in addition to its own height/margin animation) plus
+        // on the main row below lets both FLIP-animate to their new
+        // position together instead of one popping while the other
+        // slides. opacity gets its own, faster entry in the `transition`
+        // map below rather than sharing height/marginTop's pace — nesting
+        // a second AnimatePresence to stagger it doesn't work here: once
+        // this element's removal is intercepted for its own exit,
+        // AnimatePresence keeps re-rendering the exact JSX it captured at
+        // that instant, so anything nested inside — including a second
+        // conditional gating an inner AnimatePresence — is frozen at
+        // whatever it evaluated to at capture time and never gets a
+        // chance to re-evaluate to false. A single element with per-key
+        // transitions doesn't have that problem, since it's the same
+        // instance carrying its own exit the whole time, not something
+        // relying on a fresh re-render to notice anything changed.
+        <AnimatePresence initial={false}>
+          {activeFlow.sets.length > 1 && (
+            <motion.div
+              key="chip-row"
+              layout
+              initial={{ height: 0, opacity: 0, marginTop: 0 }}
+              animate={{ height: "auto", opacity: 1, marginTop: 22 }}
+              exit={{ height: 0, opacity: 0, marginTop: 0 }}
+              transition={{ ...LAYOUT_TRANSITION, opacity: CHIP_FADE_TRANSITION }}
+              className="flex flex-wrap gap-2 overflow-hidden"
+            >
+              {chipButtons}
+            </motion.div>
+          )}
+        </AnimatePresence>
       )}
 
       {/* Main row — phone frame, then rationale/footnote/controls, the
-          controls pinned to the frame's bottom edge via mt-auto so they
-          hold still regardless of how long the rationale copy runs. */}
-      <div className="mt-[26px] flex flex-col items-stretch gap-10 sm:flex-row">
-        <div className="mx-auto w-[316px] shrink-0 rounded-[8px] border border-neutral-100 bg-neutral-75 py-[34px] sm:mx-0">
-          <div className="flex h-full items-center justify-center">
-            {activeScreen ? (
-              // A fixed 219×474 window regardless of the crop's own aspect
-              // ratio — most crops fill it exactly, but a few (Home's, for
-              // one) are taller than a single phone screen. Rather than
-              // shrinking those down to fit (which would render their text
-              // noticeably smaller than every other screen), the image
-              // renders at the same fixed width as the rest and this window
-              // scrolls to reveal the remainder, so the phone frame itself
-              // never changes size between screens.
-              <div
-                className="no-scrollbar overflow-y-auto"
-                style={{
-                  width: PHONE_WIDTH,
-                  height: PHONE_HEIGHT,
-                  borderRadius: 17,
-                  boxShadow: "0 16px 44px -14px rgba(22,25,29,.32)",
-                }}
-              >
-                <Image
-                  src={activeScreen.src}
-                  alt={activeScreen.alt}
-                  width={activeScreen.width}
-                  height={activeScreen.height}
-                  style={{ width: PHONE_WIDTH, height: "auto", display: "block" }}
-                />
-              </div>
-            ) : (
-              // TEMPORARY: comes out once every screen in `flows` below has
-              // a real exported crop — this branch only exists because
-              // Songs/Audio bytes are placeholders for now.
-              <div
-                className="flex items-center justify-center rounded-[17px] border border-dashed border-neutral-200 bg-white text-center font-mono text-[10px] uppercase text-neutral-300"
-                style={{ width: PHONE_WIDTH, height: PHONE_HEIGHT }}
-              >
-                Crop not exported yet
-              </div>
-            )}
+          controls pinned to the frame's bottom edge via mt-auto — but only
+          from `cs-screens` up, where this column is stretched to match the
+          phone card's own (often taller) height, so there's real leftover
+          space for an auto margin to push into. Below `cs-screens` this is
+          a stacked column with no such extra height — mt-auto there
+          resolves to 0 (no free space to distribute), which is what was
+          collapsing the gap between the caption and the thumbnail row
+          right down to nothing; mt-8 gives that pairing an explicit,
+          real gap on mobile instead of leaning on a margin that only does
+          anything in the side-by-side layout.
+          `layout` (off under reduced motion) is what turns the chip row
+          above appearing/disappearing into this row sliding to its new
+          position instead of jumping there — the same mechanism also
+          smooths out ordinary height differences between one screen's
+          rationale copy and the next's. */}
+      <motion.div
+        layout={!reduce}
+        transition={LAYOUT_TRANSITION}
+        className="mt-[26px] flex flex-col items-stretch gap-10 cs-screens:flex-row"
+      >
+        {/* Outer box — reserves the *scaled* footprint in the flow via
+            aspect-ratio (locked to the card's true 316:PHONE_CARD_HEIGHT
+            design ratio). No auto margins anywhere, so it's flush left at
+            every breakpoint — below `cs-screens` that lines it up with the
+            flow pills above and the caption/thumbnails below (all flush
+            left themselves), rather than centering it as its own,
+            differently-aligned island in that stack; from `cs-screens` up
+            there's no leftover width to center within anyway, since the
+            card's own flex-basis is what determines the row's width there.
+            Below `cs-screens` it's w-full (the sole content
+            of its own row there, so max-w-[316px] is the only thing
+            capping it). From `cs-screens` up, width comes from flex
+            instead — basis-[316px] grow-0 shrink: this card *wants* to
+            render at the original
+            316px design size and never grow past it, but — unlike before —
+            it's no longer shrink-0, so ordinary flexbox lets it give up
+            width once the row can't fit both it and the rationale column
+            beside it. Standard flex-shrink alone would shrink this card and
+            that column *together*, proportionally, the moment either one
+            is even slightly squeezed — not what's wanted here: the
+            thumbnail nav should keep its full, legible size for as long as
+            possible, and only once *it* has already shrunk all the way to
+            THUMB_MIN_WIDTH (see the rationale column's own min-width note
+            below) does this card start giving up space. That priority is
+            what min-w-0's removal over there actually buys: with it gone,
+            the rationale column's min-width is no longer 0, so the
+            shrink algorithm can't take width from it below that floor —
+            every further pixel of squeeze has nowhere to go but here.
+            cs-screens:min-w-[150px] is this card's own floor, so the
+            priority above has a bottom: this box's automatic min-width
+            would otherwise resolve to something close to 0 (nothing
+            inside it — an absolutely-positioned, transform-scaled
+            IPhoneFrame — is the kind of content that normally forces a
+            flex item to keep a sensible minimum, the way the rationale
+            column's own text does), so without an explicit floor a
+            genuinely cramped width right at `cs-screens` — still inside
+            the `sm`–`cs-toc` tier, where CaseStudyLayout reserves real
+            space for the TOC — could shrink this all the way to an
+            invisible sliver rather than a small-but-present phone.
+            The rationale column can still end up tighter than its own
+            THUMB_MIN_WIDTH floor in that same extreme case — this doesn't
+            fix that pre-existing tight-tablet-tier squeeze, it just keeps
+            the phone from being the one to disappear over it.
+            The ResizeObserver below just reads back whichever width this
+            resolves to (design-size, mid-shrink, or fully squeezed) so the
+            inner card can scale its real, fixed-px content to match.
+            overflow-hidden matters here, not just for tidiness: the inner
+            card below is transform-scaled, and transform never changes an
+            element's own layout size — only its paint. So the inner card's
+            true *layout* footprint stays the full, unscaled 316×PHONE_CARD_
+            HEIGHT no matter how small it's visually rendering, and without
+            overflow-hidden this box's own auto/aspect-ratio height gets
+            pulled back up to fit that full-size content, same as any
+            aspect-ratio box whose content doesn't actually fit it. Clipping
+            here only ever removes that phantom reserved space below/right
+            of the visibly-scaled card — nothing the scaled-down card
+            actually paints falls outside its own scaled bounds.
+            bg-neutral-75 — matching the inner card's own background below,
+            not decorative — is what's actually behind the white strip that
+            could briefly flash at the bottom edge on mobile: this box's
+            aspect-ratio-computed height and the inner card's transform-
+            scaled height both derive from the same width via the same
+            math, but on different clocks (this box resolves synchronously
+            in CSS the moment its width is known; frameScale only updates
+            once the ResizeObserver's callback actually fires), so for a
+            frame or two after something shifts this box's own width —
+            most visibly right as the screen image finishes loading — the
+            two can disagree by a hair. Un-backgrounded, that sliver showed
+            the page's white surface through; matching the card's own color
+            means any such gap just reads as slightly more of the same
+            card instead of a visible seam. */}
+        <div
+          ref={phoneCardRef}
+          className="w-full max-w-[316px] shrink-0 overflow-hidden rounded-[8px] bg-neutral-75 cs-screens:w-auto cs-screens:min-w-[150px] cs-screens:shrink cs-screens:grow-0 cs-screens:basis-[316px]"
+          style={{ aspectRatio: `${PHONE_CARD_WIDTH} / ${PHONE_CARD_HEIGHT}` }}
+        >
+          {/* Inner card — always laid out at its true 316×PHONE_CARD_HEIGHT
+              design size (so IPhoneFrame's own real-px children position
+              correctly against it), then visually scaled — up or down — to
+              match the outer box via `transform`. transform-origin: top
+              left matches the outer box's own top-left-anchored
+              aspect-ratio sizing, so the scaled card's edges land exactly
+              on the reserved box's edges rather than the two disagreeing
+              about which corner to grow/shrink from. */}
+          <div
+            className="rounded-[8px] border border-neutral-100 bg-neutral-75 py-[34px]"
+            style={{
+              width: PHONE_CARD_WIDTH,
+              height: PHONE_CARD_HEIGHT,
+              transform: `scale(${frameScale})`,
+              transformOrigin: "top left",
+            }}
+          >
+            <div className="flex h-full items-center justify-center">
+              {/* IPhoneFrame itself — bezel, status bar, screen cutout — is
+                  outside the AnimatePresence below and never keyed on
+                  contentKey, so it's never unmounted/remounted between
+                  screens; only its children (the actual crop) swap. */}
+              <IPhoneFrame>
+                {reduce ? (
+                  screenContent
+                ) : (
+                  // key changes with the visible screen — AnimatePresence
+                  // swaps the outgoing/incoming pair with the cross-fade
+                  // above, scoped to just the crop inside the fixed frame.
+                  <AnimatePresence mode="popLayout" initial={false}>
+                    <motion.div
+                      key={contentKey}
+                      variants={screenTransitionVariants}
+                      initial="hidden"
+                      animate="visible"
+                      exit="exit"
+                    >
+                      {screenContent}
+                    </motion.div>
+                  </AnimatePresence>
+                )}
+              </IPhoneFrame>
+            </div>
           </div>
         </div>
 
-        <div className="flex min-w-0 flex-1 flex-col pt-1.5">
-          {activeScreen && (
-            <p
-              className="max-w-[370px] text-base leading-normal text-neutral-600"
-              style={{ textWrap: "pretty" }}
-            >
-              {activeScreen.body}
-            </p>
-          )}
-
-          {activeScreen?.note && (
-            <p className="mt-[18px] max-w-[340px] text-xs italic text-neutral-300">{activeScreen.note}</p>
+        {/* No min-w-0 here (used to have one) — that class exists to let a
+            flex item shrink past its own content's natural minimum, which
+            is exactly what this column should *stop* doing once the
+            thumbnail row inside it (see THUMB_MIN_WIDTH above) has already
+            shrunk to its own floor. Leaving this at the flex default
+            (min-width: auto) means the browser's own min-content
+            calculation — driven by the thumbnail row, the widest thing in
+            here — becomes this column's real floor, and the phone card
+            beside it (flex-shrink enabled, see below) is what gives up the
+            remaining space once this column hits it. */}
+        <div className="flex flex-1 flex-col pt-1.5">
+          {reduce ? (
+            rationaleContent
+          ) : (
+            <AnimatePresence mode="popLayout" initial={false}>
+              {rationaleContent && (
+                <motion.div
+                  key={rationaleKey}
+                  variants={screenTransitionVariants}
+                  initial="hidden"
+                  animate="visible"
+                  exit="exit"
+                >
+                  {rationaleContent}
+                </motion.div>
+              )}
+            </AnimatePresence>
           )}
 
           {hasScreens && (
-            <div className="mt-auto flex flex-col gap-[18px]">
-              <div className="flex gap-2.5">
-                {activeSet.screens.map((s, i) => {
-                  const active = i === activeIdx
-                  return (
-                    <button key={s.src} type="button" onClick={() => setIdx(i)} aria-label={s.alt} aria-current={active}>
-                      {/* Fixed w-[52px] h-28 (the standard crop's own aspect
-                          at that height) + object-cover/object-top, not
-                          w-auto — every thumbnail stays the same footprint
-                          regardless of the crop's real aspect. A taller
-                          crop (Home's) gets cropped from the bottom instead
-                          of shrinking to fit, which would otherwise render
-                          it as a much narrower sliver than the rest of the
-                          row. Unlike the main frame above, this preview
-                          never scrolls — it's just a fixed-size thumbnail. */}
-                      <img
-                        src={s.src}
-                        alt=""
-                        className={`screen-thumb h-28 w-[52px] rounded-[9px] object-cover object-top outline transition-opacity duration-200 ease-out focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 ${
-                          active
-                            ? "opacity-100 outline-[1.5px] outline-[var(--cs-accent)] outline-offset-2"
-                            : "opacity-40 outline-1 outline-neutral-100 hover:opacity-70"
-                        }`}
-                      />
-                    </button>
-                  )
-                })}
+            <div className="mt-8 flex flex-col gap-[18px] cs-screens:mt-auto">
+              <div className="relative">
+                {/* Below `cs-screens`: w-[52px] shrink-0 fixes every
+                    thumbnail at its designed size — overflow-x-auto lets
+                    the row scroll instead of shrinking them to fit, with
+                    snap-x/snap-start landing a drag on a thumbnail rather
+                    than half between two. From `cs-screens` up this reverts
+                    to the shrink-with-a-floor behavior the desktop
+                    side-by-side layout still wants: cs-screens:w-auto
+                    cs-screens:flex-[0_1_52px] (basis 52px, grow 0, shrink
+                    1) with cs-screens:overflow-visible/snap-none turning
+                    the scroll container back off, so this row's min-width
+                    (no longer zeroed by min-w-0, see the rationale
+                    column's own note above) correctly propagates up to
+                    that flex row instead of being swallowed by an active
+                    scroll container — overflow:auto/scroll elements report
+                    an automatic minimum size of 0 regardless of their
+                    content, which would otherwise break the phone card's
+                    priority-shrink handoff at that breakpoint. */}
+                <div
+                  ref={thumbTrackRef}
+                  className="no-scrollbar flex snap-x snap-mandatory gap-2.5 overflow-x-auto cs-screens:snap-none cs-screens:overflow-visible"
+                >
+                  {activeSet.screens.map((s, i) => {
+                    const active = i === activeIdx
+                    return (
+                      <button
+                        key={s.src}
+                        ref={(el) => {
+                          thumbButtonRefs.current[i] = el
+                        }}
+                        type="button"
+                        onClick={() => setIdx(i)}
+                        aria-label={s.alt}
+                        aria-current={active}
+                        // aspect-[52/112] — the same 52:112 ratio the old
+                        // fixed w-[52px] h-28 pair encoded — is what keeps
+                        // the desktop-only shrink above from distorting
+                        // anything: height derives from whatever width
+                        // this lands on rather than staying pinned to a
+                        // fixed 112px. Harmless below `cs-screens` too,
+                        // where width is fixed at 52 anyway (112 is just
+                        // what the ratio resolves to there).
+                        className="aspect-[52/112] w-[52px] shrink-0 snap-start cs-screens:w-auto cs-screens:flex-[0_1_52px]"
+                        style={{ minWidth: THUMB_MIN_WIDTH }}
+                      >
+                        <img
+                          src={s.src}
+                          alt=""
+                          draggable={false}
+                          className={`screen-thumb block h-full w-full select-none rounded-[9px] object-cover object-top outline transition-opacity duration-200 ease-out focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 ${
+                            active
+                              ? "opacity-100 outline-[1.5px] outline-[var(--cs-accent)] outline-offset-2"
+                              : "opacity-40 outline-1 outline-neutral-100 hover:opacity-70"
+                          }`}
+                        />
+                      </button>
+                    )
+                  })}
+                </div>
+
+                {/* Right-edge fade — outside the scrolling track, not a
+                    child of it (a positioned descendant of an overflow-x
+                    element still scrolls along with it — see
+                    IterationCarousel's own version of this same note), and
+                    reactive to actual scroll position (thumbAtEnd) rather
+                    than always on: unlike IterationCarousel's track, this
+                    one doesn't always have another item permanently
+                    peeking past the edge, so a fade with nothing left to
+                    hint at would just look like a stuck smudge over the
+                    last thumbnail once you've scrolled all the way. Hidden
+                    entirely from `cs-screens` up, where the row doesn't
+                    scroll at all. */}
+                <div
+                  aria-hidden="true"
+                  className={`pointer-events-none absolute inset-y-0 right-0 w-10 transition-opacity duration-200 ease-out cs-screens:hidden ${
+                    thumbAtEnd ? "opacity-0" : "opacity-100"
+                  }`}
+                  style={{ background: "linear-gradient(to right, transparent, #FFFFFF)" }}
+                />
               </div>
 
               <div className="flex items-center gap-[7px] shrink-0 whitespace-nowrap">
                 <button
                   type="button"
-                  onClick={() => setIdx(activeIdx - 1)}
-                  disabled={activeIdx === 0}
+                  onClick={() => prevPosition && goTo(prevPosition)}
+                  disabled={!prevPosition}
                   aria-label="Previous screen"
                   className="relative flex cursor-pointer items-center justify-center text-neutral-400 transition-colors duration-150 before:absolute before:inset-[-11px] before:content-[''] hover:text-neutral-800 disabled:cursor-default disabled:pointer-events-none disabled:text-neutral-200"
                 >
@@ -276,8 +841,8 @@ export function ScreenSpotlight({ flows, className }: ScreenSpotlightProps) {
                 </span>
                 <button
                   type="button"
-                  onClick={() => setIdx(activeIdx + 1)}
-                  disabled={activeIdx === activeSet.screens.length - 1}
+                  onClick={() => nextPosition && goTo(nextPosition)}
+                  disabled={!nextPosition}
                   aria-label="Next screen"
                   className="relative flex cursor-pointer items-center justify-center text-neutral-400 transition-colors duration-150 before:absolute before:inset-[-11px] before:content-[''] hover:text-neutral-800 disabled:cursor-default disabled:pointer-events-none disabled:text-neutral-200"
                 >
@@ -300,7 +865,7 @@ export function ScreenSpotlight({ flows, className }: ScreenSpotlightProps) {
             </div>
           )}
         </div>
-      </div>
+      </motion.div>
     </div>
   )
 }
