@@ -1,6 +1,6 @@
 import { Section } from "@/components/cs/Section"
 import { ImageBlock } from "@/components/cs/ImageBlock"
-import { Callout, Outcomes, IterationCarousel } from "@/components/cs"
+import { Callout, Outcomes, IterationCarousel, Reflections } from "@/components/cs"
 
 export default function Autumn() {
   return (
@@ -168,12 +168,30 @@ export default function Autumn() {
         />
       </Section>
 
-      <Section
+      <Reflections
         id="reflections"
         tag="it's done! what did i learn?"
-        headline="A good design system leaves nothing unsaid"
-        body="I learned that a good design system is more than just a set of components and rules. It should also include clear documentation and examples, so that anyone can understand how to use it effectively. This ensures consistency and quality across the product, even when different designers or developers are working on it."
-        primary
+        items={[
+          {
+            heading: "Ruthless prioritization > doing it all",
+            body: "Daniel Shaw, Autumn's founder, taught me that in an early-stage startup, \
+            there are a million and one things to work on, improve, and fix at all times. \
+            Progress in this environment comes from putting on \"blinders,\" choosing a single \
+            priority, and channeling all efforts into that focus.",
+          },
+          {
+            heading: "Balance quick wins with long-term foundations",
+            body: "Working on a multi-stage project taught me that on top of knowing what to build, \
+            I had to know WHEN to build it. I learned to map designs on a timeline, distinguishing what \
+            must exist now, what can wait, and what foundations need to be laid today for future success.",
+          },
+          {
+            heading: "Don’t wait for perfect data, use what you have",
+            body:"Without access to traditional user research, I studied successful low-frequency \
+            marketplaces like Zillow instead. I discovered that good design insights often come from \
+            connecting existing dots in creative ways."
+          },
+        ]}
       />
       
     </div>

@@ -4,7 +4,7 @@ import { TwoColumn } from "@/components/cs/TwoColumn"
 import { ImageBlock } from "@/components/cs/ImageBlock"
 import { IterationCarousel } from "@/components/cs/IterationCarousel"
 import { ScreenSpotlight } from "@/components/cs/ScreenSpotlight"
-import { h2 } from "framer-motion/client"
+import { Reflections } from "@/components/cs/Reflections"
 
 const SCREENS_DIR = "/images/case-studies/retrospect/screens"
 
@@ -531,12 +531,19 @@ export default function Retrospect() {
                 <ScreenSpotlight flows={finalProductFlows} />
             </Section>
 
-            <Section
+        <Reflections
                 id="reflections"
                 tag="it's done! what did i learn?"
-                headline="A good design system leaves nothing unsaid"
-                body="I learned that a good design system is more than just a set of components and rules. It should also include clear documentation and examples, so that anyone can understand how to use it effectively. This ensures consistency and quality across the product, even when different designers or developers are working on it."
-                primary
+                items={[
+                    {
+                        heading: "MVPs (minimum viable products) are the MVP (most valuable player)",
+                        body: "My team fell victim to scope creep. From the get-go we added collaboration, sharing, and a fancy onboarding, and we tried to build it all at once. I learned how important it is to start with the simplest possible version of the product,  get it in front of users early, and iterate based on real feedback (not assumptions).",
+                    },
+                    {
+                        heading: "Placeholder reflection",
+                        body: "Placeholder reflection — add a second takeaway here.",
+                    },
+                ]}
             />
         </div>
     )

@@ -1,6 +1,6 @@
 import Image from "next/image"
 import { ImageBlock } from "@/components/cs/ImageBlock"
-import { Callout, Section } from "@/components/cs"
+import { Callout, Section, Reflections } from "@/components/cs"
 
 export default function Glucal() {
   return (
@@ -150,12 +150,19 @@ export default function Glucal() {
         <ImageBlock height={400} />
       </Section>
 
-      <Section
+      <Reflections
         id="reflections"
         tag="it's done! what did i learn?"
-        headline="A good design system leaves nothing unsaid"
-        body="I learned that a good design system is more than just a set of components and rules. It should also include clear documentation and examples, so that anyone can understand how to use it effectively. This ensures consistency and quality across the product, even when different designers or developers are working on it."
-        primary
+        items={[
+          {
+            heading: "A good design system leaves nothing unsaid",
+            body: "I learned that a good design system is more than just a set of components and rules. It should also include clear documentation and examples, so that anyone can understand how to use it effectively. This ensures consistency and quality across the product, even when different designers or developers are working on it.",
+          },
+          {
+            heading: "Placeholder reflection",
+            body: "Placeholder reflection — add a second takeaway here.",
+          },
+        ]}
       />
     </div>
   )

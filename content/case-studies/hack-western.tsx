@@ -6,6 +6,7 @@ import { IterationCarousel } from "@/components/cs/IterationCarousel"
 import { Outcomes } from "@/components/cs/Outcomes"
 import { MediaFrame } from "@/components/cs/MediaFrame"
 import { StickerAnimation } from "@/components/cs/StickerAnimation"
+import { Reflections } from "@/components/cs/Reflections"
 
 export default function HackWestern() {
   return (
@@ -246,26 +247,20 @@ export default function HackWestern() {
         />
       </Section>
 
-      <Section
+      <Reflections
         id="reflections"
         tag="it's done! what did i learn?"
-        headline="A good design system leaves nothing unsaid"
-        headingLevel={2}
-        primary
-      >
-        <TwoColumn
-          left={
-            <p className="text-base text-neutral-600">
-              I learned that a good design system is more than just a set of components and rules. It should also include clear documentation and examples, so that anyone can understand how to use it effectively. This ensures consistency and quality across the product, even when different designers or developers are working on it.
-            </p>
-          }
-          right={
-            <p className="text-base text-neutral-600">
-              Placeholder reflection — add a second takeaway here.
-            </p>
-          }
-        />
-      </Section>
+        items={[
+          {
+            heading: "A good design system leaves nothing unsaid",
+            body: "I learned that a good design system is more than just a set of components and rules. It should also include clear documentation and examples, so that anyone can understand how to use it effectively. This ensures consistency and quality across the product, even when different designers or developers are working on it.",
+          },
+          {
+            heading: "Placeholder reflection",
+            body: "Placeholder reflection — add a second takeaway here.",
+          },
+        ]}
+      />
     </div>
   )
 }
