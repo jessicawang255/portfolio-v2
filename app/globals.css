@@ -172,12 +172,43 @@ body {
   border-radius: 0;
   border-top-left-radius:  var(--radius-frame);
   border-top-right-radius: var(--radius-frame);
-  box-shadow: 0 0 40px 0 rgba(0, 0, 0, 0.07), inset 0 0 0 1px rgba(0, 0, 0, 0.06);
   transition:
     border-top-left-radius     650ms var(--ease-out),
     border-top-right-radius    650ms var(--ease-out),
     border-bottom-left-radius  650ms var(--ease-out),
     border-bottom-right-radius 650ms var(--ease-out);
+}
+
+/* Shadow lives on a static pseudo-layer behind #main-frame rather than on
+   #main-frame itself. ScrollRevealController rewrites #main-frame's own
+   border-radius on every scroll frame (now rAF-batched, still every frame
+   during a scroll gesture) — repainting a 40px box-shadow in lockstep with
+   that is markedly more expensive in Safari/WebKit than in Chromium
+   (measured ~2x scroll frame time; see DotField Safari investigation).
+   Frozen here at the resting corner shape (top rounded, bottom flat — same
+   as #main-frame's own SSR default above): a 40px blur washes out the few-px
+   difference between that and any mid-peel shape, so this is visually
+   identical to a live-tracking shadow while costing nothing per scroll tick. */
+#main-frame::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  border-radius: var(--radius-frame) var(--radius-frame) 0 0;
+  box-shadow: 0 0 40px 0 rgba(0, 0, 0, 0.07), inset 0 0 0 1px rgba(0, 0, 0, 0.06);
+}
+
+/* Same split, same reason, for case studies' #cs-content (CaseStudyLayout.tsx
+   — its box-shadow used to be inline alongside the scroll-driven radius). */
+#cs-content::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  border-radius: var(--radius-frame) var(--radius-frame) 0 0;
+  box-shadow: 0 -8px 40px rgba(0, 0, 0, 0.07);
 }
 
 #main-frame[data-header-visible="false"] {

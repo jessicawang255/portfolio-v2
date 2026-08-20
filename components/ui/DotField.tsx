@@ -299,26 +299,45 @@ export function DotField({
 
     // ── Events ────────────────────────────────────────────────────────────────
 
+    // Safari's document-level mouseenter/mouseleave are unreliable (a
+    // long-standing WebKit quirk — they can simply never fire), so the
+    // "entering" teleport can't depend on onEnter alone. `hasEntered`
+    // lets onMove fall back to doing the same teleport off a plain
+    // mousemove, which fires consistently in every browser.
+    let hasEntered = false
+
+    function enterAt(x: number, y: number) {
+      cursorX = x
+      cursorY = y
+      // Teleport both springs to entry point — trail develops organically from movement
+      springX = x; springY = y; springVX = 0; springVY = 0
+      trailX  = x; trailY  = y; trailVX  = 0; trailVY  = 0
+      infTarget  = 1
+      hasEntered = true
+      startRAF()
+    }
+
     function onMove(e: MouseEvent) {
       const rect = canvas!.getBoundingClientRect()
-      cursorX = e.clientX - rect.left
-      cursorY = e.clientY - rect.top
+      const x = e.clientX - rect.left
+      const y = e.clientY - rect.top
+      if (!hasEntered) {
+        enterAt(x, y)
+        return
+      }
+      cursorX = x
+      cursorY = y
       startRAF()
     }
 
     function onEnter(e: MouseEvent) {
       const rect = canvas!.getBoundingClientRect()
-      cursorX = e.clientX - rect.left
-      cursorY = e.clientY - rect.top
-      // Teleport both springs to entry point — trail develops organically from movement
-      springX = cursorX; springY = cursorY; springVX = 0; springVY = 0
-      trailX  = cursorX; trailY  = cursorY; trailVX  = 0; trailVY  = 0
-      infTarget = 1
-      startRAF()
+      enterAt(e.clientX - rect.left, e.clientY - rect.top)
     }
 
     function onLeave() {
-      infTarget = 0
+      infTarget  = 0
+      hasEntered = false
       startRAF()
     }
 

@@ -164,9 +164,26 @@ export function ScrollRevealController({ frameId, heroId, heroFrameId }: Props) 
 
       applyRadius(window.scrollY)
 
-      function onScroll() { applyRadius(window.scrollY) }
+      // Batched to one rAF-scheduled update per frame instead of running
+      // applyRadius synchronously on every native scroll event — Safari in
+      // particular dispatches scroll events more densely than a frame budget
+      // during momentum scrolling, so unbatched, the forced-layout reads +
+      // multi-element style writes inside applyRadius run several times per
+      // frame instead of once. Measured ~2x scroll frame time in WebKit vs
+      // Chromium before this (see DotField Safari investigation).
+      let scrollRafId = 0
+      function onScroll() {
+        if (scrollRafId) return
+        scrollRafId = requestAnimationFrame(() => {
+          scrollRafId = 0
+          applyRadius(window.scrollY)
+        })
+      }
       window.addEventListener("scroll", onScroll, { passive: true })
-      cleanupScroll = () => window.removeEventListener("scroll", onScroll)
+      cleanupScroll = () => {
+        window.removeEventListener("scroll", onScroll)
+        cancelAnimationFrame(scrollRafId)
+      }
     }
 
     setup()
