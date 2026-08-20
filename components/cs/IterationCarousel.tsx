@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react"
 import Image from "next/image"
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion"
 
 type Iteration = {
   src: string
@@ -37,6 +38,7 @@ const STICKY_RELEASE_BUFFER = 120
 // reserved margin across breakpoints (see CaseStudyLayout).
 export function IterationCarousel({ items, className }: IterationCarouselProps) {
   const [active, setActive] = useState(0)
+  const reduce = useReducedMotion()
   // Measured from the root, not the caption row — the caption row is about
   // to be wrapped in its own bled-width sticky backdrop (to carry the
   // gradient all the way to the track's own right edge), so its rendered
@@ -55,6 +57,17 @@ export function IterationCarousel({ items, className }: IterationCarouselProps) 
       const track = trackRef.current
       if (!root || !track) return
       setSlideWidth(root.getBoundingClientRect().width)
+      // Below `sm` there's no TOC-reserved margin left to bleed into (see
+      // CaseStudyLayout's own `sm` split), and no room for a peeking next
+      // slide anyway — bleeding the track there just pushes the active
+      // slide's right edge under the fade gradient below, whiting out part
+      // of the *active* image instead of a peeking one. So on mobile the
+      // track stays unbled (null → falls back to w-full, i.e. slideWidth)
+      // and the active image genuinely fills the column.
+      if (document.documentElement.clientWidth < 640) {
+        setTrackWidth(null)
+        return
+      }
       const trackLeft = track.getBoundingClientRect().left
       // documentElement.clientWidth, not window.innerWidth — excludes the
       // scrollbar's own width, so the track's right edge lands flush with
@@ -156,12 +169,39 @@ export function IterationCarousel({ items, className }: IterationCarouselProps) 
             with the TOC's when both are pinned during a scroll. */}
         <div
           ref={captionRowRef}
-          className="relative flex w-full items-center justify-between gap-5 pt-9 pb-5"
+          className="relative flex w-full items-start justify-between gap-5 pt-9 pb-5"
           style={slideWidth != null ? { width: slideWidth } : undefined}
         >
-          <p className="text-xs italic leading-[1.5] text-neutral-400" aria-live="polite">
-            {current.caption}
-          </p>
+          {/* Same blur cross-fade as ScreenSpotlight's screen/rationale swap
+              and AboutContent's hover sticky panel — blur(2px)<->blur(0px),
+              100ms, easeOut, identical in and out — rather than a one-off
+              treatment just for this caption. popLayout so the exiting
+              caption doesn't shove the arrows/count sideways while it fades
+              out under the incoming one. */}
+          {reduce ? (
+            <p className="text-xs italic leading-[1.5] text-neutral-400" aria-live="polite">
+              {current.caption}
+            </p>
+          ) : (
+            <AnimatePresence mode="popLayout" initial={false}>
+              <motion.p
+                key={active}
+                className="text-xs italic leading-[1.5] text-neutral-400"
+                aria-live="polite"
+                initial={{ opacity: 0, filter: "blur(2px)" }}
+                animate={{ opacity: 1, filter: "blur(0px)" }}
+                exit={{ opacity: 0, filter: "blur(2px)" }}
+                transition={{ duration: 0.1, ease: "easeOut" }}
+              >
+                {current.caption}
+              </motion.p>
+            </AnimatePresence>
+          )}
+          {/* items-center here (not -start) keeps the arrows/count aligned
+              with each other, but the row above is now items-start so this
+              whole group sits flush with the caption's own top line instead
+              of drifting to its vertical center when the caption wraps to
+              two lines. */}
           <div className="flex items-center gap-[7px] shrink-0 whitespace-nowrap">
             {/* before:inset-[-11px] pads the hit area out to a comfortable
                 tap/click target without growing the visible icon — same
@@ -343,10 +383,14 @@ export function IterationCarousel({ items, className }: IterationCarouselProps) 
             reach :root when referenced by a Tailwind utility elsewhere on
             the page (see the case-study accent rules in globals.css for the
             same pattern). pointer-events-none keeps it from blocking
-            drag-to-scroll on the track underneath it. */}
+            drag-to-scroll on the track underneath it.
+            hidden below `sm` — the track isn't bled there (see measure()
+            above), so there's no peeking slide to fade into the surface;
+            left on, this would just paint a white scrim over the trailing
+            edge of the active, full-width image instead. */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-y-0 right-0 w-40"
+          className="pointer-events-none absolute inset-y-0 right-0 hidden w-40 sm:block"
           style={{ background: "linear-gradient(to right, transparent, #FFFFFF)" }}
         />
       </div>

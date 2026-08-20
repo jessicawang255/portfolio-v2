@@ -9,11 +9,11 @@ type OutcomesProps = {
 
 export function Outcomes({ metrics }: OutcomesProps) {
   return (
-    <div className="flex items-start justify-between gap-8 sm:grid sm:grid-cols-4 sm:gap-0">
+    <div className="flex flex-col items-start gap-8 sm:flex-row sm:justify-between">
       <p className="shrink-0 text-sm font-mono uppercase leading-[1.2] text-neutral-400 pt-1 mt-1.5">
         Outcomes
       </p>
-      <div className="flex flex-col gap-y-6 sm:col-span-3 sm:flex-row sm:flex-wrap sm:gap-x-12">
+      <div className="flex flex-col gap-y-6 sm:flex-row sm:flex-wrap sm:gap-x-12">
         {metrics.map(({ value, label }) => (
           <div key={label} className="max-w-[12rem]">
             <p className="text-2xl font-medium text-primary">{value}</p>
