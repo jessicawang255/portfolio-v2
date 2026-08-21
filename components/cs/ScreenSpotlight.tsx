@@ -295,7 +295,7 @@ export function ScreenSpotlight({ flows, className }: ScreenSpotlightProps) {
       <button
         key={s.label}
         type="button"
-        onClick={() => setSet(i)}
+        onClick={() => goToSet(i)}
         aria-current={active}
         className={`screen-chip rounded-full border px-3.5 py-[7px] text-xs transition-colors duration-fast ease-out ${
           active
@@ -465,7 +465,7 @@ export function ScreenSpotlight({ flows, className }: ScreenSpotlightProps) {
                 tabRefs.current[i] = el
               }}
               type="button"
-              onClick={() => setFlow(i)}
+              onClick={() => goToFlow(i)}
               aria-current={active}
               className={`screen-tab shrink-0 whitespace-nowrap px-0.5 pb-3 text-sm leading-[1.5] transition-colors duration-fast ease-out ${
                 active ? "text-primary" : "text-neutral-400 hover:text-neutral-600"
@@ -497,7 +497,7 @@ export function ScreenSpotlight({ flows, className }: ScreenSpotlightProps) {
             <button
               key={f.id}
               type="button"
-              onClick={() => setFlow(i)}
+              onClick={() => goToFlow(i)}
               aria-current={active}
               className={`rounded-full border px-3.5 py-[7px] text-sm leading-[1.5] transition-colors duration-fast ease-out ${
                 active

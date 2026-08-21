@@ -162,14 +162,32 @@ export function IterationCarousel({ items, className }: IterationCarouselProps) 
         <div
           aria-hidden="true"
           className="absolute inset-0"
-          style={{ background: "linear-gradient(to bottom, #FFFFFF 80%, transparent)" }}
+          style={{
+            // A percentage stop here (the old "80%") is relative to this
+            // box's own height — which is just the caption row's content
+            // (pt-9 + text + pb-2), so it drifts with the text. At the pb-5
+            // this used to be, 80% landed comfortably after the text; now
+            // that the bottom pad is pb-2 (see that div's own comment), 80%
+            // of the shorter box lands *before* the text baseline, so the
+            // fade starts while the caption is still rendering instead of
+            // in the gap below it. A fixed 8px — the same size as pb-2 —
+            // keeps the fade confined to that gap regardless of how tall
+            // the caption itself is (one line or two), so it's solid white
+            // behind the text always and only ever fades in the space
+            // that's already empty below it.
+            background: "linear-gradient(to bottom, #FFFFFF calc(100% - 8px), transparent)",
+          }}
         />
         {/* pt-9 matches the TOC's own sticky "Back" link (CaseStudyLayout) —
             same 36px top offset, same top-0, so this row's baseline lines up
-            with the TOC's when both are pinned during a scroll. */}
+            with the TOC's when both are pinned during a scroll. pb-2 (not
+            more) keeps the gap from caption text to the image below it the
+            same 8px ImageBlock's own caption (mb-2) uses — pt-9 is only
+            about the sticky release point above the text, not about how
+            close the text sits to its image. */}
         <div
           ref={captionRowRef}
-          className="relative flex w-full items-start justify-between gap-5 pt-9 pb-5"
+          className="relative flex w-full items-start justify-between gap-5 pt-9 pb-2"
           style={slideWidth != null ? { width: slideWidth } : undefined}
         >
           {/* Same blur cross-fade as ScreenSpotlight's screen/rationale swap
