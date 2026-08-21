@@ -43,13 +43,6 @@ type ScreenSpotlightProps = {
 const PHONE_WIDTH = IPHONE_SCREEN_WIDTH
 const PHONE_HEIGHT = IPHONE_SCREEN_HEIGHT
 
-// The floor the screen-index thumbnail row (52px design width, 52:112
-// aspect-ratio — both set directly on the buttons below, this constant
-// isn't the design width itself) is allowed to shrink to before the phone
-// card starts giving up width instead — see the flex-basis/min-width split
-// between the two below.
-const THUMB_MIN_WIDTH = 36
-
 // The card wrapping IPhoneFrame — frame height plus this card's own
 // vertical padding (see its py-[34px] below, mirrored here as a constant
 // so the two can't drift apart). Everything inside that card (frame image,
@@ -362,16 +355,30 @@ export function ScreenSpotlight({ flows, className }: ScreenSpotlightProps) {
     return () => observer.disconnect()
   }, [])
 
-  // Screen-index thumbnail row, mobile only (below `cs-screens` — see the
-  // thumbnail buttons' own className further down): fixed at THUMB_WIDTH
-  // instead of shrinking, scrolling horizontally instead. Unlike the flow
-  // tabs (a small, finite set you want fully visible at once — that's why
-  // *those* became wrapping pills, not a scroll, on mobile), this row is a
-  // sequential filmstrip already paired with prev/next + a counter, and
+  // Screen-index thumbnail row, every breakpoint: fixed at its 52px design
+  // width always, scrolling horizontally instead of shrinking. Unlike the
+  // flow tabs (a small, finite set you want fully visible at once — that's
+  // why *those* became wrapping pills, not a scroll, on mobile), this row is
+  // a sequential filmstrip already paired with prev/next + a counter, and
   // this codebase already treats that shape as scroll-native
-  // (IterationCarousel's own track) — plus a fixed size actually protects
-  // the thing THUMB_MIN_WIDTH was already a compromise on: staying legible.
-  // Two behaviors this needs that the old shrink-to-fit version didn't:
+  // (IterationCarousel's own track).
+  // This used to shrink-to-fit only at `cs-screens`+ (staying fixed-and-
+  // scrolling below it), with a THUMB_MIN_WIDTH floor protecting legibility
+  // once squeezed. That floor was a *per-thumbnail* number, so the row's
+  // total min-content width — and therefore how much room the phone card
+  // beside it (see PHONE_CARD_WIDTH/frameScale above) had left to render
+  // at — scaled with however many screens happened to be in the active
+  // flow/set: a 6-screen flow left less room for the phone than a 2-screen
+  // one at the exact same viewport width, so the same spotlight rendered a
+  // different-sized phone depending only on which tab was open. Fixing the
+  // row at its design width everywhere, and paired with an explicit
+  // count-independent min-width on the rationale column around it (see
+  // that column's own comment further down for why the row's own
+  // overflow-x-auto isn't, by itself, enough to stop this width from
+  // bubbling up), removes that dependency: the phone card's size becomes a
+  // function of the row's own available width alone — proportional to the
+  // container, not to the thumbnail count.
+  // Two behaviors this needs that a shrink-to-fit version wouldn't:
   const thumbTrackRef = useRef<HTMLDivElement>(null)
   const thumbButtonRefs = useRef<(HTMLButtonElement | null)[]>([])
   const [thumbAtEnd, setThumbAtEnd] = useState(false)
@@ -593,35 +600,39 @@ export function ScreenSpotlight({ flows, className }: ScreenSpotlightProps) {
             capping it). From `cs-screens` up, width comes from flex
             instead — basis-[316px] grow-0 shrink: this card *wants* to
             render at the original
-            316px design size and never grow past it, but — unlike before —
-            it's no longer shrink-0, so ordinary flexbox lets it give up
-            width once the row can't fit both it and the rationale column
-            beside it. Standard flex-shrink alone would shrink this card and
-            that column *together*, proportionally, the moment either one
-            is even slightly squeezed — not what's wanted here: the
-            thumbnail nav should keep its full, legible size for as long as
-            possible, and only once *it* has already shrunk all the way to
-            THUMB_MIN_WIDTH (see the rationale column's own min-width note
-            below) does this card start giving up space. That priority is
-            what min-w-0's removal over there actually buys: with it gone,
-            the rationale column's min-width is no longer 0, so the
-            shrink algorithm can't take width from it below that floor —
-            every further pixel of squeeze has nowhere to go but here.
-            cs-screens:min-w-[150px] is this card's own floor, so the
-            priority above has a bottom: this box's automatic min-width
-            would otherwise resolve to something close to 0 (nothing
-            inside it — an absolutely-positioned, transform-scaled
-            IPhoneFrame — is the kind of content that normally forces a
-            flex item to keep a sensible minimum, the way the rationale
-            column's own text does), so without an explicit floor a
-            genuinely cramped width right at `cs-screens` — still inside
-            the `sm`–`cs-toc` tier, where CaseStudyLayout reserves real
-            space for the TOC — could shrink this all the way to an
-            invisible sliver rather than a small-but-present phone.
-            The rationale column can still end up tighter than its own
-            THUMB_MIN_WIDTH floor in that same extreme case — this doesn't
-            fix that pre-existing tight-tablet-tier squeeze, it just keeps
-            the phone from being the one to disappear over it.
+            316px design size and never grow past it, but it's not
+            shrink-0 either, so ordinary flexbox lets it give up width once
+            the row can't fit both it and the rationale column beside it.
+            How much it gives up is meant to depend only on the row's own
+            available width — proportional to the container as a whole —
+            never on how many screens happen to be in the active flow/set.
+            That's why the thumbnail row beside it (further down) is a
+            fixed-width, always-scrolling filmstrip rather than something
+            that shrinks with a per-item floor, *and* why the rationale
+            column now carries its own explicit min-width instead of
+            leaving that at the flex default (see that column's own
+            comment for why the scrolling row alone doesn't stop its width
+            from bubbling up): a shrink-to-fit thumbnail row's total
+            min-content width scales with its screen count, and with no
+            floor of its own the rationale column's automatic min-width
+            just inherits that count-dependent number — a different floor
+            for every flow/set, handing this card a different amount of
+            leftover space at the same viewport width depending only on
+            which tab was open. A fixed, explicit min-width instead pins
+            that floor to one number regardless of count, so the only thing
+            left setting the split between this card and that column is the
+            row's own available width.
+            cs-screens:min-w-[150px] is this card's own floor, so that
+            split has a bottom: this box's automatic min-width would
+            otherwise resolve to something close to 0 (nothing inside it —
+            an absolutely-positioned, transform-scaled IPhoneFrame — is the
+            kind of content that normally forces a flex item to keep a
+            sensible minimum, the way the rationale column's own text
+            does), so without an explicit floor a genuinely cramped width
+            right at `cs-screens` — still inside the `sm`–`cs-toc` tier,
+            where CaseStudyLayout reserves real space for the TOC — could
+            shrink this all the way to an invisible sliver rather than a
+            small-but-present phone.
             The ResizeObserver below just reads back whichever width this
             resolves to (design-size, mid-shrink, or fully squeezed) so the
             inner card can scale its real, fixed-px content to match.
@@ -701,17 +712,30 @@ export function ScreenSpotlight({ flows, className }: ScreenSpotlightProps) {
           </div>
         </div>
 
-        {/* No min-w-0 here (used to have one) — that class exists to let a
-            flex item shrink past its own content's natural minimum, which
-            is exactly what this column should *stop* doing once the
-            thumbnail row inside it (see THUMB_MIN_WIDTH above) has already
-            shrunk to its own floor. Leaving this at the flex default
-            (min-width: auto) means the browser's own min-content
-            calculation — driven by the thumbnail row, the widest thing in
-            here — becomes this column's real floor, and the phone card
-            beside it (flex-shrink enabled, see below) is what gives up the
-            remaining space once this column hits it. */}
-        <div className="flex flex-1 flex-col pt-1.5">
+        {/* min-w-0 here (used not to have one) plus an explicit
+            cs-screens:min-w-[180px] floor in its place. The old approach
+            left this at the flex default (min-width: auto) and let the
+            browser's own min-content calculation become this column's real
+            floor — the assumption being that, with the thumbnail row now a
+            scroll container (see its own comment below), that calculation
+            would land on a fixed, count-independent number. It doesn't:
+            the "an overflow:auto element reports an automatic minimum size
+            of 0" rule is specifically about how *that element itself*
+            behaves as a flex item along the shrinking axis — it does not
+            zero out that element's min-content contribution to an
+            *ancestor* several levels up (through the plain block/column-
+            flex wrappers between the track and this column) that still has
+            the default overflow: visible. So this column's automatic
+            min-width kept bubbling up from the track's real content width
+            — 52px × however many screens the active set has, plus gaps —
+            which is exactly the count-dependent floor this whole fix is
+            trying to remove. min-w-0 bypasses that calculation outright,
+            and the explicit min-width takes its place as this column's
+            floor instead: a fixed number, so the split between this column
+            and the phone card beside it (flex-shrink enabled, see above)
+            depends only on the row's own available width, never on how
+            many thumbnails happen to be in whichever flow/set is open. */}
+        <div className="flex min-w-0 flex-1 flex-col pt-1.5 cs-screens:min-w-[180px]">
           {reduce ? (
             rationaleContent
           ) : (
@@ -733,26 +757,28 @@ export function ScreenSpotlight({ flows, className }: ScreenSpotlightProps) {
           {hasScreens && (
             <div className="mt-8 flex flex-col gap-[18px] cs-screens:mt-auto">
               <div className="relative">
-                {/* Below `cs-screens`: w-[52px] shrink-0 fixes every
-                    thumbnail at its designed size — overflow-x-auto lets
-                    the row scroll instead of shrinking them to fit, with
+                {/* w-[52px] shrink-0 fixes every thumbnail at its designed
+                    size, at every breakpoint — overflow-x-auto lets the row
+                    scroll instead of shrinking them to fit, with
                     snap-x/snap-start landing a drag on a thumbnail rather
-                    than half between two. From `cs-screens` up this reverts
-                    to the shrink-with-a-floor behavior the desktop
-                    side-by-side layout still wants: cs-screens:w-auto
-                    cs-screens:flex-[0_1_52px] (basis 52px, grow 0, shrink
-                    1) with cs-screens:overflow-visible/snap-none turning
-                    the scroll container back off, so this row's min-width
-                    (no longer zeroed by min-w-0, see the rationale
-                    column's own note above) correctly propagates up to
-                    that flex row instead of being swallowed by an active
-                    scroll container — overflow:auto/scroll elements report
-                    an automatic minimum size of 0 regardless of their
-                    content, which would otherwise break the phone card's
-                    priority-shrink handoff at that breakpoint. */}
+                    than half between two. This used to revert to a
+                    shrink-with-a-floor behavior from `cs-screens` up
+                    instead, but that made the row's min-content width (and
+                    therefore how much the phone card beside it could keep,
+                    see PHONE_CARD_WIDTH/frameScale above) scale with
+                    however many screens were in the active flow/set. This
+                    row's own overflow-x-auto only stops that width from
+                    forcing *this row itself* wider than its container —
+                    it doesn't, on its own, stop the width from bubbling up
+                    to an ancestor several levels up that still has the
+                    default overflow: visible (see the rationale column's
+                    own comment further up for that half of the fix); this
+                    fixed width is what makes the row's *content* itself
+                    count-independent in the first place, which the
+                    ancestor fix depends on. */}
                 <div
                   ref={thumbTrackRef}
-                  className="no-scrollbar flex snap-x snap-mandatory gap-2.5 overflow-x-auto cs-screens:snap-none cs-screens:overflow-visible"
+                  className="no-scrollbar flex snap-x snap-mandatory gap-2.5 overflow-x-auto"
                 >
                   {activeSet.screens.map((s, i) => {
                     const active = i === activeIdx
@@ -767,15 +793,10 @@ export function ScreenSpotlight({ flows, className }: ScreenSpotlightProps) {
                         aria-label={s.alt}
                         aria-current={active}
                         // aspect-[52/112] — the same 52:112 ratio the old
-                        // fixed w-[52px] h-28 pair encoded — is what keeps
-                        // the desktop-only shrink above from distorting
-                        // anything: height derives from whatever width
-                        // this lands on rather than staying pinned to a
-                        // fixed 112px. Harmless below `cs-screens` too,
-                        // where width is fixed at 52 anyway (112 is just
-                        // what the ratio resolves to there).
-                        className="aspect-[52/112] w-[52px] shrink-0 snap-start cs-screens:w-auto cs-screens:flex-[0_1_52px]"
-                        style={{ minWidth: THUMB_MIN_WIDTH }}
+                        // fixed w-[52px] h-28 pair encoded — resolves off
+                        // the fixed 52px width above at every breakpoint,
+                        // there's no shrink left anywhere to distort it.
+                        className="aspect-[52/112] w-[52px] shrink-0 snap-start"
                       >
                         <img
                           src={s.src}
@@ -801,12 +822,13 @@ export function ScreenSpotlight({ flows, className }: ScreenSpotlightProps) {
                     one doesn't always have another item permanently
                     peeking past the edge, so a fade with nothing left to
                     hint at would just look like a stuck smudge over the
-                    last thumbnail once you've scrolled all the way. Hidden
-                    entirely from `cs-screens` up, where the row doesn't
-                    scroll at all. */}
+                    last thumbnail once you've scrolled all the way. No
+                    longer hidden from `cs-screens` up — the row scrolls at
+                    every breakpoint now, see the track's own comment
+                    above. */}
                 <div
                   aria-hidden="true"
-                  className={`pointer-events-none absolute inset-y-0 right-0 w-10 transition-opacity duration-200 ease-out cs-screens:hidden ${
+                  className={`pointer-events-none absolute inset-y-0 right-0 w-10 transition-opacity duration-200 ease-out ${
                     thumbAtEnd ? "opacity-0" : "opacity-100"
                   }`}
                   style={{ background: "linear-gradient(to right, transparent, #FFFFFF)" }}
