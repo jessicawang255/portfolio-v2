@@ -775,10 +775,31 @@ export function ScreenSpotlight({ flows, className }: ScreenSpotlightProps) {
                     own comment further up for that half of the fix); this
                     fixed width is what makes the row's *content* itself
                     count-independent in the first place, which the
-                    ancestor fix depends on. */}
+                    ancestor fix depends on.
+                    -m-1.5 p-1.5: setting overflow-x here also computes
+                    overflow-y to auto (a scroll container can only leave
+                    one axis visible if the other is already clipped — the
+                    UA can't clip x while leaving y genuinely unclipped), so
+                    this became a real clipping box the moment it went from
+                    overflow-visible (desktop's old shrink-to-fit version)
+                    to overflow-x-auto everywhere. The active thumbnail's
+                    outline-offset-2 (see screen-thumb below) — and the
+                    focus-visible ring's own offset stacked on top of it —
+                    paint outside the thumbnail's own border box, which
+                    used to be fine with nothing clipping it but now gets
+                    cut off at the scrollport edge: the top and bottom on
+                    every thumbnail, and the left/right on whichever one is
+                    flush against the track's own edge. Padding pushes the
+                    scrollport edge out past that protrusion so it paints
+                    fully; the matching negative margin (same trick
+                    IterationCarousel's own track uses for its border) cancels
+                    the padding back out of this element's contribution to
+                    the surrounding layout, so the row's actual footprint —
+                    and the width math the phone card's shrink split above
+                    depends on — is unchanged. */}
                 <div
                   ref={thumbTrackRef}
-                  className="no-scrollbar flex snap-x snap-mandatory gap-2.5 overflow-x-auto"
+                  className="no-scrollbar -m-1.5 flex snap-x snap-mandatory gap-2.5 overflow-x-auto p-1.5"
                 >
                   {activeSet.screens.map((s, i) => {
                     const active = i === activeIdx
