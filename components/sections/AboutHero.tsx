@@ -56,6 +56,8 @@ const photos = [
       "/images/about/photo-3-1.jpg",
       "/images/about/photo-3-2.jpg",
       "/images/about/photo-3-3.jpg",
+      "/images/about/photo-3-4.png",
+      "/images/about/photo-3-5.png",
     ],
     alt: "Jessica's cat",
     rotate: -1.7,
