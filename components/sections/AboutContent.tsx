@@ -424,10 +424,10 @@ function FunPanelContent() {
         </div>
         <div className="flex-1">
           <AboutPanelImage
-            aspect="427/487"
-            src="/images/about/for-fun/twenty.jpg"
-            alt="My cat, Twenty"
-            caption="My cat, Twenty"
+            aspect="3/4"
+            src="/images/about/for-fun/climbing-shoes.png"
+            alt="My climbing shoes"
+            caption="My climbing shoes"
           />
         </div>
       </div>
