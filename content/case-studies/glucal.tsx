@@ -2,6 +2,36 @@ import Image from "next/image"
 import { ImageBlock } from "@/components/cs/ImageBlock"
 import { Callout, Section, Reflections } from "@/components/cs"
 
+// Real exported pixel dimensions of every glucal-final-*.webp crop — all
+// three share one aspect ratio (unlike ScreenSpotlight's per-screen crops),
+// so this is a single shared constant rather than per-item width/height.
+const SOLUTION_IMAGE_WIDTH = 498
+const SOLUTION_IMAGE_HEIGHT = 1077
+
+const solutionFeatures = [
+  {
+    number: 1,
+    title: "Insulin Calculator",
+    body: "Users input their current glucose levels and carbohydrate intake then select a carb ratio. gluCal then calculates the recommended insulin dose based on their personalized settings, which can be adjusted at any time. Users can also log specific foods along with the carb count.",
+    src: "/images/case-studies/glucal/glucal-final-1.webp",
+    alt: "Insulin Calculator screen, showing glucose level and carbohydrate intake inputs alongside the calculated insulin dose",
+  },
+  {
+    number: 2,
+    title: "Insulin Log",
+    body: "All insulin calculations are automatically stored in the insulin log. Users can also add logs manually from this page for doses taken without using the calculator for more flexibility.",
+    src: "/images/case-studies/glucal/glucal-final-2.webp",
+    alt: "Insulin Log screen, listing automatically and manually logged insulin doses",
+  },
+  {
+    number: 3,
+    title: "Food Diary",
+    body: "The food diary logs all food items entered through the insulin calculator to help users track their diet alongside their insulin intake. Users can also create a food diary entry directly from this screen.",
+    src: "/images/case-studies/glucal/glucal-final-3.webp",
+    alt: "Food Diary screen, listing food entries logged through the insulin calculator",
+  },
+]
+
 export default function Glucal() {
   return (
     <div className="flex flex-col gap-16 sm:gap-30">
@@ -54,10 +84,31 @@ export default function Glucal() {
         id="solution"
         tag="Solution"
         headline="gluCal: The all-in-one calculator and log to simplify insulin dosing"
-        body="gluCal is a mobile app for users who prefer a simple tool for managing diabetes. It focuses on essential functions only: calculating insulin doses, logging insulin, and tracking food intake."
         primary
       >
-        <ImageBlock height={400} />
+        {solutionFeatures.map((feature) => (
+          <div key={feature.number} className="flex flex-col gap-6 sm:flex-row sm:items-start sm:gap-16">
+            <Image
+              src={feature.src}
+              alt={feature.alt}
+              width={SOLUTION_IMAGE_WIDTH}
+              height={SOLUTION_IMAGE_HEIGHT}
+              // unoptimized — these crops are animated WebP demos; running
+              // them through next/image's sharp pipeline would flatten them
+              // to a single still frame.
+              unoptimized
+              className="w-full max-w-56 shrink-0 h-auto rounded-[8px] border border-neutral-100 mx-auto sm:mx-0"
+            />
+            <div className="flex-1 min-w-0 max-w-xl">
+              <h3 className="text-lg font-medium leading-[1.3] text-primary">
+                {feature.number}. {feature.title}
+              </h3>
+              <p className="mt-3.5 text-base leading-normal text-neutral-600">
+                {feature.body}
+              </p>
+            </div>
+          </div>
+        ))}
       </Section>
 
       <Section
@@ -107,23 +158,11 @@ export default function Glucal() {
       >
         <ImageBlock
           src="/images/case-studies/glucal/glucal-design-1.png"
-          alt="Design decision 1"
+          alt="Early wireframes"
           width={2000}
           height={841}
         />
-      
-        <ImageBlock
-          src="/images/case-studies/glucal/glucal-design-2.png"
-          alt="Design decision 2"
-          width={2000}
-          height={1782}
-        />
-        <ImageBlock
-          src="/images/case-studies/glucal/glucal-design-3.png"
-          alt="Design decision 3"
-          width={2000}
-          height={1898}
-        />
+
         <ImageBlock
           src="/images/case-studies/glucal/glucal-design-4.png"
           alt="Design decision 4"
@@ -133,18 +172,63 @@ export default function Glucal() {
       </Section>
 
       <Section
-        id="final-product"
-        tag="Final Product"
-        headline="Introducing gluCal."
-        primary
+        id="design-decision-1"
+        tag="Design Decision #1"
+        headline="How do we show that logging food is associated with the carb count input?"
+        body="Users have the option to log the food they’re eating when calculating insulin. If a user logs food, the carbs input field is automatically filled with that information."
       >
-        <ImageBlock height={400} />
+        <p className="text-balance text-base leading-normal text-neutral-600">
+          The &ldquo;log food&rdquo; button needed to appear <strong className="text-[var(--cs-accent)] font-semibold">1. optional</strong> and <strong className="text-[var(--cs-accent)] font-semibold">2. associated with the carbs input field</strong>.
+        </p>
+
+        <ImageBlock
+          src="/images/case-studies/glucal/glucal-design-2.png"
+          alt="Four button-placement iterations for the log food action, compared on perceived optionality and association to the carbs input"
+          width={2000}
+          height={1782}
+        />
+
+        {/* mt-7/sm:mt-21 stack on top of this children wrapper's own gap-9
+            (see Section.tsx) so the total gap above this headline — 36px +
+            28px = 64px, 36px + 84px = 120px — matches the gap-16/sm:gap-30
+            the page's own top-level flex uses between sections, even though
+            this headline is a mid-section child rather than its own
+            section. */}
+        <h1 className="text-balance text-3xl font-medium leading-[1.2] text-primary mt-7 sm:mt-21">
+          However, users still expressed that logging food seemed like a separate process from inputting carb amounts.
+        </h1>
+        <p className="text-balance text-base leading-normal text-neutral-600">
+          One user suggested to <strong className="text-[var(--cs-accent)] font-semibold">nest the button within the carb input field</strong>. When the button is nested within the field, it visually indicates that the log food action is part of the carbs input process, rather than a separate action that is simply associated with carbs.
+        </p>
+
+        <ImageBlock
+          src="/images/case-studies/glucal/glucal-design-3.png"
+          alt="Final design: the log food button nested inside the carbs input field"
+          width={2000}
+          height={1898}
+        />
       </Section>
 
       <Section
-        id="next-steps"
-        tag="Next Steps"
-        headline="What's next for gluCal."
+        id="design-decision-2"
+        tag="Design Decision #2"
+        headline="What would it look like to log multiple food items at once?">
+      
+      </Section>
+
+
+      <Section
+        id="design-decision-3"
+        tag="Design Decision #3"
+        headline="How should we structure the data synchronization of the insulin log and food diary?">
+
+      </Section>
+      
+
+      <Section
+        id="final-product"
+        tag="Final Product"
+        headline="Introducing gluCal."
         primary
       >
         <ImageBlock height={400} />
