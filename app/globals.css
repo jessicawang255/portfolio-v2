@@ -170,6 +170,44 @@ body {
   overscroll-behavior: none;
 }
 
+/* ─── Heading scale ────────────────────────────────────────────────────────
+   A real element-level cascade, not just a convention repeated by hand: h1
+   here is the exact "text-balance text-3xl font-medium leading-[1.2]
+   text-primary" combo every case study headline (Section.tsx's own
+   `headline`, and every hand-rolled <h1> in glucal.tsx's "problem" section)
+   already used verbatim — this just makes that the tag's real default
+   instead of a class string copy-pasted at each call site. h2 is the
+   design system's 20px sub-heading tier. Both stay in @layer base so a
+   bare <h1>/<h2> picks these up, but any explicit Tailwind size class
+   (e.g. text-3xl on an h2 that needs to read at headline size) still wins —
+   a class selector outranks a bare element selector regardless of layer. */
+@layer base {
+  h1 {
+    text-wrap: balance;
+    /* 30px — text-3xl's real value. Hardcoded, not var(--text-3xl): Tailwind
+       v4 only emits a @theme variable to :root when a compiled utility class
+       references it, and hand-written CSS isn't a utility class (same
+       tree-shaking pitfall as --color-* — see the accent rules below, which
+       hardcode hex for the same reason). */
+    font-size: 30px;
+    /* 500 — hardcoded, not var(--font-weight-medium): that token lives under
+       @theme inline, which this file's own doc comment above notes bakes
+       values into compiled utility output without ever emitting a real CSS
+       variable, so hand-written CSS can't reference it either. */
+    font-weight: 500;
+    line-height: 1.2;
+    color: var(--color-primary);
+  }
+
+  h2 {
+    text-wrap: balance;
+    font-size: 20px;
+    font-weight: 500; /* hardcoded — see h1's own note above */
+    line-height: 1.3;
+    color: var(--color-primary);
+  }
+}
+
 /* ─── Main frame — radius transitions ──────────────────────────────────────── */
 
 /* --radius-frame is 20px on mobile; bump to the full 36px at the `sm`
