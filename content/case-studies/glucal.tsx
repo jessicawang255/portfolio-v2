@@ -32,6 +32,109 @@ const solutionFeatures = [
   },
 ]
 
+type IterationCardData = {
+  heading: string
+  body?: string
+  checklist?: { ok: boolean; text: string }[]
+  numbered?: string[]
+}
+
+// A single white insight card inside a food-log-iteration comparison box
+// ("Elevation" / "Alignment with existing mental models" / etc.) —
+// extracted since each iteration renders up to 5 of
+// these, split across two independently-stacked columns rather than one
+// aligned grid (see foodLogIterations' leftCards/rightCards below).
+function IterationCard({ heading, body, checklist, numbered }: IterationCardData) {
+  return (
+    <div className="rounded-[8px] bg-neutral-50 p-6">
+      <p className="text-base font-medium text-primary">{heading}</p>
+      {body && <p className="mt-2 text-base leading-normal text-neutral-600">{body}</p>}
+      {checklist && (
+        <ul className="mt-2.5 flex flex-col gap-2">
+          {checklist.map((item) => (
+            <li key={item.text} className="flex items-start gap-2.5 text-base leading-normal text-neutral-600">
+              <span className="mt-0.5 shrink-0 text-neutral-700" aria-hidden="true">
+                {item.ok ? "✓" : "✕"}
+              </span>
+              <span>{item.text}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+      {numbered && (
+        <ol className="mt-2.5 flex flex-col gap-1.5">
+          {numbered.map((item, i) => (
+            <li key={item} className="flex gap-2 text-base leading-normal text-neutral-600">
+              <span className="text-neutral-400">{i + 1}.</span>
+              <span>{item}</span>
+            </li>
+          ))}
+        </ol>
+      )}
+    </div>
+  )
+}
+
+// Real exported pixel dimensions of glucal-design-5/6.webp — animated
+// screen-recording crops of the "Log Food" screen, same convention as
+// SOLUTION_IMAGE_WIDTH/HEIGHT above.
+const ITERATION_IMAGE_WIDTH = 390
+const ITERATION_IMAGE_HEIGHT = 844
+
+const foodLogIterations = [
+  {
+    src: "/images/case-studies/glucal/glucal-design-5.webp",
+    alt: "The log food form appearing as a modal over the list of already-logged foods",
+    caption: "Iteration 1: A modal that overlays the list of logged foods",
+    imagePosition: "left" as const,
+    leftCards: [
+      {
+        heading: "Elevation",
+        body: "One level above previously-logged items",
+        checklist: [
+          { ok: true, text: "Clearly separates the current food item from the list" },
+          { ok: false, text: "Might be confusing to track multiple layers since the previously-logged items is already an overlay" },
+        ],
+      },
+      {
+        heading: "Exiting from the form",
+        body: "Two ways to exit the modal without adding food:",
+        numbered: ["X button at top left", "Clicking outside the modal (aligns with exiting modal design)"],
+      },
+    ],
+    rightCards: [
+      { heading: "Alignment with existing mental models", body: "Modals are a common UI pattern, making this interaction highly intuitive for users." },
+      { heading: "Content overflow", body: "Since the modal is fixed, content is accessible without scrolling" },
+      { heading: "Visual experience", body: "The design is standard and unremarkable" },
+    ],
+  },
+  {
+    src: "/images/case-studies/glucal/glucal-design-6.webp",
+    alt: "The log food form appearing as a panel that slides down within the list of already-logged foods",
+    caption: "Iteration 2: A slide-down panel that reveals the food input form",
+    imagePosition: "right" as const,
+    leftCards: [
+      {
+        heading: "Elevation",
+        body: "Same level as previously-logged items",
+        checklist: [
+          { ok: true, text: "Easier to manage with fewer layers" },
+          { ok: false, text: "Less clear separation between the new and previously-logged food items, which might cause confusion" },
+        ],
+      },
+      {
+        heading: "Exiting from the form",
+        body: "No clear option to exit the food input form without adding an item. Clicking outside the form is not intuitive",
+      },
+    ],
+    rightCards: [
+      { heading: "Alignment with existing mental models", body: "This approach deviates from standard UI conventions which could lead to confusion, particularly for users who aren’t as tech-savvy" },
+      { heading: "Content overflow", body: "Once the food list gets longer, users will need to scroll to access the food input form" },
+      { heading: "Visual experience", body: "The smooth animations and unique design make the app more engaging and add delight" },
+    ],
+  },
+]
+
 export default function Glucal() {
   return (
     <div className="flex flex-col gap-16 sm:gap-30">
@@ -172,8 +275,8 @@ export default function Glucal() {
       </Section>
 
       <Section
-        id="design-decision-1"
-        tag="Design Decision #1"
+        id="1-logging-food"
+        tag="Decision #1"
         headline="How do we show that logging food is associated with the carb count input?"
         body="Users have the option to log the food they’re eating when calculating insulin. If a user logs food, the carbs input field is automatically filled with that information."
       >
@@ -210,16 +313,84 @@ export default function Glucal() {
       </Section>
 
       <Section
-        id="design-decision-2"
-        tag="Design Decision #2"
-        headline="What would it look like to log multiple food items at once?">
-      
+        id="2-multiple-food-items"
+        tag="Decision #2"
+        headline="What would it look like to log multiple food items at once?"
+        body="When logging food from the calculator, an intermediate screen appears that stores all the food the user is logging. I explored two different approaches for the food input form that appears after they click “Add Item”."
+      >
+        {foodLogIterations.map((iteration) => {
+          const phone = (
+            // cs-screens (960px), not sm (640px) — same threshold
+            // ScreenSpotlight uses for its own phone-beside-content row (see
+            // its own breakpoint comment in globals.css): this box's actual
+            // available width is the case study's body column, which is
+            // still only ~650px at `sm`, too narrow to fit a phone crop
+            // alongside two card columns without every card wrapping line
+            // by line. Stacked (phone above cards) below cs-screens instead.
+            <div className="flex flex-col items-center cs-screens:w-56 cs-screens:shrink-0">
+              <Image
+                src={iteration.src}
+                alt={iteration.alt}
+                width={ITERATION_IMAGE_WIDTH}
+                height={ITERATION_IMAGE_HEIGHT}
+                // unoptimized — animated WebP screen recording, same as
+                // solutionFeatures' glucal-final-*.webp crops above.
+                unoptimized
+                className="w-full max-w-56 h-auto rounded-[8px] border border-neutral-100"
+              />
+            </div>
+          )
+          const cards = (
+            <div className="min-w-0 flex-1">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:items-start">
+                <div className="flex flex-col gap-4">
+                  {iteration.leftCards.map((card) => (
+                    <IterationCard key={card.heading} {...card} />
+                  ))}
+                </div>
+                <div className="flex flex-col gap-4">
+                  {iteration.rightCards.map((card) => (
+                    <IterationCard key={card.heading} {...card} />
+                  ))}
+                </div>
+              </div>
+            </div>
+          )
+          return (
+            // Same wrapper shape as ImageBlock — caption <p> directly above
+            // the visual — just with this whole box standing in for
+            // ImageBlock's <Image>, since the "image" here is the box's
+            // phone + cards content, not a single flat image file.
+            <div key={iteration.src}>
+              <p className="mb-2 text-xs leading-[1.5] text-neutral-400 italic">{iteration.caption}</p>
+              <div className="rounded-[8px] border border-neutral-100 bg-neutral-75 p-6 sm:p-10">
+                <div className="flex flex-col gap-8 cs-screens:flex-row cs-screens:items-start">
+                  {iteration.imagePosition === "left" ? (
+                    <>
+                      {phone}
+                      {cards}
+                    </>
+                  ) : (
+                    <>
+                      {cards}
+                      {phone}
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
+          )
+        })}
+
+        <h2 className="text-balance">
+          Based on the comparison of these metrics, iteration 1 is the clear top choice.
+        </h2>
       </Section>
 
 
       <Section
-        id="design-decision-3"
-        tag="Design Decision #3"
+        id="3-syncing-data"
+        tag="Decision #3"
         headline="How should we structure the data synchronization of the insulin log and food diary?">
 
       </Section>
