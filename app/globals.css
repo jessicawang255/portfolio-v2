@@ -133,12 +133,16 @@
 }
 
 :root {
-  /* Top nav is hidden below `md` (bottom pill nav takes over), so there's no
-     bar to clear. Restored at `md` — py-4 (32px) + text-base line height (24px). */
+  /* Top nav is hidden below `sm` (bottom pill nav takes over), so there's no
+     bar to clear. Restored at `sm` — py-4 (32px) + text-base line height (24px).
+     Deliberately its own breakpoint, not `md` like the rest of the site's
+     chrome (--radius-frame below, container padding, DESKTOP_QUERY in
+     ScrollRevealController/DotField) — the nav swap is a separate concern
+     from those and moved independently of them. */
   --nav-height: 0px;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 640px) {
   :root {
     --nav-height: 56px;
   }

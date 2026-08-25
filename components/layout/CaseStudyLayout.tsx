@@ -80,8 +80,8 @@ export function CaseStudyLayout({ project, children, heroBackground, heroAspectR
   return (
     <>
       {/* Transparent nav overlay — above hero (z:5), below content card (z:10).
-          Below `md`, the bottom pill nav takes over — no top bar to show. */}
-      <header className="fixed inset-x-0 top-0 hidden pointer-events-none md:block" style={{ zIndex: 6 }}>
+          Below `sm`, the bottom pill nav takes over — no top bar to show. */}
+      <header className="fixed inset-x-0 top-0 hidden pointer-events-none sm:block" style={{ zIndex: 6 }}>
         <nav
           className="container-chrome flex items-center justify-between py-4 pointer-events-auto"
           aria-label="Primary navigation"

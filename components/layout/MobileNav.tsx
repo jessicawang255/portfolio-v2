@@ -7,7 +7,7 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion"
 import { spring } from "@/lib/motion"
 import { projects } from "@/content/work"
 
-// The site's only mobile nav (see Nav.tsx, which renders nothing below `md`,
+// The site's only mobile nav (see Nav.tsx, which renders nothing below `sm`,
 // and Footer.tsx, whose own Work/About/Resume links only surface once you've
 // scrolled all the way to the true end of the page). Persistent and fixed so
 // it's reachable from anywhere, including case study pages, which otherwise
@@ -182,7 +182,7 @@ export function MobileNav() {
   const PANEL_OVERLAP = 24
 
   return (
-    <div ref={rootRef} className="fixed inset-x-5 bottom-5 z-40 md:hidden">
+    <div ref={rootRef} className="fixed inset-x-5 bottom-5 z-40 sm:hidden">
       {/* Keyed by pathname so the whole unit (back button + chip + panel)
           treats every route change as a fresh mount/unmount instead of the
           persistent single instance it actually is — MobileNav lives in
