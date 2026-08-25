@@ -97,7 +97,7 @@ export default function Autumn() {
         <span id="design-challenges" className="block scroll-mt-12" aria-hidden="true" />
 
         <Section
-          id="design-challenge-1"
+          id="1-provider-preview-cards"
           tag="Design Challenge #1"
           headline="Users were not clicking to the provider pages from the Support Library articles"
           body="Initially, users had to navigate to a separate provider page after reading articles, creating unnecessary friction in the user journey. Click-though rates on these sections were extremely low."
@@ -124,7 +124,7 @@ export default function Autumn() {
       </div>
 
       <Section
-        id="design-challenge-2"
+        id="2-phased-launch"
         tag="Design Challenge #2"
         headline="With limited content initially, the full platform felt empty and bloated at launch"
       >

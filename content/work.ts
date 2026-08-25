@@ -145,7 +145,10 @@ export const projects: Project[] = [
       { title: "Problem" },
       { title: "Understanding the Market" },
       { title: "Adding User Touchpoints" },
-      { title: "Design Challenges", subsections: ["Design Challenge #1", "Design Challenge #2"] },
+      {
+        title: "Design Challenges",
+        subsections: ["1: Provider preview cards", "2: Phased launch"],
+      },
       { title: "Final Product" },
       { title: "Reflections"}
     ],
