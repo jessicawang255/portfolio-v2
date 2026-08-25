@@ -369,7 +369,7 @@ export function MobileNav() {
               </AnimatePresence>
 
               {/* Current-page chip — always white, always `rounded-full`, always
-                  this exact same shape whether the panel is open or closed. 18px
+                  this exact same shape whether the panel is open or closed. 14px
                   above and below the label — see spacing redline.
                   The whole chip toggles the panel, nothing else — the label is
                   always plain text, never a link. Case studies get a dedicated
@@ -390,7 +390,7 @@ export function MobileNav() {
                 onPointerDown={() => shellRef.current?.style.setProperty("--chip-press", "0.97")}
                 onPointerUp={() => shellRef.current?.style.removeProperty("--chip-press")}
                 onPointerLeave={() => shellRef.current?.style.removeProperty("--chip-press")}
-                className="relative z-10 flex cursor-pointer items-center justify-between rounded-full bg-surface pl-6 pr-5 py-4.5"
+                className="relative z-10 flex cursor-pointer items-center justify-between rounded-full bg-surface pl-6 pr-5 py-3.5"
                 style={{ boxShadow: open ? `${chipLiftShadow}, ${mainShadow}` : mainShadow }}
               >
                 <span className="text-base font-medium text-primary">{chipLabel}</span>
