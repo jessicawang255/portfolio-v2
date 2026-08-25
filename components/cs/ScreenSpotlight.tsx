@@ -255,24 +255,24 @@ export function ScreenSpotlight({ flows, className }: ScreenSpotlightProps) {
     </div>
   )
 
-  // max-w-[370px]/[340px] only apply from `cs-screens` up, where this text
+  // max-w-[370px]/[340px] only apply from `lg` up, where this text
   // shares a row with the phone card and the cap is doing real work — a
   // comfortable reading measure rather than however wide the leftover flex
-  // space happens to be. Below `cs-screens` the rationale sits in its own
-  // full-width row under the phone (see the main row's cs-screens:flex-row
+  // space happens to be. Below `lg` the rationale sits in its own
+  // full-width row under the phone (see the main row's lg:flex-row
   // below), so the same cap would just wrap it into a narrow column inside
   // an otherwise full-width case-study page for no reason — max-w-full
   // there lets it use the whole column instead.
   const rationaleContent = activeScreen ? (
     <>
       <p
-        className="max-w-full text-base leading-normal text-neutral-600 cs-screens:max-w-[370px]"
+        className="max-w-full text-base leading-normal text-neutral-600 lg:max-w-[370px]"
         style={{ textWrap: "pretty" }}
       >
         {activeScreen.body}
       </p>
       {activeScreen.note && (
-        <p className="mt-[18px] max-w-full text-xs italic text-neutral-300 cs-screens:max-w-[340px]">
+        <p className="mt-[18px] max-w-full text-xs italic text-neutral-300 lg:max-w-[340px]">
           {activeScreen.note}
         </p>
       )}
@@ -323,8 +323,8 @@ export function ScreenSpotlight({ flows, className }: ScreenSpotlightProps) {
   }, [flow, flows.length])
 
   // Fluid-scale for the phone card — see PHONE_CARD_WIDTH above and the
-  // width rules in the JSX below. Below `cs-screens` the card is w-full
-  // (capped at max-w-[316px]); from `cs-screens` up it's flex-basis-driven,
+  // width rules in the JSX below. Below `lg` the card is w-full
+  // (capped at max-w-[316px]); from `lg` up it's flex-basis-driven,
   // shrinking below 316px only once the rationale column beside it has
   // already given up all it can (see that column's own note on the flex
   // priority) — so resizing a desktop window narrower visibly shrinks it
@@ -343,7 +343,7 @@ export function ScreenSpotlight({ flows, className }: ScreenSpotlightProps) {
     if (!el) return
     function measure() {
       if (!el) return
-      // No Math.min(1, …) clamp — below `sm` the card is meant to scale up
+      // No Math.min(1, …) clamp — below `md` the card is meant to scale up
       // on a wide phone too, not just down on a narrow one, so it always
       // reads as the same proportion of the column rather than a fixed
       // design size with a shrink-only escape hatch.
@@ -362,7 +362,7 @@ export function ScreenSpotlight({ flows, className }: ScreenSpotlightProps) {
   // a sequential filmstrip already paired with prev/next + a counter, and
   // this codebase already treats that shape as scroll-native
   // (IterationCarousel's own track).
-  // This used to shrink-to-fit only at `cs-screens`+ (staying fixed-and-
+  // This used to shrink-to-fit only at `lg`+ (staying fixed-and-
   // scrolling below it), with a THUMB_MIN_WIDTH floor protecting legibility
   // once squeezed. That floor was a *per-thumbnail* number, so the row's
   // total min-content width — and therefore how much room the phone card
@@ -426,17 +426,17 @@ export function ScreenSpotlight({ flows, className }: ScreenSpotlightProps) {
 
   return (
     <div className={`flex flex-col ${className ?? ""}`}>
-      {/* Tab row — one tab per flow, `cs-screens`+ only (see that
+      {/* Tab row — one tab per flow, `lg`+ only (see that
           breakpoint's own comment in globals.css for why it's much later
-          than `sm`: tested live, this side-by-side treatment stays
+          than `md`: tested live, this side-by-side treatment stays
           genuinely cramped — tab labels clipped past the viewport edge,
-          the thumbnail row below running out of room — well past `sm`
+          the thumbnail row below running out of room — well past `md`
           itself). Used to be horizontally scrollable + no-scrollbar below
-          `sm`, but on a real mobile column the labels alone (~440px, four
+          `md`, but on a real mobile column the labels alone (~440px, four
           flows) run well past the ~336px available, and overflow-x-auto
           with no scrollbar leaves no on-screen cue there's more to drag to
           — see the wrapping pill row just below, which replaces this below
-          `cs-screens`.
+          `lg`.
           The gray divider is a separate absolute strip rather than a border
           on this container, and the purple indicator is one shared absolute
           div (positioned/sized off the measurement above) rather than each
@@ -450,7 +450,7 @@ export function ScreenSpotlight({ flows, className }: ScreenSpotlightProps) {
           align-items) to the container's cross-size, so a button's own
           bottom edge is geometrically identical to the container's,
           guaranteeing every strip lands on the same pixel row. */}
-      <div className="relative hidden gap-[18px] cs-screens:flex">
+      <div className="relative hidden gap-[18px] lg:flex">
         <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-neutral-100" />
         {indicator && (
           <div
@@ -484,7 +484,7 @@ export function ScreenSpotlight({ flows, className }: ScreenSpotlightProps) {
         })}
       </div>
 
-      {/* Mobile flow nav, below `cs-screens` — filled pills that wrap instead of
+      {/* Mobile flow nav, below `lg` — filled pills that wrap instead of
           scrolling, the same fix the chip row below already uses
           (flex-wrap, no scroll) for its own set-level nav, just applied one
           level up. text-sm/leading-[1.5] matches screen-tab's own font
@@ -497,7 +497,7 @@ export function ScreenSpotlight({ flows, className }: ScreenSpotlightProps) {
           fill and a light tint are visually distinct even sharing one hue.
           No sliding indicator here — an active pill's own fill already
           marks it, so there's nothing for an underline to add. */}
-      <div className="flex flex-wrap gap-2 cs-screens:hidden">
+      <div className="flex flex-wrap gap-2 lg:hidden">
         {flows.map((f, i) => {
           const active = i === flow
           return (
@@ -567,9 +567,9 @@ export function ScreenSpotlight({ flows, className }: ScreenSpotlightProps) {
 
       {/* Main row — phone frame, then rationale/footnote/controls, the
           controls pinned to the frame's bottom edge via mt-auto — but only
-          from `cs-screens` up, where this column is stretched to match the
+          from `lg` up, where this column is stretched to match the
           phone card's own (often taller) height, so there's real leftover
-          space for an auto margin to push into. Below `cs-screens` this is
+          space for an auto margin to push into. Below `lg` this is
           a stacked column with no such extra height — mt-auto there
           resolves to 0 (no free space to distribute), which is what was
           collapsing the gap between the caption and the thumbnail row
@@ -584,20 +584,20 @@ export function ScreenSpotlight({ flows, className }: ScreenSpotlightProps) {
       <motion.div
         layout={!reduce}
         transition={LAYOUT_TRANSITION}
-        className="mt-[26px] flex flex-col items-stretch gap-10 cs-screens:flex-row"
+        className="mt-[26px] flex flex-col items-stretch gap-10 lg:flex-row"
       >
         {/* Outer box — reserves the *scaled* footprint in the flow via
             aspect-ratio (locked to the card's true 316:PHONE_CARD_HEIGHT
             design ratio). No auto margins anywhere, so it's flush left at
-            every breakpoint — below `cs-screens` that lines it up with the
+            every breakpoint — below `lg` that lines it up with the
             flow pills above and the caption/thumbnails below (all flush
             left themselves), rather than centering it as its own,
-            differently-aligned island in that stack; from `cs-screens` up
+            differently-aligned island in that stack; from `lg` up
             there's no leftover width to center within anyway, since the
             card's own flex-basis is what determines the row's width there.
-            Below `cs-screens` it's w-full (the sole content
+            Below `lg` it's w-full (the sole content
             of its own row there, so max-w-[316px] is the only thing
-            capping it). From `cs-screens` up, width comes from flex
+            capping it). From `lg` up, width comes from flex
             instead — basis-[316px] grow-0 shrink: this card *wants* to
             render at the original
             316px design size and never grow past it, but it's not
@@ -622,14 +622,14 @@ export function ScreenSpotlight({ flows, className }: ScreenSpotlightProps) {
             that floor to one number regardless of count, so the only thing
             left setting the split between this card and that column is the
             row's own available width.
-            cs-screens:min-w-[150px] is this card's own floor, so that
+            lg:min-w-[150px] is this card's own floor, so that
             split has a bottom: this box's automatic min-width would
             otherwise resolve to something close to 0 (nothing inside it —
             an absolutely-positioned, transform-scaled IPhoneFrame — is the
             kind of content that normally forces a flex item to keep a
             sensible minimum, the way the rationale column's own text
             does), so without an explicit floor a genuinely cramped width
-            right at `cs-screens` — still inside the `sm`–`cs-toc` tier,
+            right at `lg` — still inside the `md`–`xl` tier,
             where CaseStudyLayout reserves real space for the TOC — could
             shrink this all the way to an invisible sliver rather than a
             small-but-present phone.
@@ -663,7 +663,7 @@ export function ScreenSpotlight({ flows, className }: ScreenSpotlightProps) {
             card instead of a visible seam. */}
         <div
           ref={phoneCardRef}
-          className="w-full max-w-[316px] shrink-0 overflow-hidden rounded-[8px] bg-neutral-75 cs-screens:w-auto cs-screens:min-w-[150px] cs-screens:shrink cs-screens:grow-0 cs-screens:basis-[316px]"
+          className="w-full max-w-[316px] shrink-0 overflow-hidden rounded-[8px] bg-neutral-75 lg:w-auto lg:min-w-[150px] lg:shrink lg:grow-0 lg:basis-[316px]"
           style={{ aspectRatio: `${PHONE_CARD_WIDTH} / ${PHONE_CARD_HEIGHT}` }}
         >
           {/* Inner card — always laid out at its true 316×PHONE_CARD_HEIGHT
@@ -713,7 +713,7 @@ export function ScreenSpotlight({ flows, className }: ScreenSpotlightProps) {
         </div>
 
         {/* min-w-0 here (used not to have one) plus an explicit
-            cs-screens:min-w-[180px] floor in its place. The old approach
+            lg:min-w-[180px] floor in its place. The old approach
             left this at the flex default (min-width: auto) and let the
             browser's own min-content calculation become this column's real
             floor — the assumption being that, with the thumbnail row now a
@@ -735,7 +735,7 @@ export function ScreenSpotlight({ flows, className }: ScreenSpotlightProps) {
             and the phone card beside it (flex-shrink enabled, see above)
             depends only on the row's own available width, never on how
             many thumbnails happen to be in whichever flow/set is open. */}
-        <div className="flex min-w-0 flex-1 flex-col pt-1.5 cs-screens:min-w-[180px]">
+        <div className="flex min-w-0 flex-1 flex-col pt-1.5 lg:min-w-[180px]">
           {reduce ? (
             rationaleContent
           ) : (
@@ -755,14 +755,14 @@ export function ScreenSpotlight({ flows, className }: ScreenSpotlightProps) {
           )}
 
           {hasScreens && (
-            <div className="mt-8 flex flex-col gap-[18px] cs-screens:mt-auto">
+            <div className="mt-8 flex flex-col gap-[18px] lg:mt-auto">
               <div className="relative">
                 {/* w-[52px] shrink-0 fixes every thumbnail at its designed
                     size, at every breakpoint — overflow-x-auto lets the row
                     scroll instead of shrinking them to fit, with
                     snap-x/snap-start landing a drag on a thumbnail rather
                     than half between two. This used to revert to a
-                    shrink-with-a-floor behavior from `cs-screens` up
+                    shrink-with-a-floor behavior from `lg` up
                     instead, but that made the row's min-content width (and
                     therefore how much the phone card beside it could keep,
                     see PHONE_CARD_WIDTH/frameScale above) scale with
@@ -844,7 +844,7 @@ export function ScreenSpotlight({ flows, className }: ScreenSpotlightProps) {
                     peeking past the edge, so a fade with nothing left to
                     hint at would just look like a stuck smudge over the
                     last thumbnail once you've scrolled all the way. No
-                    longer hidden from `cs-screens` up — the row scrolls at
+                    longer hidden from `lg` up — the row scrolls at
                     every breakpoint now, see the track's own comment
                     above. */}
                 <div

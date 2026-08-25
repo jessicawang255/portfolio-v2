@@ -46,7 +46,7 @@ function hexToRgb(hex: string): readonly [number, number, number] {
 
 const GREY_RGB = hexToRgb(GREY)
 
-// Below `sm`, there's no cursor to track — the field renders as a static
+// Below `md`, there's no cursor to track — the field renders as a static
 // grid with no hover glow, same treatment as prefers-reduced-motion.
 const DESKTOP_QUERY = "(min-width: 768px)"
 

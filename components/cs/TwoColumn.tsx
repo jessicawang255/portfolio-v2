@@ -7,12 +7,12 @@ type TwoColumnProps = {
 }
 
 const ratioClasses: Record<Ratio, string> = {
-  "1/1": "sm:grid-cols-2",
-  "3/2": "sm:grid-cols-[3fr_2fr]",
-  "2/3": "sm:grid-cols-[2fr_3fr]",
+  "1/1": "md:grid-cols-2",
+  "3/2": "md:grid-cols-[3fr_2fr]",
+  "2/3": "md:grid-cols-[2fr_3fr]",
 }
 
-// Below `sm`, always stacks into a single column (two rows) regardless of
+// Below `md`, always stacks into a single column (two rows) regardless of
 // ratio — there's no room for side-by-side columns on mobile.
 export function TwoColumn({ left, right, ratio = "1/1" }: TwoColumnProps) {
   return (

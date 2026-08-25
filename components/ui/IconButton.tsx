@@ -82,7 +82,7 @@ export function IconButton({ href, label, icon, size = 24, className, copyText, 
           backgroundColor: "currentColor",
         }}
       />
-      {/* Hidden below `sm` — hover has no real meaning on touch, and this
+      {/* Hidden below `md` — hover has no real meaning on touch, and this
           tooltip's own `whitespace-nowrap` box still counts toward page
           width even at opacity-0 (nothing clips it), so on a narrow
           viewport the last icon in a row pushes it past the screen edge,
@@ -93,7 +93,7 @@ export function IconButton({ href, label, icon, size = 24, className, copyText, 
         className="pointer-events-none absolute bottom-full left-1/2 mb-1 hidden origin-bottom
         -translate-x-1/2 scale-90 whitespace-nowrap rounded-[var(--radius-sm)] bg-neutral-900/90
         px-1.5 py-0.5 text-xs text-neutral-50 opacity-0 transition-[opacity,scale] duration-[var(--duration-slow)]
-        ease-[var(--ease-out)] group-hover/icon:scale-100 group-hover/icon:opacity-100 group-hover/icon:delay-400 sm:block"
+        ease-[var(--ease-out)] group-hover/icon:scale-100 group-hover/icon:opacity-100 group-hover/icon:delay-400 md:block"
       >
         {displayLabel}
       </span>

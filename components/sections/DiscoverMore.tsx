@@ -30,20 +30,20 @@ export function DiscoverMore() {
 
       {/* Mobile thumbnails all match the first item's (Google Calendar)
           ratio so the 2x2 grid reads as one uniform set of tiles; at
-          `discover-wide` (960px, see globals.css) each card reverts to its
-          own natural thumbnail ratio for the bento-style 4-col single-row
-          layout. That release point sits well past `sm` on purpose — 4
-          columns right at `sm` leaves each one too narrow and titles wrap
+          `lg` (960px, see globals.css) each card reverts to its own
+          natural thumbnail ratio for the bento-style 4-col single-row
+          layout. That release point sits well past `md` on purpose — 4
+          columns right at `md` leaves each one too narrow and titles wrap
           word-by-word. Each column is still a plain 1fr share of the row,
           so cards narrow together and stay their own aspect ratio; nothing
           stretches to compensate. */}
-      <div className="grid grid-cols-2 discover-wide:grid-cols-4 gap-6 items-start">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 items-start">
         {discoverItems.map((item) => (
           <motion.div key={item.slug} variants={fadeUp}>
             <CaseStudyCard
               project={item}
               mobileImageRatio={MOBILE_DISCOVER_RATIO}
-              mobileBreakpoint="wide"
+              mobileBreakpoint="lg"
             />
           </motion.div>
         ))}

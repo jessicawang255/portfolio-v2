@@ -19,7 +19,7 @@ const GAP_X = 40
 //
 // Whether that's 4 columns (one row) or 2 (wrapped, mobile-style) is decided
 // by measuring this row's actual content against its actual container width
-// — not a `sm:` viewport breakpoint or a single hardcoded container-query
+// — not a `md:` viewport breakpoint or a single hardcoded container-query
 // threshold. A fixed threshold has to assume the *widest* case study's
 // fields (guessing safely means over-shooting for every narrower one, which
 // is exactly what left visible slack next to Skills on cases with shorter

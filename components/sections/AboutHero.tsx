@@ -17,14 +17,14 @@ const socials = [
 // noticeably bigger, not just rearranged), tablet keeps the single fluid
 // row, desktop is unchanged from the original design. `aspect-[W/H]` and
 // `max-w-[Npx]` (each photo's own original desktop dimensions) apply at
-// every tier below `about-photos` regardless of display mode — height
+// every tier below `2xl` regardless of display mode — height
 // always follows width, and growth never overshoots the real design size.
 // What DOES change per tier is what actually drives the width in the first
 // place: grid's own column-track stretch on phone (no flex-grow involved —
 // grid ignores it entirely), `flex-[N]` weighted to that same original
-// width from `sm` up (flex-grow only applies to a flex container's direct
+// width from `md` up (flex-grow only applies to a flex container's direct
 // children, so it has to be re-declared once the row switches away from
-// grid), and the fixed `about-photos:w-[Npx]` from the original design
+// grid), and the fixed `2xl:w-[Npx]` from the original design
 // past that.
 const photos = [
   {
@@ -37,7 +37,7 @@ const photos = [
     ],
     alt: "Jessica at her desk",
     rotate: 5.5,
-    className: "aspect-[220/222] max-w-[220px] sm:flex-[220] about-photos:flex-none about-photos:w-[220px] about-photos:h-[222px]",
+    className: "aspect-[220/222] max-w-[220px] md:flex-[220] 2xl:flex-none 2xl:w-[220px] 2xl:h-[222px]",
   },
   {
     id: "photo-2",
@@ -48,7 +48,7 @@ const photos = [
     ],
     alt: "Jessica outside in autumn",
     rotate: -7.5,
-    className: "aspect-[218/222] max-w-[218px] sm:flex-[218] about-photos:flex-none about-photos:w-[218px] about-photos:h-[222px]",
+    className: "aspect-[218/222] max-w-[218px] md:flex-[218] 2xl:flex-none 2xl:w-[218px] 2xl:h-[222px]",
   },
   {
     id: "photo-3",
@@ -64,14 +64,14 @@ const photos = [
     // The one photo with its own per-tier layout properties, not just
     // sizing — `col-span-2 mx-auto w-full` puts it on its own centered row
     // in the phone grid (see the row's own comment below), all three reset
-    // at `sm` where the row goes back to one flex line and this needs to
-    // behave like photo-1/2 again. `sm:mx-0` specifically (not just
-    // relying on `sm:flex-[280]`'s own basis:0% to out-rank a stray
+    // at `md` where the row goes back to one flex line and this needs to
+    // behave like photo-1/2 again. `md:mx-0` specifically (not just
+    // relying on `md:flex-[280]`'s own basis:0% to out-rank a stray
     // `w-full`) — auto margins on a flex item consume free space *before*
     // flex-grow gets any of it, so left over from the grid tier, this
     // would quietly win the whole row's free space for itself instead of
     // growing in proportion with photo-1/2 the way `flex-[280]` intends.
-    className: "col-span-2 mx-auto w-full aspect-[280/192] max-w-[280px] sm:mx-0 sm:w-auto sm:flex-[280] about-photos:flex-none about-photos:w-[280px] about-photos:h-[192px]",
+    className: "col-span-2 mx-auto w-full aspect-[280/192] max-w-[280px] md:mx-0 md:w-auto md:flex-[280] 2xl:flex-none 2xl:w-[280px] 2xl:h-[192px]",
   },
 ]
 
@@ -151,7 +151,7 @@ export function AboutHero() {
 
   return (
     <section
-      className="container-main pointer-events-none pt-16 pb-12 sm:pt-[120px] sm:pb-20"
+      className="container-main pointer-events-none pt-16 pb-12 md:pt-[120px] md:pb-20"
       aria-label="About introduction"
     >
       <motion.div
@@ -159,17 +159,17 @@ export function AboutHero() {
         initial={reduce ? "visible" : "hidden"}
         animate="visible"
         // Stacked (text above, photos below) from phone through tablet —
-        // `about-photos` is the first width with room for both the text
+        // `2xl` is the first width with room for both the text
         // column and the photo row's real desktop size side by side (see
         // that breakpoint's own comment in globals.css). Below it, `flex-col`
         // needs neither `items-start` nor `justify-between`: both only
         // matter for the row layout (top-aligning the two flex items instead
         // of one stretching to match the other's height, and pushing them to
         // opposite ends) — a column's single-file children don't need either.
-        className="pointer-events-auto relative z-[1] flex flex-col gap-14 about-photos:flex-row about-photos:items-start about-photos:justify-between about-photos:gap-24"
+        className="pointer-events-auto relative z-[1] flex flex-col gap-14 2xl:flex-row 2xl:items-start 2xl:justify-between 2xl:gap-24"
       >
         {/* max-w-[800px] only matters once the row layout kicks in at
-            `about-photos` — below that this is a full-width column child
+            `2xl` — below that this is a full-width column child
             stacked above the photo row (see the row's own comment below),
             not competing with it for horizontal space, so it stays `w-full`
             all the way through the tablet tier instead of capping at 800px.
@@ -186,7 +186,7 @@ export function AboutHero() {
             toward the middle. At container-main's 1848px content-width
             ceiling (120rem minus its own padding) that leaves ~218px of
             breathing room before the 830px-wide photo row. */}
-        <div className="flex w-full flex-col about-photos:max-w-[800px]">
+        <div className="flex w-full flex-col 2xl:max-w-[800px]">
           <motion.h1
             variants={fadeUp}
             className="mb-3 text-balance text-3xl font-medium text-neutral-900"
@@ -226,8 +226,8 @@ export function AboutHero() {
           </motion.div>
         </div>
 
-        {/* Visible at every width (F-01: this used to be `hidden … sm:flex`,
-            invisible below `sm` and clipped off-screen from `sm` up to
+        {/* Visible at every width (F-01: this used to be `hidden … md:flex`,
+            invisible below `md` and clipped off-screen from `md` up to
             ~1326px). A 2-column grid on phone, not a 3-across flex row —
             photo-1 and photo-2 fall into row one automatically (plain grid
             auto-placement), photo-3 spans both columns and centers itself
@@ -238,11 +238,11 @@ export function AboutHero() {
             means each one can grow noticeably larger before hitting its own
             `max-w-[Npx]` cap, at every phone width — not just a side effect
             of the wrap, the actual reason for it.
-            `flex sm:` — back to one row from `sm` up, same fluid-grow
+            `flex md:` — back to one row from `md` up, same fluid-grow
             single line as before (see the `photos` array above for why
             `flex-[N]` has to be re-declared there instead of carrying over).
             `w-full` gives that row real width to grow into — without it,
-            it'd just shrink-wrap to content like it does at `about-photos`+
+            it'd just shrink-wrap to content like it does at `2xl`+
             — reverts to `w-auto` there for the same reason in reverse: side
             by side with the text column, it goes back to sizing off its
             now-fixed-size children instead of stretching into the column's
@@ -250,7 +250,7 @@ export function AboutHero() {
             text's own baseline — only makes sense once they're side by side too. */}
         <motion.div
           variants={stagger}
-          className="grid grid-cols-2 w-full items-center gap-4.5 sm:flex sm:gap-9 about-photos:w-auto about-photos:gap-14 about-photos:pt-2"
+          className="grid grid-cols-2 w-full items-center gap-4.5 md:flex md:gap-9 2xl:w-auto 2xl:gap-14 2xl:pt-2"
         >
           {photos.map(({ id, srcs, alt, rotate, className }, i) => (
             // The `flex-[N]`/`aspect-[…]`/`max-w-[…]` sizing lives here, not

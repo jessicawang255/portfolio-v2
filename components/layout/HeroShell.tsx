@@ -25,18 +25,18 @@ export function HeroShell({ children, fallbackSpacer = 324 }: Props) {
 
   return (
     <>
-      {/* Below `sm`, this stays in normal flow instead of fixed — matching
+      {/* Below `md`, this stays in normal flow instead of fixed — matching
           Footer.tsx, which is likewise static on mobile and only fixed from
-          `sm` up. */}
+          `md` up. */}
       <div
         ref={ref}
         id="hero-content"
-        className="static sm:fixed inset-x-0 top-0 z-[2] pointer-events-none"
+        className="static md:fixed inset-x-0 top-0 z-[2] pointer-events-none"
         style={{ transformOrigin: "center top" }}
       >
         {children}
       </div>
-      <div aria-hidden="true" style={{ height: spacer }} className="hidden sm:block" />
+      <div aria-hidden="true" style={{ height: spacer }} className="hidden md:block" />
     </>
   )
 }

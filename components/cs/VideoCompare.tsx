@@ -51,7 +51,7 @@ export function VideoCompare({ items, className }: VideoCompareProps) {
   }, [activeIndex, items])
 
   return (
-    <div className={`flex flex-col gap-10 sm:flex-row sm:justify-center sm:gap-24 ${className ?? ""}`}>
+    <div className={`flex flex-col gap-10 md:flex-row md:justify-center md:gap-24 ${className ?? ""}`}>
       {items.map((item, i) => {
         const isActive = activeIndex === i
         return (

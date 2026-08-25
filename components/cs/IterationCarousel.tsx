@@ -57,8 +57,8 @@ export function IterationCarousel({ items, className }: IterationCarouselProps) 
       const track = trackRef.current
       if (!root || !track) return
       setSlideWidth(root.getBoundingClientRect().width)
-      // Below `sm` there's no TOC-reserved margin left to bleed into (see
-      // CaseStudyLayout's own `sm` split), and no room for a peeking next
+      // Below `md` there's no TOC-reserved margin left to bleed into (see
+      // CaseStudyLayout's own `md` split), and no room for a peeking next
       // slide anyway — bleeding the track there just pushes the active
       // slide's right edge under the fade gradient below, whiting out part
       // of the *active* image instead of a peeking one. So on mobile the
@@ -402,13 +402,13 @@ export function IterationCarousel({ items, className }: IterationCarouselProps) 
             the page (see the case-study accent rules in globals.css for the
             same pattern). pointer-events-none keeps it from blocking
             drag-to-scroll on the track underneath it.
-            hidden below `sm` — the track isn't bled there (see measure()
+            hidden below `md` — the track isn't bled there (see measure()
             above), so there's no peeking slide to fade into the surface;
             left on, this would just paint a white scrim over the trailing
             edge of the active, full-width image instead. */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-y-0 right-0 hidden w-40 sm:block"
+          className="pointer-events-none absolute inset-y-0 right-0 hidden w-40 md:block"
           style={{ background: "linear-gradient(to right, transparent, #FFFFFF)" }}
         />
       </div>

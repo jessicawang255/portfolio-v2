@@ -44,68 +44,49 @@
   --color-nav-link-hover: var(--color-neutral-900);
   --color-icon-social:    var(--color-neutral-200);
 
-  /* `sm` — the site's main mobile/desktop switch, used throughout via `sm:`.
-     Raised from Tailwind's default 40rem (640px) to 48rem (768px), the
-     standard `md` breakpoint size, so the mobile layouts hold through the
-     640–768px range instead of switching to desktop treatments too early. */
-  --breakpoint-sm: 48rem;
+  /* ─── Breakpoint scale ─────────────────────────────────────────────────
+     A shared, universal set of widths every component picks from, instead
+     of one global mobile/desktop switch (old `sm`) plus a bespoke pixel
+     value invented per component that needed something later. `sm`/`md`
+     match Tailwind's own defaults; `lg`/`xl`/`2xl` are overridden below
+     because this site's content wants different steps than Tailwind's
+     stock 1024/1280/1536 — each override absorbs a breakpoint that used
+     to be its own one-off token. */
+  --breakpoint-sm: 40rem; /* 640px — small-phone → large-phone/small-tablet.
+    Not currently used by anything; available as a real in-between step. */
+  --breakpoint-md: 48rem; /* 768px — the site's main mobile/desktop switch:
+    nav, page layout direction, and most spacing flip here. Everything
+    defaults to `md` unless a component has actual evidence to move. */
 
-  /* Case study content column — where the TOC's reserved margin stops being
-     mirrored on the right (see CaseStudyLayout.tsx). Deliberately its own
-     registered breakpoint rather than an arbitrary `min-[1152px]:` bracket
-     value: Tailwind only sorts *registered* breakpoints (this scale, or
-     `sm`/`md`/`lg`/etc.) into the correct cascade order — an arbitrary
-     bracket value doesn't get slotted in by width, so `sm:`'s rule would
-     end up later in the stylesheet and silently win at every viewport,
-     including above this one. Sits between `lg` (1024px, where the column
-     would still be squeezed under the symmetric treatment) and `xl` (1280px,
-     further out than this needs to be) — nudge it directly if `lg`/`xl` ever
-     shift and this drifts out of that gap. */
-  --breakpoint-cs-toc: 72rem;
+  /* Absorbs the former `--breakpoint-discover-wide` / `--breakpoint-cs-screens`
+     (previously two separate tokens that happened to land on the same
+     960px by coincidence, kept apart so retuning one couldn't silently
+     move the other — now that both are meant to sit on the shared scale,
+     landing on the same tier is the point, not a risk to guard against).
+     Used by DiscoverMore's 2x2→4-col bento grid (`md`'s ~72px padding +
+     gaps leaves 4 columns too narrow for titles like "Google Calendar
+     enhanced task management" before this width) and ScreenSpotlight's
+     stacked→side-by-side flow (tested live against its worst case, an
+     8-screen flow — anywhere from `md` to ~800px the flow-tab label clips
+     and the thumbnail row runs out of THUMB_MIN_WIDTH room). */
+  --breakpoint-lg: 60rem; /* 960px */
 
-  /* About hero — where the photo trio has room to sit beside the intro text
-     again instead of stacked beneath it (see AboutHero.tsx). Below this, text
-     (full width) + a fixed 40px gap + the photo row (830px at their real
-     desktop size, including gaps) would need 1254px of content space just to
-     avoid re-clipping the way F-01 originally did — plus container-main's
-     72px of horizontal padding at `sm`+, that's ~1326px of actual viewport.
-     Rounded up to a clean 84rem (1344px) for a little breathing room, not the
-     bare minimum. Its own registered breakpoint for the same reason as
-     `cs-toc` above: an arbitrary `min-[1344px]:` bracket doesn't get sorted
-     into cascade order by width, so `sm:`'s rule would silently win here too. */
-  --breakpoint-about-photos: 84rem;
+  /* Absorbs the former `--breakpoint-cs-toc` — case study content column,
+     where the TOC's reserved margin stops being mirrored on the right
+     (see CaseStudyLayout.tsx). Sits between the old `lg` (1024px, where
+     the column would still be squeezed under the symmetric treatment) and
+     stock `xl` (1280px, further out than this needed) — that gap is why
+     this tier is 1152px instead of Tailwind's default 1280px. */
+  --breakpoint-xl: 72rem; /* 1152px */
 
-  /* Discover More — where the 2x2 mobile grid switches to a single row of
-     4 (see DiscoverMore.tsx). Deliberately later than `sm` (768px): right
-     above `sm`, container-main's fixed 72px of padding + 3 gap-6 gaps (72px)
-     leaves each of 4 columns only ~130px, too narrow for titles like "Google
-     Calendar enhanced task management" — they wrap word-by-word. 60rem
-     (960px) gives each column ~200px, enough room for 2-3 comfortable line
-     breaks instead. Its own registered breakpoint for the same reason as
-     `cs-toc`/`about-photos` above, and so this can be retuned independently
-     of `sm`/`lg` without affecting anything else using those. */
-  --breakpoint-discover-wide: 60rem;
-
-  /* ScreenSpotlight — where the flow tabs + phone card + rationale +
-     screen-index thumbnails switch from the stacked mobile treatment to
-     the side-by-side desktop one (see ScreenSpotlight.tsx). Deliberately
-     much later than `sm` (768px): tested live against the component's own
-     worst case (an 8-screen flow, e.g. Retrospect's "Opening a capsule")
-     at a range of widths — anywhere from `sm` up to ~800px, the flow-tab
-     row's own label ("Opening a capsule") gets clipped past the viewport
-     edge and the thumbnail row runs out of room for its own
-     THUMB_MIN_WIDTH floor, well before the mobile-only wrapping-pill
-     treatment would ever look cramped at the same width. ~850px is where
-     it stops visibly breaking; 60rem (960px) — the same value as
-     `discover-wide` above by coincidence, not by reuse; keep it a separate
-     token so retuning one can't silently move the other — gives that a bit
-     of the same "not the bare minimum" buffer the other breakpoints here
-     get, comfortable rather than just barely passing. Its own registered
-     breakpoint for the same reason as `cs-toc`/`about-photos`/
-     `discover-wide` above: an arbitrary `min-[960px]:` bracket doesn't get
-     sorted into cascade order by width, so `sm:`'s rule would silently win
-     here too. */
-  --breakpoint-cs-screens: 60rem;
+  /* Absorbs the former `--breakpoint-about-photos` — About hero, where the
+     photo trio has room to sit beside the intro text again instead of
+     stacked beneath it (see AboutHero.tsx). Below this, text (full width)
+     + a fixed 40px gap + the photo row (830px at real desktop size) would
+     need ~1326px of viewport including container-main's padding; rounded
+     up to a clean 1344px for breathing room, not the bare minimum — why
+     this tier is 1344px instead of Tailwind's default 1536px. */
+  --breakpoint-2xl: 84rem; /* 1344px */
 
   /* Radii */
   --radius-sm:    4px;
@@ -152,8 +133,8 @@
 }
 
 :root {
-  /* Top nav is hidden below `sm` (bottom pill nav takes over), so there's no
-     bar to clear. Restored at `sm` — py-4 (32px) + text-base line height (24px). */
+  /* Top nav is hidden below `md` (bottom pill nav takes over), so there's no
+     bar to clear. Restored at `md` — py-4 (32px) + text-base line height (24px). */
   --nav-height: 0px;
 }
 
@@ -216,7 +197,7 @@ body {
 
 /* ─── Main frame — radius transitions ──────────────────────────────────────── */
 
-/* --radius-frame is 20px on mobile; bump to the full 36px at the `sm`
+/* --radius-frame is 20px on mobile; bump to the full 36px at the `md`
    breakpoint, matching DESKTOP_QUERY in ScrollRevealController. */
 @media (min-width: 768px) {
   :root {
@@ -299,7 +280,7 @@ body {
    hold its actual content, so capping + centering here is enough to cover
    all of them without touching each one individually. 120rem (1920px)
    reuses the same cap CaseStudyLayout already puts on its own content
-   column (see its cs-toc:max-w-[min(120rem,...)] div) so very wide screens
+   column (see its xl:max-w-[min(120rem,...)] div) so very wide screens
    read as one consistent width sitewide instead of each section picking
    its own. Below that width margin-inline:auto is a no-op, so nothing
    changes until a screen is actually wide enough to need it. */
@@ -338,10 +319,10 @@ body {
    --thumb-ratio-* custom property CaseStudyCard sets: below the release
    breakpoint, use --thumb-ratio-mobile if a section opted in, otherwise fall
    back to the card's own desktop ratio; at/above it, always the card's own
-   ratio. Plain `.card-thumb` releases at `sm` (768px — Case Studies);
-   `.card-thumb-mobile-wide` releases later, at 60rem/960px (Discover More;
-   matches --breakpoint-discover-wide above — keep the two in sync), since
-   4 columns right at `sm` leaves each one too narrow. */
+   ratio. Plain `.card-thumb` releases at `md` (768px — Case Studies);
+   `.card-thumb-mobile-wide` releases later, at `lg` (960px — Discover More;
+   matches --breakpoint-lg above — keep the two in sync), since 4 columns
+   right at `md` leaves each one too narrow. */
 .card-thumb {
   transition: transform 400ms cubic-bezier(0.22, 1, 0.36, 1);
   aspect-ratio: var(--thumb-ratio-mobile, var(--thumb-ratio-desktop));

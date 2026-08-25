@@ -5,7 +5,7 @@ import { projects } from "@/content/work"
 import { CaseStudyCard } from "@/components/ui/CaseStudyCard"
 import { fadeUp } from "@/lib/motion"
 
-// Shared mobile ratio for every card below `sm` (Hack Western's own desktop
+// Shared mobile ratio for every card below `md` (Hack Western's own desktop
 // ratio) — see DiscoverMore's identical use of mobileImageRatio.
 const MOBILE_RATIO: [number, number] = [740, 504]
 
@@ -25,11 +25,11 @@ export function CaseStudies() {
         Case Studies
       </motion.h2>
 
-      <div className="flex flex-col gap-y-9 sm:gap-y-16">
+      <div className="flex flex-col gap-y-9 md:gap-y-16">
         {/* Row 1: 5/4 split — each row triggers on its own visibility, and
             both cards in the row fade up together (no stagger between them). */}
         <motion.div
-          className="grid grid-cols-1 gap-9 sm:grid-cols-[5fr_4fr]"
+          className="grid grid-cols-1 gap-9 md:grid-cols-[5fr_4fr]"
           initial={reduce ? "visible" : "hidden"}
           whileInView="visible"
           viewport={{ once: true, margin: "-80px" }}
@@ -44,7 +44,7 @@ export function CaseStudies() {
 
         {/* Row 2: right card dominant */}
         <motion.div
-          className="grid grid-cols-1 gap-9 sm:grid-wide-right"
+          className="grid grid-cols-1 gap-9 md:grid-wide-right"
           initial={reduce ? "visible" : "hidden"}
           whileInView="visible"
           viewport={{ once: true, margin: "-80px" }}

@@ -80,8 +80,8 @@ export function CaseStudyLayout({ project, children, heroBackground, heroAspectR
   return (
     <>
       {/* Transparent nav overlay — above hero (z:5), below content card (z:10).
-          Below `sm`, the bottom pill nav takes over — no top bar to show. */}
-      <header className="fixed inset-x-0 top-0 hidden pointer-events-none sm:block" style={{ zIndex: 6 }}>
+          Below `md`, the bottom pill nav takes over — no top bar to show. */}
+      <header className="fixed inset-x-0 top-0 hidden pointer-events-none md:block" style={{ zIndex: 6 }}>
         <nav
           className="container-chrome flex items-center justify-between py-4 pointer-events-auto"
           aria-label="Primary navigation"
@@ -112,11 +112,11 @@ export function CaseStudyLayout({ project, children, heroBackground, heroAspectR
       <main className="flex-1 flex flex-col">
         <ScrollRevealController frameId="cs-content" heroId="cs-hero-content" heroFrameId="cs-hero-frame" />
 
-        {/* Hero — pinned to the viewport from `sm` up (see CaseStudyHero), so
+        {/* Hero — pinned to the viewport from `md` up (see CaseStudyHero), so
             #cs-content can visually slide up and cover it, same as
             #main-frame covers Work/About's hero. Background stays fully
             static; only the foreground screenshot (HeroForeground) fades +
-            scales as it's covered — see ScrollRevealController. Below `sm`
+            scales as it's covered — see ScrollRevealController. Below `md`
             the hero stays in normal static flow instead, with no covering
             effect. Background + foreground are both owned by the
             per-case-study hero component (whatever it renders: gradient,
@@ -150,16 +150,16 @@ export function CaseStudyLayout({ project, children, heroBackground, heroAspectR
           }}
         >
           {/* The content column is truly centered (mx-auto, equal margins on
-              both sides) from `cs-toc` (1152px, see globals.css) up — same as
-              it's always been. Below that, down to `sm`, is a squeezed tablet
+              both sides) from `xl` (1152px, see globals.css) up — same as
+              it's always been. Below that, down to `md`, is a squeezed tablet
               zone the original symmetric split never accounted for: it
               reserved an identical, unused block of whitespace on the right
               (mirroring the TOC's left-side space) at *every* width, which
               starves the column exactly where it can least afford it — a
-              ~900px viewport was down to a ~270px column. Between `sm` and
-              `cs-toc` the column instead gets a plain left margin (just the
+              ~900px viewport was down to a ~270px column. Between `md` and
+              `xl` the column instead gets a plain left margin (just the
               TOC + gap) and eats every remaining pixel, no mirrored margin —
-              then `cs-toc`+ reverts to the original centered treatment, since
+              then `xl`+ reverts to the original centered treatment, since
               by then the symmetric column is already comfortable on its own.
               This does mean a real jump at 1152px (content suddenly loses
               the right-hand space it had a pixel below) rather than a smooth
@@ -170,22 +170,22 @@ export function CaseStudyLayout({ project, children, heroBackground, heroAspectR
               badly-squeezed territory. */}
           <div className="container-main">
             {/* min(...) guarantees the column's left margin never drops below
-                16rem in the `sm`–`cs-toc` tablet tier (17.5rem again at
-                `cs-toc`+, see the aside's own left offset below) — otherwise
+                16rem in the `md`–`xl` tablet tier (17.5rem again at
+                `xl`+, see the aside's own left offset below) — otherwise
                 the TOC gets pushed off-screen to the left on any viewport
-                narrower than max-w + that margin. Only applied from `sm` up
+                narrower than max-w + that margin. Only applied from `md` up
                 — below that there's no TOC to reserve space for, and a
                 positive left margin goes negative on narrow viewports,
                 collapsing the whole column.
-                The tablet tier's TOC↔content gap is tighter than `cs-toc`+'s
+                The tablet tier's TOC↔content gap is tighter than `xl`+'s
                 (16rem vs. 17.5rem, i.e. 16px vs. 40px between the TOC's own
                 w-60 and the column) — this tier is already reclaiming space
                 from the old mirrored right-margin bug, so the gap itself can
                 afford to give a little more of that space to the column too,
                 rather than sitting at the same width the roomier desktop
                 tier uses. */}
-            <div className="relative max-w-full sm:ml-[16rem] sm:max-w-[calc(100%-16rem)] cs-toc:mx-auto cs-toc:max-w-[min(120rem,calc(100%-35rem))]">
-              <aside className="absolute top-0 h-full w-60 left-[-17.5rem] sm:left-[-16rem] cs-toc:left-[-17.5rem]">
+            <div className="relative max-w-full md:ml-[16rem] md:max-w-[calc(100%-16rem)] xl:mx-auto xl:max-w-[min(120rem,calc(100%-35rem))]">
+              <aside className="absolute top-0 h-full w-60 left-[-17.5rem] md:left-[-16rem] xl:left-[-17.5rem]">
                 <div className="sticky top-0 pt-9 pb-16">
                   <Link
                     href="/"

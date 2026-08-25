@@ -84,7 +84,7 @@ export async function MoreCaseStudies({ currentSlug }: Props) {
                   already a Link (nested <a> tags are invalid HTML). Reveals
                   with the row's existing group-hover opacity fade. */}
               <span
-                className="hidden shrink-0 items-center leading-none text-neutral-200 opacity-0 transition-opacity duration-150 group-hover:opacity-100 sm:flex"
+                className="hidden shrink-0 items-center leading-none text-neutral-200 opacity-0 transition-opacity duration-150 group-hover:opacity-100 md:flex"
                 aria-hidden="true"
                 style={{
                   width: 24,

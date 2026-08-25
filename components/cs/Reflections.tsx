@@ -20,7 +20,7 @@ export function Reflections({ id, tag, items }: ReflectionsProps) {
       </div>
       {/* auto-fit + minmax reflows off the grid's own rendered width (this
           column's width varies with the TOC/viewport tiers in
-          CaseStudyLayout, so a viewport-based `sm:` breakpoint can still be
+          CaseStudyLayout, so a viewport-based `md:` breakpoint can still be
           in "side by side" mode while the column itself is too narrow for
           it) instead of a fixed breakpoint, and never opens more columns
           than there are items since empty auto-fit tracks collapse. */}

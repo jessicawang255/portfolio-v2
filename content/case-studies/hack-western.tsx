@@ -10,7 +10,7 @@ import { Reflections } from "@/components/cs/Reflections"
 
 export default function HackWestern() {
   return (
-    <div className="flex flex-col gap-16 sm:gap-30">
+    <div className="flex flex-col gap-16 md:gap-30">
       <Section
         id="overview"
         tag="Overview"
@@ -190,11 +190,11 @@ export default function HackWestern() {
         {/* Not a TwoColumn — that component splits the row by a fixed fr
             ratio, but the sticker here has no frame/background to size a
             column around (see StickerAnimation). Instead the Callout grows
-            to fill whatever width the sticker doesn't need (sm:flex-1),
+            to fill whatever width the sticker doesn't need (md:flex-1),
             and the sticker sits at a fixed content size next to it. */}
-        <div className="flex flex-col items-stretch gap-6 sm:flex-row">
+        <div className="flex flex-col items-stretch gap-6 md:flex-row">
           <Callout
-            className="sm:flex-1"
+            className="md:flex-1"
             label="Discovery"
             heading="During prototype testing, users often missed the sticker drawer since the generic button gave little reason to click it."
             body="To make it more discoverable and fun, we set the drawer icon to display the last sticker a user earned."
@@ -207,7 +207,7 @@ export default function HackWestern() {
               would silently lose that fight. The library's 100%/100%
               default fills whatever box it's given, so sizing the box here
               works with that default instead of fighting it. */}
-          <div className="flex h-40 w-40 shrink-0 items-center justify-center sm:h-48 sm:w-48">
+          <div className="flex h-40 w-40 shrink-0 items-center justify-center md:h-48 md:w-48">
             <StickerAnimation
               alt="Animation cycling through a user's earned stickers, the kind that appears on the sticker drawer icon"
             />

@@ -169,9 +169,9 @@ const nestedButtonComparison = [
 
 export default function Glucal() {
   return (
-    <div className="flex flex-col gap-16 sm:gap-30">
+    <div className="flex flex-col gap-16 md:gap-30">
       <section id="problem" className="flex flex-col items-start scroll-mt-12">
-        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6 sm:gap-16 w-full">
+        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6 md:gap-16 w-full">
           <div className="max-w-xl">
             <div className="flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-[var(--cs-accent)] shrink-0" aria-hidden="true" />
@@ -185,13 +185,13 @@ export default function Glucal() {
             </p>
           </div>
 
-          <div className="w-full sm:w-auto shrink-0 flex flex-col items-start sm:items-end">
+          <div className="w-full md:w-auto shrink-0 flex flex-col items-start md:items-end">
             <Image
               src="/images/case-studies/glucal/glucal-problem-1.png"
               alt="Pictogram of 75 million people who inject insulin daily, sourced from the National Center for Biotechnology Information"
               width={696}
               height={809}
-              className="w-full sm:w-72 h-auto"
+              className="w-full md:w-72 h-auto"
             />
           </div>
         </div>
@@ -209,7 +209,7 @@ export default function Glucal() {
               alt=""
               width={306}
               height={484}
-              className="hidden sm:block w-36 h-auto"
+              className="hidden md:block w-36 h-auto"
             />
           </div>
         </div>
@@ -222,7 +222,7 @@ export default function Glucal() {
         primary
       >
         {solutionFeatures.map((feature) => (
-          <div key={feature.number} className="flex flex-col gap-6 sm:flex-row sm:items-start sm:gap-16">
+          <div key={feature.number} className="flex flex-col gap-6 md:flex-row md:items-start md:gap-16">
             <Image
               src={feature.src}
               alt={feature.alt}
@@ -232,7 +232,7 @@ export default function Glucal() {
               // them through next/image's sharp pipeline would flatten them
               // to a single still frame.
               unoptimized
-              className="w-full max-w-56 shrink-0 h-auto rounded-[8px] border border-neutral-100 mx-auto sm:mx-0"
+              className="w-full max-w-56 shrink-0 h-auto rounded-[8px] border border-neutral-100 mx-auto md:mx-0"
             />
             <div className="flex-1 min-w-0 max-w-xl">
               <h3 className="text-lg font-medium leading-[1.3] text-primary">
@@ -309,8 +309,8 @@ export default function Glucal() {
           The &ldquo;log food&rdquo; button needed to appear <strong className="text-[var(--cs-accent)] font-semibold">1. optional</strong> and <strong className="text-[var(--cs-accent)] font-semibold">2. associated with the carbs input field</strong>.
         </p>
 
-        <div className="rounded-[8px] border border-neutral-100 bg-neutral-75 p-6 sm:p-10">
-          <div className="grid grid-cols-2 gap-6 sm:grid-cols-4">
+        <div className="rounded-[8px] border border-neutral-100 bg-neutral-75 p-6 md:p-10">
+          <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
             {buttonIterations.map((iteration) => (
               <div key={iteration.number} className="flex flex-col items-center gap-3">
                 <p className="text-center text-sm font-mono uppercase leading-[1.2] text-neutral-400">
@@ -331,7 +331,7 @@ export default function Glucal() {
             <table className="w-full border-collapse">
               <thead>
                 <tr>
-                  <th className="sm:w-44" />
+                  <th className="md:w-44" />
                   {buttonIterations.map((iteration) => (
                     <th key={iteration.number} className="pb-2 pr-4 text-left last:pr-0">
                       <span className="font-mono text-sm leading-none font-normal text-neutral-400">
@@ -344,7 +344,7 @@ export default function Glucal() {
               <tbody>
                 {buttonComparison.map((row) => (
                   <tr key={row.criterion} className="border-t border-neutral-100">
-                    <td className="py-3 pr-4 align-top sm:w-44 sm:pr-8">
+                    <td className="py-3 pr-4 align-top md:w-44 md:pr-8">
                       <span className="font-mono text-sm leading-[0.8] font-normal text-neutral-400">
                         {row.criterion}
                       </span>
@@ -361,20 +361,20 @@ export default function Glucal() {
           </div>
         </div>
 
-        {/* mt-7/sm:mt-21 stack on top of this children wrapper's own gap-9
+        {/* mt-7/md:mt-21 stack on top of this children wrapper's own gap-9
             (see Section.tsx) so the total gap above this headline — 36px +
-            28px = 64px, 36px + 84px = 120px — matches the gap-16/sm:gap-30
+            28px = 64px, 36px + 84px = 120px — matches the gap-16/md:gap-30
             the page's own top-level flex uses between sections, even though
             this headline is a mid-section child rather than its own
             section. */}
-        <h1 className="text-balance text-3xl font-medium leading-[1.2] text-primary mt-7 sm:mt-21">
+        <h1 className="text-balance text-3xl font-medium leading-[1.2] text-primary mt-7 md:mt-21">
           However, users still expressed that logging food seemed like a separate process from inputting carb amounts.
         </h1>
         <p className="text-balance text-base leading-normal text-neutral-600">
           One user suggested to <strong className="text-[var(--cs-accent)] font-semibold">nest the button within the carb input field</strong>. When the button is nested within the field, it visually indicates that the log food action is part of the carbs input process, rather than a separate action that is simply associated with carbs.
         </p>
 
-        <div className="rounded-[8px] border border-neutral-100 bg-neutral-75 p-6 sm:p-10">
+        <div className="rounded-[8px] border border-neutral-100 bg-neutral-75 p-6 md:p-10">
           <div className="flex justify-center">
             <div className="flex flex-col items-center gap-3">
               <p className="text-sm font-mono uppercase leading-[1.2] text-neutral-400">Nested button</p>
@@ -392,7 +392,7 @@ export default function Glucal() {
             <table className="w-full border-collapse">
               <thead>
                 <tr>
-                  <th className="sm:w-44" />
+                  <th className="md:w-44" />
                   <th className="pb-2 pr-4 text-left">
                     <span className="font-mono text-sm leading-none font-normal text-neutral-400">5</span>
                   </th>
@@ -401,7 +401,7 @@ export default function Glucal() {
               <tbody>
                 {nestedButtonComparison.map((row) => (
                   <tr key={row.criterion} className="border-t border-neutral-100">
-                    <td className="py-3 pr-4 align-top sm:w-44 sm:pr-8">
+                    <td className="py-3 pr-4 align-top md:w-44 md:pr-8">
                       <span className="font-mono text-sm leading-[0.8] font-normal text-neutral-400">
                         {row.criterion}
                       </span>
@@ -431,14 +431,14 @@ export default function Glucal() {
             showing the actual design, not a table-header thumbnail — then
             one shared comparison table below, instead of two separate
             stacked boxes each re-explaining the same three points. */}
-        <div className="rounded-[8px] border border-neutral-100 bg-neutral-75 p-6 sm:p-10">
+        <div className="rounded-[8px] border border-neutral-100 bg-neutral-75 p-6 md:p-10">
           <VideoCompare items={[foodLogApproaches[0], foodLogApproaches[1]]} />
 
           <div className="mt-10 overflow-x-auto">
             <table className="w-full border-collapse">
               <thead>
                 <tr>
-                  <th className="sm:w-44" />
+                  <th className="md:w-44" />
                   {foodLogApproaches.map((approach) => (
                     <th key={approach.name} className="pb-2 pr-4 text-left last:pr-0">
                       <span className="font-mono text-sm leading-none font-normal text-neutral-400 uppercase">
@@ -451,7 +451,7 @@ export default function Glucal() {
               <tbody>
                 {foodLogComparison.map((row) => (
                   <tr key={row.criterion} className="border-t border-neutral-100">
-                    <td className="py-3 pr-4 align-top sm:w-44 sm:pr-8">
+                    <td className="py-3 pr-4 align-top md:w-44 md:pr-8">
                       <span className="font-mono text-sm leading-[0.8] font-normal text-neutral-400">
                         {row.criterion}
                       </span>

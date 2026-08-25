@@ -22,12 +22,14 @@ const socialLinks = [
 ]
 
 // `before:inset-[…]` pads each link's hit area out toward the 44px touch-
-// target minimum (see IconButton's own `::before` for the same trick) —
-// vertical inset only reaches -10px (not the full -11px+ that'd fully clear
-// 44px) since these rows are stacked with just a 4px gap (`gap-1` below);
-// going further would overlap more than it already does. Horizontal goes
-// wider (-16px) since it costs nothing here — nothing else sits beside a
-// stacked link — and single-character labels like "X" need it most.
+// target minimum (see IconButton's own `::before` for the same trick).
+// Vertical inset caps at -10px, the largest value that clears 44px without
+// one row's hit area reaching past the midpoint into a neighboring row —
+// which is why rows also need real space between them: `gap-6` below (24px)
+// on mobile, where fingers aren't as precise as a mouse, dropping to `gap-1`
+// from `md` up where each row is a small, precisely-clickable target.
+// Horizontal inset stays generous at every size (-16px) since nothing sits
+// beside a stacked link — single-character labels like "X" need it most.
 const FOOTER_LINK_CLASS = "relative text-base font-normal text-nav-link hover:text-nav-link-hover transition-colors duration-150 before:absolute before:inset-x-[-16px] before:inset-y-[-10px] before:content-['']"
 
 // Popover reveal — same on-screen-settle curve as TableOfContents' subsection reveal.
@@ -167,13 +169,15 @@ function ColophonButton() {
     const rect = btnRef.current?.getBoundingClientRect()
     if (!rect) return
     // The trigger sits at the left edge of its column on mobile
-    // (`items-start`) but the right edge on desktop (`sm:items-end`) — below
-    // `sm`, anchor the panel's left edge to the button's left edge like
-    // before; from `sm` up, anchor its *right* edge to the button's right
+    // (`items-start`) but the right edge on desktop (`md:items-end`) — below
+    // `md`, anchor the panel's left edge to the button's left edge like
+    // before; from `md` up, anchor its *right* edge to the button's right
     // edge instead, so the panel lines up with the column's right edge
     // (every child in the column shares that edge) rather than trailing off
     // whichever `left` the word "Colophon" itself happens to start at.
-    const isDesktop = window.innerWidth >= 640 // Tailwind `sm`
+    const isDesktop = window.innerWidth >= 768 // this site's `md` (768px) —
+    // was hardcoded to stock Tailwind's default `md` (640px) here, 128px
+    // off from the `md:items-end` layout flip above it actually tracks
     const bottom = window.innerHeight - rect.top + 12
     if (isDesktop) {
       const right = Math.max(window.innerWidth - rect.right, PANEL_VIEWPORT_MARGIN)
@@ -201,7 +205,7 @@ function ColophonButton() {
       if (e.key === "Escape") setOpen(false)
     }
     // Scroll changes the button's viewport position (the footer is only
-    // `fixed` from `sm` up, and scrolls with content below it) — rather than
+    // `fixed` from `md` up, and scrolls with content below it) — rather than
     // tracking it live, just close the panel.
     function handleScroll() {
       setOpen(false)
@@ -310,8 +314,8 @@ function ColophonButton() {
   )
 }
 
-// Static (scrolls with content) below `sm`, matching the header/nav's mobile
-// behavior. Fixed from `sm` up — pinned behind the content frame so its
+// Static (scrolls with content) below `md`, matching the header/nav's mobile
+// behavior. Fixed from `md` up — pinned behind the content frame so its
 // bottom corners can peel back to reveal it on scroll (see
 // ScrollRevealController, which animates that peel and reserves body
 // padding-bottom for it at the desktop breakpoint).
@@ -319,16 +323,8 @@ export function Footer() {
   const pathname = usePathname()
 
   return (
-    <footer id="site-footer" className="static sm:fixed sm:inset-x-0 sm:bottom-0 sm:z-0 bg-chrome">
-      {/* First three columns hug their own content (`max-content`) instead
-          of stretching to an equal 1/4 of container-chrome's 120rem cap —
-          on a wide screen that stretch was what made "Work" and "Email"
-          read as stranded in mostly-empty tracks. The last column keeps
-          `1fr`, absorbing the leftover space so Colophon/view count stay
-          anchored to the right edge as before. Column gap also trimmed
-          from the row gap's 32px (gap-8) down to 24px (gap-x-6), now that
-          it's the only thing separating adjacent columns. */}
-      <div className="container-chrome grid grid-cols-1 gap-8 pt-9 pb-12 sm:grid-cols-[max-content_max-content_max-content_1fr] sm:gap-x-24">
+    <footer id="site-footer" className="static md:fixed md:inset-x-0 md:bottom-0 md:z-0 bg-chrome">
+      <div className="container-chrome grid grid-cols-1 gap-12 md:gap-8 pt-9 pb-12 md:grid-cols-[max-content_max-content_max-content_1fr] md:gap-x-24">
         {/* Name + clock */}
         <div className="flex flex-col gap-1">
           <Link
@@ -343,7 +339,7 @@ export function Footer() {
 
         {/* Nav links */}
         <nav aria-label="Footer navigation">
-          <ul className="flex flex-col gap-1 list-none m-0 p-0">
+          <ul className="flex flex-col gap-4 md:gap-1 list-none m-0 p-0">
             {navLinks.map(({ label, href, target }) => (
               <li key={label}>
                 <Link
@@ -362,7 +358,7 @@ export function Footer() {
 
         {/* Social links */}
         <nav aria-label="Social links">
-          <ul className="flex flex-col gap-1 list-none m-0 p-0">
+          <ul className="flex flex-col gap-6 md:gap-1 list-none m-0 p-0">
             {socialLinks.map(({ label, href }) => (
               <li key={label}>
                 <a
@@ -379,8 +375,8 @@ export function Footer() {
         </nav>
 
         {/* Colophon, design system teaser, view count */}
-        <div className="flex flex-col items-start gap-1 sm:items-end sm:justify-between">
-          <div className="flex flex-col items-start gap-1 sm:items-end">
+        <div className="flex flex-col items-start gap-1 md:items-end md:justify-between">
+          <div className="flex flex-col items-start gap-1 md:items-end">
             <ColophonButton />
             {/* Design system link — hidden for now, adding this back later. Route stays live. */}
             {/* <Link href="/design" className={FOOTER_LINK_CLASS}>

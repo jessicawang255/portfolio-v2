@@ -13,11 +13,11 @@ type Props = {
   // different natural ratios line up to one shared ratio on mobile while
   // each card keeps its own ratio above that breakpoint.
   mobileImageRatio?: [number, number]
-  // Which breakpoint releases the box back to its own ratio: `sm` (768px,
-  // default — Case Studies) or `wide` (--breakpoint-discover-wide, 960px —
-  // Discover More, whose 4 columns need more room before `sm` stops being
-  // too narrow). Only meaningful alongside mobileImageRatio.
-  mobileBreakpoint?: "sm" | "wide"
+  // Which breakpoint releases the box back to its own ratio: `md` (768px,
+  // default — Case Studies) or `lg` (960px — Discover More, whose 4 columns
+  // need more room before `md` stops being too narrow). Only meaningful
+  // alongside mobileImageRatio.
+  mobileBreakpoint?: "md" | "lg"
   // Where a cropped video thumbnail anchors within its box — `center`
   // (default) or `top` to keep the top of the frame intact and crop from
   // the bottom instead. No effect on images or on boxes that don't crop.
@@ -55,7 +55,7 @@ export function Separator({ children, className = "" }: { children: ReactNode; c
   )
 }
 
-export function CaseStudyCard({ project, imageRatio, mobileImageRatio, mobileBreakpoint = "sm", videoPosition = "center" }: Props) {
+export function CaseStudyCard({ project, imageRatio, mobileImageRatio, mobileBreakpoint = "md", videoPosition = "center" }: Props) {
   const { slug, title, name, status, disciplines, bg, thumbnail, thumbnailWidth, thumbnailHeight, href } = project
 
   const isGradient = bg.startsWith("linear-gradient")
@@ -63,7 +63,7 @@ export function CaseStudyCard({ project, imageRatio, mobileImageRatio, mobileBre
   const isVideo = thumbnail?.endsWith(".mp4") || thumbnail?.endsWith(".webm")
   const hasMetadata = name || status || (disciplines && disciplines.length > 0)
   const isExternal = Boolean(href)
-  const isWideMobile = mobileBreakpoint === "wide"
+  const isWideMobile = mobileBreakpoint === "lg"
 
   // With no explicit imageRatio, size the box to the thumbnail's own aspect
   // ratio instead of forcing a uniform crop — lets Discover More's bento
@@ -74,7 +74,7 @@ export function CaseStudyCard({ project, imageRatio, mobileImageRatio, mobileBre
   // aspect-ratio (not a pixel height) so the box scales proportionally with
   // its fluid grid-column width instead of stretching width while height
   // stays fixed. Set as CSS custom properties rather than `aspectRatio`
-  // directly so globals.css can swap in `--thumb-ratio-mobile` below `sm`
+  // directly so globals.css can swap in `--thumb-ratio-mobile` below `md`
   // when a section (Discover More) opts every card into one shared ratio.
   const thumbStyle = {
     ...(ratio ? { "--thumb-ratio-desktop": `${ratio[0]} / ${ratio[1]}` } : {}),
@@ -91,7 +91,7 @@ export function CaseStudyCard({ project, imageRatio, mobileImageRatio, mobileBre
         href={href ?? `/work/${slug}`}
         target={isExternal ? "_blank" : undefined}
         rel={isExternal ? "noopener noreferrer" : undefined}
-        className="flex flex-col gap-4 sm:gap-3 rounded-[--radius-xl] outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-4"
+        className="flex flex-col gap-4 md:gap-3 rounded-[--radius-xl] outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-4"
       >
         {/* Thumbnail — aspect-ratio (set in thumbStyle) governs the box at
             every width, mobile included, so height shrinks with width
@@ -111,8 +111,8 @@ export function CaseStudyCard({ project, imageRatio, mobileImageRatio, mobileBre
               className={
                 (usesThumbnailRatio
                   ? isWideMobile
-                    ? "absolute inset-0 h-full w-full object-cover discover-wide:object-contain"
-                    : "absolute inset-0 h-full w-full object-cover sm:object-contain"
+                    ? "absolute inset-0 h-full w-full object-cover lg:object-contain"
+                    : "absolute inset-0 h-full w-full object-cover md:object-contain"
                   : "absolute inset-0 h-full w-full object-cover") +
                 (videoPosition === "top" ? " object-top" : "")
               }
@@ -126,8 +126,8 @@ export function CaseStudyCard({ project, imageRatio, mobileImageRatio, mobileBre
               className={
                 usesThumbnailRatio
                   ? isWideMobile
-                    ? "object-cover discover-wide:object-contain"
-                    : "object-cover sm:object-contain"
+                    ? "object-cover lg:object-contain"
+                    : "object-cover md:object-contain"
                   : "object-cover"
               }
               sizes="(max-width: 768px) 100vw, 50vw"
@@ -136,8 +136,8 @@ export function CaseStudyCard({ project, imageRatio, mobileImageRatio, mobileBre
         </div>
 
         {/* Text block */}
-        <div className="card-text flex items-start justify-between gap-6 px-0 sm:px-3.5">
-          <div className="flex flex-col gap-0 sm:gap-1">
+        <div className="card-text flex items-start justify-between gap-6 px-0 md:px-3.5">
+          <div className="flex flex-col gap-0 md:gap-1">
             <h3 className="text-balance text-base font-medium leading-[1.4] text-neutral-800">
               {title}
             </h3>
@@ -155,7 +155,7 @@ export function CaseStudyCard({ project, imageRatio, mobileImageRatio, mobileBre
 
           {/* Hover-reveal arrow — desktop only (see `hover: hover` gate in
               globals.css); dropped on mobile since there's no hover to reveal it. */}
-          <span className="card-arrow hidden shrink-0 leading-none text-neutral-200 sm:inline" aria-hidden="true">
+          <span className="card-arrow hidden shrink-0 leading-none text-neutral-200 md:inline" aria-hidden="true">
             <ArrowUpRight />
           </span>
         </div>
