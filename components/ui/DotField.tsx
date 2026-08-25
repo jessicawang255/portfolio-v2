@@ -48,7 +48,7 @@ const GREY_RGB = hexToRgb(GREY)
 
 // Below `sm`, there's no cursor to track — the field renders as a static
 // grid with no hover glow, same treatment as prefers-reduced-motion.
-const DESKTOP_QUERY = "(min-width: 640px)"
+const DESKTOP_QUERY = "(min-width: 768px)"
 
 function useIsDesktop() {
   const [isDesktop, setIsDesktop] = useState(

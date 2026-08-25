@@ -13,7 +13,7 @@ type Props = {
   // different natural ratios line up to one shared ratio on mobile while
   // each card keeps its own ratio above that breakpoint.
   mobileImageRatio?: [number, number]
-  // Which breakpoint releases the box back to its own ratio: `sm` (640px,
+  // Which breakpoint releases the box back to its own ratio: `sm` (768px,
   // default — Case Studies) or `wide` (--breakpoint-discover-wide, 960px —
   // Discover More, whose 4 columns need more room before `sm` stops being
   // too narrow). Only meaningful alongside mobileImageRatio.

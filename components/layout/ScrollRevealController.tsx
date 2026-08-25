@@ -14,7 +14,7 @@ const DESKTOP_RADIUS = 36
 // switch between fixed (peels from behind the frame) and static (normal
 // flow), and the one --radius-frame in globals.css uses for its 20px/36px
 // swap.
-const DESKTOP_QUERY = "(min-width: 640px)"
+const DESKTOP_QUERY = "(min-width: 768px)"
 
 type Props = {
   /** The card whose corners peel open as it slides toward the viewport top

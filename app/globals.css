@@ -44,6 +44,12 @@
   --color-nav-link-hover: var(--color-neutral-900);
   --color-icon-social:    var(--color-neutral-200);
 
+  /* `sm` — the site's main mobile/desktop switch, used throughout via `sm:`.
+     Raised from Tailwind's default 40rem (640px) to 48rem (768px), the
+     standard `md` breakpoint size, so the mobile layouts hold through the
+     640–768px range instead of switching to desktop treatments too early. */
+  --breakpoint-sm: 48rem;
+
   /* Case study content column — where the TOC's reserved margin stops being
      mirrored on the right (see CaseStudyLayout.tsx). Deliberately its own
      registered breakpoint rather than an arbitrary `min-[1152px]:` bracket
@@ -70,7 +76,7 @@
   --breakpoint-about-photos: 84rem;
 
   /* Discover More — where the 2x2 mobile grid switches to a single row of
-     4 (see DiscoverMore.tsx). Deliberately later than `sm` (640px): right
+     4 (see DiscoverMore.tsx). Deliberately later than `sm` (768px): right
      above `sm`, container-main's fixed 72px of padding + 3 gap-6 gaps (72px)
      leaves each of 4 columns only ~130px, too narrow for titles like "Google
      Calendar enhanced task management" — they wrap word-by-word. 60rem
@@ -83,7 +89,7 @@
   /* ScreenSpotlight — where the flow tabs + phone card + rationale +
      screen-index thumbnails switch from the stacked mobile treatment to
      the side-by-side desktop one (see ScreenSpotlight.tsx). Deliberately
-     much later than `sm` (640px): tested live against the component's own
+     much later than `sm` (768px): tested live against the component's own
      worst case (an 8-screen flow, e.g. Retrospect's "Opening a capsule")
      at a range of widths — anywhere from `sm` up to ~800px, the flow-tab
      row's own label ("Opening a capsule") gets clipped past the viewport
@@ -151,7 +157,7 @@
   --nav-height: 0px;
 }
 
-@media (min-width: 640px) {
+@media (min-width: 768px) {
   :root {
     --nav-height: 56px;
   }
@@ -212,7 +218,7 @@ body {
 
 /* --radius-frame is 20px on mobile; bump to the full 36px at the `sm`
    breakpoint, matching DESKTOP_QUERY in ScrollRevealController. */
-@media (min-width: 640px) {
+@media (min-width: 768px) {
   :root {
     --radius-frame: 36px;
   }
@@ -311,7 +317,7 @@ body {
   padding-inline: 20px;
 }
 
-@media (min-width: 640px) {
+@media (min-width: 768px) {
   .container-main,
   .container-chrome {
     padding-inline: 36px;
@@ -332,7 +338,7 @@ body {
    --thumb-ratio-* custom property CaseStudyCard sets: below the release
    breakpoint, use --thumb-ratio-mobile if a section opted in, otherwise fall
    back to the card's own desktop ratio; at/above it, always the card's own
-   ratio. Plain `.card-thumb` releases at `sm` (640px — Case Studies);
+   ratio. Plain `.card-thumb` releases at `sm` (768px — Case Studies);
    `.card-thumb-mobile-wide` releases later, at 60rem/960px (Discover More;
    matches --breakpoint-discover-wide above — keep the two in sync), since
    4 columns right at `sm` leaves each one too narrow. */
@@ -341,7 +347,7 @@ body {
   aspect-ratio: var(--thumb-ratio-mobile, var(--thumb-ratio-desktop));
 }
 
-@media (min-width: 640px) {
+@media (min-width: 768px) {
   .card-thumb:not(.card-thumb-mobile-wide) {
     aspect-ratio: var(--thumb-ratio-desktop);
   }
