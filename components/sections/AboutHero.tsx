@@ -196,27 +196,27 @@ export function AboutHero() {
 
           <motion.p
             variants={fadeUp}
-            className="mb-4 text-balance text-base font-normal text-neutral-700"
+            className="max-w-lg text-balance text-base font-normal text-neutral-700"
           >
-            I love to sing, create, and feel. Yesterday, I had two rice
-            krispies. Today, I shall have two more.
+            I&rsquo;m a creative, a problem-solver, and a maker who obsesses
+            over details. I&rsquo;m driven by the idea that you can make
+            something from nothing, whether that be products, songs, or
+            communities.
           </motion.p>
 
           <motion.p
             variants={fadeUp}
-            className="mb-4 text-balance text-base font-normal text-neutral-700"
+            className="mt-6 max-w-lg text-balance text-base font-normal text-neutral-700"
           >
-            Hi there! I&rsquo;m Jessica. 🎉 I&rsquo;m a product designer
-            who&rsquo;s obsessed with exploring new ideas and contemplating
-            how we can shape the future of technology to help those most in
-            need.
+            On any given day, you might find me producing music, climbing
+            rocks, learning about the stars, or collecting design inspo on X.
           </motion.p>
 
           <motion.p
             variants={fadeUp}
-            className="mb-9 text-balance text-base font-normal text-neutral-700"
+            className="mt-6 mb-9 max-w-lg text-balance text-base font-normal text-neutral-700"
           >
-            I love yapping and meeting ppl! Reach out to me :)
+            Say hi, I&rsquo;d love to connect!
           </motion.p>
 
           <motion.div variants={fadeUp} className="flex items-center gap-4">
