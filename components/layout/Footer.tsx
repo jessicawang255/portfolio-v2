@@ -358,7 +358,7 @@ export function Footer() {
 
         {/* Social links */}
         <nav aria-label="Social links">
-          <ul className="flex flex-col gap-6 md:gap-1 list-none m-0 p-0">
+          <ul className="flex flex-col gap-4 md:gap-1 list-none m-0 p-0">
             {socialLinks.map(({ label, href }) => (
               <li key={label}>
                 <a
@@ -375,8 +375,8 @@ export function Footer() {
         </nav>
 
         {/* Colophon, design system teaser, view count */}
-        <div className="flex flex-col items-start gap-1 md:items-end md:justify-between">
-          <div className="flex flex-col items-start gap-1 md:items-end">
+        <div className="flex flex-col items-start gap-4 md:items-end md:justify-between">
+          <div className="flex flex-col items-start gap-4 md:items-end">
             <ColophonButton />
             {/* Design system link — hidden for now, adding this back later. Route stays live. */}
             {/* <Link href="/design" className={FOOTER_LINK_CLASS}>
