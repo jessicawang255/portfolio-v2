@@ -1,6 +1,6 @@
 import Image from "next/image"
 import { ImageBlock } from "@/components/cs/ImageBlock"
-import { Callout, Section, Reflections } from "@/components/cs"
+import { Callout, Section, Reflections, VideoCompare } from "@/components/cs"
 
 // Real exported pixel dimensions of every glucal-final-*.webp crop — all
 // three share one aspect ratio (unlike ScreenSpotlight's per-screen crops),
@@ -32,106 +32,138 @@ const solutionFeatures = [
   },
 ]
 
-type IterationCardData = {
-  heading: string
-  body?: string
-  checklist?: { ok: boolean; text: string }[]
-  numbered?: string[]
-}
-
-// A single white insight card inside a food-log-iteration comparison box
-// ("Elevation" / "Alignment with existing mental models" / etc.) —
-// extracted since each iteration renders up to 5 of
-// these, split across two independently-stacked columns rather than one
-// aligned grid (see foodLogIterations' leftCards/rightCards below).
-function IterationCard({ heading, body, checklist, numbered }: IterationCardData) {
-  return (
-    <div className="rounded-[8px] bg-neutral-50 p-6">
-      <p className="text-base font-medium text-primary">{heading}</p>
-      {body && <p className="mt-2 text-base leading-normal text-neutral-600">{body}</p>}
-      {checklist && (
-        <ul className="mt-2.5 flex flex-col gap-2">
-          {checklist.map((item) => (
-            <li key={item.text} className="flex items-start gap-2.5 text-base leading-normal text-neutral-600">
-              <span className="mt-0.5 shrink-0 text-neutral-700" aria-hidden="true">
-                {item.ok ? "✓" : "✕"}
-              </span>
-              <span>{item.text}</span>
-            </li>
-          ))}
-        </ul>
-      )}
-      {numbered && (
-        <ol className="mt-2.5 flex flex-col gap-1.5">
-          {numbered.map((item, i) => (
-            <li key={item} className="flex gap-2 text-base leading-normal text-neutral-600">
-              <span className="text-neutral-400">{i + 1}.</span>
-              <span>{item}</span>
-            </li>
-          ))}
-        </ol>
-      )}
-    </div>
-  )
-}
-
-// Real exported pixel dimensions of glucal-design-5/6.webp — animated
-// screen-recording crops of the "Log Food" screen, same convention as
-// SOLUTION_IMAGE_WIDTH/HEIGHT above.
-const ITERATION_IMAGE_WIDTH = 390
-const ITERATION_IMAGE_HEIGHT = 844
-
-const foodLogIterations = [
+const foodLogApproaches = [
   {
-    src: "/images/case-studies/glucal/glucal-design-5.webp",
+    name: "Modal",
+    // Longer than `name` — this is the tag sitting above the video, where
+    // there's room to say what it actually does; `name` stays short for
+    // the comparison table's column headers below.
+    label: "Modal overlay",
+    // .mp4, not the original glucal-design-5.webp — an animated WebP has
+    // no play/pause control a browser exposes to JS, so VideoCompare
+    // (playing one clip at a time, the other paused behind a click-to-play
+    // scrim) needs a real <video> element. Re-encoded frame-for-frame from
+    // the original WebP (ffmpeg's own WebP-animation decoder choked on the
+    // source file directly, so this went through Pillow frame extraction
+    // first) — same 390×844, same 10fps.
+    src: "/images/case-studies/glucal/glucal-design-5.mp4",
     alt: "The log food form appearing as a modal over the list of already-logged foods",
-    caption: "Iteration 1: A modal that overlays the list of logged foods",
-    imagePosition: "left" as const,
-    leftCards: [
-      {
-        heading: "Elevation",
-        body: "One level above previously-logged items",
-        checklist: [
-          { ok: true, text: "Clearly separates the current food item from the list" },
-          { ok: false, text: "Might be confusing to track multiple layers since the previously-logged items is already an overlay" },
-        ],
-      },
-      {
-        heading: "Exiting from the form",
-        body: "Two ways to exit the modal without adding food:",
-        numbered: ["X button at top left", "Clicking outside the modal (aligns with exiting modal design)"],
-      },
-    ],
-    rightCards: [
-      { heading: "Alignment with existing mental models", body: "Modals are a common UI pattern, making this interaction highly intuitive for users." },
-      { heading: "Content overflow", body: "Since the modal is fixed, content is accessible without scrolling" },
-      { heading: "Visual experience", body: "The design is standard and unremarkable" },
+  },
+  {
+    name: "Panel",
+    label: "Slide-down panel",
+    src: "/images/case-studies/glucal/glucal-design-6.mp4",
+    alt: "The log food form appearing as a panel that slides down within the list of already-logged foods",
+  },
+]
+
+// Only the three criteria that actually distinguished the two approaches —
+// elevation and visual polish were dropped: both were already visible in
+// the screenshots above, so writing a sentence about them added length
+// without adding information.
+const foodLogComparison = [
+  {
+    criterion: "Exiting the form",
+    modal: { ok: true, text: "Two ways out" },
+    panel: { ok: false, text: "No way out" },
+  },
+  {
+    criterion: "Mental models",
+    modal: { ok: true, text: "Familiar pattern" },
+    panel: { ok: false, text: "Breaks convention" },
+  },
+  {
+    criterion: "Content overflow",
+    modal: { ok: true, text: "Fixed, no scroll" },
+    panel: { ok: false, text: "Scrolls when long" },
+  },
+]
+
+type FindingTone = "good" | "mixed" | "bad"
+
+// Sampled directly from glucal-design-2.png's own tinted cells, not
+// invented — these three pale tints are already the source design's own
+// color language for a finding's verdict, carried over as-is.
+const TONE_BG: Record<FindingTone, string> = {
+  good: "#F8FDF5",
+  mixed: "#FFFAEE",
+  bad: "#FEF2F3",
+}
+
+// Real exported pixel dimensions of glucal-food-log-iteration-{1..4}.png —
+// individual phone crops cut from glucal-design-2.png's original 4-up
+// composite, so each can sit in its own grid cell instead of the whole
+// comparison being one flat, uncroppable image.
+const BUTTON_ITERATION_WIDTH = 395
+const BUTTON_ITERATION_HEIGHT = 810
+
+const buttonIterations = [
+  {
+    number: 1,
+    style: "Attached, outline",
+    src: "/images/case-studies/glucal/glucal-food-log-iteration-1.png",
+    alt: "Log food button attached to the carbs field, in an outlined style",
+  },
+  {
+    number: 2,
+    style: "Attached, solid",
+    src: "/images/case-studies/glucal/glucal-food-log-iteration-2.png",
+    alt: "Log food button attached to the carbs field, in a solid style",
+  },
+  {
+    number: 3,
+    style: "Separate, outline",
+    src: "/images/case-studies/glucal/glucal-food-log-iteration-3.png",
+    alt: "Log food button separate from the carbs field, in an outlined style",
+  },
+  {
+    number: 4,
+    style: "Separate, solid",
+    src: "/images/case-studies/glucal/glucal-food-log-iteration-4.png",
+    alt: "Log food button separate from the carbs field, in a solid style",
+  },
+]
+
+// Color carries the verdict here, not a checkmark — three tiers (good /
+// mixed / bad) instead of Decision #2's binary pro/con, since these
+// findings genuinely aren't binary: iteration 2's "unclear optionality" is
+// a real caveat, not a flat negative the way "no way out" was.
+const buttonComparison = [
+  {
+    criterion: "Perceived optionality",
+    cells: [
+      { tone: "good" as FindingTone, body: <>The outlined version and unique shape creates a <strong className="font-semibold text-primary">lower visual hierarchy, signaling optionality</strong></> },
+      { tone: "mixed" as FindingTone, body: <>Positioning behind the carbs button sets it apart, but <strong className="font-semibold text-primary">unclear optionality without the &ldquo;optional&rdquo; label</strong></> },
+      { tone: "mixed" as FindingTone, body: <>Outline differentiates it from mandatory fields, but <strong className="font-semibold text-primary">the shape is the same</strong></> },
+      { tone: "bad" as FindingTone, body: <><strong className="font-semibold text-primary">Lacks clarity as an optional field</strong> without the &ldquo;optional&rdquo; label</> },
     ],
   },
   {
-    src: "/images/case-studies/glucal/glucal-design-6.webp",
-    alt: "The log food form appearing as a panel that slides down within the list of already-logged foods",
-    caption: "Iteration 2: A slide-down panel that reveals the food input form",
-    imagePosition: "right" as const,
-    leftCards: [
-      {
-        heading: "Elevation",
-        body: "Same level as previously-logged items",
-        checklist: [
-          { ok: true, text: "Easier to manage with fewer layers" },
-          { ok: false, text: "Less clear separation between the new and previously-logged food items, which might cause confusion" },
-        ],
-      },
-      {
-        heading: "Exiting from the form",
-        body: "No clear option to exit the food input form without adding an item. Clicking outside the form is not intuitive",
-      },
+    criterion: "Association to carb input",
+    cells: [
+      { tone: "mixed" as FindingTone, body: <>Positioning makes it appear related to the carbs input, but the <strong className="font-semibold text-primary">connection is unclear</strong></> },
+      { tone: "mixed" as FindingTone, body: <>Positioning makes it appear related to the carbs input, but the <strong className="font-semibold text-primary">connection is unclear</strong></> },
+      { tone: "bad" as FindingTone, body: <><strong className="font-semibold text-primary">Positioned separately</strong> from the carbs input field, no evident relation</> },
+      { tone: "bad" as FindingTone, body: <><strong className="font-semibold text-primary">Positioned separately</strong> from the carbs input field, no evident relation</> },
     ],
-    rightCards: [
-      { heading: "Alignment with existing mental models", body: "This approach deviates from standard UI conventions which could lead to confusion, particularly for users who aren’t as tech-savvy" },
-      { heading: "Content overflow", body: "Once the food list gets longer, users will need to scroll to access the food input form" },
-      { heading: "Visual experience", body: "The smooth animations and unique design make the app more engaging and add delight" },
-    ],
+  },
+]
+
+// Real exported pixel dimensions of glucal-food-log-nested.png, cropped
+// from glucal-design-3.png.
+const NESTED_BUTTON_WIDTH = 705
+const NESTED_BUTTON_HEIGHT = 1570
+
+const nestedButtonComparison = [
+  {
+    criterion: "Perceived optionality",
+    tone: "good" as FindingTone,
+    body: <>Outlined button creates <strong className="font-semibold text-primary">lower visual hierarchy, signaling optionality</strong></>,
+  },
+  {
+    criterion: "Association to carb input",
+    tone: "good" as FindingTone,
+    body: <>Nesting conveys the button&rsquo;s exact <strong className="font-semibold text-primary">relationship to carbs</strong>: logging food is an optional way to input carbs.</>,
   },
 ]
 
@@ -265,13 +297,6 @@ export default function Glucal() {
           width={2000}
           height={841}
         />
-
-        <ImageBlock
-          src="/images/case-studies/glucal/glucal-design-4.png"
-          alt="Design decision 4"
-          width={2000}
-          height={682}
-        />
       </Section>
 
       <Section
@@ -284,12 +309,57 @@ export default function Glucal() {
           The &ldquo;log food&rdquo; button needed to appear <strong className="text-[var(--cs-accent)] font-semibold">1. optional</strong> and <strong className="text-[var(--cs-accent)] font-semibold">2. associated with the carbs input field</strong>.
         </p>
 
-        <ImageBlock
-          src="/images/case-studies/glucal/glucal-design-2.png"
-          alt="Four button-placement iterations for the log food action, compared on perceived optionality and association to the carbs input"
-          width={2000}
-          height={1782}
-        />
+        <div className="rounded-[8px] border border-neutral-100 bg-neutral-75 p-6 sm:p-10">
+          <div className="grid grid-cols-2 gap-6 sm:grid-cols-4">
+            {buttonIterations.map((iteration) => (
+              <div key={iteration.number} className="flex flex-col items-center gap-3">
+                <p className="text-center text-sm font-mono uppercase leading-[1.2] text-neutral-400">
+                  {iteration.number}. {iteration.style}
+                </p>
+                <Image
+                  src={iteration.src}
+                  alt={iteration.alt}
+                  width={BUTTON_ITERATION_WIDTH}
+                  height={BUTTON_ITERATION_HEIGHT}
+                  className="h-auto w-full rounded-[16px] border border-neutral-100 shadow-[0_1px_3px_rgba(0,0,0,0.08),0_8px_24px_rgba(0,0,0,0.08)]"
+                />
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-10 overflow-x-auto">
+            <table className="w-full border-collapse">
+              <thead>
+                <tr>
+                  <th className="sm:w-44" />
+                  {buttonIterations.map((iteration) => (
+                    <th key={iteration.number} className="pb-2 pr-4 text-left last:pr-0">
+                      <span className="font-mono text-sm leading-none font-normal text-neutral-400">
+                        {iteration.number}
+                      </span>
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {buttonComparison.map((row) => (
+                  <tr key={row.criterion} className="border-t border-neutral-100">
+                    <td className="py-3 pr-4 align-top sm:w-44 sm:pr-8">
+                      <span className="font-mono text-sm leading-[0.8] font-normal text-neutral-400">
+                        {row.criterion}
+                      </span>
+                    </td>
+                    {row.cells.map((cell, i) => (
+                      <td key={i} className="p-3 align-top last:pr-0" style={{ backgroundColor: TONE_BG[cell.tone] }}>
+                        <p className="text-sm leading-normal text-neutral-600">{cell.body}</p>
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
 
         {/* mt-7/sm:mt-21 stack on top of this children wrapper's own gap-9
             (see Section.tsx) so the total gap above this headline — 36px +
@@ -304,12 +374,51 @@ export default function Glucal() {
           One user suggested to <strong className="text-[var(--cs-accent)] font-semibold">nest the button within the carb input field</strong>. When the button is nested within the field, it visually indicates that the log food action is part of the carbs input process, rather than a separate action that is simply associated with carbs.
         </p>
 
-        <ImageBlock
-          src="/images/case-studies/glucal/glucal-design-3.png"
-          alt="Final design: the log food button nested inside the carbs input field"
-          width={2000}
-          height={1898}
-        />
+        <div className="rounded-[8px] border border-neutral-100 bg-neutral-75 p-6 sm:p-10">
+          <div className="flex justify-center">
+            <div className="flex flex-col items-center gap-3">
+              <p className="text-sm font-mono uppercase leading-[1.2] text-neutral-400">Nested button</p>
+              <Image
+                src="/images/case-studies/glucal/glucal-food-log-nested.png"
+                alt="Final design: the log food button nested inside the carbs input field"
+                width={NESTED_BUTTON_WIDTH}
+                height={NESTED_BUTTON_HEIGHT}
+                className="h-auto w-full max-w-72 rounded-[26px] border border-neutral-100 shadow-[0_1px_3px_rgba(0,0,0,0.08),0_8px_24px_rgba(0,0,0,0.08)]"
+              />
+            </div>
+          </div>
+
+          <div className="mt-10 overflow-x-auto">
+            <table className="w-full border-collapse">
+              <thead>
+                <tr>
+                  <th className="sm:w-44" />
+                  <th className="pb-2 pr-4 text-left">
+                    <span className="font-mono text-sm leading-none font-normal text-neutral-400">5</span>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {nestedButtonComparison.map((row) => (
+                  <tr key={row.criterion} className="border-t border-neutral-100">
+                    <td className="py-3 pr-4 align-top sm:w-44 sm:pr-8">
+                      <span className="font-mono text-sm leading-[0.8] font-normal text-neutral-400">
+                        {row.criterion}
+                      </span>
+                    </td>
+                    <td className="p-3 align-top" style={{ backgroundColor: TONE_BG[row.tone] }}>
+                      <p className="text-sm leading-normal text-neutral-600">{row.body}</p>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <p className="text-balance text-base leading-normal text-neutral-600">
+          Perfect! This was a great solution that I would not have come up with without the help of user feedback!
+        </p>
       </Section>
 
       <Section
@@ -318,72 +427,65 @@ export default function Glucal() {
         headline="What would it look like to log multiple food items at once?"
         body="When logging food from the calculator, an intermediate screen appears that stores all the food the user is logging. I explored two different approaches for the food input form that appears after they click “Add Item”."
       >
-        {foodLogIterations.map((iteration) => {
-          const phone = (
-            // cs-screens (960px), not sm (640px) — same threshold
-            // ScreenSpotlight uses for its own phone-beside-content row (see
-            // its own breakpoint comment in globals.css): this box's actual
-            // available width is the case study's body column, which is
-            // still only ~650px at `sm`, too narrow to fit a phone crop
-            // alongside two card columns without every card wrapping line
-            // by line. Stacked (phone above cards) below cs-screens instead.
-            <div className="flex flex-col items-center cs-screens:w-56 cs-screens:shrink-0">
-              <Image
-                src={iteration.src}
-                alt={iteration.alt}
-                width={ITERATION_IMAGE_WIDTH}
-                height={ITERATION_IMAGE_HEIGHT}
-                // unoptimized — animated WebP screen recording, same as
-                // solutionFeatures' glucal-final-*.webp crops above.
-                unoptimized
-                className="w-full max-w-56 h-auto rounded-[8px] border border-neutral-100"
-              />
-            </div>
-          )
-          const cards = (
-            <div className="min-w-0 flex-1">
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:items-start">
-                <div className="flex flex-col gap-4">
-                  {iteration.leftCards.map((card) => (
-                    <IterationCard key={card.heading} {...card} />
+        {/* Big screenshots first — the whole point of a case study is
+            showing the actual design, not a table-header thumbnail — then
+            one shared comparison table below, instead of two separate
+            stacked boxes each re-explaining the same three points. */}
+        <div className="rounded-[8px] border border-neutral-100 bg-neutral-75 p-6 sm:p-10">
+          <VideoCompare items={[foodLogApproaches[0], foodLogApproaches[1]]} />
+
+          <div className="mt-10 overflow-x-auto">
+            <table className="w-full border-collapse">
+              <thead>
+                <tr>
+                  <th className="sm:w-44" />
+                  {foodLogApproaches.map((approach) => (
+                    <th key={approach.name} className="pb-2 pr-4 text-left last:pr-0">
+                      <span className="font-mono text-sm leading-none font-normal text-neutral-400 uppercase">
+                        {approach.name}
+                      </span>
+                    </th>
                   ))}
-                </div>
-                <div className="flex flex-col gap-4">
-                  {iteration.rightCards.map((card) => (
-                    <IterationCard key={card.heading} {...card} />
-                  ))}
-                </div>
-              </div>
-            </div>
-          )
-          return (
-            // Same wrapper shape as ImageBlock — caption <p> directly above
-            // the visual — just with this whole box standing in for
-            // ImageBlock's <Image>, since the "image" here is the box's
-            // phone + cards content, not a single flat image file.
-            <div key={iteration.src}>
-              <p className="mb-2 text-xs leading-[1.5] text-neutral-400 italic">{iteration.caption}</p>
-              <div className="rounded-[8px] border border-neutral-100 bg-neutral-75 p-6 sm:p-10">
-                <div className="flex flex-col gap-8 cs-screens:flex-row cs-screens:items-start">
-                  {iteration.imagePosition === "left" ? (
-                    <>
-                      {phone}
-                      {cards}
-                    </>
-                  ) : (
-                    <>
-                      {cards}
-                      {phone}
-                    </>
-                  )}
-                </div>
-              </div>
-            </div>
-          )
-        })}
+                </tr>
+              </thead>
+              <tbody>
+                {foodLogComparison.map((row) => (
+                  <tr key={row.criterion} className="border-t border-neutral-100">
+                    <td className="py-3 pr-4 align-top sm:w-44 sm:pr-8">
+                      <span className="font-mono text-sm leading-[0.8] font-normal text-neutral-400">
+                        {row.criterion}
+                      </span>
+                    </td>
+                    {[row.modal, row.panel].map((cell, i) => (
+                      <td key={i} className="py-3 pr-4 align-top last:pr-0 upper">
+                        <div className="flex items-center gap-2.5 text-base leading-normal text-neutral-600">
+                          <span
+                            aria-hidden="true"
+                            className="block shrink-0 bg-current text-neutral-400"
+                            style={{
+                              width: 16,
+                              height: 16,
+                              WebkitMaskImage: `url(/icons/${cell.ok ? "check" : "close"}-fill.svg)`,
+                              maskImage: `url(/icons/${cell.ok ? "check" : "close"}-fill.svg)`,
+                              WebkitMaskSize: "contain",
+                              maskSize: "contain",
+                              WebkitMaskRepeat: "no-repeat",
+                              maskRepeat: "no-repeat",
+                            }}
+                          />
+                          <span>{cell.text}</span>
+                        </div>
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
 
         <h2 className="text-balance">
-          Based on the comparison of these metrics, iteration 1 is the clear top choice.
+          The modal wins on all three counts — a clear way to exit, a familiar pattern, and no scrolling.
         </h2>
       </Section>
 
@@ -391,10 +493,30 @@ export default function Glucal() {
       <Section
         id="3-syncing-data"
         tag="Decision #3"
-        headline="How should we structure the data synchronization of the insulin log and food diary?">
+        headline="How should we structure the data synchronization of the insulin log and food diary?"
+        body="When a user logs food alongside an insulin calculation, two entries are created — one in the insulin log, one in the food diary — connected by a shared carb count. If that carb count is edited later in one log, should it update the other, and should the associated insulin dose update too?"
+      >
+        <ImageBlock
+          src="/images/case-studies/glucal/glucal-design-4.png"
+          alt="Two options compared: storing the carb count independently in each log, versus linking it so editing the count in one log updates the other"
+          width={1904}
+          height={682}
+        />
 
+        <p className="text-balance text-base leading-normal text-neutral-600">
+          I weighed this against two priorities for gluCal: <strong className="text-[var(--cs-accent)] font-semibold">simplicity</strong> (the app should reduce thinking, not add to it) and <strong className="text-[var(--cs-accent)] font-semibold">flexibility </strong>(real life is messy — people don&rsquo;t always log insulin and food together, or in order).
+        </p>
+
+        <p className="text-balance text-base leading-normal text-neutral-600">
+          Keeping the carb counts independent supports both: users can edit either log without triggering unexpected changes elsewhere, and it avoids the technical complexity of syncing data across gluCal&rsquo;s two separate database tables.
+        </p>
+
+        <Callout
+          label="Decision"
+          heading="Carb counts stay independent across the insulin log and food diary."
+        />
       </Section>
-      
+
 
       <Section
         id="final-product"
@@ -405,7 +527,7 @@ export default function Glucal() {
         <ImageBlock height={400} />
       </Section>
 
-      <Reflections
+      {/* <Reflections
         id="reflections"
         tag="it's done! what did i learn?"
         items={[
@@ -418,7 +540,7 @@ export default function Glucal() {
             body: "Placeholder reflection — add a second takeaway here.",
           },
         ]}
-      />
+      /> */}
     </div>
   )
 }
