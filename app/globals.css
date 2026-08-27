@@ -564,6 +564,15 @@ body {
   100% { rotate: 0deg; }
 }
 
+/* Wider swing than icon-tick — at TertiaryLink's small (1em) inline icon
+   size, icon-tick's rotation reads as barely-there. */
+@keyframes icon-tick-wide {
+  0%   { rotate: 0deg; }
+  40%  { rotate: -14deg; }
+  75%  { rotate: 14deg; }
+  100% { rotate: 0deg; }
+}
+
 /* ─── Case study entry animations ──────────────────────────────────────────── */
 
 @keyframes cs-fade-up {
