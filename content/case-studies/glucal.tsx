@@ -262,7 +262,10 @@ export default function Glucal() {
                 // them through next/image's sharp pipeline would flatten them
                 // to a single still frame.
                 unoptimized
-                className="w-full max-w-56 shrink-0 h-auto rounded-[8px] border border-neutral-100 mx-auto md:mx-0"
+                // Same lighter shadow as the button-iteration/nested-button
+                // screens above — this section's own screens were the one
+                // remaining gap, styled with just a border and no shadow.
+                className="w-full max-w-56 shrink-0 h-auto rounded-[8px] border border-neutral-100 shadow-[0_4px_20px_-6px_rgba(22,25,29,0.06)] mx-auto md:mx-0"
               />
               <div className="flex-1 min-w-0 max-w-xl">
                 <h2 className="text-balance">
@@ -352,7 +355,11 @@ export default function Glucal() {
                   alt={iteration.alt}
                   width={BUTTON_ITERATION_WIDTH}
                   height={BUTTON_ITERATION_HEIGHT}
-                  className="h-auto w-full rounded-[16px] border border-neutral-100 shadow-[0_1px_3px_rgba(0,0,0,0.08),0_8px_24px_rgba(0,0,0,0.08)]"
+                  // Same lighter shadow as AboutContent's panel — a single
+                  // soft layer at low opacity, tinted neutral-900 rather
+                  // than flat black — instead of the heavier dual-layer
+                  // shadow other case studies' screens use.
+                  className="h-auto w-full rounded-[16px] border border-neutral-100 shadow-[0_4px_20px_-6px_rgba(22,25,29,0.06)]"
                 />
               </div>
             ))}
@@ -421,7 +428,9 @@ export default function Glucal() {
                 alt="Final design: the log food button nested inside the carbs input field"
                 width={NESTED_BUTTON_WIDTH}
                 height={NESTED_BUTTON_HEIGHT}
-                className="h-auto w-full max-w-72 rounded-[26px] border border-neutral-100 shadow-[0_1px_3px_rgba(0,0,0,0.08),0_8px_24px_rgba(0,0,0,0.08)]"
+                // Same lighter shadow as AboutContent's panel — see the
+                // button-iteration images above.
+                className="h-auto w-full max-w-72 rounded-[26px] border border-neutral-100 shadow-[0_4px_20px_-6px_rgba(22,25,29,0.06)]"
               />
             </div>
           </div>

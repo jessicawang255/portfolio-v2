@@ -58,10 +58,11 @@ export function VideoCompare({ items, className }: VideoCompareProps) {
           <div key={item.name} className="flex flex-col items-center gap-3">
             <p className="text-sm font-mono uppercase leading-[1.2] text-neutral-400">{item.label}</p>
             <div
-              // Same shadow as hack-western.tsx's own case-study image —
-              // reusing that value rather than a new one, so every
-              // drop-shadowed image across case studies matches.
-              className="relative w-full max-w-72 overflow-hidden rounded-[26px] border border-neutral-100 shadow-[0_1px_3px_rgba(0,0,0,0.08),0_8px_24px_rgba(0,0,0,0.08)]"
+              // Same lighter shadow as AboutContent's panel — this
+              // component is only used by gluCal, which deliberately
+              // diverges from hack-western.tsx's heavier case-study-image
+              // shadow for a softer treatment across its own screens.
+              className="relative w-full max-w-72 overflow-hidden rounded-[26px] border border-neutral-100 shadow-[0_4px_20px_-6px_rgba(22,25,29,0.06)]"
               style={{ aspectRatio: "390 / 844" }}
             >
               <video
