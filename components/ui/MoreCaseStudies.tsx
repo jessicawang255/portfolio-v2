@@ -55,14 +55,16 @@ export async function MoreCaseStudies({ currentSlug }: Props) {
               className="group -mx-3 flex items-center justify-between gap-6 border-x border-x-transparent border-y border-y-transparent px-3 py-4 outline-none transition-colors duration-150 hover:border-y-neutral-900/3 hover:bg-neutral-75 hover:duration-0 focus-visible:ring-2 focus-visible:ring-accent"
             >
               <div className="flex min-w-0 items-center gap-6">
-                {/* Scales down 100x60 -> 95x57, anchored at its own center —
-                    the title stays put rather than shifting with it. */}
+                {/* Sized to the hero images' 6000x2830 aspect ratio so they
+                    fill the box with no letterboxing. Scales down
+                    127x60 -> 121x57, anchored at its own center — the title
+                    stays put rather than shifting with it. */}
                 <div
-                  className="relative h-[60px] w-[100px] shrink-0 overflow-hidden rounded-base transition-[scale] duration-200 group-hover:scale-95"
+                  className="relative h-[60px] w-[127px] shrink-0 overflow-hidden rounded-base transition-[scale] duration-200 group-hover:scale-95"
                   style={bgStyle}
                 >
                   {heroImg && (
-                    <Image src={heroImg} alt="" fill className="object-contain" />
+                    <Image src={heroImg} alt="" fill className="object-cover" />
                   )}
                 </div>
 
