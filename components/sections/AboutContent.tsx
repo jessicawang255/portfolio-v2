@@ -784,7 +784,7 @@ export function AboutContent({ spotifyPlaylist }: { spotifyPlaylist: Song[] | nu
                 things on the wall.
               </motion.p>
 
-              <motion.p variants={fadeUp}>
+              {/* <motion.p variants={fadeUp}>
                 I love exploring creative ways to make technology beautiful.
                 Check out some of my projects in{" "}
                 <TertiaryLink
@@ -796,9 +796,9 @@ export function AboutContent({ spotifyPlaylist }: { spotifyPlaylist: Song[] | nu
                   my playground
                 </TertiaryLink>
                 .
-              </motion.p>
+              </motion.p> */}
 
-              <motion.p variants={fadeUp}>
+              {/* <motion.p variants={fadeUp}>
                 Check out a more comprehensive list of{" "}
                 <TertiaryLink
                   href="#"
@@ -809,7 +809,7 @@ export function AboutContent({ spotifyPlaylist }: { spotifyPlaylist: Song[] | nu
                   the things I like
                 </TertiaryLink>
                 .
-              </motion.p>
+              </motion.p> */}
 
               <motion.p variants={fadeUp}>
                 I find it humbling and grounding and awe-inspiring to learn
