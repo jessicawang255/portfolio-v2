@@ -231,7 +231,7 @@ export default function Glucal() {
 
         <div className="mt-6 w-full">
           <h1 className="text-balance text-3xl font-medium leading-[1.2] text-primary mt-4">
-            Despite being a daily task, there&rsquo;s no straightforward tool that simplifies insulin calculation elegantly.
+            Despite being a daily task, there&rsquo;s no straightforward tool that simplifies insulin calculation.
           </h1>
           <p className="text-balance text-base leading-normal text-neutral-600 mt-7">
             The process is <strong className="text-[var(--cs-accent)] font-semibold">tedious</strong>, <strong className="text-[var(--cs-accent)] font-semibold">monotonous</strong>, and <strong className="text-[var(--cs-accent)] font-semibold">complicated</strong>. No one wants to do math before each meal! Existing tools are either frustrating to use, or don&rsquo;t address the specific need.
