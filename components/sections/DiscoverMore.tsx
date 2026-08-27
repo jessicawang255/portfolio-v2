@@ -15,7 +15,11 @@ export function DiscoverMore() {
 
   return (
     <motion.section
-      className="container-main pt-12 pb-20"
+      // No top padding — the gap after CaseStudies is the Home page's own
+      // gap-20 flex wrapper now (see app/(home)/page.tsx), not this
+      // section's own padding. pb-20 stays: that's the space before the
+      // footer, a separate concern from the inter-section gap.
+      className="container-main pb-20"
       variants={stagger}
       initial={reduce ? "visible" : "hidden"}
       whileInView="visible"

@@ -14,7 +14,10 @@ export function CaseStudies() {
   const reduce = useReducedMotion()
 
   return (
-    <section id="work" className="container-main pt-9 pb-20">
+    // No bottom padding — the gap before "Discover More" is the Home page's
+    // own gap-20 flex wrapper now (see app/(home)/page.tsx), not this
+    // section's own padding.
+    <section id="work" className="container-main pt-9">
       <motion.h2
         variants={fadeUp}
         initial={reduce ? "visible" : "hidden"}
