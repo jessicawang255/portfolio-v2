@@ -238,7 +238,24 @@ body {
    Frozen here at the resting corner shape (top rounded, bottom flat — same
    as #main-frame's own SSR default above): a 40px blur washes out the few-px
    difference between that and any mid-peel shape, so this is visually
-   identical to a live-tracking shadow while costing nothing per scroll tick. */
+   identical to a live-tracking shadow while costing nothing per scroll tick.
+
+   That "few-px difference" assumption only holds near the resting shape,
+   though — right before the top corner finishes closing (or right as the
+   bottom corner starts opening for the footer), the live radius can be tens
+   of px away from this frozen one, and the blur no longer hides a gap that
+   size: the frozen corner's own curve shows through as a stray rounded
+   shadow behind the now-sharper live corner. Rather than chase that by
+   animating this layer's shape too (reintroducing the exact repaint cost
+   this split exists to avoid), --shadow-opacity fades it out over precisely
+   that mismatch window — set every scroll frame in ScrollRevealController
+   alongside the radius, from the same already-computed top/bottom values, so
+   it's zero cost beyond one more (compositor-only, no repaint) opacity
+   write. Full opacity only where this frozen shape is actually accurate
+   (at rest); it's faded below zero well before either corner's live radius
+   has drifted far enough from this shape for the gap to read as a separate
+   shape rather than "washed out." Defaults to 1 (this file's own resting
+   value) so nothing looks different before JS attaches on first paint. */
 #main-frame::before {
   content: "";
   position: absolute;
@@ -247,6 +264,7 @@ body {
   pointer-events: none;
   border-radius: var(--radius-frame) var(--radius-frame) 0 0;
   box-shadow: 0 0 40px 0 rgba(0, 0, 0, 0.07), inset 0 0 0 1px rgba(0, 0, 0, 0.06);
+  opacity: var(--shadow-opacity, 1);
 }
 
 /* Same split, same reason, for case studies' #cs-content (CaseStudyLayout.tsx
@@ -259,6 +277,7 @@ body {
   pointer-events: none;
   border-radius: var(--radius-frame) var(--radius-frame) 0 0;
   box-shadow: 0 -8px 40px rgba(0, 0, 0, 0.07);
+  opacity: var(--shadow-opacity, 1);
 }
 
 #main-frame[data-header-visible="false"] {
