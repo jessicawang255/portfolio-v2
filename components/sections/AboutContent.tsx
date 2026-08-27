@@ -754,14 +754,7 @@ export function AboutContent({ spotifyPlaylist }: { spotifyPlaylist: Song[] | nu
             <div
               onMouseEnter={() => handleRowHover("fun")}
               onMouseLeave={handleRowUnhover}
-              // Same hover treatment as JourneyRow/CommunityRow (border-y +
-              // bg tint on hover, -mx-3/px-3 canceling horizontally so
-              // hovering doesn't shift the text). Vertical padding (py-3)
-              // is left uncanceled, same as JourneyRow/CommunityRow's own
-              // py-3/py-4 — that's what gives this section's header the
-              // same gap to its content as the journey/communities headers
-              // have to their first row.
-              className="-mx-3 flex flex-col gap-8 border-x border-x-transparent border-y border-y-transparent px-3 py-3 text-base leading-relaxed text-neutral-900 transition-colors duration-100 lg:hover:cursor-help lg:hover:border-y-neutral-900/3 lg:hover:bg-neutral-75 lg:hover:duration-0"
+              className="-mx-3 flex flex-col gap-6 border-x border-x-transparent border-y border-y-transparent px-3 py-3 text-base leading-relaxed text-neutral-900 transition-colors duration-100 lg:hover:cursor-help lg:hover:border-y-neutral-900/3 lg:hover:bg-neutral-75 lg:hover:duration-0"
             >
               <motion.p variants={fadeUp}>
                 I love making music. I sing and produce my own songs (
