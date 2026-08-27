@@ -796,10 +796,20 @@ export function ScreenSpotlight({ flows, className }: ScreenSpotlightProps) {
                     the padding back out of this element's contribution to
                     the surrounding layout, so the row's actual footprint —
                     and the width math the phone card's shrink split above
-                    depends on — is unchanged. */}
+                    depends on — is unchanged.
+                    scroll-p-1.5 matches that same padding: without it, snap
+                    treats the padding as slack to eliminate rather than
+                    space to preserve, so it settles at rest with scrollLeft
+                    already 6px in — clipping the first thumbnail's own
+                    outline against the scrollport edge exactly like an
+                    unpadded track would, even though the padding is
+                    present in the DOM the whole time. Declaring it as
+                    scroll-padding tells snap that inset is intentional, so
+                    it snaps the first thumbnail to the *padded* start
+                    (scrollLeft: 0) instead of flush against the raw edge. */}
                 <div
                   ref={thumbTrackRef}
-                  className="no-scrollbar -m-1.5 flex snap-x snap-mandatory gap-2.5 overflow-x-auto p-1.5"
+                  className="no-scrollbar -m-1.5 flex snap-x snap-mandatory gap-2.5 overflow-x-auto p-1.5 scroll-p-1.5"
                 >
                   {activeSet.screens.map((s, i) => {
                     const active = i === activeIdx
@@ -846,10 +856,17 @@ export function ScreenSpotlight({ flows, className }: ScreenSpotlightProps) {
                     last thumbnail once you've scrolled all the way. No
                     longer hidden from `lg` up — the row scrolls at
                     every breakpoint now, see the track's own comment
-                    above. */}
+                    above.
+                    -right-1.5/-inset-y-1.5 (not right-0/inset-y-0): the
+                    track's own -m-1.5/p-1.5 (see above) pushes its real,
+                    clipped edge 6px past this wrapper's box on every side,
+                    so a fade flush with the wrapper instead of the track
+                    left that last 6px of thumbnail showing fully unfaded
+                    past the gradient's white end — a hard seam right where
+                    the fade should have finished dissolving into it. */}
                 <div
                   aria-hidden="true"
-                  className={`pointer-events-none absolute inset-y-0 right-0 w-10 transition-opacity duration-200 ease-out ${
+                  className={`pointer-events-none absolute -inset-y-1.5 -right-1.5 w-10 transition-opacity duration-200 ease-out ${
                     thumbAtEnd ? "opacity-0" : "opacity-100"
                   }`}
                   style={{ background: "linear-gradient(to right, transparent, #FFFFFF)" }}
