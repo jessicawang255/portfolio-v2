@@ -655,7 +655,9 @@ export function AboutContent({ spotifyPlaylist }: { spotifyPlaylist: Song[] | nu
     <div className="container-main pt-9 pb-9">
       <div className="grid grid-cols-1 gap-x-[54px] lg:grid-cols-[minmax(0,min(586px,40%))_1fr]">
         {/* Left column — sections 1-4 */}
-        <div className="flex flex-col gap-28">
+        {/* gap-20 flat at every breakpoint — matches Home's own section gap
+            (see app/(home)/page.tsx), not a responsive step. */}
+        <div className="flex flex-col gap-20">
           <motion.section
             id="journey"
             variants={stagger}
@@ -839,10 +841,12 @@ export function AboutContent({ spotifyPlaylist }: { spotifyPlaylist: Song[] | nu
       </div>
 
       {/* Playlist — outside the two-column grid; renders full width once the
-          sticky panel's container (above) has scrolled out of the way. */}
+          sticky panel's container (above) has scrolled out of the way.
+          mt-20 — matches the gap-20 used between the sections above (and on
+          Home), not a separately-tuned value. */}
       <motion.section
         id="playlist"
-        className="mt-28"
+        className="mt-20"
         variants={stagger}
         initial={reduce ? "visible" : "hidden"}
         whileInView="visible"
