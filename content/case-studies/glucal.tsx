@@ -165,19 +165,19 @@ const buttonComparison = [
   {
     criterion: "Perceived optionality",
     cells: [
-      { tone: "good" as FindingTone, body: <>The outlined version and unique shape creates a <strong className="font-semibold text-primary">lower visual hierarchy, signaling optionality</strong></> },
-      { tone: "mixed" as FindingTone, body: <>Positioning behind the carbs button sets it apart, but <strong className="font-semibold text-primary">unclear optionality without the &ldquo;optional&rdquo; label</strong></> },
-      { tone: "mixed" as FindingTone, body: <>Outline differentiates it from mandatory fields, but <strong className="font-semibold text-primary">the shape is the same</strong></> },
-      { tone: "bad" as FindingTone, body: <><strong className="font-semibold text-primary">Lacks clarity as an optional field</strong> without the &ldquo;optional&rdquo; label</> },
+      { tone: "good" as FindingTone, body: "Outline creates lower hierarchy, signaling optionality" },
+      { tone: "mixed" as FindingTone, body: "Set apart by position, but unclear without a label" },
+      { tone: "mixed" as FindingTone, body: "Outline differs from mandatory fields, but shape is unchanged" },
+      { tone: "bad" as FindingTone, body: "Unclear as optional without a label" },
     ],
   },
   {
     criterion: "Association to carb input",
     cells: [
-      { tone: "mixed" as FindingTone, body: <>Positioning makes it appear related to the carbs input, but the <strong className="font-semibold text-primary">connection is unclear</strong></> },
-      { tone: "mixed" as FindingTone, body: <>Positioning makes it appear related to the carbs input, but the <strong className="font-semibold text-primary">connection is unclear</strong></> },
-      { tone: "bad" as FindingTone, body: <><strong className="font-semibold text-primary">Positioned separately</strong> from the carbs input field, no evident relation</> },
-      { tone: "bad" as FindingTone, body: <><strong className="font-semibold text-primary">Positioned separately</strong> from the carbs input field, no evident relation</> },
+      { tone: "mixed" as FindingTone, body: "Near the carbs input, but connection unclear" },
+      { tone: "mixed" as FindingTone, body: "Near the carbs input, but connection unclear" },
+      { tone: "bad" as FindingTone, body: "Positioned separately, no evident relation" },
+      { tone: "bad" as FindingTone, body: "Positioned separately, no evident relation" },
     ],
   },
 ]
@@ -191,12 +191,12 @@ const nestedButtonComparison = [
   {
     criterion: "Perceived optionality",
     tone: "good" as FindingTone,
-    body: <>Outlined button creates <strong className="font-semibold text-primary">lower visual hierarchy, signaling optionality</strong></>,
+    body: "Outline creates lower hierarchy, signaling optionality",
   },
   {
     criterion: "Association to carb input",
     tone: "good" as FindingTone,
-    body: <>Nesting conveys the button&rsquo;s exact <strong className="font-semibold text-primary">relationship to carbs</strong>: logging food is an optional way to input carbs.</>,
+    body: "Nesting shows logging food is an optional way to input carbs.",
   },
 ]
 
