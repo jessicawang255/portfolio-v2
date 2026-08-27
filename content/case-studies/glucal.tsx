@@ -432,7 +432,7 @@ export default function Glucal() {
             <table className="w-full border-collapse">
               <thead>
                 <tr>
-                  <th className="md:w-36" />
+                  <th className="md:w-44" />
                   <th className="pb-2 pr-4 text-left">
                     <span className="font-mono text-sm leading-none font-normal text-neutral-400">5</span>
                   </th>
@@ -441,7 +441,7 @@ export default function Glucal() {
               <tbody>
                 {nestedButtonComparison.map((row) => (
                   <tr key={row.criterion} className="border-t border-neutral-100">
-                    <td className="py-3 pr-4 align-top md:w-36 md:pr-6">
+                    <td className="py-3 pr-4 align-top md:w-44 md:pr-8">
                       <span className="font-mono text-sm leading-[0.8] font-normal text-neutral-400">
                         {row.criterion}
                       </span>
