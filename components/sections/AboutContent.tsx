@@ -329,7 +329,10 @@ function SpotifyIcon() {
 function SectionHeader({ label, action }: { label: string; action?: React.ReactNode }) {
   return (
     <div className="mb-6 flex items-center justify-between">
-      <h2 className="font-mono text-sm uppercase leading-[1.2] text-neutral-400">{label}</h2>
+      {/* font-normal — see CaseStudies.tsx's identical eyebrow for why:
+          the bare `h2` selector in globals.css defaults to the 500
+          sub-heading weight, which this label was never meant to be. */}
+      <h2 className="font-mono text-sm font-normal uppercase leading-[1.2] text-neutral-400">{label}</h2>
       {action}
     </div>
   )

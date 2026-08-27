@@ -20,7 +20,10 @@ export function CaseStudies() {
         initial={reduce ? "visible" : "hidden"}
         whileInView="visible"
         viewport={{ once: true, margin: "-80px" }}
-        className="mb-5 font-mono text-sm uppercase leading-[1.2] text-neutral-400"
+        // font-normal — pins this to the tag family's 400 weight; the bare
+        // `h2` selector in globals.css otherwise defaults it to the 500
+        // sub-heading weight, which this eyebrow label was never meant to be.
+        className="mb-5 font-mono text-sm font-normal uppercase leading-[1.2] text-neutral-400"
       >
         Case Studies
       </motion.h2>

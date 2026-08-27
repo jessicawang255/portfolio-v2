@@ -23,7 +23,8 @@ export function DiscoverMore() {
     >
       <motion.h2
         variants={fadeUp}
-        className="mb-5 font-mono text-sm uppercase leading-[1.2] text-neutral-400"
+        // font-normal — see CaseStudies.tsx's identical eyebrow for why.
+        className="mb-5 font-mono text-sm font-normal uppercase leading-[1.2] text-neutral-400"
       >
         Discover More
       </motion.h2>
