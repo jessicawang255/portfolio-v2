@@ -729,11 +729,13 @@ export function AboutContent({ spotifyPlaylist }: { spotifyPlaylist: Song[] | nu
               onMouseEnter={() => setHoveredId("fun")}
               onMouseLeave={() => setHoveredId(null)}
               // Same hover treatment as JourneyRow/CommunityRow (border-y +
-              // bg tint on hover), but since this block isn't a row in a
-              // list with its own baked-in padding, the -m-3/p-3 pair
-              // cancels out at rest — the padding only becomes visible as
-              // hover breathing room, it doesn't shift the unhovered text.
-              className="-m-3 flex flex-col gap-8 border-x border-x-transparent border-y border-y-transparent p-3 text-base leading-relaxed text-neutral-900 transition-colors duration-100 lg:hover:cursor-help lg:hover:border-y-neutral-900/3 lg:hover:bg-neutral-75 lg:hover:duration-0"
+              // bg tint on hover, -mx-3/px-3 canceling horizontally so
+              // hovering doesn't shift the text). Vertical padding (py-3)
+              // is left uncanceled, same as JourneyRow/CommunityRow's own
+              // py-3/py-4 — that's what gives this section's header the
+              // same gap to its content as the journey/communities headers
+              // have to their first row.
+              className="-mx-3 flex flex-col gap-8 border-x border-x-transparent border-y border-y-transparent px-3 py-3 text-base leading-relaxed text-neutral-900 transition-colors duration-100 lg:hover:cursor-help lg:hover:border-y-neutral-900/3 lg:hover:bg-neutral-75 lg:hover:duration-0"
             >
               <motion.p variants={fadeUp}>
                 I love making music. I sing and produce my own songs (jossici on
