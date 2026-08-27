@@ -764,13 +764,22 @@ export function AboutContent({ spotifyPlaylist }: { spotifyPlaylist: Song[] | nu
               className="-mx-3 flex flex-col gap-8 border-x border-x-transparent border-y border-y-transparent px-3 py-3 text-base leading-relaxed text-neutral-900 transition-colors duration-100 lg:hover:cursor-help lg:hover:border-y-neutral-900/3 lg:hover:bg-neutral-75 lg:hover:duration-0"
             >
               <motion.p variants={fadeUp}>
-                I love making music. I sing and produce my own songs (jossici on
-                all platforms), and I&rsquo;m on a{" "}
+                I love making music. I sing and produce my own songs (
+                <TertiaryLink
+                  href="https://open.spotify.com/artist/14rpUPUITbgY4OVymVMblx?si=WvlljoMNTyGfaptR14ONow"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  icon={{ type: "favicon" }}
+                >
+                  jossici
+                </TertiaryLink>{" "}
+                on all platforms), and I&rsquo;m on a{" "}
                 <TertiaryLink
                   href="https://www.instagram.com/repercussionsacappella/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  icon={{ type: "custom", src: "/icons/instagram.svg" }}
+                  icon={{ type: "favicon" }}
+                  className="ml-1"
                 >
                   varsity a cappella team
                 </TertiaryLink>
