@@ -41,7 +41,7 @@
   --color-divider:      #EDEDED;
 
   --color-nav-link:       var(--color-neutral-500);
-  --color-nav-link-hover: var(--color-neutral-900);
+  --color-nav-link-hover: var(--color-neutral-800);
   --color-icon-social:    var(--color-neutral-200);
 
   /* ─── Breakpoint scale ─────────────────────────────────────────────────
