@@ -245,29 +245,36 @@ export default function Glucal() {
         headline="gluCal: The all-in-one calculator and log to simplify insulin dosing"
         primary
       >
-        {solutionFeatures.map((feature) => (
-          <div key={feature.number} className="flex flex-col gap-6 md:flex-row md:items-start md:gap-16">
-            <Image
-              src={feature.src}
-              alt={feature.alt}
-              width={SOLUTION_IMAGE_WIDTH}
-              height={SOLUTION_IMAGE_HEIGHT}
-              // unoptimized — these crops are animated WebP demos; running
-              // them through next/image's sharp pipeline would flatten them
-              // to a single still frame.
-              unoptimized
-              className="w-full max-w-56 shrink-0 h-auto rounded-[8px] border border-neutral-100 mx-auto md:mx-0"
-            />
-            <div className="flex-1 min-w-0 max-w-xl">
-              <h3 className="text-lg font-medium leading-[1.3] text-primary">
-                {feature.number}. {feature.title}
-              </h3>
-              <p className="mt-3 text-base leading-normal text-neutral-600">
-                {feature.body}
-              </p>
+        {/* Own gap and top margin, on top of Section's default 24px
+            between children / 28px below the headline — three distinct
+            product screens read better with more breathing room, both from
+            each other and from the headline above, than the tighter rhythm
+            that suits prose blocks elsewhere in this file. */}
+        <div className="flex flex-col gap-10 md:gap-16 mt-6 md:mt-10 w-full">
+          {solutionFeatures.map((feature) => (
+            <div key={feature.number} className="flex flex-col gap-6 md:flex-row md:items-start md:gap-16">
+              <Image
+                src={feature.src}
+                alt={feature.alt}
+                width={SOLUTION_IMAGE_WIDTH}
+                height={SOLUTION_IMAGE_HEIGHT}
+                // unoptimized — these crops are animated WebP demos; running
+                // them through next/image's sharp pipeline would flatten them
+                // to a single still frame.
+                unoptimized
+                className="w-full max-w-56 shrink-0 h-auto rounded-[8px] border border-neutral-100 mx-auto md:mx-0"
+              />
+              <div className="flex-1 min-w-0 max-w-xl">
+                <h2 className="text-balance">
+                  {feature.number}. {feature.title}
+                </h2>
+                <p className="mt-3 text-base leading-normal text-neutral-600">
+                  {feature.body}
+                </p>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </Section>
 
       <Section
