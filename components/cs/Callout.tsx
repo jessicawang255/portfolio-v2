@@ -19,7 +19,7 @@ export function Callout({ label, heading, body, children, className }: CalloutPr
         {heading}
       </h2>
       {body && (
-        <p className="text-balance text-base text-neutral-600 leading-normal mt-2">{body}</p>
+        <p className="text-balance text-base text-neutral-600 leading-normal mt-3">{body}</p>
       )}
       {children && <div className="mt-3">{children}</div>}
     </div>
