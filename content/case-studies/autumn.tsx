@@ -117,7 +117,10 @@ export default function Autumn() {
           />
 
           <p className="text-base text-neutral-600">
-            After implementing this change, we saw a 19% increase in clicks to the provider pages. *************************FIX THIS PART
+            The new cards embed provider profiles directly in articles, recommend providers relevant
+            to the content (e.g., estate lawyers in legal planning articles), and let users contact
+            providers without leaving the page. This made providers easier to discover, and gave users
+            a more natural path to Autumn&rsquo;s main product.
           </p>
         </Section>
       </div>
