@@ -116,7 +116,7 @@ export default function Autumn() {
             caption="Initial Knowledge Hub flow"
           />
 
-          <p className="mt-6 text-base text-neutral-600">
+          <p className="text-base text-neutral-600">
             After implementing this change, we saw a 19% increase in clicks to the provider pages. *************************FIX THIS PART
           </p>
         </Section>
