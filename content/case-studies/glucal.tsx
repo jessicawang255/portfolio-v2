@@ -81,13 +81,45 @@ const foodLogComparison = [
 
 type FindingTone = "good" | "mixed" | "bad"
 
-// Sampled directly from glucal-design-2.png's own tinted cells, not
-// invented — these three pale tints are already the source design's own
-// color language for a finding's verdict, carried over as-is.
-const TONE_BG: Record<FindingTone, string> = {
-  good: "#F8FDF5",
-  mixed: "#FFFAEE",
-  bad: "#FEF2F3",
+// A colored glyph carries the verdict in every comparison table below —
+// check / subtract / × per tone — instead of a flat dot or Decision #2's
+// original neutral check/×. Shape and color now agree instead of either
+// channel carrying the meaning alone. Same red/yellow/green language as
+// glucal-design-2.png's tinted cells, muted to sit quietly next to the
+// page's neutral-gray palette.
+const TONE_COLOR: Record<FindingTone, string> = {
+  good: "#4E9F5E",
+  mixed: "#D9A441",
+  bad: "#DB5A61",
+}
+
+// Same Remix-style "-fill" glyph set as the rest of the site (24x24
+// viewBox, single currentColor path) for all three tones, so "mixed" masks
+// and scales identically to check/× instead of a hand-drawn dash.
+const TONE_ICON: Record<FindingTone, string> = {
+  good: "check-fill",
+  mixed: "subtract-fill",
+  bad: "close-fill",
+}
+
+function ToneIcon({ tone, size = 14, className = "" }: { tone: FindingTone; size?: number; className?: string }) {
+  return (
+    <span
+      aria-hidden="true"
+      className={`block shrink-0 bg-current ${className}`}
+      style={{
+        width: size,
+        height: size,
+        color: TONE_COLOR[tone],
+        WebkitMaskImage: `url(/icons/${TONE_ICON[tone]}.svg)`,
+        maskImage: `url(/icons/${TONE_ICON[tone]}.svg)`,
+        WebkitMaskSize: "contain",
+        maskSize: "contain",
+        WebkitMaskRepeat: "no-repeat",
+        maskRepeat: "no-repeat",
+      }}
+    />
+  )
 }
 
 // Real exported pixel dimensions of glucal-food-log-iteration-{1..4}.png —
@@ -124,10 +156,11 @@ const buttonIterations = [
   },
 ]
 
-// Color carries the verdict here, not a checkmark — three tiers (good /
-// mixed / bad) instead of Decision #2's binary pro/con, since these
-// findings genuinely aren't binary: iteration 2's "unclear optionality" is
-// a real caveat, not a flat negative the way "no way out" was.
+// Three tiers (good / mixed / bad) instead of Decision #2's binary
+// pro/con, since these findings genuinely aren't binary: iteration 2's
+// "unclear optionality" is a real caveat, not a flat negative the way
+// "no way out" was — "mixed" gets its own subtract glyph rather than
+// reusing check/×, since it's neither.
 const buttonComparison = [
   {
     criterion: "Perceived optionality",
@@ -354,8 +387,11 @@ export default function Glucal() {
                       </span>
                     </td>
                     {row.cells.map((cell, i) => (
-                      <td key={i} className="p-3 align-top last:pr-0" style={{ backgroundColor: TONE_BG[cell.tone] }}>
-                        <p className="text-sm leading-normal text-neutral-600">{cell.body}</p>
+                      <td key={i} className="p-3 align-top last:pr-0">
+                        <div className="flex items-start gap-2.5">
+                          <ToneIcon tone={cell.tone} className="mt-0.5" />
+                          <p className="text-base leading-normal text-neutral-600">{cell.body}</p>
+                        </div>
                       </td>
                     ))}
                   </tr>
@@ -410,8 +446,11 @@ export default function Glucal() {
                         {row.criterion}
                       </span>
                     </td>
-                    <td className="p-3 align-top" style={{ backgroundColor: TONE_BG[row.tone] }}>
-                      <p className="text-sm leading-normal text-neutral-600">{row.body}</p>
+                    <td className="p-3 align-top">
+                      <div className="flex items-start gap-2.5">
+                        <ToneIcon tone={row.tone} className="mt-0.5" />
+                        <p className="text-base leading-normal text-neutral-600">{row.body}</p>
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -463,20 +502,7 @@ export default function Glucal() {
                     {[row.modal, row.panel].map((cell, i) => (
                       <td key={i} className="py-3 pr-4 align-top last:pr-0 upper">
                         <div className="flex items-center gap-2.5 text-base leading-normal text-neutral-600">
-                          <span
-                            aria-hidden="true"
-                            className="block shrink-0 bg-current text-neutral-400"
-                            style={{
-                              width: 16,
-                              height: 16,
-                              WebkitMaskImage: `url(/icons/${cell.ok ? "check" : "close"}-fill.svg)`,
-                              maskImage: `url(/icons/${cell.ok ? "check" : "close"}-fill.svg)`,
-                              WebkitMaskSize: "contain",
-                              maskSize: "contain",
-                              WebkitMaskRepeat: "no-repeat",
-                              maskRepeat: "no-repeat",
-                            }}
-                          />
+                          <ToneIcon tone={cell.ok ? "good" : "bad"} size={16} />
                           <span>{cell.text}</span>
                         </div>
                       </td>
