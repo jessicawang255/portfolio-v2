@@ -324,7 +324,7 @@ export function Footer() {
 
   return (
     <footer id="site-footer" className="static md:fixed md:inset-x-0 md:bottom-0 md:z-0 bg-chrome">
-      <div className="container-chrome grid grid-cols-1 gap-12 md:gap-8 pt-9 pb-12 md:grid-cols-[max-content_max-content_max-content_1fr] md:gap-x-24">
+      <div className="container-chrome grid grid-cols-1 gap-10 md:gap-8 pt-9 pb-12 md:grid-cols-[max-content_max-content_max-content_1fr] md:gap-x-24">
         {/* Name + clock */}
         <div className="flex flex-col gap-1">
           <Link
