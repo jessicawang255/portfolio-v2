@@ -18,6 +18,7 @@ export default function Autumn() {
           width={2000}
           height={1000}
         />
+      </Section>
 
       <Outcomes
         metrics={[
@@ -26,8 +27,6 @@ export default function Autumn() {
           { value: "10/12", label: "users felt inclined to revisit Autumn in the future" },
         ]}
       />
-
-      </Section>
 
       <Section
         id="problem"
