@@ -120,6 +120,22 @@ export function ScrollRevealController({ frameId, heroId, heroFrameId }: Props) 
         el.style.borderBottomLeftRadius  = `${bottom}px`
         el.style.borderBottomRightRadius = `${bottom}px`
 
+        // Fades the frozen box-shadow pseudo-layer (see #main-frame::before /
+        // #cs-content::before in globals.css) out across the same window
+        // where its shape stops matching the live corners above — top/max is
+        // 1 at rest (top === maxRadius, matching the frozen top corner) and
+        // falls to 0 as the top corner finishes closing; 1 - bottom/max is 1
+        // at rest (bottom === 0, matching the frozen flat bottom) and falls
+        // to 0 as the footer corner opens. min() of the two means the shadow
+        // is only at full strength while *both* corners still match their
+        // frozen counterparts, and fades the moment either one doesn't —
+        // this is what keeps the frozen shape from ever reading as a visibly
+        // separate shape behind the live one, without animating the
+        // pseudo-layer itself (opacity is compositor-only, unlike the
+        // border-radius/box-shadow repaint this split exists to avoid).
+        const shadowOpacity = maxRadius > 0 ? Math.min(top / maxRadius, 1 - bottom / maxRadius) : 1
+        el.style.setProperty("--shadow-opacity", `${shadowOpacity}`)
+
         // Hero content fades + scales in step with the same header progress
         // as the radius above, but on its own ease curve (see headerFade.ts)
         // so the two motions can read slightly differently. transform-origin
