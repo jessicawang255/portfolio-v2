@@ -22,10 +22,11 @@ const socials = [
 // What DOES change per tier is what actually drives the width in the first
 // place: grid's own column-track stretch on phone (no flex-grow involved —
 // grid ignores it entirely), `flex-[N]` weighted to that same original
-// width from `md` up (flex-grow only applies to a flex container's direct
+// width from `sm` up (flex-grow only applies to a flex container's direct
 // children, so it has to be re-declared once the row switches away from
 // grid), and the fixed `2xl:w-[Npx]` from the original design
-// past that.
+// past that. `sm`, not `md`: the wrap is meant only for the smallest
+// breakpoint — anything roomier than that already has space for one row.
 const photos = [
   {
     id: "photo-1",
@@ -37,7 +38,7 @@ const photos = [
     ],
     alt: "Jessica at her desk",
     rotate: 5.5,
-    className: "aspect-[220/222] max-w-[220px] md:flex-[220] 2xl:flex-none 2xl:w-[220px] 2xl:h-[222px]",
+    className: "aspect-[220/222] max-w-[220px] sm:flex-[220] 2xl:flex-none 2xl:w-[220px] 2xl:h-[222px]",
   },
   {
     id: "photo-2",
@@ -48,7 +49,7 @@ const photos = [
     ],
     alt: "Jessica outside in autumn",
     rotate: -7.5,
-    className: "aspect-[218/222] max-w-[218px] md:flex-[218] 2xl:flex-none 2xl:w-[218px] 2xl:h-[222px]",
+    className: "aspect-[218/222] max-w-[218px] sm:flex-[218] 2xl:flex-none 2xl:w-[218px] 2xl:h-[222px]",
   },
   {
     id: "photo-3",
@@ -64,14 +65,14 @@ const photos = [
     // The one photo with its own per-tier layout properties, not just
     // sizing — `col-span-2 mx-auto w-full` puts it on its own centered row
     // in the phone grid (see the row's own comment below), all three reset
-    // at `md` where the row goes back to one flex line and this needs to
-    // behave like photo-1/2 again. `md:mx-0` specifically (not just
-    // relying on `md:flex-[280]`'s own basis:0% to out-rank a stray
+    // at `sm` where the row goes back to one flex line and this needs to
+    // behave like photo-1/2 again. `sm:mx-0` specifically (not just
+    // relying on `sm:flex-[280]`'s own basis:0% to out-rank a stray
     // `w-full`) — auto margins on a flex item consume free space *before*
     // flex-grow gets any of it, so left over from the grid tier, this
     // would quietly win the whole row's free space for itself instead of
     // growing in proportion with photo-1/2 the way `flex-[280]` intends.
-    className: "col-span-2 mx-auto w-full aspect-[280/192] max-w-[280px] md:mx-0 md:w-auto md:flex-[280] 2xl:flex-none 2xl:w-[280px] 2xl:h-[192px]",
+    className: "col-span-2 mx-auto w-full aspect-[280/192] max-w-[280px] sm:mx-0 sm:w-auto sm:flex-[280] 2xl:flex-none 2xl:w-[280px] 2xl:h-[192px]",
   },
 ]
 
@@ -238,9 +239,13 @@ export function AboutHero() {
             means each one can grow noticeably larger before hitting its own
             `max-w-[Npx]` cap, at every phone width — not just a side effect
             of the wrap, the actual reason for it.
-            `flex md:` — back to one row from `md` up, same fluid-grow
-            single line as before (see the `photos` array above for why
-            `flex-[N]` has to be re-declared there instead of carrying over).
+            `flex sm:` — back to one row from `sm` up, not `md`: the wrap is
+            only meant for the smallest breakpoint, where 3 photos genuinely
+            don't have room side by side — anything from `sm` up already
+            does, so there's no reason to keep wrapping through the rest of
+            the tablet range. Same fluid-grow single line as before (see the
+            `photos` array above for why `flex-[N]` has to be re-declared
+            there instead of carrying over).
             `w-full` gives that row real width to grow into — without it,
             it'd just shrink-wrap to content like it does at `2xl`+
             — reverts to `w-auto` there for the same reason in reverse: side
@@ -250,7 +255,7 @@ export function AboutHero() {
             text's own baseline — only makes sense once they're side by side too. */}
         <motion.div
           variants={stagger}
-          className="grid grid-cols-2 w-full items-center gap-4.5 md:flex md:gap-9 2xl:w-auto 2xl:gap-14 2xl:pt-2"
+          className="grid grid-cols-2 w-full items-center gap-4.5 sm:flex sm:gap-9 2xl:w-auto 2xl:gap-14 2xl:pt-2"
         >
           {photos.map(({ id, srcs, alt, rotate, className }, i) => (
             // The `flex-[N]`/`aspect-[…]`/`max-w-[…]` sizing lives here, not
