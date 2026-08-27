@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import Image from "next/image"
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion"
 import { TertiaryLink } from "@/components/ui/TertiaryLink"
@@ -624,6 +624,32 @@ export function AboutContent({ spotifyPlaylist }: { spotifyPlaylist: Song[] | nu
   const [activeId, setActiveId] = useState<string>("")
   const [hoveredId, setHoveredId] = useState<string | null>(null)
 
+  // A row's onMouseLeave doesn't clear hoveredId directly — it schedules a
+  // clear a beat later, giving the cursor time to land on the sticky panel
+  // in transit. Entering a row or the panel cancels that pending clear, so
+  // content only actually disappears once the mouse has left both surfaces
+  // without landing on the other.
+  const unhoverTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  const cancelScheduledUnhover = () => {
+    if (unhoverTimeoutRef.current !== null) {
+      clearTimeout(unhoverTimeoutRef.current)
+      unhoverTimeoutRef.current = null
+    }
+  }
+
+  const handleRowHover = (id: string) => {
+    cancelScheduledUnhover()
+    setHoveredId(id)
+  }
+
+  const handleRowUnhover = () => {
+    cancelScheduledUnhover()
+    unhoverTimeoutRef.current = setTimeout(() => setHoveredId(null), 100)
+  }
+
+  useEffect(() => cancelScheduledUnhover, [])
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -684,8 +710,8 @@ export function AboutContent({ spotifyPlaylist }: { spotifyPlaylist: Song[] | nu
                 <motion.div key={item.id} variants={fadeUp}>
                   <JourneyRow
                     item={item}
-                    onHover={() => setHoveredId(item.id)}
-                    onUnhover={() => setHoveredId(null)}
+                    onHover={() => handleRowHover(item.id)}
+                    onUnhover={handleRowUnhover}
                   />
                 </motion.div>
               ))}
@@ -707,8 +733,8 @@ export function AboutContent({ spotifyPlaylist }: { spotifyPlaylist: Song[] | nu
                 <motion.div key={item.id} variants={fadeUp}>
                   <CommunityRow
                     item={item}
-                    onHover={() => setHoveredId(item.id)}
-                    onUnhover={() => setHoveredId(null)}
+                    onHover={() => handleRowHover(item.id)}
+                    onUnhover={handleRowUnhover}
                   />
                 </motion.div>
               ))}
@@ -726,8 +752,8 @@ export function AboutContent({ spotifyPlaylist }: { spotifyPlaylist: Song[] | nu
               <SectionHeader label="WHAT I DO FOR FUN" />
             </motion.div>
             <div
-              onMouseEnter={() => setHoveredId("fun")}
-              onMouseLeave={() => setHoveredId(null)}
+              onMouseEnter={() => handleRowHover("fun")}
+              onMouseLeave={handleRowUnhover}
               // Same hover treatment as JourneyRow/CommunityRow (border-y +
               // bg tint on hover, -mx-3/px-3 canceling horizontally so
               // hovering doesn't shift the text). Vertical padding (py-3)
@@ -796,6 +822,8 @@ export function AboutContent({ spotifyPlaylist }: { spotifyPlaylist: Song[] | nu
         {/* Right column — sticky panel, scoped to the grid row above (ends after "My Playlist") */}
         <div className="relative mt-16 hidden lg:mt-0 lg:block">
           <div
+            onMouseEnter={cancelScheduledUnhover}
+            onMouseLeave={() => setHoveredId(null)}
             // Fills the viewport (minus the nav clearance the `top` offset already
             // eats into) rather than a fixed 83vh, so it reads as edge-to-edge on
             // any screen. The -16px keeps the bottom gap equal to the 36px top
