@@ -196,14 +196,14 @@ export default function Glucal() {
           </div>
         </div>
 
-        <div className="mt-9 w-full">
+        <div className="mt-6 w-full">
           <h1 className="text-balance text-3xl font-medium leading-[1.2] text-primary mt-4">
             Despite being a daily task, there&rsquo;s no straightforward tool that simplifies insulin calculation elegantly.
           </h1>
           <p className="text-balance text-base leading-normal text-neutral-600 mt-7">
             The process is <strong className="text-[var(--cs-accent)] font-semibold">tedious</strong>, <strong className="text-[var(--cs-accent)] font-semibold">monotonous</strong>, and <strong className="text-[var(--cs-accent)] font-semibold">complicated</strong>. No one wants to do math before each meal! Existing tools are either frustrating to use, or don&rsquo;t address the specific need.
           </p>
-          <div className="flex flex-col gap-9 mt-12 w-full">
+          <div className="flex flex-col gap-6 mt-6 w-full">
             <Image
               src="/images/case-studies/glucal/glucal-problem-2.png"
               alt=""
@@ -238,7 +238,7 @@ export default function Glucal() {
               <h3 className="text-lg font-medium leading-[1.3] text-primary">
                 {feature.number}. {feature.title}
               </h3>
-              <p className="mt-3.5 text-base leading-normal text-neutral-600">
+              <p className="mt-3 text-base leading-normal text-neutral-600">
                 {feature.body}
               </p>
             </div>
@@ -361,13 +361,13 @@ export default function Glucal() {
           </div>
         </div>
 
-        {/* mt-7/md:mt-21 stack on top of this children wrapper's own gap-9
-            (see Section.tsx) so the total gap above this headline — 36px +
-            28px = 64px, 36px + 84px = 120px — matches the gap-16/md:gap-30
+        {/* mt-10/md:mt-24 stack on top of this children wrapper's own gap-6
+            (see Section.tsx) so the total gap above this headline — 24px +
+            40px = 64px, 24px + 96px = 120px — matches the gap-16/md:gap-30
             the page's own top-level flex uses between sections, even though
             this headline is a mid-section child rather than its own
             section. */}
-        <h1 className="text-balance text-3xl font-medium leading-[1.2] text-primary mt-7 md:mt-21">
+        <h1 className="text-balance text-3xl font-medium leading-[1.2] text-primary mt-10 md:mt-24">
           However, users still expressed that logging food seemed like a separate process from inputting carb amounts.
         </h1>
         <p className="text-balance text-base leading-normal text-neutral-600">
