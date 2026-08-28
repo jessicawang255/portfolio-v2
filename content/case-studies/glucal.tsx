@@ -555,29 +555,22 @@ export default function Glucal() {
       </Section>
 
 
-      <Section
-        id="final-product"
-        tag="Final Product"
-        headline="Introducing gluCal."
-        primary
-      >
-        <ImageBlock height={400} />
-      </Section>
-
-      {/* <Reflections
+      <Reflections
         id="reflections"
         tag="it's done! what did i learn?"
         items={[
           {
-            heading: "A good design system leaves nothing unsaid",
-            body: "I learned that a good design system is more than just a set of components and rules. It should also include clear documentation and examples, so that anyone can understand how to use it effectively. This ensures consistency and quality across the product, even when different designers or developers are working on it.",
+            // TODO: replace with a real first takeaway from building gluCal.
+            heading: "TODO: first takeaway",
+            body: "TODO — add first takeaway here.",
           },
           {
-            heading: "Placeholder reflection",
-            body: "Placeholder reflection — add a second takeaway here.",
+            // TODO: replace with a real second takeaway from building gluCal.
+            heading: "TODO: second takeaway",
+            body: "TODO — add second takeaway here.",
           },
         ]}
-      /> */}
+      />
     </div>
   )
 }

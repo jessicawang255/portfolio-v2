@@ -178,8 +178,7 @@ export const projects: Project[] = [
         title: "Design Decisions",
         subsections: ["1: Logging food", "2: Multiple food items", "3: Syncing data"],
       },
-      { title: "Final Product" },
-      // { title: "Reflections"},
+      { title: "Reflections" },
     ],
   },
 ]
