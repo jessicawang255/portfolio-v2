@@ -660,8 +660,31 @@ export function ScreenSpotlight({ flows, className }: ScreenSpotlightProps) {
             two can disagree by a hair. Un-backgrounded, that sliver showed
             the page's white surface through; matching the card's own color
             means any such gap just reads as slightly more of the same
-            card instead of a visible seam. */}
-        <div
+            card instead of a visible seam.
+            `layout` (off under reduced motion, same as the row below) is
+            load-bearing, not decorative, below `lg`: this box's own true
+            size never changes between screens (fixed aspect-ratio against a
+            container width that isn't moving), but it sits inside the main
+            row's own `layout` animation just below, stacked directly above
+            the rationale column in that row's mobile flex-col. Rationale
+            copy length varies screen to screen, so that row's total height
+            genuinely does change on every step — and framer-motion's layout
+            animation smooths *that* by scaling the row element itself from
+            old height to new, a transform which, left uncorrected, paints
+            every plain (non-`layout`) descendant squished/stretched right
+            along with it — this card and its phone screen included. Giving
+            this card `layout` of its own makes it a projection node in the
+            same tree, so framer-motion applies the matching counter-scale
+            that cancels the inherited distortion back out, the same
+            correction it already applies between nested `layout` elements.
+            From `lg` up the row is flex-row instead, so its height is
+            whichever column is taller — almost always this fixed-height
+            card, not the much shorter rationale text — which is why this
+            never showed up on desktop: the row's height rarely actually
+            changes there, so there's rarely a scale to correct in the first
+            place. */}
+        <motion.div
+          layout={!reduce}
           ref={phoneCardRef}
           className="w-full max-w-[316px] shrink-0 overflow-hidden rounded-[8px] bg-neutral-75 lg:w-auto lg:min-w-[150px] lg:shrink lg:grow-0 lg:basis-[316px]"
           style={{ aspectRatio: `${PHONE_CARD_WIDTH} / ${PHONE_CARD_HEIGHT}` }}
@@ -710,7 +733,7 @@ export function ScreenSpotlight({ flows, className }: ScreenSpotlightProps) {
               </IPhoneFrame>
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* min-w-0 here (used not to have one) plus an explicit
             lg:min-w-[180px] floor in its place. The old approach
