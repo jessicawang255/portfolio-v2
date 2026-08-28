@@ -136,8 +136,8 @@ export function CaseStudyLayout({ project, children, heroBackground, heroAspectR
         {/* Content card — its top corners round off as it slides up over the
             fixed hero (see ScrollRevealController); the hero fades + scales
             in place as it's covered, matching Work/About. */}
-        {/* box-shadow lives on #cs-content::before (globals.css), not here —
-            see the comment on #main-frame::before for why. */}
+        {/* box-shadow lives on #cs-content itself (globals.css) — see the
+            comment on #main-frame there for why it's not a separate layer. */}
         <section
           id="cs-content"
           className="relative bg-surface"
