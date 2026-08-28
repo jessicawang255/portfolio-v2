@@ -64,7 +64,7 @@ export function IconButton({ href, label, icon, size = 24, className, copyText, 
       target={external ? "_blank" : undefined}
       rel={external ? "noopener noreferrer" : undefined}
       onClick={handleClick}
-      className={`group/icon relative inline-flex text-icon-social transition-[color,scale] duration-150 before:absolute before:inset-[-11px] before:content-[''] hover:scale-110 hover:text-nav-link-hover motion-safe:hover:animate-[icon-tick_var(--duration-slow)_var(--ease-out)] ${className ?? ""}`}
+      className={`group/icon relative inline-flex text-icon-social transition-[color,scale] duration-150 before:absolute before:inset-[-11px] before:content-[''] hover:z-50 hover:scale-110 hover:text-nav-link-hover focus-visible:z-50 motion-safe:hover:animate-[icon-tick_var(--duration-slow)_var(--ease-out)] ${className ?? ""}`}
       {...rest}
     >
       <span
@@ -90,7 +90,7 @@ export function IconButton({ href, label, icon, size = 24, className, copyText, 
           touch device could ever trigger anyway. */}
       <span
         aria-hidden="true"
-        className="pointer-events-none absolute bottom-full left-1/2 mb-1 hidden origin-bottom
+        className="pointer-events-none absolute bottom-full left-1/2 z-50 mb-1 hidden origin-bottom
         -translate-x-1/2 scale-90 whitespace-nowrap rounded-[var(--radius-sm)] bg-neutral-900/90
         px-1.5 py-0.5 text-xs text-neutral-50 opacity-0 transition-[opacity,scale] duration-[var(--duration-slow)]
         ease-[var(--ease-out)] group-hover/icon:scale-100 group-hover/icon:opacity-100 group-hover/icon:delay-400 md:block"

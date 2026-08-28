@@ -15,21 +15,22 @@ type PanelSection = { id: string; label: string }
 // "Some Statistics" both live outside that grid entirely, so the panel
 // scrolls away before either of them.
 const panelSections: PanelSection[] = [
-  { id: "journey",     label: "MY JOURNEY THUS FAR" },
+  { id: "journey",     label: "MY EXPERIENCE" },
   { id: "communities", label: "MY COMMUNITIES" },
   { id: "fun",         label: "WHAT I DO FOR FUN" },
 ]
 
-type JourneyItem = { id: string; company: string; role: string; period: string }
+type JourneyItem = { id: string; company: string; role: string; period: string; href: string }
 
+// Volunteer/community-leadership roles (Framer, Hack Western, Western
+// Founders Network) live only in "My Communities" below, not here — this
+// list stands in for the resume (see the "View resume" button on its
+// header), so it's scoped to employment.
 const journeyItems: JourneyItem[] = [
-  { id: "royal-bank-of-canada",     company: "Royal Bank of Canada",               role: "Software Engineering Intern", period: "NOW" },
-  { id: "framer",                   company: "Framer",                             role: "Campus Ambassador",           period: "NOW" },
-  { id: "hack-western",             company: "Hack Western",                       role: "Design Lead",                 period: "NOW" },
-  { id: "cibc",                     company: "Canadian Imperial Bank of Commerce", role: "Software Engineering Intern", period: "2025" },
-  { id: "western-founders-network", company: "Western Founders Network",           role: "Vice President of Design",    period: "2025" },
-  { id: "the-residency",            company: "The Residency",                      role: "Design Lead",                 period: "2024" },
-  { id: "autumn",                   company: "Autumn",                             role: "Product Design Intern",       period: "2024" },
+  { id: "royal-bank-of-canada",     company: "Royal Bank of Canada",               role: "Software Engineering Intern", period: "NOW",  href: "https://www.rbcroyalbank.com" },
+  { id: "cibc",                     company: "Canadian Imperial Bank of Commerce", role: "Software Engineering Intern", period: "2025", href: "https://www.cibc.com" },
+  { id: "the-residency",            company: "The Residency",                      role: "Design Lead",                 period: "2024", href: "https://www.livetheresidency.com" },
+  { id: "autumn",                   company: "Autumn",                             role: "Product Design Intern",       period: "2024", href: "https://www.autumn.co" },
 ]
 
 type Community = {
@@ -491,13 +492,25 @@ function JourneyRow({
     <div
       onMouseEnter={onHover}
       onMouseLeave={onUnhover}
-      className="-mx-3 flex items-center justify-between gap-6 border-x border-x-transparent border-y border-y-transparent px-3 py-3 transition-colors duration-100 lg:hover:cursor-help lg:hover:border-y-neutral-900/3 lg:hover:bg-neutral-75 lg:hover:duration-0"
+      className="group -mx-3 flex items-center justify-between gap-6 border-x border-x-transparent border-y border-y-transparent px-3 py-3 transition-colors duration-100 lg:hover:cursor-help lg:hover:border-y-neutral-900/3 lg:hover:bg-neutral-75 lg:hover:duration-0"
     >
       <div>
         <p className="text-balance text-base font-medium text-neutral-900">{item.company}</p>
         <p className="text-balance text-base text-neutral-500">{item.role}</p>
       </div>
-      <span className="shrink-0 font-mono text-sm uppercase text-neutral-400">{item.period}</span>
+      {/* Crossfades in place rather than sitting beside the period — the row
+          itself isn't the link (only the icon is, unlike CommunityRow), so
+          this swaps what the trailing slot shows instead of adding to it.
+          group-focus-within alongside group-hover so tabbing to the
+          IconButton reveals it too, not just mouse hover. */}
+      <div className="relative h-6 w-6 shrink-0">
+        <span className="absolute inset-0 flex items-center justify-end font-mono text-sm uppercase text-neutral-400 transition-[opacity,filter] duration-150 ease-out group-hover:opacity-0 group-hover:blur-[2px] group-focus-within:opacity-0 group-focus-within:blur-[2px]">
+          {item.period}
+        </span>
+        <span className="absolute inset-0 opacity-0 blur-[2px] transition-[opacity,filter] duration-150 ease-out group-hover:opacity-100 group-hover:blur-none group-focus-within:opacity-100 group-focus-within:blur-none">
+          <IconButton href={item.href} icon="/icons/global-line.svg" />
+        </span>
+      </div>
     </div>
   )
 }
@@ -693,7 +706,7 @@ export function AboutContent({ spotifyPlaylist }: { spotifyPlaylist: Song[] | nu
           >
             <motion.div variants={fadeUp}>
               <SectionHeader
-                label="MY JOURNEY THUS FAR"
+                label="MY EXPERIENCE"
                 action={
                   <IconButton
                     href="/JessicaWang_Resume.pdf"
@@ -707,7 +720,14 @@ export function AboutContent({ spotifyPlaylist }: { spotifyPlaylist: Song[] | nu
             </motion.div>
             <div className="flex flex-col gap-0">
               {journeyItems.map((item) => (
-                <motion.div key={item.id} variants={fadeUp}>
+                // relative + hover/focus-within z — fadeUp's y-transform
+                // leaves each row as its own stacking context even after
+                // settling (transform: translateY(0px) ≠ none), which
+                // otherwise traps the icon's tooltip below whichever
+                // sibling row happens to come later in the DOM. Elevating
+                // the whole row here (not just the tooltip) lets it clear
+                // every sibling regardless of paint order.
+                <motion.div key={item.id} variants={fadeUp} className="relative hover:z-10 focus-within:z-10">
                   <JourneyRow
                     item={item}
                     onHover={() => handleRowHover(item.id)}
@@ -730,7 +750,8 @@ export function AboutContent({ spotifyPlaylist }: { spotifyPlaylist: Song[] | nu
             </motion.div>
             <div className="flex flex-col">
               {communities.map((item) => (
-                <motion.div key={item.id} variants={fadeUp}>
+                // Same stacking-context fix as journeyItems above.
+                <motion.div key={item.id} variants={fadeUp} className="relative hover:z-10 focus-within:z-10">
                   <CommunityRow
                     item={item}
                     onHover={() => handleRowHover(item.id)}
