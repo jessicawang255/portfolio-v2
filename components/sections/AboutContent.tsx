@@ -801,8 +801,7 @@ export function AboutContent({ spotifyPlaylist }: { spotifyPlaylist: Song[] | nu
               </motion.p>
 
               <motion.p variants={fadeUp}>
-                I&rsquo;ve taken a liking to bouldering because of the colourful
-                things on the wall.
+                I also enjoy bouldering and lifting weights (but less so cardio)
               </motion.p>
 
               {/* <motion.p variants={fadeUp}>
