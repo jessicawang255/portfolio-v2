@@ -460,12 +460,20 @@ export default function Retrospect() {
                     I recieved two main pieces of feedback from testers:
                 </p>
 
-                <ImageBlock
-                    src="/images/case-studies/retrospect/retrospect-flows-4.png"
-                    alt="Comparison of a multi-photo grid versus a single voice recording, with tester feedback asking why several photos but only one voice note could be added"
-                    width={1658}
-                    height={945}
-                />
+                <div className="flex flex-col gap-3">
+                    <h2 className="text-balance text-xl font-medium text-neutral-800 leading-[1.2]">Users want to include multiple pieces of any media type — not just photos and songs.</h2>
+                    <p className="text-base text-neutral-600 leading-normal">
+                        I&apos;d designed the option to add several photos, but assumed every other media type could only hold one. Testers immediately caught the gap: &ldquo;Why can I add several photos, but only one voice note?&rdquo;
+                    </p>
+                </div>
+
+                <div className="flex flex-col gap-3">
+                    <h2 className="text-balance text-xl font-medium text-neutral-800 leading-[1.2]">Each media type was also being added and managed differently — one consistent pattern was overdue.</h2>
+                    <p className="text-base text-neutral-600 leading-normal">
+                        I consolidated every media type into the same interface: a carousel. Users could add several items, delete existing ones, and rearrange them — all through one consistent pattern instead of several different ones.
+                    </p>
+                </div>
+
                 <ImageBlock
                     src="/images/case-studies/retrospect/retrospect-flows-5.png"
                     alt="Revised carousel treatment applied consistently across photos, voice recordings, songs, notes, prompts, and drawings"
