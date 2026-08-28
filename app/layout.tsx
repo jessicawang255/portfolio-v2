@@ -17,7 +17,7 @@ const robotoMono = Roboto_Mono({
 export const metadata: Metadata = {
   title: {
     template: "%s · Jessica Wang",
-    default: "Jessica Wang",
+    default: "Jessica Wang · Product Designer",
   },
   description:
     "I'm Jessica. I'm a product designer. 🥑",
