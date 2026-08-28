@@ -389,19 +389,8 @@ export default function Retrospect() {
                 />
 
                 <p className="text-base text-neutral-600 leading-normal">
-                    The team's research revealed two key findings about trends in the consumer app space:
+                    The team’s research revealed two key findings about trends in the consumer app space: people want apps that help them connect with friends in a real and relaxed way, and sharing is central to how users engage with niche social apps.
                 </p>
-
-                <TwoColumn
-                    left={
-                        <h2 className="text-balance text-xl font-medium text-neutral-800 leading-[1.2]">1. People want apps that help them connect with friends in a real and relaxed way.</h2>
-
-                    }
-                    right={
-                        <h2 className="text-balance text-xl font-medium text-neutral-800 leading-[1.2]">2. Sharing is central to how users engage with niche social apps.</h2>
-                    }
-                />
-
             </Section>
 
             <Section
@@ -460,19 +449,20 @@ export default function Retrospect() {
                     I recieved two main pieces of feedback from testers:
                 </p>
 
-                <div className="flex flex-col gap-3">
-                    <h2 className="text-balance text-xl font-medium text-neutral-800 leading-[1.2]">Users want to include multiple pieces of any media type — not just photos and songs.</h2>
-                    <p className="text-base text-neutral-600 leading-normal">
-                        I&apos;d designed the option to add several photos, but assumed every other media type could only hold one. Testers immediately caught the gap: &ldquo;Why can I add several photos, but only one voice note?&rdquo;
-                    </p>
-                </div>
-
-                <div className="flex flex-col gap-3">
-                    <h2 className="text-balance text-xl font-medium text-neutral-800 leading-[1.2]">Each media type was also being added and managed differently — one consistent pattern was overdue.</h2>
-                    <p className="text-base text-neutral-600 leading-normal">
-                        I consolidated every media type into the same interface: a carousel. Users could add several items, delete existing ones, and rearrange them — all through one consistent pattern instead of several different ones.
-                    </p>
-                </div>
+                <TwoColumn
+                    left={
+                        <Callout
+                            heading="Users want to include multiple pieces of any media type — not just photos and songs."
+                            body="I'd designed the option to add several photos, but assumed every other media type could only hold one. Testers immediately caught the gap: “Why can I add several photos, but only one voice note?”"
+                        />
+                    }
+                    right={
+                        <Callout
+                            heading="Each media type was also being added and managed differently — one consistent pattern was overdue."
+                            body="I consolidated every media type into the same interface: a carousel. Users could add several items, delete existing ones, and rearrange them — all through one consistent pattern instead of several different ones."
+                        />
+                    }
+                />
 
                 <ImageBlock
                     src="/images/case-studies/retrospect/retrospect-flows-5.png"

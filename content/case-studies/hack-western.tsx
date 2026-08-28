@@ -149,25 +149,15 @@ export default function HackWestern() {
         id="designing-for-mobile"
         tag="Designing for Mobile"
         headline="With the web designs established, I needed a creative way to include personalized stickers on mobile, where there wasn't enough space to display them in the background."
+        body="On the desktop version, stickers appear based on a user&rsquo;s answers. For example, selecting Mathematics/Statistics as my major would surface a &ldquo;Math/Stats&rdquo; sticker in the background."
         primary
       >
-        <TwoColumn
-          ratio="3/2"
-          left={
-            <ImageBlock
-              src="/images/case-studies/hack-western/hw-mobile-1.gif"
-              alt="Desktop application form surrounded by unlocked stickers, including a University of Toronto Mississauga badge, a Hack Western Newcomer ribbon, and a Novice Hacker name tag"
-              width={2384}
-              height={1397}
-            />
-          }
-          right={
-            <p className="text-base text-neutral-600">
-              On the desktop version, stickers appear based on a user&rsquo;s answers. For example,
-              selecting Mathematics/Statistics as my major would surface a &ldquo;Math/Stats&rdquo; sticker
-              in the background.
-            </p>
-          }
+        <ImageBlock
+          src="/images/case-studies/hack-western/hw-mobile-1.gif"
+          alt="Desktop application form surrounded by unlocked stickers, including a University of Toronto Mississauga badge, a Hack Western Newcomer ribbon, and a Novice Hacker name tag"
+          width={2384}
+          height={1397}
+          caption="Desktop Sticker Collecting"
         />
         <p className="text-base text-neutral-600">
           Our solution was a sticker drawer: a hidden panel that opened when users tapped a floating

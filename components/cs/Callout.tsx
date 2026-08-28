@@ -8,7 +8,7 @@ type CalloutProps = {
 
 export function Callout({ label, heading, body, children, className }: CalloutProps) {
   return (
-    <div className={`h-fit rounded-[8px] bg-[var(--cs-accent)]/6 px-6 py-5 ${className ?? ""}`}>
+    <div className={className}>
       <h2 className="text-balance text-xl font-medium text-neutral-800 leading-[1.4]">
         {label && (
           <>

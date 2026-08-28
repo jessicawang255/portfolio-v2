@@ -23,7 +23,7 @@ type IterationCarouselProps = {
 const STICKY_RELEASE_BUFFER = 120
 
 // A horizontally-scrolling carousel for comparing several iterations of a
-// design — same caption treatment ImageBlock already uses (italic, text-xs,
+// design — same caption treatment ImageBlock already uses (italic, 13px,
 // neutral-400, sitting above the image), with a prev/next + count folded
 // onto that line instead of a separate tab bar. The images themselves scroll
 // as a real track (drag it directly, or use the arrows), rather than being
@@ -212,14 +212,14 @@ export function IterationCarousel({ items, className }: IterationCarouselProps) 
               caption doesn't shove the arrows/count sideways while it fades
               out under the incoming one. */}
           {reduce ? (
-            <p className="text-xs italic leading-[1.5] text-neutral-400" aria-live="polite">
+            <p className="text-[13px] italic leading-[1.5] text-neutral-400" aria-live="polite">
               {current.caption}
             </p>
           ) : (
             <AnimatePresence mode="popLayout" initial={false}>
               <motion.p
                 key={active}
-                className="text-xs italic leading-[1.5] text-neutral-400"
+                className="text-[13px] italic leading-[1.5] text-neutral-400"
                 aria-live="polite"
                 initial={{ opacity: 0, filter: "blur(2px)" }}
                 animate={{ opacity: 1, filter: "blur(0px)" }}

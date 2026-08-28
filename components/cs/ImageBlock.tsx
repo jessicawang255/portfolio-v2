@@ -9,7 +9,7 @@ export function ImageBlock(props: ImageBlockProps) {
     const { src, alt, width, height, className, caption } = props
     return (
       <div>
-        {caption && <p className="mb-2 text-xs leading-[1.5] text-neutral-400 italic">{caption}</p>}
+        {caption && <p className="mb-2 text-[13px] leading-[1.5] text-neutral-400 italic">{caption}</p>}
         <Image
           src={src}
           alt={alt}
@@ -24,7 +24,7 @@ export function ImageBlock(props: ImageBlockProps) {
   const { height = 240, className, caption } = props
   return (
     <div>
-      {caption && <p className="mb-2 text-xs leading-[1.5] text-neutral-500 italic">{caption}</p>}
+      {caption && <p className="mb-2 text-[13px] leading-[1.5] text-neutral-500 italic">{caption}</p>}
       <div
         className={`w-full rounded-[8px] border border-neutral-100 bg-neutral-100 ${className ?? ""}`}
         style={{ height }}
