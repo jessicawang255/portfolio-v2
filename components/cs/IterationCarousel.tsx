@@ -144,6 +144,19 @@ export function IterationCarousel({ items, className }: IterationCarouselProps) 
           beyond the one constant above: CSS sticky's own release point is
           already "the end of its containing block," and that block is now
           intentionally shorter than the real content.
+          top-0, not some offset: the white backdrop painted on the caption
+          row below is `inset-0` on *this* div, so it only ever covers this
+          div's own box. Pinning here at the true viewport edge means that
+          backdrop's top edge lands there too, with nothing left uncovered
+          for the scrolling track underneath to show through. (top-9 looks
+          tempting — sticky's `top` costs nothing until actually stuck, so
+          it seems like a free way to avoid the pt-9 below's static height —
+          but it moves this div's own top 36px down the same way, opening a
+          gap above the backdrop that the scrolling image bleeds through.
+          Getting pt-9's alignment without its static cost would need
+          knowing whether the row is *actually* stuck, which plain CSS
+          can't express — that's an IntersectionObserver-sentinel job, not
+          a one-line swap.)
           Bled to the same trackWidth as the track/fade below, so the
           gradient backdrop covers the peeking non-active slide too instead
           of stopping at the column's own edge — same -mx-[1px]/px-[1px] as
@@ -180,11 +193,13 @@ export function IterationCarousel({ items, className }: IterationCarouselProps) 
         />
         {/* pt-9 matches the TOC's own sticky "Back" link (CaseStudyLayout) —
             same 36px top offset, same top-0, so this row's baseline lines up
-            with the TOC's when both are pinned during a scroll. pb-2 (not
-            more) keeps the gap from caption text to the image below it the
-            same 8px ImageBlock's own caption (mb-2) uses — pt-9 is only
-            about the sticky release point above the text, not about how
-            close the text sits to its image. */}
+            with the TOC's when both are pinned during a scroll. It's also
+            load-bearing for the backdrop above (see that div's own comment):
+            since the backdrop covers exactly this row's box, pt-9 is what
+            makes that box tall enough to blank out the scrolling track all
+            the way up to the true viewport edge once stuck. pb-2 (not more)
+            keeps the gap from caption text to the image below it the same
+            8px ImageBlock's own caption (mb-2) uses. */}
         <div
           ref={captionRowRef}
           className="relative flex w-full items-start justify-between gap-5 pt-9 pb-2"
