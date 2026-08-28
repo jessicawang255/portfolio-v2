@@ -80,7 +80,12 @@ export function CaseStudyLayout({ project, children, heroBackground, heroAspectR
   return (
     <>
       {/* Transparent nav overlay — above hero (z:5), below content card (z:10).
-          Below `sm`, the bottom pill nav takes over — no top bar to show. */}
+          Below `sm`, the bottom pill nav takes over — no top bar to show.
+          `sm` is the site's chrome breakpoint (see --breakpoint-sm in
+          globals.css), shared with CaseStudyHero's own static→fixed switch
+          — this bar is fixed at every breakpoint it renders at, so
+          appearing any earlier than the hero's own fixed switch would have
+          it sit above a hero still scrolling past underneath it. */}
       <header className="fixed inset-x-0 top-0 hidden pointer-events-none sm:block" style={{ zIndex: 6 }}>
         <nav
           className="container-chrome flex items-center justify-between py-4 pointer-events-auto"

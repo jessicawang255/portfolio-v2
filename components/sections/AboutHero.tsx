@@ -152,7 +152,12 @@ export function AboutHero() {
 
   return (
     <section
-      className="container-main pointer-events-none pt-16 pb-12 md:pt-[120px] md:pb-20"
+      // pt jumps to its desktop value at `sm`, not `md` — see Hero.tsx's own
+      // comment on this same pattern: `sm` is the chrome breakpoint where
+      // the fixed top nav bar appears and needs clearance, independent of
+      // `md`'s content-shape switch, which pb (unrelated to nav clearance)
+      // still uses.
+      className="container-main pointer-events-none pt-16 pb-12 sm:pt-[120px] md:pb-20"
       aria-label="About introduction"
     >
       <motion.div

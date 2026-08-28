@@ -25,18 +25,21 @@ export function HeroShell({ children, fallbackSpacer = 324 }: Props) {
 
   return (
     <>
-      {/* Below `md`, this stays in normal flow instead of fixed — matching
-          Footer.tsx, which is likewise static on mobile and only fixed from
-          `md` up. */}
+      {/* Below `sm` — the site's chrome breakpoint (see --breakpoint-sm in
+          globals.css) — this stays in normal flow instead of fixed,
+          matching Footer.tsx, which is likewise static on mobile and only
+          fixed from `sm` up. Not `md`: this switch is about whether the
+          hero pins and peels behind the frame at all, a different concern
+          from how the frame's own content is laid out. */}
       <div
         ref={ref}
         id="hero-content"
-        className="static md:fixed inset-x-0 top-0 z-[2] pointer-events-none"
+        className="static sm:fixed inset-x-0 top-0 z-[2] pointer-events-none"
         style={{ transformOrigin: "center top" }}
       >
         {children}
       </div>
-      <div aria-hidden="true" style={{ height: spacer }} className="hidden md:block" />
+      <div aria-hidden="true" style={{ height: spacer }} className="hidden sm:block" />
     </>
   )
 }

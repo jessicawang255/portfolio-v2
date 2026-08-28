@@ -6,15 +6,19 @@ import { footerRatio, applyFooterFade, resetFooterFade } from "./footerFade"
 import { headerProgress, headerRadius, fadeOpacity, fadeScale } from "./headerFade"
 
 // px — corner radius when header/footer is fully visible. Matches
-// --radius-frame in globals.css: 20px on mobile, 36px from `md` up.
+// --radius-frame in globals.css: 20px on mobile, 36px from `sm` up.
 const MOBILE_RADIUS  = 20
 const DESKTOP_RADIUS = 36
 
-// Must match the `md:` breakpoint HeroShell.tsx/CaseStudyHero.tsx use to
-// switch between fixed (peels from behind the frame) and static (normal
-// flow), and the one --radius-frame in globals.css uses for its 20px/36px
-// swap.
-const DESKTOP_QUERY = "(min-width: 768px)"
+// Must match the `sm:` breakpoint HeroShell.tsx/CaseStudyHero.tsx/Footer.tsx
+// use to switch between fixed (peels from behind the frame) and static
+// (normal flow), and the one --radius-frame in globals.css uses for its
+// 20px/36px swap. This is the site's chrome breakpoint (see --breakpoint-sm
+// in globals.css) — deliberately not `md`, which frameId's own content
+// (the grid/columns inside #main-frame or #cs-content) uses for its
+// separate layout switch. A frame can be laid out "mobile" here while this
+// controller still runs the full desktop peel/fade/footer-reveal treatment.
+const DESKTOP_QUERY = "(min-width: 640px)"
 
 type Props = {
   /** The card whose corners peel open as it slides toward the viewport top
@@ -62,7 +66,7 @@ export function ScrollRevealController({ frameId, heroId, heroFrameId }: Props) 
     function setup() {
       cleanupScroll()
 
-      // Footer is only fixed from `md` up (see Footer.tsx) — below that it's
+      // Footer is only fixed from `sm` up (see Footer.tsx) — below that it's
       // in normal flow, sitting directly after the frame with no overlap, so
       // there's no space to reserve for it. The frame's bottom-corner radius
       // still peels open as the footer is scrolled into view either way (see
@@ -146,7 +150,7 @@ export function ScrollRevealController({ frameId, heroId, heroFrameId }: Props) 
         // unmounting (no remount cost scrolling back and forth near the
         // threshold) and than animating height (visibility doesn't trigger
         // reflow). Gated to `mql.matches` like the fade/scale above: below
-        // `md` the hero is `static`, not `fixed` — it scrolls away in normal
+        // `sm` the hero is `static`, not `fixed` — it scrolls away in normal
         // flow and can't overlap the footer this way regardless.
         if (heroFrameId) {
           const heroFrame = document.getElementById(heroFrameId)

@@ -16,7 +16,14 @@ export function Hero() {
 
   return (
     <section
-      className="container-main pointer-events-none pt-16 pb-12 md:pt-[120px] md:pb-20"
+      // pt jumps to its desktop value at `sm`, not `md`: `sm` is the site's
+      // chrome breakpoint (see --breakpoint-sm in globals.css) — the point
+      // the top nav bar appears and starts needing clearance. `pt-16` alone
+      // reads as fine top-of-page whitespace below `sm` (bottom pill nav,
+      // nothing fixed up top) but is tight once a 56px fixed bar sits above
+      // it. pb stays on `md`, the content-shape breakpoint — the gap before
+      // the next section isn't a nav-clearance concern.
+      className="container-main pointer-events-none pt-16 pb-12 sm:pt-[120px] md:pb-20"
       aria-label="Introduction"
     >
       <motion.div

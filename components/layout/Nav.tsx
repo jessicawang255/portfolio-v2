@@ -24,7 +24,13 @@ export function Nav() {
   if (pathname.startsWith("/work/")) return null
 
   return (
-    // Below `sm`, the bottom pill nav takes over — no top bar to show.
+    // Below `sm`, the bottom pill nav takes over — no top bar to show. `sm`
+    // is the site's chrome breakpoint (see --breakpoint-sm in globals.css),
+    // shared with HeroShell's own static→fixed switch — this bar is fixed
+    // at every breakpoint it renders at, so appearing any earlier than the
+    // hero's own fixed switch would have it sit above a hero still
+    // scrolling past underneath it. Independent of `md`, which is what the
+    // page content (grids, columns) uses for its own layout switch.
     <header id="site-nav" className="fixed inset-x-0 top-0 z-[2] hidden bg-chrome/50 sm:block">
       <nav
         className="container-chrome flex items-center justify-between py-4"

@@ -182,6 +182,11 @@ export function MobileNav() {
   const PANEL_OVERLAP = 24
 
   return (
+    // `sm:hidden`, matching Nav.tsx's own `sm:block` — the top bar and this
+    // chip hand off at `sm`, the site's chrome breakpoint (see
+    // --breakpoint-sm in globals.css), the same one HeroShell's hero
+    // switches from static to fixed at, so there's never a gap where a
+    // fixed top bar shows above a hero still scrolling past underneath it.
     <div ref={rootRef} className="fixed inset-x-5 bottom-5 z-40 sm:hidden">
       {/* Keyed by pathname so the whole unit (back button + chip + panel)
           treats every route change as a fresh mount/unmount instead of the

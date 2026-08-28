@@ -15,16 +15,19 @@ import Image, { type StaticImageData } from "next/image"
 // (the background stays fully static; see CaseStudyHero), so it can anchor
 // its own transform-origin directly with a plain CSS value.
 //
-// Below `md`, this is the only in-flow child of CaseStudyHero's container
-// (the background is `absolute inset-0`, sizing to match) — its own natural
-// height is what CaseStudyHero shrink-wraps to on mobile, see there for why.
-// ScrollRevealController never touches opacity/transform below `md` (it's a
-// no-op there), so relative positioning on mobile costs nothing.
+// Below `sm` — the site's chrome breakpoint (see --breakpoint-sm in
+// globals.css) — this is the only in-flow child of CaseStudyHero's
+// container (the background is `absolute inset-0`, sizing to match) — its
+// own natural height is what CaseStudyHero shrink-wraps to on mobile, see
+// there for why. ScrollRevealController never touches opacity/transform
+// below `sm` (it's a no-op there), so relative positioning on mobile costs
+// nothing. Tied to CaseStudyHero's own `sm:fixed` switch, not `md` — this is
+// the hero peel mechanic, not a content-layout concern.
 export function HeroForeground({ src, alt }: { src: StaticImageData; alt: string }) {
   const [loaded, setLoaded] = useState(false)
 
   return (
-    <div id="cs-hero-content" className="relative md:absolute inset-x-0 top-0" style={{ transformOrigin: "center top" }}>
+    <div id="cs-hero-content" className="relative sm:absolute inset-x-0 top-0" style={{ transformOrigin: "center top" }}>
       <Image
         src={src}
         alt={alt}

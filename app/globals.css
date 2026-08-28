@@ -52,11 +52,25 @@
      because this site's content wants different steps than Tailwind's
      stock 1024/1280/1536 — each override absorbs a breakpoint that used
      to be its own one-off token. */
-  --breakpoint-sm: 40rem; /* 640px — small-phone → large-phone/small-tablet.
-    Not currently used by anything; available as a real in-between step. */
-  --breakpoint-md: 48rem; /* 768px — the site's main mobile/desktop switch:
-    nav, page layout direction, and most spacing flip here. Everything
-    defaults to `md` unless a component has actual evidence to move. */
+  --breakpoint-sm: 40rem; /* 640px — the site's "chrome" switch: nav
+    (Nav.tsx/MobileNav.tsx/CaseStudyLayout's overlay), the hero's
+    static→fixed peel (HeroShell.tsx/CaseStudyHero.tsx/HeroForeground.tsx),
+    #site-footer's own static→fixed swap, and --nav-height/--radius-frame
+    below, which those all read from. Deliberately its own, earlier tier
+    than `md`: the chrome mechanic (does the hero pin and peel from behind
+    the frame, is the nav a fixed bar or the bottom pill) is a different
+    question from how the *content* inside the frame is laid out (grid
+    columns, card stacking, container padding) — a narrow viewport can have
+    "mobile" single-column content while still getting the fixed-chrome
+    treatment, same as a wide one. Nav/hero/footer must all three switch at
+    this exact same breakpoint, whatever it's tuned to — split them across
+    two and a fixed nav bar ends up sitting above a hero that's still
+    static and scrolling underneath it (or symmetrically for the footer). */
+  --breakpoint-md: 48rem; /* 768px — the site's main content-layout switch:
+    page layout direction and most spacing flip here. Everything defaults
+    to `md` unless a component has actual evidence to move — the chrome
+    mechanic above is the one deliberate exception, not a precedent for
+    moving anything else off `md` without similar evidence. */
 
   /* Absorbs the former `--breakpoint-discover-wide` / `--breakpoint-cs-screens`
      (previously two separate tokens that happened to land on the same
@@ -135,10 +149,13 @@
 :root {
   /* Top nav is hidden below `sm` (bottom pill nav takes over), so there's no
      bar to clear. Restored at `sm` — py-4 (32px) + text-base line height (24px).
-     Deliberately its own breakpoint, not `md` like the rest of the site's
-     chrome (--radius-frame below, container padding, DESKTOP_QUERY in
-     ScrollRevealController/DotField) — the nav swap is a separate concern
-     from those and moved independently of them. */
+     Pinned to `sm` — see --breakpoint-sm's own comment above: this is the
+     site's chrome breakpoint, shared with HeroShell/CaseStudyHero's
+     static→fixed switch and #site-footer's own. All of those have to move
+     together — a nav swap any earlier than the hero's own fixed switch puts
+     a fixed, opaque bar above a hero that's still scrolling past underneath
+     it. Deliberately *not* `md`, which is what the content inside the frame
+     (grids, columns, container padding) uses for its own, separate switch. */
   --nav-height: 0px;
 }
 
@@ -201,9 +218,13 @@ body {
 
 /* ─── Main frame — radius transitions ──────────────────────────────────────── */
 
-/* --radius-frame is 20px on mobile; bump to the full 36px at the `md`
-   breakpoint, matching DESKTOP_QUERY in ScrollRevealController. */
-@media (min-width: 768px) {
+/* --radius-frame is 20px on mobile; bump to the full 36px at `sm` — the
+   site's chrome breakpoint (see --breakpoint-sm's comment above), matching
+   DESKTOP_QUERY in ScrollRevealController and --nav-height. Not `md`: this
+   radius is what the peel animation interpolates toward, so it has to track
+   the same switch as the peel mechanic itself, not the content grid inside
+   the frame. */
+@media (min-width: 640px) {
   :root {
     --radius-frame: 36px;
   }

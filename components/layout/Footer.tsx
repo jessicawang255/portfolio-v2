@@ -205,7 +205,7 @@ function ColophonButton() {
       if (e.key === "Escape") setOpen(false)
     }
     // Scroll changes the button's viewport position (the footer is only
-    // `fixed` from `md` up, and scrolls with content below it) — rather than
+    // `fixed` from `sm` up, and scrolls with content below it) — rather than
     // tracking it live, just close the panel.
     function handleScroll() {
       setOpen(false)
@@ -314,16 +314,19 @@ function ColophonButton() {
   )
 }
 
-// Static (scrolls with content) below `md`, matching the header/nav's mobile
-// behavior. Fixed from `md` up — pinned behind the content frame so its
+// Static (scrolls with content) below `sm`, matching the header/nav's mobile
+// behavior. Fixed from `sm` up — pinned behind the content frame so its
 // bottom corners can peel back to reveal it on scroll (see
 // ScrollRevealController, which animates that peel and reserves body
-// padding-bottom for it at the desktop breakpoint).
+// padding-bottom for it at the desktop breakpoint). `sm` is the site's
+// chrome breakpoint (see --breakpoint-sm in globals.css) — deliberately
+// earlier than `md`, which the grid below uses for its own column layout;
+// the footer can be desktop-fixed while its content is still mobile-stacked.
 export function Footer() {
   const pathname = usePathname()
 
   return (
-    <footer id="site-footer" className="static md:fixed md:inset-x-0 md:bottom-0 md:z-0 bg-chrome">
+    <footer id="site-footer" className="static sm:fixed sm:inset-x-0 sm:bottom-0 sm:z-0 bg-chrome">
       <div className="container-chrome grid grid-cols-1 gap-10 md:gap-8 pt-9 pb-12 md:grid-cols-[max-content_max-content_max-content_1fr] md:gap-x-24">
         {/* Name + clock */}
         <div className="flex flex-col gap-1">
