@@ -442,7 +442,7 @@ function FunPanelContent() {
 function PanelContentView({ entry }: { entry: PanelEntry }) {
   return (
     <div>
-      <div className="flex flex-col gap-6 text-base leading-relaxed text-neutral-900">
+      <div className="flex flex-col gap-6 text-base leading-relaxed text-neutral-600">
         {entry.blocks.map((block, i) =>
           block.type === "p" ? (
             <p key={i}>{block.text}</p>
@@ -803,7 +803,7 @@ export function AboutContent({ spotifyPlaylist }: { spotifyPlaylist: Song[] | nu
             <div
               onMouseEnter={() => handleRowHover("fun")}
               onMouseLeave={handleRowUnhover}
-              className="-mx-3 flex flex-col gap-6 border-x border-x-transparent border-y border-y-transparent px-3 py-3 text-base leading-relaxed text-neutral-900 transition-colors duration-100 lg:hover:cursor-help lg:hover:border-y-neutral-900/3 lg:hover:bg-neutral-75 lg:hover:duration-0"
+              className="-mx-3 flex flex-col gap-6 border-x border-x-transparent border-y border-y-transparent px-3 py-3 text-base leading-relaxed text-neutral-600 transition-colors duration-100 lg:hover:cursor-help lg:hover:border-y-neutral-900/3 lg:hover:bg-neutral-75 lg:hover:duration-0"
             >
               <motion.p variants={fadeUp}>
                 I love making music. I sing and produce my own songs (
@@ -933,7 +933,7 @@ export function AboutContent({ spotifyPlaylist }: { spotifyPlaylist: Song[] | nu
       >
         <motion.div variants={fadeUp}>
           <SectionHeader label="MY PLAYLIST" />
-          <p className="mb-8 text-base text-neutral-900">
+          <p className="mb-8 text-base text-neutral-600">
             Based off my Spotify&rsquo;s most played songs in the past 6 months.
           </p>
         </motion.div>

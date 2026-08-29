@@ -3,6 +3,7 @@
 import { motion, useReducedMotion } from "framer-motion"
 import { stagger, fadeUp } from "@/lib/motion"
 import { IconButton } from "@/components/ui/IconButton"
+import { TertiaryLink } from "@/components/ui/TertiaryLink"
 
 const socials = [
   { label: "LinkedIn", href: "https://www.linkedin.com/in/jwang255/", icon: "/icons/linkedin.svg" },
@@ -41,16 +42,20 @@ export function Hero() {
 
         <motion.p
           variants={fadeUp}
-          className="mb-4 max-w-lg text-balance font-normal text-neutral-700 text-base"
+          className="mb-4 max-w-lg text-balance font-normal text-neutral-600 text-base"
         >
-          I'm a product designer who's fluent from design to code. I like to think deeply about what the future of design will be. Are we all cooked? Maybe. But maybe not, too!
+          I'm a product designer. I strive to craft experiences that feel so simple, they disappear. Right now, I'm most curious about how AI will reshape interfaces and systems.
         </motion.p>
 
         <motion.p
           variants={fadeUp}
-          className="mb-9 font-mono text-neutral-500 text-sm"
+          className="mb-9 max-w-lg text-balance font-normal text-neutral-600 text-base"
         >
-          Currently designing + building digital asset technology @ RBC.
+          Most recently designing + building digital asset technology @{" "}
+          <TertiaryLink href="https://www.rbcroyalbank.com" target="_blank" rel="noopener noreferrer">
+            RBC
+          </TertiaryLink>
+          .
         </motion.p>
 
         <motion.div variants={fadeUp} className="flex items-center gap-4">

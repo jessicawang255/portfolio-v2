@@ -202,7 +202,7 @@ export function AboutHero() {
 
           <motion.p
             variants={fadeUp}
-            className="max-w-lg text-balance text-base font-normal text-neutral-700"
+            className="max-w-lg text-balance text-base font-normal text-neutral-600"
           >
             I&rsquo;m a creative, a problem-solver, and a maker who obsesses
             over details. I&rsquo;m driven by the idea that you can make
@@ -212,7 +212,7 @@ export function AboutHero() {
 
           <motion.p
             variants={fadeUp}
-            className="mt-6 max-w-lg text-balance text-base font-normal text-neutral-700"
+            className="mt-6 max-w-lg text-balance text-base font-normal text-neutral-600"
           >
             On any given day, you might find me producing music, climbing
             rocks, learning about the stars, or collecting design inspo on X.
@@ -220,7 +220,7 @@ export function AboutHero() {
 
           <motion.p
             variants={fadeUp}
-            className="mt-6 mb-9 max-w-lg text-balance text-base font-normal text-neutral-700"
+            className="mt-6 mb-9 max-w-lg text-balance text-base font-normal text-neutral-600"
           >
             Say hi, I&rsquo;d love to connect!
           </motion.p>
