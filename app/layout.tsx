@@ -1,6 +1,7 @@
 import { ViewTransition } from "react"
 import type { Metadata, Viewport } from "next"
 import { Roboto_Mono } from "next/font/google"
+import { Analytics } from "@vercel/analytics/next"
 import { DotField } from "@/components/ui/DotField"
 import { Nav } from "@/components/layout/Nav"
 import { MobileNav } from "@/components/layout/MobileNav"
@@ -57,6 +58,7 @@ export default function RootLayout({
         <MobileNav />
         <ScrollRevealController frameId="main-frame" heroId="hero-content" heroFrameId="hero-content" />
         <ScrollToTop />
+        <Analytics />
       </body>
     </html>
   )
