@@ -650,7 +650,7 @@ body {
 /* ─── Text selection highlight — hex values directly; avoids @theme tree-shaking */
 :root {
   --selection-bg:   #EBF0F4;
-  --selection-text: #174A73;
+  --selection-text: #0F8BF0;
 }
 
 ::selection {
