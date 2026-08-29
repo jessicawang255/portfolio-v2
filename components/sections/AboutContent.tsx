@@ -829,7 +829,7 @@ export function AboutContent({ spotifyPlaylist }: { spotifyPlaylist: Song[] | nu
               </motion.p>
 
               <motion.p variants={fadeUp}>
-                I also enjoy bouldering and lifting weights (but less so cardio)
+                In my free time, I enjoy bouldering and lifting weights (but less so cardio).
               </motion.p>
 
               {/* <motion.p variants={fadeUp}>
@@ -860,10 +860,9 @@ export function AboutContent({ spotifyPlaylist }: { spotifyPlaylist: Song[] | nu
               </motion.p> */}
 
               <motion.p variants={fadeUp}>
-                I find it humbling and grounding and awe-inspiring to learn
-                about our place in the universe, the little speck of dust we
-                are. And so I love learning about constellations and all the
-                things one sees when looking up at the sky at night.
+                Finally, I find it humbling and awe-inspiring to learn
+                about space. I love recognizing constellations and all the
+                marvelous objects in the night sky!
               </motion.p>
             </div>
           </motion.section>
