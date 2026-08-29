@@ -488,12 +488,26 @@ function JourneyRow({
   onHover: () => void
   onUnhover: () => void
 }) {
+  const external = item.href.startsWith("http")
   return (
     <div
       onMouseEnter={onHover}
       onMouseLeave={onUnhover}
-      className="group -mx-3 flex items-center justify-between gap-6 border-x border-x-transparent border-y border-y-transparent px-3 py-3 transition-colors duration-100 lg:hover:cursor-help lg:hover:border-y-neutral-900/3 lg:hover:bg-neutral-75 lg:hover:duration-0"
+      className="group relative -mx-3 flex items-center justify-between gap-6 border-x border-x-transparent border-y border-y-transparent px-3 py-3 transition-colors duration-100 lg:hover:cursor-help lg:hover:border-y-neutral-900/3 lg:hover:bg-neutral-75 lg:hover:duration-0"
     >
+      {/* Below `lg` the sticky panel is hidden, so there's no hover preview
+          making an icon-only click target legible — the whole row becomes
+          the link instead. aria-hidden + tabIndex -1: a mouse/touch hit-area
+          only, not a second stop for assistive tech — the IconButton below
+          stays the one reachable, always-present link. */}
+      <a
+        href={item.href}
+        target={external ? "_blank" : undefined}
+        rel={external ? "noopener noreferrer" : undefined}
+        aria-hidden="true"
+        tabIndex={-1}
+        className="absolute inset-0 lg:hidden"
+      />
       <div>
         <p className="text-balance text-base font-medium text-neutral-900">{item.company}</p>
         <p className="text-balance text-base text-neutral-500">{item.role}</p>
@@ -524,12 +538,26 @@ function CommunityRow({
   onHover: () => void
   onUnhover: () => void
 }) {
+  const external = item.href.startsWith("http")
   return (
     <div
       onMouseEnter={onHover}
       onMouseLeave={onUnhover}
-      className="group -mx-3 flex items-center justify-between gap-6 border-x border-x-transparent border-y border-y-transparent px-3 py-4 transition-colors duration-100 lg:hover:cursor-help lg:hover:border-y-neutral-900/3 lg:hover:bg-neutral-75 lg:hover:duration-0"
+      className="group relative -mx-3 flex items-center justify-between gap-6 border-x border-x-transparent border-y border-y-transparent px-3 py-4 transition-colors duration-100 lg:hover:cursor-help lg:hover:border-y-neutral-900/3 lg:hover:bg-neutral-75 lg:hover:duration-0"
     >
+      {/* Below `lg` the sticky panel is hidden, so there's no hover preview
+          making an icon-only click target legible — the whole row becomes
+          the link instead. aria-hidden + tabIndex -1: a mouse/touch hit-area
+          only, not a second stop for assistive tech — the IconButton below
+          stays the one reachable, always-present link. */}
+      <a
+        href={item.href}
+        target={external ? "_blank" : undefined}
+        rel={external ? "noopener noreferrer" : undefined}
+        aria-hidden="true"
+        tabIndex={-1}
+        className="absolute inset-0 lg:hidden"
+      />
       <div className="flex items-center gap-6">
         <div
           className="h-14 w-14 shrink-0 bg-contain bg-center bg-no-repeat transition-[scale] duration-200 lg:group-hover:scale-95"
