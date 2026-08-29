@@ -493,7 +493,7 @@ function JourneyRow({
     <div
       onMouseEnter={onHover}
       onMouseLeave={onUnhover}
-      className="group relative -mx-3 flex items-center justify-between gap-6 border-x border-x-transparent border-y border-y-transparent px-3 py-3 transition-colors duration-100 lg:hover:cursor-help lg:hover:border-y-neutral-900/3 lg:hover:bg-neutral-75 lg:hover:duration-0"
+      className="group relative -mx-3 flex items-center justify-between gap-6 border-x border-x-transparent border-y border-y-transparent px-3 py-3 transition-colors duration-100 hover:border-y-neutral-900/3 hover:bg-neutral-75 hover:duration-0 lg:hover:cursor-help"
     >
       {/* Below `lg` the sticky panel is hidden, so there's no hover preview
           making an icon-only click target legible — the whole row becomes
@@ -543,7 +543,7 @@ function CommunityRow({
     <div
       onMouseEnter={onHover}
       onMouseLeave={onUnhover}
-      className="group relative -mx-3 flex items-center justify-between gap-6 border-x border-x-transparent border-y border-y-transparent px-3 py-4 transition-colors duration-100 lg:hover:cursor-help lg:hover:border-y-neutral-900/3 lg:hover:bg-neutral-75 lg:hover:duration-0"
+      className="group relative -mx-3 flex items-center justify-between gap-6 border-x border-x-transparent border-y border-y-transparent px-3 py-4 transition-colors duration-100 hover:border-y-neutral-900/3 hover:bg-neutral-75 hover:duration-0 lg:hover:cursor-help"
     >
       {/* Below `lg` the sticky panel is hidden, so there's no hover preview
           making an icon-only click target legible — the whole row becomes
@@ -560,7 +560,7 @@ function CommunityRow({
       />
       <div className="flex items-center gap-6">
         <div
-          className="h-14 w-14 shrink-0 bg-contain bg-center bg-no-repeat transition-[scale] duration-200 lg:group-hover:scale-95"
+          className="h-14 w-14 shrink-0 bg-contain bg-center bg-no-repeat transition-[scale] duration-200 group-hover:scale-95"
           style={{ backgroundImage: `url(${item.logo})` }}
         />
         <div>
@@ -627,13 +627,13 @@ function SongRow({ item, flowerIdx }: { item: Song; flowerIdx: number }) {
           <p className="text-balance text-base text-neutral-500">{item.artist}</p>
         </div>
       </div>
-      {/* Hidden below the single-column breakpoint: reserving its width there
-          would force the title to wrap, and touch/mobile has no hover to
-          reveal it anyway. Icon-only (no "Play on Spotify" label) — the
-          Spotify mark itself carries that information, same as CommunityRow's
-          per-item platform icons (Instagram/website) rather than a generic
-          external-link arrow. */}
-      <span className="hidden shrink-0 items-center text-neutral-200 opacity-0 transition-opacity duration-150 min-[960px]:flex group-hover:opacity-100">
+      {/* Shown (opacity-revealed on hover) at every breakpoint, same as
+          JourneyRow's/CommunityRow's icons — touch has no hover to reveal
+          it, but a mouse in a narrow window still does. Icon-only (no "Play
+          on Spotify" label) — the Spotify mark itself carries that
+          information, same as CommunityRow's per-item platform icons
+          (Instagram/website) rather than a generic external-link arrow. */}
+      <span className="flex shrink-0 items-center text-neutral-200 opacity-0 transition-opacity duration-150 group-hover:opacity-100">
         {/* group/icon is scoped to just this icon (not the row's own
             `group`), so the tint/scale/tick and tooltip below only react to
             a hover precise enough to land on the 24px mark itself — same
