@@ -493,7 +493,7 @@ function JourneyRow({
     <div
       onMouseEnter={onHover}
       onMouseLeave={onUnhover}
-      className="group relative -mx-3 flex items-center justify-between gap-6 border-x border-x-transparent border-y border-y-transparent px-3 py-3 transition-colors duration-100 hover:border-y-neutral-900/3 hover:bg-neutral-75 hover:duration-0 lg:hover:cursor-help"
+      className="group relative -mx-3 flex items-center justify-between gap-6 border-x border-x-transparent border-y border-y-transparent px-3 py-3 transition-colors duration-150 hover:border-y-neutral-900/3 hover:bg-neutral-75 hover:duration-0 lg:hover:cursor-help"
     >
       {/* Below `lg` the sticky panel is hidden, so there's no hover preview
           making an icon-only click target legible — the whole row becomes
@@ -543,7 +543,7 @@ function CommunityRow({
     <div
       onMouseEnter={onHover}
       onMouseLeave={onUnhover}
-      className="group relative -mx-3 flex items-center justify-between gap-6 border-x border-x-transparent border-y border-y-transparent px-3 py-4 transition-colors duration-100 hover:border-y-neutral-900/3 hover:bg-neutral-75 hover:duration-0 lg:hover:cursor-help"
+      className="group relative -mx-3 flex items-center justify-between gap-6 border-x border-x-transparent border-y border-y-transparent px-3 py-4 transition-colors duration-150 hover:border-y-neutral-900/3 hover:bg-neutral-75 hover:duration-0 lg:hover:cursor-help"
     >
       {/* Below `lg` the sticky panel is hidden, so there's no hover preview
           making an icon-only click target legible — the whole row becomes
@@ -649,7 +649,7 @@ function SongRow({ item, flowerIdx }: { item: Song; flowerIdx: number }) {
             className="pointer-events-none absolute bottom-full left-1/2 mb-1 hidden origin-bottom
             -translate-x-1/2 scale-90 whitespace-nowrap rounded-[var(--radius-sm)] bg-neutral-900/90
             px-1.5 py-0.5 text-xs text-neutral-50 opacity-0 transition-[opacity,scale] duration-[var(--duration-slow)]
-            ease-[var(--ease-out)] group-hover/icon:scale-100 group-hover/icon:opacity-100 group-hover/icon:delay-400 md:block"
+            ease-in group-hover/icon:scale-100 group-hover/icon:opacity-100 group-hover/icon:ease-[var(--ease-out)] group-hover/icon:delay-400 md:block"
           >
             Spotify
           </span>
