@@ -255,7 +255,7 @@ function ColophonButton() {
                 right: coords.right,
                 width: PANEL_WIDTH,
               }}
-              className="z-50 rounded-lg bg-surface p-4 text-sm text-secondary shadow-[0_12px_32px_-18px_rgba(0,0,0,0.35),0_0_0_1px_rgba(0,0,0,0.06)]"
+              className="z-50 rounded-lg bg-surface p-4 text-sm text-neutral-600 shadow-[0_12px_32px_-18px_rgba(0,0,0,0.35),0_0_0_1px_rgba(0,0,0,0.06)]"
             >
               <p className="mb-2 font-mono text-sm uppercase leading-[1.2] text-neutral-400">Colophon</p>
               <div className="flex flex-col gap-1">
