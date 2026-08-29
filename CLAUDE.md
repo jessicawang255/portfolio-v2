@@ -15,6 +15,12 @@ npm start        # Start production server (requires build first)
 
 There are no tests configured yet.
 
+## Git workflow
+
+Commit in small, specific increments rather than bundling several unrelated changes into one commit. Keep commit messages brief and simple (a short, plain-language summary — no elaborate bodies).
+
+Don't commit after every small edit — the user may be experimenting. Commit when a distinct chunk of work is actually finished: a bug is fixed, a feature works end-to-end, a refactor lands cleanly. Style/visual tweaks and in-progress exploration should stay uncommitted until they settle.
+
 ## Stack
 
 - **Next.js 16.2.7** with App Router — read `node_modules/next/dist/docs/01-app/` before writing routing or rendering code; this version has breaking changes from prior releases
