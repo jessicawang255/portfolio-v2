@@ -110,25 +110,30 @@ function EyeIcon() {
 
 // Sitewide total, persisted server-side (see app/api/views/route.ts) — the
 // footer is a fixture in the root layout, so there's one count, not a
-// per-page one. Counted at most once per browser session: a fresh session
-// POSTs (increment + return new total) and flags itself in sessionStorage;
-// any later read in the same session just GETs the current total instead of
-// re-incrementing it.
-const VIEW_SESSION_FLAG = "site-view-counted"
+// per-page one. Counted at most once per browser, not per tab/session:
+// sessionStorage resets on every new tab (it's scoped per top-level
+// browsing context), which double-counted a single visitor opening a
+// second tab — localStorage is scoped to the browser/device itself, so a
+// fresh browser POSTs (increment + return new total) and flags itself
+// there; any later visit, in any tab, just GETs the current total instead
+// of re-incrementing it. Clearing site data or switching browser/device
+// still counts as a new visitor — this is an approximation, not a precise
+// unique-visitor count, by design (no server-side tracking).
+const VIEW_STORAGE_FLAG = "site-view-counted"
 
 function ViewCounter() {
   const [count, setCount] = useState<number | null>(null)
 
   useEffect(() => {
     let cancelled = false
-    const alreadyCounted = sessionStorage.getItem(VIEW_SESSION_FLAG) === "1"
+    const alreadyCounted = localStorage.getItem(VIEW_STORAGE_FLAG) === "1"
 
     fetch("/api/views", { method: alreadyCounted ? "GET" : "POST" })
       .then((res) => res.json())
       .then((data: { count: number }) => {
         if (cancelled) return
         setCount(data.count)
-        if (!alreadyCounted) sessionStorage.setItem(VIEW_SESSION_FLAG, "1")
+        if (!alreadyCounted) localStorage.setItem(VIEW_STORAGE_FLAG, "1")
       })
       .catch(() => {})
 
