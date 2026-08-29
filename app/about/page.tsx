@@ -2,6 +2,8 @@ import type { Metadata } from "next"
 import { AboutContent } from "@/components/sections/AboutContent"
 import { getTracksByUrls } from "@/lib/spotify"
 
+// No description/openGraph/twitter here on purpose — the root layout's
+// site-wide versions (and its one OG image) carry through unchanged.
 export const metadata: Metadata = {
   title: "About",
 }

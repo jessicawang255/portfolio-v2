@@ -1,5 +1,5 @@
 import { ViewTransition } from "react"
-import type { Metadata } from "next"
+import type { Metadata, Viewport } from "next"
 import { Roboto_Mono } from "next/font/google"
 import { DotField } from "@/components/ui/DotField"
 import { Nav } from "@/components/layout/Nav"
@@ -7,6 +7,7 @@ import { MobileNav } from "@/components/layout/MobileNav"
 import { Footer } from "@/components/layout/Footer"
 import { ScrollRevealController } from "@/components/layout/ScrollRevealController"
 import { ScrollToTop } from "@/components/layout/ScrollToTop"
+import { siteDescription, siteName, siteUrl } from "@/lib/site"
 import "./globals.css"
 
 const robotoMono = Roboto_Mono({
@@ -14,13 +15,33 @@ const robotoMono = Roboto_Mono({
   variable: "--font-roboto-mono",
 })
 
+const defaultTitle = "Jessica Wang · Product Designer"
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: {
     template: "%s · Jessica Wang",
-    default: "Jessica Wang · Product Designer",
+    default: defaultTitle,
   },
-  description:
-    "I'm Jessica. I'm a product designer. 🥑",
+  description: siteDescription,
+  openGraph: {
+    title: defaultTitle,
+    description: siteDescription,
+    url: "/",
+    siteName,
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: defaultTitle,
+    description: siteDescription,
+  },
+}
+
+// Matches --color-chrome (#F9FAFB) so mobile Safari's UI chrome blends into
+// the page background — the site has no dark mode to branch on.
+export const viewport: Viewport = {
+  themeColor: "#F9FAFB",
 }
 
 export default function RootLayout({

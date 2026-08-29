@@ -6,6 +6,8 @@ export function generateStaticParams() {
   return projects.map((p) => ({ slug: p.slug }))
 }
 
+// Only the title varies per case study — description/openGraph/twitter/OG
+// image are left unset so the root layout's site-wide versions carry through.
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
   const project = projects.find((p) => p.slug === slug)
