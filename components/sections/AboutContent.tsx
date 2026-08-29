@@ -748,14 +748,20 @@ export function AboutContent({ spotifyPlaylist }: { spotifyPlaylist: Song[] | nu
             </motion.div>
             <div className="flex flex-col gap-0">
               {journeyItems.map((item) => (
-                // relative + hover/focus-within z — fadeUp's y-transform
-                // leaves each row as its own stacking context even after
-                // settling (transform: translateY(0px) ≠ none), which
-                // otherwise traps the icon's tooltip below whichever
+                // relative + a standing (not hover-conditional) z — fadeUp's
+                // y-transform leaves each row as its own stacking context
+                // even after settling (transform: translateY(0px) ≠ none),
+                // which otherwise traps the icon's tooltip below whichever
                 // sibling row happens to come later in the DOM. Elevating
                 // the whole row here (not just the tooltip) lets it clear
-                // every sibling regardless of paint order.
-                <motion.div key={item.id} variants={fadeUp} className="relative hover:z-10 focus-within:z-10">
+                // every sibling regardless of paint order — kept on
+                // permanently rather than toggled by hover/focus-within,
+                // since toggling it off the instant the mouse leaves used to
+                // yank the row back into normal paint order while its
+                // tooltip was still fading out, flashing a stale fragment of
+                // it. Rows never overlap each other at rest, so a standing
+                // z-10 on every one is free.
+                <motion.div key={item.id} variants={fadeUp} className="relative z-10">
                   <JourneyRow
                     item={item}
                     onHover={() => handleRowHover(item.id)}
@@ -779,7 +785,7 @@ export function AboutContent({ spotifyPlaylist }: { spotifyPlaylist: Song[] | nu
             <div className="flex flex-col">
               {communities.map((item) => (
                 // Same stacking-context fix as journeyItems above.
-                <motion.div key={item.id} variants={fadeUp} className="relative hover:z-10 focus-within:z-10">
+                <motion.div key={item.id} variants={fadeUp} className="relative z-10">
                   <CommunityRow
                     item={item}
                     onHover={() => handleRowHover(item.id)}

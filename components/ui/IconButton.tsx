@@ -58,13 +58,18 @@ export function IconButton({ href, label, icon, size = 24, className, copyText, 
     // `before:inset-[-11px]` pads the link's hit area out to ~44px square
     // (the Apple HIG / Material touch-target minimum) without growing the
     // visible icon — same trick iOS uses for its own small glyph buttons.
+    // `z-50` is a standing elevation, not hover-conditional — it used to be
+    // hover:/focus-visible:-only, but that dropped the icon back into normal
+    // paint order the instant the mouse left, while the tooltip below was
+    // still mid-fade, flashing a stale fragment of it. Icons never overlap
+    // each other at rest, so keeping this on all the time is free.
     <a
       href={href}
       aria-label={displayLabel}
       target={external ? "_blank" : undefined}
       rel={external ? "noopener noreferrer" : undefined}
       onClick={handleClick}
-      className={`group/icon relative inline-flex text-icon-social transition-[color,scale] duration-150 before:absolute before:inset-[-11px] before:content-[''] hover:z-50 hover:scale-110 hover:text-nav-link-hover focus-visible:z-50 motion-safe:hover:animate-[icon-tick_var(--duration-slow)_var(--ease-out)] ${className ?? ""}`}
+      className={`group/icon relative z-50 inline-flex text-icon-social transition-[color,scale] duration-150 before:absolute before:inset-[-11px] before:content-[''] hover:scale-110 hover:text-nav-link-hover motion-safe:hover:animate-[icon-tick_var(--duration-slow)_var(--ease-out)] ${className ?? ""}`}
       {...rest}
     >
       <span
