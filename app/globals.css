@@ -331,26 +331,16 @@ body {
 /* ─── Case study card — base transition states ──────────────────────────────── */
 
 /* Thumbnail box scales; default = no transform. Ratio comes from whichever
-   --thumb-ratio-* custom property CaseStudyCard sets: below the release
-   breakpoint, use --thumb-ratio-mobile if a section opted in, otherwise fall
-   back to the card's own desktop ratio; at/above it, always the card's own
-   ratio. Plain `.card-thumb` releases at `md` (768px — Case Studies);
-   `.card-thumb-mobile-wide` releases later, at `lg` (960px — Discover More;
-   matches --breakpoint-lg above — keep the two in sync), since 4 columns
-   right at `md` leaves each one too narrow. */
+   --thumb-ratio-* custom property CaseStudyCard sets: below `md` (768px),
+   use --thumb-ratio-mobile if a section opted in, otherwise fall back to
+   the card's own desktop ratio; at/above `md`, always the card's own ratio. */
 .card-thumb {
   transition: transform 400ms cubic-bezier(0.22, 1, 0.36, 1);
   aspect-ratio: var(--thumb-ratio-mobile, var(--thumb-ratio-desktop));
 }
 
 @media (min-width: 768px) {
-  .card-thumb:not(.card-thumb-mobile-wide) {
-    aspect-ratio: var(--thumb-ratio-desktop);
-  }
-}
-
-@media (min-width: 960px) {
-  .card-thumb-mobile-wide {
+  .card-thumb {
     aspect-ratio: var(--thumb-ratio-desktop);
   }
 }
