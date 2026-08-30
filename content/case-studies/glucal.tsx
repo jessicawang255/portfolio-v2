@@ -560,14 +560,12 @@ export default function Glucal() {
         tag="it's done! what did i learn?"
         items={[
           {
-            // TODO: replace with a real first takeaway from building gluCal.
-            heading: "TODO: first takeaway",
-            body: "TODO — add first takeaway here.",
+            heading: "Design and development work together, not one after another",
+            body: "I had the misconception that design and dev were separate, clean processes - you finish one, then hand it off to the other. Deciding how the insulin log and food diary should sync proved me wrong. The technical reality of keeping two separate database tables in sync directly shaped the design decision, and vice versa.",
           },
           {
-            // TODO: replace with a real second takeaway from building gluCal.
-            heading: "TODO: second takeaway",
-            body: "TODO — add second takeaway here.",
+            heading: "Get feedback on rough ideas",
+            body: "I tried four different, polished versions of a button before showing my work to anyone. The idea that actually worked - nesting the button - came from one offhand comment in a single user interview. Especially when working alone, feedback is most useful when early and rough, before you invest time in polishing a solution that may not be the right one.",
           },
         ]}
       />
