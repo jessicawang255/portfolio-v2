@@ -533,8 +533,8 @@ export default function Retrospect() {
                         body: "My team fell victim to scope creep. From the get-go we added collaboration, sharing, and a fancy onboarding, and we tried to build it all at once. I learned how important it is to start with the simplest possible version of the product,  get it in front of users early, and iterate based on real feedback (not assumptions).",
                     },
                     {
-                        heading: "Placeholder reflection",
-                        body: "Placeholder reflection — add a second takeaway here.",
+                        heading: "Don't just agree, push back",
+                        body: "This was my first time working alongside a PM and developers, and my instinct was to defer. If the PM had already prioritized something, or a dev said another approach would be easier, I assumed they'd thought it through more than I had. I learned that I was the one who'd actually talked to users and reasoned through the interaction, and staying quiet just because someone said their opinion first wasted that.",
                     },
                 ]}
             />
