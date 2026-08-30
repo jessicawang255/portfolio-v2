@@ -114,22 +114,22 @@ export function CaseStudyCard({ project, imageRatio, mobileImageRatio, videoPosi
               }
             />
           )}
-          {thumbnail && !isVideo && (
+          {thumbnail && !isVideo && (imageInset ? (
+            // `fill` forces width/height:100% of its own positioned parent
+            // (Next throws if you fight that in style) — so to inset the
+            // image, inset a wrapper instead and let `fill` fill that.
+            <div className="absolute" style={{ inset: `${imageInset}%` }}>
+              <Image src={thumbnail} alt={title} fill className="object-contain" sizes="(max-width: 768px) 100vw, 50vw" />
+            </div>
+          ) : (
             <Image
               src={thumbnail}
               alt={title}
               fill
-              style={imageInset ? { inset: `${imageInset}%` } : undefined}
-              className={
-                imageInset
-                  ? "object-contain"
-                  : usesThumbnailRatio
-                    ? "object-cover md:object-contain"
-                    : "object-cover"
-              }
+              className={usesThumbnailRatio ? "object-cover md:object-contain" : "object-cover"}
               sizes="(max-width: 768px) 100vw, 50vw"
             />
-          )}
+          ))}
         </div>
 
         {/* Text block */}
