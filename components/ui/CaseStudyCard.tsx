@@ -18,12 +18,20 @@ type Props = {
   // the bottom instead. No effect on images or on boxes that don't crop.
   videoPosition?: "center" | "top"
   // Shrinks the image within its box by this percentage on every side
-  // (switches fit to `object-contain` so nothing crops) instead of filling
-  // the box edge-to-edge. Only sensible when the asset's own background —
-  // baked into the file, or transparent over the card's bg color — matches
-  // the box color, so the margin this reveals reads as intentional padding
-  // rather than a mismatched border.
+  // instead of filling the box edge-to-edge. Only sensible when the asset's
+  // own background — baked into the file, or transparent over the card's bg
+  // color — matches the box color, so the margin this reveals reads as
+  // intentional padding rather than a mismatched border.
   imageInset?: number
+  // How the image fills the inset box: `contain` (default) shows the whole
+  // asset uncropped, so any padding baked into the file stays exactly as
+  // drawn. `cover` scales up and crops instead — for an asset whose own
+  // canvas has uneven built-in padding (e.g. Snippets: ~12% empty margin
+  // above the screenshots, ~0% below), cropping into the excess is the only
+  // way to balance it without re-exporting the file, and is only safe
+  // toward the edge that actually has slack to spare. No effect without
+  // imageInset.
+  imageFit?: "contain" | "cover"
 }
 
 export function ArrowUpRight() {
@@ -57,7 +65,14 @@ export function Separator({ children, className = "" }: { children: ReactNode; c
   )
 }
 
-export function CaseStudyCard({ project, imageRatio, mobileImageRatio, videoPosition = "center", imageInset }: Props) {
+export function CaseStudyCard({
+  project,
+  imageRatio,
+  mobileImageRatio,
+  videoPosition = "center",
+  imageInset,
+  imageFit = "contain",
+}: Props) {
   const { slug, title, name, status, disciplines, bg, thumbnail, thumbnailWidth, thumbnailHeight, href } = project
 
   const isGradient = bg.startsWith("linear-gradient")
@@ -119,7 +134,13 @@ export function CaseStudyCard({ project, imageRatio, mobileImageRatio, videoPosi
             // (Next throws if you fight that in style) — so to inset the
             // image, inset a wrapper instead and let `fill` fill that.
             <div className="absolute" style={{ inset: `${imageInset}%` }}>
-              <Image src={thumbnail} alt={title} fill className="object-contain" sizes="(max-width: 768px) 100vw, 50vw" />
+              <Image
+                src={thumbnail}
+                alt={title}
+                fill
+                className={imageFit === "cover" ? "object-cover object-bottom" : "object-contain"}
+                sizes="(max-width: 768px) 100vw, 50vw"
+              />
             </div>
           ) : (
             <Image

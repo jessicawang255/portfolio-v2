@@ -8,17 +8,25 @@ import { stagger, fadeUp } from "@/lib/motion"
 // One shared box ratio for every card, at every width — a single row of 4
 // reads as an uneven skyline if each keeps its own thumbnail ratio (unlike
 // the 2-up masonry pairs in CaseStudies, where an offset pair still reads as
-// intentional). 3:2 sits a bit shorter than the harmonic mean of the widest
+// intentional). 8:5 (1.6) sits shorter than the harmonic mean of the widest
 // natural ratio here (Google Calendar, 260/140 ≈ 1.86) and the narrowest
-// (Hack Western, 230/200 = 1.15) would give (1.42) — and lands in the same
-// 1.47–1.53 cluster CaseStudies' own imageRatio boxes already use.
-const DISCOVER_IMAGE_RATIO: [number, number] = [750, 500]
+// (Hack Western, 230/200 = 1.15) would give (1.42) — deliberately so, to
+// hug the artwork rather than average it.
+const DISCOVER_IMAGE_RATIO: [number, number] = [800, 500]
 
 // Shrinks each thumbnail off the edges of its box rather than filling it —
 // every asset here is drawn on (or, for Snippets, photographed against) a
 // background that matches its card's bg color, so the margin this reveals
 // reads as padding, not a mismatched border.
 const DISCOVER_IMAGE_INSET = 14
+
+// Snippets' own screenshot bakes in ~12% empty margin above the phone
+// mockups but ~0% below (they're flush with the canvas edge) — unlike the
+// other three assets, which are close to evenly padded on their own. With
+// `contain` that native imbalance shows through no matter the box height;
+// cropping into the top's slack (nothing to lose off the bottom) is what
+// actually balances it.
+const SNIPPETS_SLUG = "snippets"
 
 export function DiscoverMore() {
   const reduce = useReducedMotion()
@@ -56,6 +64,7 @@ export function DiscoverMore() {
               project={item}
               imageRatio={DISCOVER_IMAGE_RATIO}
               imageInset={DISCOVER_IMAGE_INSET}
+              imageFit={item.slug === SNIPPETS_SLUG ? "cover" : "contain"}
             />
           </motion.div>
         ))}
