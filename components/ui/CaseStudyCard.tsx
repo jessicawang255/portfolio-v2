@@ -8,30 +8,20 @@ type Props = {
   // Explicit [width, height] box ratio for cards without a real thumbnail
   // image (bento layout on the home page). Overrides thumbnailWidth/Height.
   imageRatio?: [number, number]
-  // Overrides the box ratio below `md` (768px) only (see
+  // Overrides the box ratio below `mobileBreakpoint` only (see
   // --thumb-ratio-mobile in globals.css) — lets a grid of cards with
   // different natural ratios line up to one shared ratio on mobile while
   // each card keeps its own ratio above that breakpoint.
   mobileImageRatio?: [number, number]
+  // Which breakpoint releases the box back to its own ratio: `md` (768px,
+  // default — Case Studies) or `lg` (960px — Discover More, whose 4 columns
+  // need more room before `md` stops being too narrow). Only meaningful
+  // alongside mobileImageRatio.
+  mobileBreakpoint?: "md" | "lg"
   // Where a cropped video thumbnail anchors within its box — `center`
   // (default) or `top` to keep the top of the frame intact and crop from
   // the bottom instead. No effect on images or on boxes that don't crop.
   videoPosition?: "center" | "top"
-  // Shrinks the image within its box by this percentage on every side
-  // instead of filling the box edge-to-edge. Only sensible when the asset's
-  // own background — baked into the file, or transparent over the card's bg
-  // color — matches the box color, so the margin this reveals reads as
-  // intentional padding rather than a mismatched border.
-  imageInset?: number
-  // How the image fills the inset box: `contain` (default) shows the whole
-  // asset uncropped, so any padding baked into the file stays exactly as
-  // drawn. `cover` scales up and crops instead — for an asset whose own
-  // canvas has uneven built-in padding (e.g. Snippets: ~12% empty margin
-  // above the screenshots, ~0% below), cropping into the excess is the only
-  // way to balance it without re-exporting the file, and is only safe
-  // toward the edge that actually has slack to spare. No effect without
-  // imageInset.
-  imageFit?: "contain" | "cover"
 }
 
 export function ArrowUpRight() {
@@ -65,14 +55,7 @@ export function Separator({ children, className = "" }: { children: ReactNode; c
   )
 }
 
-export function CaseStudyCard({
-  project,
-  imageRatio,
-  mobileImageRatio,
-  videoPosition = "center",
-  imageInset,
-  imageFit = "contain",
-}: Props) {
+export function CaseStudyCard({ project, imageRatio, mobileImageRatio, mobileBreakpoint = "md", videoPosition = "center" }: Props) {
   const { slug, title, name, status, disciplines, bg, thumbnail, thumbnailWidth, thumbnailHeight, href } = project
 
   const isGradient = bg.startsWith("linear-gradient")
@@ -80,6 +63,7 @@ export function CaseStudyCard({
   const isVideo = thumbnail?.endsWith(".mp4") || thumbnail?.endsWith(".webm")
   const hasMetadata = name || status || (disciplines && disciplines.length > 0)
   const isExternal = Boolean(href)
+  const isWideMobile = mobileBreakpoint === "lg"
 
   // With no explicit imageRatio, size the box to the thumbnail's own aspect
   // ratio instead of forcing a uniform crop — lets Discover More's bento
@@ -113,7 +97,10 @@ export function CaseStudyCard({
             every width, mobile included, so height shrinks with width
             instead of the box holding a fixed mobile height and letting the
             crop vary card-to-card. */}
-        <div className="card-thumb relative w-full overflow-hidden" style={thumbStyle}>
+        <div
+          className={`card-thumb relative w-full overflow-hidden${isWideMobile ? " card-thumb-mobile-wide" : ""}`}
+          style={thumbStyle}
+        >
           {thumbnail && isVideo && (
             <video
               src={thumbnail}
@@ -123,34 +110,29 @@ export function CaseStudyCard({
               playsInline
               className={
                 (usesThumbnailRatio
-                  ? "absolute inset-0 h-full w-full object-cover md:object-contain"
+                  ? isWideMobile
+                    ? "absolute inset-0 h-full w-full object-cover lg:object-contain"
+                    : "absolute inset-0 h-full w-full object-cover md:object-contain"
                   : "absolute inset-0 h-full w-full object-cover") +
                 (videoPosition === "top" ? " object-top" : "")
               }
             />
           )}
-          {thumbnail && !isVideo && (imageInset ? (
-            // `fill` forces width/height:100% of its own positioned parent
-            // (Next throws if you fight that in style) — so to inset the
-            // image, inset a wrapper instead and let `fill` fill that.
-            <div className="absolute" style={{ inset: `${imageInset}%` }}>
-              <Image
-                src={thumbnail}
-                alt={title}
-                fill
-                className={imageFit === "cover" ? "object-cover object-bottom" : "object-contain"}
-                sizes="(max-width: 768px) 100vw, 50vw"
-              />
-            </div>
-          ) : (
+          {thumbnail && !isVideo && (
             <Image
               src={thumbnail}
               alt={title}
               fill
-              className={usesThumbnailRatio ? "object-cover md:object-contain" : "object-cover"}
+              className={
+                usesThumbnailRatio
+                  ? isWideMobile
+                    ? "object-cover lg:object-contain"
+                    : "object-cover md:object-contain"
+                  : "object-cover"
+              }
               sizes="(max-width: 768px) 100vw, 50vw"
             />
-          ))}
+          )}
         </div>
 
         {/* Text block */}
