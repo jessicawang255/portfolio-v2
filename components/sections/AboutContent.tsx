@@ -371,7 +371,7 @@ function AboutPanelImage({ caption, aspect, width, src, alt, objectPosition }: P
         </div>
       )}
       {caption ? (
-        <p className="mt-2 text-sm leading-[1.5] text-neutral-400 italic">{caption}</p>
+        <p className="mt-2 text-sm leading-[1.5] text-neutral-500 italic">{caption}</p>
       ) : null}
     </div>
   )
@@ -407,7 +407,7 @@ function FunPanelContent() {
             />
           </div>
         </div>
-        <p className="mt-2 text-sm leading-[1.5] text-neutral-400 italic">
+        <p className="mt-2 text-sm leading-[1.5] text-neutral-500 italic">
           Left: Performing at the 2025 International Championship of Collegiate A cappella (the exact competition in
           pitch perfect). Right: My a cappella team, Repercussions 💛
         </p>
