@@ -77,7 +77,7 @@ export async function MoreCaseStudies({ currentSlug }: Props) {
                   <h3 className="text-balance text-base font-medium leading-[1.3] text-neutral-800">
                     {title}
                   </h3>
-                  <p className="mt-1 text-balance font-mono text-sm text-neutral-300">
+                  <p className="mt-1 text-balance text-base text-neutral-500">
                     {name}
                     {name && status && <Separator className="mx-1.5">•</Separator>}
                     {status}

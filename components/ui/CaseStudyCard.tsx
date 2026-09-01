@@ -185,7 +185,7 @@ export function CaseStudyCard({
             </h3>
 
             {hasMetadata && (
-              <p className="text-balance font-mono text-sm text-neutral-400">
+              <p className="text-balance text-base text-neutral-500">
                 {name}
                 {name && (status || disciplines?.length) && <Separator className="mx-1.5">•</Separator>}
                 {status}
