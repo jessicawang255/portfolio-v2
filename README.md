@@ -2,9 +2,9 @@
   <img src="app/icon.svg" width="64" height="64" alt="Jessica Wang logo" />
 </p>
 
-<h1>Jessica Wang · Product Designer</h1>
+<h1>Jessica Wang</h1>
 
-<p>Hi, I'm Jessica. Welcome to the source for my product design portfolio, and my little corner of the internet. Designed in Figma, built with Next.js.</p>
+<p>Hi, I'm Jessica 🌠 Welcome to the source for my product design portfolio, and my little corner of the internet. Designed in Figma, built with Next.js.</p>
 
 ## What you'll find
 
