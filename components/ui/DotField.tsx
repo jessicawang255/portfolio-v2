@@ -83,14 +83,14 @@ export function DotField({
   // Always-fresh ref so the canvas loop can read the latest color without
   // the effect needing to re-run (which would reset all spring state).
   const accentColorRef = useRef(accentRgb)
-  accentColorRef.current = accentRgb
   // Exposes startRAF from inside the effect so the nudge effect below
   // can kick the loop when the color changes while the cursor is idle.
   const startRAFRef = useRef<() => void>(() => {})
 
-  // Kick the RAF whenever accentColor changes so the lerp runs even if
-  // the cursor hasn't moved.
+  // Refresh the ref and kick the RAF whenever accentColor changes, so the
+  // lerp runs even if the cursor hasn't moved.
   useEffect(() => {
+    accentColorRef.current = accentRgb
     startRAFRef.current()
   }, [accentRgb])
 

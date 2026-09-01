@@ -44,7 +44,7 @@ export function Hero() {
           variants={fadeUp}
           className="mb-4 max-w-lg text-balance font-normal text-neutral-600 text-base"
         >
-          I'm a product designer. I strive to craft experiences that feel so simple, they disappear. Right now, I'm most curious about how AI will reshape interfaces and systems.
+          I&rsquo;m a product designer. I strive to craft experiences that feel so simple, they disappear. Right now, I&rsquo;m most curious about how AI will reshape interfaces and systems.
         </motion.p>
 
         <motion.p

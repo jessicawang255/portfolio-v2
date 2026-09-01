@@ -203,12 +203,13 @@ export function ScrollRevealController({ frameId, heroId, heroFrameId }: Props) 
       // last applied here.
       resetFooterFade(footer!)
     }
-    // frameId/heroId are constant per call site (each layout always passes
-    // the same pair) but are included here for correctness. pathname is what
-    // actually matters: it re-runs setup on every navigation, including
-    // between two different case studies (a dynamic /work/[slug] route,
-    // where the frame/hero measurements genuinely need to be re-taken).
-  }, [pathname, frameId, heroId])
+    // frameId/heroId/heroFrameId are constant per call site (each layout
+    // always passes the same set) but are included here for correctness.
+    // pathname is what actually matters: it re-runs setup on every
+    // navigation, including between two different case studies (a dynamic
+    // /work/[slug] route, where the frame/hero measurements genuinely need
+    // to be re-taken).
+  }, [pathname, frameId, heroId, heroFrameId])
 
   return null
 }

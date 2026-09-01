@@ -850,13 +850,15 @@ export function ScreenSpotlight({ flows, className }: ScreenSpotlightProps) {
                         // fixed w-[52px] h-28 pair encoded — resolves off
                         // the fixed 52px width above at every breakpoint,
                         // there's no shrink left anywhere to distort it.
-                        className="aspect-[52/112] w-[52px] shrink-0 snap-start"
+                        className="relative aspect-[52/112] w-[52px] shrink-0 snap-start"
                       >
-                        <img
+                        <Image
                           src={s.src}
                           alt=""
+                          fill
                           draggable={false}
-                          className={`screen-thumb block h-full w-full select-none rounded-[9px] object-cover object-top outline transition-opacity duration-200 ease-out focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 ${
+                          sizes="52px"
+                          className={`screen-thumb select-none rounded-[9px] object-cover object-top outline transition-opacity duration-200 ease-out focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 ${
                             active
                               ? "opacity-100 outline-[1.5px] outline-[var(--cs-accent)] outline-offset-2"
                               : "opacity-40 outline-1 outline-neutral-100 hover:opacity-70"

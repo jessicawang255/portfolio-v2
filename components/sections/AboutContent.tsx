@@ -339,15 +339,6 @@ function SectionHeader({ label, action }: { label: string; action?: React.ReactN
   )
 }
 
-function PlaceholderBox({ className }: { className?: string }) {
-  return (
-    <div className={`flex items-center rounded-2xl border border-neutral-900 px-8 ${className ?? ""}`}>
-      <p className="text-base font-bold text-red-600">CONTENT INSIDE (this is temp)</p>
-    </div>
-  )
-  
-}
-
 // 2px radius per spec. Renders the real photo once src/alt are set on the
 // PanelImage entry, otherwise falls back to an aspect-ratio placeholder.
 // `objectPosition` overrides the crop anchor (default center) for photos

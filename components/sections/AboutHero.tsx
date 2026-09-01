@@ -292,6 +292,12 @@ export function AboutHero() {
                     className="about-photo-layers"
                     ref={(el) => { layersRefs.current[i] = el }}
                   >
+                    {/* Plain <img>, not next/image: runShimmerTransition above
+                        crossfades by creating a sibling <img> and later
+                        reassigning this element's `.src` directly (base.src =
+                        toSrc) — next/image's own loading/lifecycle management
+                        doesn't support that kind of external DOM mutation. */}
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       ref={(el) => { baseImgRefs.current[i] = el }}
                       src={srcs[indices[i]]}
