@@ -66,13 +66,13 @@ export function CaseStudyMeta({ fields }: { fields: MetaField[] }) {
         <div key={label}>
           <p className="font-mono text-sm text-neutral-400 mb-1">{label}</p>
           {Array.isArray(value) ? (
-            <div className="text-base text-neutral-500">
+            <div className="text-base text-neutral-600">
               {value.map((item, i) => (
                 <p key={i} className="m-0">{item}</p>
               ))}
             </div>
           ) : (
-            <p className="text-base text-neutral-500">{value}</p>
+            <p className="text-base text-neutral-600">{value}</p>
           )}
         </div>
       ))}
