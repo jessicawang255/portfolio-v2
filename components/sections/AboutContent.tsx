@@ -734,7 +734,7 @@ export function AboutContent({ spotifyPlaylist }: { spotifyPlaylist: Song[] | nu
 
   return (
     <div className="container-main pt-9 pb-9">
-      <div className="grid grid-cols-1 gap-x-[54px] lg:grid-cols-[minmax(0,min(640px,44%))_1fr]">
+      <div className="grid grid-cols-1 gap-x-[54px] lg:grid-cols-[minmax(0,min(586px,40%))_1fr]">
         {/* Left column — sections 1-4 */}
         {/* gap-20 flat at every breakpoint — matches Home's own section gap
             (see app/(home)/page.tsx), not a responsive step. */}
