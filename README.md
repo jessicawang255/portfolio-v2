@@ -1,36 +1,81 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<p>
+  <img src="app/icon.svg" width="64" height="64" alt="Jessica Wang logo" />
+</p>
 
-## Getting Started
+<h1>Jessica Wang · Product Designer</h1>
 
-First, run the development server:
+<p>Hi, I'm Jessica. Welcome to the source for my product design portfolio, and my little corner of the internet. Designed in Figma, built with Next.js.</p>
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## What you'll find
+
+- **Home**: landing page and project index
+- **Case studies**: in-depth write-ups:
+  - `hack-western`: designing an inviting application experience for 2,000 hackers
+  - `retrospect`: a digital time capsule to capture memories with friends
+  - `glucal`: easing the daily burdens of diabetes management
+  - `autumn`: boosting discovery for a grief support platform
+- **About**: my experiences, communities, hobbies, and favourite songs
+- More coming soon!
+
+## Tech stack
+- Framework: Next.js App Router
+- Styling: Tailwind CSS
+- Language: TypeScript
+- Animation: Framer Motion, Lottie
+- Data: Redis (page view counts), Spotify Web API (about page playlist)
+- Analytics: Vercel Analytics
+- Deployment: Vercel
+
+## Project structure
+
+```
+app/                  routes (App Router)
+  (home)/             landing page
+  about/               about page
+  work/[slug]/        case study pages
+  api/views/           view-count endpoint (Redis)
+content/              case study copy & section data
+components/
+  ui/ layout/ sections/ cs/ motion/
+lib/                  shared utilities (site config, Spotify, motion helpers)
+public/               static assets & images
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Getting started
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm install
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Open [http://localhost:3000](http://localhost:3000).
 
-## Learn More
+### Environment variables
 
-To learn more about Next.js, take a look at the following resources:
+Create a `.env.local` with:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+REDIS_URL=
+SPOTIFY_CLIENT_ID=
+SPOTIFY_CLIENT_SECRET=
+SPOTIFY_REFRESH_TOKEN=
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+`NEXT_PUBLIC_SITE_URL` can also be set to override the canonical site URL used for metadata and OG images (defaults to the Vercel deployment URL).
 
-## Deploy on Vercel
+## Scripts
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+npm run dev      # start dev server
+npm run build    # production build
+npm start        # start production server (run build first)
+npm run lint     # run ESLint
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Deployment
+
+Deployed on [Vercel](https://vercel.com), building from the `main` branch.
+
+## Ownership
+
+Designed and built by Jessica Wang. All content, case studies, and imagery are my own!
