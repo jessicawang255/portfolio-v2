@@ -242,12 +242,16 @@ export default function HackWestern() {
         tag="it's done! what did i learn?"
         items={[
           {
-            heading: "A good design system leaves nothing unsaid",
-            body: "I learned that a good design system is more than just a set of components and rules. It should also include clear documentation and examples, so that anyone can understand how to use it effectively. This ensures consistency and quality across the product, even when different designers or developers are working on it.",
+            heading: "Delight only works if people notice it",
+            body: "The mobile sticker drawer let people collect stickers as they applied, but almost no one found it until we changed its icon to show the last sticker someone earned. A delightful detail means nothing if no one finds it — you have to design the invitation to it, too.",
           },
           {
-            heading: "Placeholder reflection",
-            body: "Placeholder reflection — add a second takeaway here.",
+            heading: "A blank canvas creates decision paralysis",
+            body: "When designing the stickerbook, I had to decide how much control to give people over colour and sticker placement — a full colour picker, or a constrained set of palettes. Though a blank canvas sounds like more freedom, it created too many decisions and nothing to start from. When creating tools that allow for user input and creativity, guardrails help users actually get started instead of limit them.",
+          },
+          {
+            heading: "A good design system leaves nothing unsaid",
+            body: "I learned that a good design system is more than just a set of components and rules. It should also include clear documentation and examples, so that anyone can understand how to use it effectively. This ensures consistency and quality across the product, even when different designers or developers are working on it.",
           },
         ]}
       />
