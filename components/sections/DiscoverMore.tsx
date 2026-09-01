@@ -65,6 +65,7 @@ export function DiscoverMore() {
               imageRatio={DISCOVER_IMAGE_RATIO}
               imageInset={DISCOVER_IMAGE_INSET}
               imageFit={item.slug === SNIPPETS_SLUG ? "cover" : "contain"}
+              titleSize="responsive"
             />
           </motion.div>
         ))}

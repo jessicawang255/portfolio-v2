@@ -37,6 +37,15 @@ type Props = {
   // toward the edge that actually has slack to spare. No effect without
   // imageInset.
   imageFit?: "contain" | "cover"
+  // Title size: `lg` (default, flat 18px) for Case Studies, whose mobile
+  // grid is a single full-width column so 18px never gets cramped.
+  // `responsive` (16px below `lg`, 18px from `lg` up) for Discover More,
+  // whose 2-col grid stays narrow through the whole phone/small-tablet
+  // range and wraps multi-word titles to 3 lines at 18px there. Pinned to
+  // the same `lg` breakpoint as Discover More's own grid-cols-2→4 switch
+  // (see DiscoverMore.tsx) so the two can't drift apart — the bump always
+  // lands exactly when the grid actually gives each card more room.
+  titleSize?: "lg" | "responsive"
 }
 
 export function ArrowUpRight() {
@@ -70,6 +79,7 @@ export function CaseStudyCard({
   videoPosition = "center",
   imageInset,
   imageFit = "contain",
+  titleSize = "lg",
 }: Props) {
   const { slug, title, name, status, bg, thumbnail, thumbnailWidth, thumbnailHeight, href } = project
 
@@ -172,7 +182,11 @@ export function CaseStudyCard({
               breakpoint (dropped the old gap-0/md:gap-1 split) for the same
               reason. */}
           <div className="flex flex-col gap-0.5">
-            <h3 className="text-balance text-base font-medium leading-[1.3] text-neutral-800">
+            <h3
+              className={`text-balance font-medium leading-[1.3] text-neutral-800 ${
+                titleSize === "responsive" ? "text-base lg:text-lg" : "text-lg"
+              }`}
+            >
               {title}
             </h3>
 

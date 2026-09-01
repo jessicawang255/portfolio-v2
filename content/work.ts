@@ -32,7 +32,7 @@ export const discoverItems: Project[] = [
   {
     slug: "google-calendar",
     href: "https://www.figma.com/proto/bT2pWyNdvFSlDzzptTRZwG/Google-Calendar-Enhanced-Task-Management---2024-Ivey-Product-Society-Fellowship?node-id=38-346&p=f&viewport=177%2C357%2C0.08&t=YiZsyTmCXOvIMEG1-9&scaling=contain&content-scaling=fixed&starting-point-node-id=38%3A346&page-id=25%3A44&show-proto-sidebar=1",
-    title: "Google Calendar enhanced task management",
+    title: "Google Calendar task management",
     status: "Fellowship project",
     bg: "#D6F0FF",
     thumbnail: "/images/discover/gcal.svg",
