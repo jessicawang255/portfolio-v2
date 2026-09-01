@@ -873,7 +873,15 @@ export function AboutContent({ spotifyPlaylist }: { spotifyPlaylist: Song[] | nu
               <motion.p variants={fadeUp}>
                 Finally, I find it humbling and awe-inspiring to learn
                 about space. I love recognizing constellations and all the
-                marvelous objects in the night sky!
+                marvelous objects in the night sky! My favourite star is {" "}
+                <TertiaryLink
+                  href="https://en.wikipedia.org/wiki/Vega"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Vega
+                </TertiaryLink>
+                , which is the brightest star in the constellation Lyra.
               </motion.p>
             </div>
           </motion.section>
