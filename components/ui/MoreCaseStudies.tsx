@@ -2,7 +2,6 @@ import Link from "next/link"
 import Image from "next/image"
 import type { StaticImageData } from "next/image"
 import { projects } from "@/content/work"
-import { Separator } from "@/components/ui/CaseStudyCard"
 
 type Props = {
   currentSlug: string
@@ -78,7 +77,9 @@ export async function MoreCaseStudies({ currentSlug }: Props) {
                       everywhere on the site, not just a visually-close one. */}
                   <p className="mt-0.5 text-balance text-base text-neutral-500">
                     {name}
-                    {name && status && <Separator className="mx-1.5">•</Separator>}
+                    {name && status && (
+                      <span className="mx-1.5" aria-hidden="true">·</span>
+                    )}
                     {status}
                   </p>
                 </div>

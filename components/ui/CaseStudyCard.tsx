@@ -1,7 +1,7 @@
 import Image from "next/image"
 import Link from "next/link"
 import type { Project } from "@/content/work"
-import type { CSSProperties, ReactNode } from "react"
+import type { CSSProperties } from "react"
 
 type Props = {
   project: Project
@@ -62,14 +62,6 @@ export function ArrowUpRight() {
   )
 }
 
-export function Separator({ children, className = "" }: { children: ReactNode; className?: string }) {
-  return (
-    <span className={`text-subtle ${className}`} aria-hidden="true">
-      {children}
-    </span>
-  )
-}
-
 export function CaseStudyCard({
   project,
   imageRatio,
@@ -79,12 +71,12 @@ export function CaseStudyCard({
   imageInset,
   imageFit = "contain",
 }: Props) {
-  const { slug, title, name, status, disciplines, bg, thumbnail, thumbnailWidth, thumbnailHeight, href } = project
+  const { slug, title, name, status, bg, thumbnail, thumbnailWidth, thumbnailHeight, href } = project
 
   const isGradient = bg.startsWith("linear-gradient")
   const bgStyle = isGradient ? { background: bg } : { backgroundColor: bg }
   const isVideo = thumbnail?.endsWith(".mp4") || thumbnail?.endsWith(".webm")
-  const hasMetadata = name || status || (disciplines && disciplines.length > 0)
+  const hasMetadata = name || status
   const isExternal = Boolean(href)
   const isWideMobile = mobileBreakpoint === "lg"
 
@@ -187,10 +179,10 @@ export function CaseStudyCard({
             {hasMetadata && (
               <p className="text-balance text-base text-neutral-500">
                 {name}
-                {name && (status || disciplines?.length) && <Separator className="mx-1.5">•</Separator>}
+                {name && status && (
+                  <span className="mx-1.5" aria-hidden="true">·</span>
+                )}
                 {status}
-                {status && disciplines?.length && <Separator className="mx-2">/</Separator>}
-                {disciplines?.join(" / ")}
               </p>
             )}
           </div>
