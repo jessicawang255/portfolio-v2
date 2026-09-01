@@ -206,7 +206,7 @@ export function CaseStudyLayout({ project, children, heroBackground, heroAspectR
               {/* max-w-[120rem] above caps the content column — tune it freely, it never affects the TOC's own w-60 */}
               <div className="cs-header-content pt-9 pb-16">
                 <p className="font-mono text-sm uppercase leading-[1.2] text-neutral-400 mb-6">{name}</p>
-                <h1 className="text-balance text-5xl font-medium text-primary leading-[1.1] tracking-[-0.0125em] w-full">
+                <h1 className="text-balance text-4xl lg:text-5xl font-medium text-primary leading-[1.2] lg:leading-[1.1] lg:tracking-[-0.0125em] w-full">
                   {title}
                 </h1>
 
