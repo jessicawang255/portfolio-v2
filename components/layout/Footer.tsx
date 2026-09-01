@@ -7,6 +7,7 @@ import { createPortal } from "react-dom"
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion"
 import { TertiaryLink } from "@/components/ui/TertiaryLink"
 import { samePageReload } from "@/lib/samePageNav"
+import { siteUrl } from "@/lib/site"
 
 const navLinks: { label: string; href: string; target?: string }[] = [
   { label: "Work",   href: "/" },
@@ -121,19 +122,28 @@ function EyeIcon() {
 // unique-visitor count, by design (no server-side tracking).
 const VIEW_STORAGE_FLAG = "site-view-counted"
 
+// Only the canonical production host increments the count. Every other
+// origin this component can render on — Vercel preview deployments (a
+// fresh URL per push, so localStorage's per-origin dedupe never applies)
+// and local dev (REDIS_URL is pulled from Vercel into .env.local, so it
+// talks to the same real counter) — would otherwise inflate a count meant
+// to track actual site visitors, not the person building the site.
+const PRODUCTION_HOST = new URL(siteUrl).hostname
+
 function ViewCounter() {
   const [count, setCount] = useState<number | null>(null)
 
   useEffect(() => {
     let cancelled = false
-    const alreadyCounted = localStorage.getItem(VIEW_STORAGE_FLAG) === "1"
+    const isProduction = window.location.hostname === PRODUCTION_HOST
+    const shouldIncrement = isProduction && localStorage.getItem(VIEW_STORAGE_FLAG) !== "1"
 
-    fetch("/api/views", { method: alreadyCounted ? "GET" : "POST" })
+    fetch("/api/views", { method: shouldIncrement ? "POST" : "GET" })
       .then((res) => res.json())
       .then((data: { count: number }) => {
         if (cancelled) return
         setCount(data.count)
-        if (!alreadyCounted) localStorage.setItem(VIEW_STORAGE_FLAG, "1")
+        if (shouldIncrement) localStorage.setItem(VIEW_STORAGE_FLAG, "1")
       })
       .catch(() => {})
 
