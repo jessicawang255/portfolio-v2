@@ -509,8 +509,11 @@ function JourneyRow({
         className="absolute inset-0 lg:hidden"
       />
       <div>
-        <p className="text-balance text-base font-medium text-neutral-900">{item.company}</p>
-        <p className="text-balance text-base text-neutral-500">{item.role}</p>
+        <p className="text-balance text-base font-medium leading-[1.3] text-neutral-900">{item.company}</p>
+        {/* mt-0.5: restores the space leading-[1.3] trims off the title's
+            bottom half-leading (relative to text-base's default 1.5) so
+            the gap to the role line below reads the same as before. */}
+        <p className="mt-0.5 text-balance text-base text-neutral-500">{item.role}</p>
       </div>
       {/* Crossfades in place rather than sitting beside the period — the row
           itself isn't the link (only the icon is, unlike CommunityRow), so
@@ -564,8 +567,11 @@ function CommunityRow({
           style={{ backgroundImage: `url(${item.logo})` }}
         />
         <div>
-          <p className="text-balance text-base font-medium text-neutral-900">{item.name}</p>
-          <p className="text-balance text-base text-neutral-500">{item.description}</p>
+          <p className="text-balance text-base font-medium leading-[1.3] text-neutral-900">{item.name}</p>
+          {/* mt-0.5: restores the space leading-[1.3] trims off the
+              title's bottom half-leading — see JourneyRow's identical
+              comment above. */}
+          <p className="mt-0.5 text-balance text-base text-neutral-500">{item.description}</p>
         </div>
       </div>
       <IconButton
@@ -623,8 +629,11 @@ function SongRow({ item, flowerIdx }: { item: Song; flowerIdx: number }) {
       <div className="flex items-center gap-6">
         <SongArt flowerIdx={flowerIdx} isHovered={isHovered} />
         <div>
-          <p className="text-balance text-base font-medium text-neutral-900">{item.title}</p>
-          <p className="text-balance text-base text-neutral-500">{item.artist}</p>
+          <p className="text-balance text-base font-medium leading-[1.3] text-neutral-900">{item.title}</p>
+          {/* mt-0.5: restores the space leading-[1.3] trims off the
+              title's bottom half-leading — see JourneyRow's identical
+              comment above. */}
+          <p className="mt-0.5 text-balance text-base text-neutral-500">{item.artist}</p>
         </div>
       </div>
       {/* Shown (opacity-revealed on hover) at every breakpoint, same as
