@@ -173,13 +173,13 @@ export function CaseStudyCard({
 
         {/* Text block */}
         <div className="card-text flex items-start justify-between gap-6 px-0 md:px-3.5">
-          {/* gap-0/md:gap-1 above and gap-4/md:gap-3 on the Link wrapper
-              (thumbnail-to-text) are left as-is: tightening the title from
-              leading-[1.4] to leading-[1.3] trims only ~0.8px off its
-              half-leading (16px text-base * 0.1 / 2), which rounds back
-              down to these same gap tokens — nothing to compensate at that
-              scale. */}
-          <div className="flex flex-col gap-0 md:gap-1">
+          {/* gap-0.5 — same title-to-subtitle gap as MoreCaseStudies' mt-0.5
+              and About's JourneyRow/CommunityRow/SongRow, so this text
+              pattern renders at the exact same pixel gap everywhere on the
+              site, not just a visually-close one. One value at every
+              breakpoint (dropped the old gap-0/md:gap-1 split) for the same
+              reason. */}
+          <div className="flex flex-col gap-0.5">
             <h3 className="text-balance text-base font-medium leading-[1.3] text-neutral-800">
               {title}
             </h3>

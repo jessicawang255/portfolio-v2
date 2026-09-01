@@ -69,15 +69,14 @@ export async function MoreCaseStudies({ currentSlug }: Props) {
                 </div>
 
                 <div className="min-w-0">
-                  {/* mt-1 below is left as-is: tightening the title from
-                      leading-[1.4] to leading-[1.3] trims only ~0.8px off
-                      its half-leading (16px text-base * 0.1 / 2), which
-                      rounds back down to the same gap token — nothing to
-                      compensate at that scale. */}
                   <h3 className="text-balance text-base font-medium leading-[1.3] text-neutral-800">
                     {title}
                   </h3>
-                  <p className="mt-1 text-balance text-base text-neutral-500">
+                  {/* mt-0.5 — same title-to-subtitle gap as CaseStudyCard's
+                      gap-0.5 and About's JourneyRow/CommunityRow/SongRow, so
+                      this text pattern renders at the exact same pixel gap
+                      everywhere on the site, not just a visually-close one. */}
+                  <p className="mt-0.5 text-balance text-base text-neutral-500">
                     {name}
                     {name && status && <Separator className="mx-1.5">•</Separator>}
                     {status}
