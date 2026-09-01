@@ -424,7 +424,12 @@ function FunPanelContent() {
 
       <div className="flex gap-6">
         <div className="w-[63%] shrink-0">
-          <AboutPanelImage aspect="5/3" caption="something" />
+          <AboutPanelImage
+            aspect="3024/1888"
+            src="/images/about/for-fun/don't-mind-project.png"
+            alt="Project file for my song “don’t mind...”"
+            caption="Project file for my song “don’t mind...”"
+          />
         </div>
         <div className="flex-1">
           <AboutPanelImage
