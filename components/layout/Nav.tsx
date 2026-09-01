@@ -18,19 +18,12 @@ function isActive(pathname: string, href: string) {
 export function Nav() {
   const pathname = usePathname()
 
-  // Case study pages render their own transparent nav overlay (see
-  // CaseStudyLayout) tuned to sit above their hero's z-stack — this one
-  // would just be duplicate, invisible markup underneath it.
+  // Case study pages render their own nav overlay (see CaseStudyLayout).
   if (pathname.startsWith("/work/")) return null
 
   return (
-    // Below `sm`, the bottom pill nav takes over — no top bar to show. `sm`
-    // is the site's chrome breakpoint (see --breakpoint-sm in globals.css),
-    // shared with HeroShell's own static→fixed switch — this bar is fixed
-    // at every breakpoint it renders at, so appearing any earlier than the
-    // hero's own fixed switch would have it sit above a hero still
-    // scrolling past underneath it. Independent of `md`, which is what the
-    // page content (grids, columns) uses for its own layout switch.
+    // Bottom pill nav takes over below `sm`; matches HeroShell's fixed-position
+    // breakpoint so this bar never sits above a still-scrolling hero.
     <header id="site-nav" className="fixed inset-x-0 top-0 z-[2] hidden bg-chrome/50 sm:block">
       <nav
         className="container-chrome flex items-center justify-between py-4"

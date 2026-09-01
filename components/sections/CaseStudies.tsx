@@ -5,8 +5,7 @@ import { projects } from "@/content/work"
 import { CaseStudyCard } from "@/components/ui/CaseStudyCard"
 import { fadeUp } from "@/lib/motion"
 
-// Shared mobile ratio for every card below `md` (Hack Western's own desktop
-// ratio) — see DiscoverMore's identical use of mobileImageRatio.
+// Shared mobile ratio for every card below `md` (Hack Western's own desktop ratio).
 const MOBILE_RATIO: [number, number] = [740, 504]
 
 export function CaseStudies() {
@@ -14,26 +13,21 @@ export function CaseStudies() {
   const reduce = useReducedMotion()
 
   return (
-    // No bottom padding — the gap before "Discover More" is the Home page's
-    // own gap-20 flex wrapper now (see app/(home)/page.tsx), not this
-    // section's own padding.
+    // No bottom padding — the gap before "Discover More" comes from Home's own gap-20 wrapper.
     <section id="work" className="container-main pt-9">
       <motion.h2
         variants={fadeUp}
         initial={reduce ? "visible" : "hidden"}
         whileInView="visible"
         viewport={{ once: true, margin: "-80px" }}
-        // font-normal — pins this to the tag family's 400 weight; the bare
-        // `h2` selector in globals.css otherwise defaults it to the 500
-        // sub-heading weight, which this eyebrow label was never meant to be.
+        // font-normal overrides the h2 default weight (500) — this eyebrow isn't a sub-heading.
         className="mb-5 font-mono text-sm font-normal uppercase leading-[1.2] text-neutral-400"
       >
         Case Studies
       </motion.h2>
 
       <div className="flex flex-col gap-y-9 md:gap-y-16">
-        {/* Row 1: 5/4 split — each row triggers on its own visibility, and
-            both cards in the row fade up together (no stagger between them). */}
+        {/* Row 1: 5/4 split. Each row triggers on its own visibility; both cards fade up together, no stagger. */}
         <motion.div
           className="grid grid-cols-1 gap-9 md:grid-cols-[5fr_4fr]"
           initial={reduce ? "visible" : "hidden"}

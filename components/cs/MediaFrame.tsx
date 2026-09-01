@@ -5,15 +5,10 @@ type MediaFrameProps = {
   children: React.ReactNode
 }
 
-// Close to the placeholder box ImageBlock draws when it has no `src`
-// (rounded-[8px], border-neutral-100, fixed pixel height) — but bg-neutral-75
-// instead of bg-neutral-100 (lighter, same chrome/panel tone as MobileNav and
-// AboutContent's hover rows), and this one keeps the box as a permanent
-// backdrop and centers real media inside it, instead of the box being the
-// content. Used for mobile screen recordings/animations that read as a
-// device mockup: letting the surrounding neutral-75 show through on every
-// side is what sells "phone floating on a background" rather than "cropped
-// video filling a rectangle."
+// A permanent bg-neutral-75 backdrop that centers real media inside it,
+// rather than the box itself being the content (unlike ImageBlock's
+// placeholder). Used for mobile recordings/animations mocked up as a device
+// floating on a background, rather than filling the whole box edge to edge.
 export function MediaFrame({ height, caption, className, children }: MediaFrameProps) {
   return (
     <div>

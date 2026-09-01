@@ -5,15 +5,13 @@ import { NextResponse } from "next/server"
 // identical on every page, so there's no per-route count to key off of.
 const VIEWS_KEY = "site:views"
 
-// Vercel's Redis marketplace product (Upstash-backed) only exposes a plain
-// `REDIS_URL` connection string — no REST API credentials — so this talks
-// node-redis over TCP rather than Upstash's REST client. Client + in-flight
-// connection promise are kept at module scope: Node reuses that scope across
-// warm invocations of the same serverless instance, so a warm request skips
-// reconnecting, and two cold requests racing to connect both await the same
-// promise instead of opening two connections. `REDIS_URL` isn't provisioned
-// locally until `vercel env pull` (see .env.local), so a missing var just
-// skips connecting and every handler below falls back to `{ count: 0 }`.
+// Vercel's Redis marketplace product only exposes a plain REDIS_URL
+// connection string (no REST credentials), so this talks node-redis over
+// TCP. Client + connect promise live at module scope so warm invocations
+// reuse the connection, and concurrent cold starts share one connect()
+// call instead of racing. REDIS_URL isn't set locally without
+// `vercel env pull`, so a missing var just skips connecting and every
+// handler falls back to `{ count: 0 }`.
 let client: RedisClientType | null = null
 let connecting: Promise<RedisClientType> | null = null
 
@@ -33,9 +31,8 @@ function getClient(): Promise<RedisClientType> | null {
   return connecting
 }
 
-// Read-only — used once a visitor's session has already counted its view,
-// so re-fetching the total (e.g. a second tab, or remounting after a hard
-// refresh later in the same session) doesn't increment it again.
+// Read-only — used once a session has already counted its view, so
+// re-fetching the total doesn't increment it again.
 export async function GET() {
   const redis = await getClient()
   if (!redis) return NextResponse.json({ count: 0 })

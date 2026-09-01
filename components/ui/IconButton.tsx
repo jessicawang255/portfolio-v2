@@ -5,17 +5,15 @@ import { getIconTooltip } from "@/lib/iconTooltips"
 
 type Props = {
   href: string
-  // Falls back to a label derived from `icon` (and `href` for the globe
-  // icon) via getIconTooltip when omitted — set this explicitly only when
-  // the derived default doesn't fit (e.g. "Copy Email" instead of "Email").
+  // Falls back to a label derived from `icon`/`href` via getIconTooltip when
+  // omitted — set explicitly only when the derived default doesn't fit.
   label?: string
   icon: string
   size?: number
   className?: string
-  // When set, a click copies this string to the clipboard instead of
-  // navigating (`href` is kept anyway as the mailto:/etc. fallback for
-  // right-click "copy link address" and no-JS cases). The tooltip flips to
-  // "Copied!" for a beat as confirmation.
+  // When set, a click copies this string instead of navigating (`href` is
+  // kept as the mailto:/etc. fallback for right-click and no-JS cases). The
+  // tooltip flips to "Copied!" for a beat as confirmation.
   copyText?: string
 } & Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, "href" | "className" | "aria-label">
 
@@ -23,8 +21,7 @@ const COPIED_RESET_MS = 1600
 
 // Icon-only link: mask-image icon that tints on hover, plus a floating
 // label tooltip that fades in after a beat of sustained hover and drops
-// out instantly on mouse-leave (group-hover:delay-400 has no matching
-// delay on the base rule, so leaving skips straight to the fast fade-out).
+// out instantly on mouse-leave.
 export function IconButton({ href, label, icon, size = 24, className, copyText, onClick, ...rest }: Props) {
   const external = href.startsWith("http")
   const resolvedLabel = label ?? getIconTooltip(icon, href)
@@ -46,7 +43,7 @@ export function IconButton({ href, label, icon, size = 24, className, copyText, 
       },
       () => {
         // Clipboard API unavailable (e.g. insecure context) — fall back to
-        // the plain mailto: link this button still points at.
+        // the plain link this button still points at.
         window.location.href = href
       }
     )
@@ -55,14 +52,10 @@ export function IconButton({ href, label, icon, size = 24, className, copyText, 
   const displayLabel = copied ? "Copied!" : resolvedLabel
 
   return (
-    // `before:inset-[-11px]` pads the link's hit area out to ~44px square
-    // (the Apple HIG / Material touch-target minimum) without growing the
-    // visible icon — same trick iOS uses for its own small glyph buttons.
-    // `z-50` is a standing elevation, not hover-conditional — it used to be
-    // hover:/focus-visible:-only, but that dropped the icon back into normal
-    // paint order the instant the mouse left, while the tooltip below was
-    // still mid-fade, flashing a stale fragment of it. Icons never overlap
-    // each other at rest, so keeping this on all the time is free.
+    // `before:inset-[-11px]` pads the hit area out to ~44px square (the
+    // touch-target minimum) without growing the visible icon. `z-50` stays
+    // on at all times so a still-fading tooltip never gets clipped by the
+    // icon dropping back into normal paint order on mouse-leave.
     <a
       href={href}
       aria-label={displayLabel}
@@ -87,12 +80,9 @@ export function IconButton({ href, label, icon, size = 24, className, copyText, 
           backgroundColor: "currentColor",
         }}
       />
-      {/* Hidden below `md` — hover has no real meaning on touch, and this
-          tooltip's own `whitespace-nowrap` box still counts toward page
-          width even at opacity-0 (nothing clips it), so on a narrow
-          viewport the last icon in a row pushes it past the screen edge,
-          making the whole page horizontally scrollable for a label no
-          touch device could ever trigger anyway. */}
+      {/* Hidden below `md`: hover has no meaning on touch, and this
+          tooltip's whitespace-nowrap box still counts toward page width at
+          opacity-0, which can push a narrow viewport into horizontal scroll. */}
       <span
         aria-hidden="true"
         className="pointer-events-none absolute bottom-full left-1/2 z-50 mb-1 hidden origin-bottom

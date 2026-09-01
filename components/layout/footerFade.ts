@@ -2,10 +2,7 @@
 // ScrollRevealController (Work/About and case study pages alike).
 // #site-footer is rendered once in the root layout and never unmounts
 // between routes, so whichever instance is active must agree on exactly how
-// it's styled — duplicating this logic per-instance is how it drifted out of
-// sync before it was unified (case study pages never got the fade/scale at
-// all, and neither instance reset it on cleanup, leaving stale opacity/
-// transform stuck on it after navigating away).
+// it's styled.
 
 const FADE_FLOOR = 0.05
 const MIN_SCALE = 0.98
@@ -21,9 +18,7 @@ export function footerRatio(scrollY: number, footerAbsTop: number, footerH: numb
 }
 
 // footerReveal: 0 = unrevealed (page top), 1 = fully revealed (scrolled to
-// bottom) — see footerRatio above. anchorX: shared horizontal scale anchor,
-// in viewport coordinates — the viewport's own horizontal center in
-// practice, passed in by the caller rather than hardcoded here.
+// bottom). anchorX: shared horizontal scale anchor, in viewport coordinates.
 export function applyFooterFade(footerEl: HTMLElement, footerReveal: number, anchorX: number, desktop: boolean) {
   if (!desktop) {
     footerEl.style.opacity = ""
@@ -32,18 +27,11 @@ export function applyFooterFade(footerEl: HTMLElement, footerReveal: number, anc
     return
   }
 
-  // #site-footer is `position: fixed` from the moment its own breakpoint
-  // applies — painted at the same viewport-anchored spot regardless of
-  // scroll position, same as the hero (see ScrollRevealController's
-  // heroFrameId handling). footerReveal reaching down to exactly 0 (not
-  // just close to it — footerRatio clamps) means the page is nowhere near
-  // its end, so the footer has no business being visible at all yet — but
-  // FADE_FLOOR below only ever fades it to 5% opacity, not 0, which reads
-  // as a genuine ghost-image bug (not a subtle hint of what's coming) on a
-  // short viewport where the footer's fixed box overlaps the hero's: same
-  // failure as the hero-into-footer case, just the other direction.
-  // visibility:hidden removes it from paint entirely for that whole span,
-  // restored the instant footerReveal ticks up off of 0.
+  // FADE_FLOOR below only ever fades the footer to 5% opacity, not 0 — on a
+  // short viewport where the footer's fixed box overlaps the hero, that
+  // reads as a visible ghost image rather than a hint of what's coming while
+  // footerReveal is still at exactly 0. visibility:hidden removes it from
+  // paint for that span, restored the instant footerReveal ticks up.
   footerEl.style.visibility = footerReveal > 0 ? "" : "hidden"
 
   const fadeRatio  = 1 - easeInReveal(footerReveal, FADE_EASE_POWER)
@@ -52,11 +40,8 @@ export function applyFooterFade(footerEl: HTMLElement, footerReveal: number, anc
 
   footerEl.style.opacity = `${FADE_FLOOR + fadeRatio * (1 - FADE_FLOOR)}`
 
-  // Anchored at the bottom of the viewport (offsetTop/offsetLeft, not
-  // getBoundingClientRect — see ScrollRevealController for why: transforms
-  // don't affect layout-box measurements, so this stays drift-free across
-  // repeated frames) so the footer scales in place from its own bottom edge
-  // instead of receding toward a distant point.
+  // offsetTop/offsetLeft, not getBoundingClientRect: transforms don't affect
+  // layout-box measurements, so this stays drift-free across repeated frames.
   const originX = anchorX - footerEl.offsetLeft
   const originY = window.innerHeight - footerEl.offsetTop
   footerEl.style.transformOrigin = `${originX}px ${originY}px`
@@ -64,11 +49,8 @@ export function applyFooterFade(footerEl: HTMLElement, footerReveal: number, anc
 }
 
 // Reset #site-footer to its default appearance. Must be called from every
-// ScrollRevealController instance's effect cleanup — since the footer
-// persists across routes, whichever instance stops managing it (e.g.
-// navigating from Work/About to a case study page) needs to hand it back in
-// a neutral state rather than leaving it stuck mid-fade for the next
-// instance to inherit.
+// ScrollRevealController instance's effect cleanup, since the footer
+// persists across routes and would otherwise stay stuck mid-fade.
 export function resetFooterFade(footerEl: HTMLElement) {
   footerEl.style.opacity = ""
   footerEl.style.transform = ""

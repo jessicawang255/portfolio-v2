@@ -15,9 +15,8 @@ type Props = {
   // to a plain color/gradient when a case study doesn't define one.
   heroBackground?: React.ComponentType<{ project: Project }> | null
   // The hero foreground image's width/height ratio (see hero/*.tsx's
-  // `heroAspectRatio` export) — sizes the hero container to that image's
-  // real proportions instead of a fixed vh guess, see HERO_HEIGHT below.
-  // Undefined when a case study has no custom hero image to size against.
+  // `heroAspectRatio` export) — sizes the hero container to the image's
+  // real proportions. Undefined when there's no custom hero image.
   heroAspectRatio?: number
 }
 
@@ -42,16 +41,14 @@ const navLinks: { label: string; href: string; target?: string }[] = [
 ]
 
 // Fallback when a case study has no hero image to size against (plain
-// DefaultHeroBackground color/gradient, no intrinsic proportions) — a flat
-// 65vh guess, same as every case study used before heroAspectRatio existed.
+// DefaultHeroBackground color/gradient, no intrinsic proportions).
 const FALLBACK_HERO_HEIGHT = "65vh"
 
-// Extra height on the *fixed background container only* (see CaseStudyHero's
-// `height` vs `spacerHeight`) — not visible at rest, since #cs-content sits
-// flush against the hero image's real height and simply covers this sliver.
-// It exists purely as a buffer during the scroll-peel: without it, the
-// background would run out from behind the frame's still-rounding top
-// corner right before the reveal finishes, showing a flash of empty space.
+// Extra height on the fixed background container only (see CaseStudyHero's
+// `height` vs `spacerHeight`) — a buffer during the scroll-peel so the
+// background doesn't run out from behind the frame's rounding top corner
+// right before the reveal finishes. Not visible at rest: #cs-content covers
+// this sliver.
 const HERO_BG_EXTRA = 80
 
 export function CaseStudyLayout({ project, children, heroBackground, heroAspectRatio }: Props) {
@@ -61,10 +58,8 @@ export function CaseStudyLayout({ project, children, heroBackground, heroAspectR
 
   // The hero foreground image renders at `w-full` inside a full-viewport-width
   // container (see HeroForeground/CaseStudyHero), so its real rendered height
-  // is always `100vw / aspectRatio` — a plain CSS calc, re-evaluated on every
-  // resize exactly like the old 65vh was, so it tracks width shrinking even
-  // when viewport height doesn't change (65vh alone never would). Falls back
-  // to the flat vh guess when there's no image (see FALLBACK_HERO_HEIGHT).
+  // is always `100vw / aspectRatio`. Falls back to a flat vh guess when
+  // there's no image (see FALLBACK_HERO_HEIGHT).
   const HERO_HEIGHT = heroAspectRatio
     ? `calc(100vw / ${heroAspectRatio})`
     : FALLBACK_HERO_HEIGHT
@@ -80,12 +75,7 @@ export function CaseStudyLayout({ project, children, heroBackground, heroAspectR
   return (
     <>
       {/* Transparent nav overlay — above hero (z:5), below content card (z:10).
-          Below `sm`, the bottom pill nav takes over — no top bar to show.
-          `sm` is the site's chrome breakpoint (see --breakpoint-sm in
-          globals.css), shared with CaseStudyHero's own static→fixed switch
-          — this bar is fixed at every breakpoint it renders at, so
-          appearing any earlier than the hero's own fixed switch would have
-          it sit above a hero still scrolling past underneath it. */}
+          Bottom pill nav takes over below `sm`. */}
       <header className="fixed inset-x-0 top-0 hidden pointer-events-none sm:block" style={{ zIndex: 6 }}>
         <nav
           className="container-chrome flex items-center justify-between py-4 pointer-events-auto"
@@ -119,20 +109,16 @@ export function CaseStudyLayout({ project, children, heroBackground, heroAspectR
 
         {/* Hero — pinned to the viewport from `md` up (see CaseStudyHero), so
             #cs-content can visually slide up and cover it, same as
-            #main-frame covers Work/About's hero. Background stays fully
-            static; only the foreground screenshot (HeroForeground) fades +
-            scales as it's covered — see ScrollRevealController. Below `md`
-            the hero stays in normal static flow instead, with no covering
-            effect. Background + foreground are both owned by the
-            per-case-study hero component (whatever it renders: gradient,
-            image, canvas, plus its own foreground screenshot if any). */}
+            #main-frame covers Work/About's hero. Background stays static;
+            only the foreground screenshot (HeroForeground) fades + scales as
+            it's covered — see ScrollRevealController. Below `md` the hero
+            stays in normal static flow with no covering effect. */}
         <CaseStudyHero
           height={`calc(${HERO_HEIGHT} + ${HERO_BG_EXTRA}px)`}
           // #cs-content pulls itself up by `-var(--radius-frame)` (see its
           // own marginTop below) so its rounded corner nests against the
-          // hero instead of leaving a hard seam — spacerHeight has to give
-          // that same amount back, or the pull-up bites into the image
-          // itself instead of into slack space above it.
+          // hero — spacerHeight gives that same amount back so the pull-up
+          // bites into slack space above the image, not the image itself.
           spacerHeight={`calc(${HERO_HEIGHT} + var(--radius-frame))`}
         >
           <HeroBackground project={project} />
@@ -154,41 +140,20 @@ export function CaseStudyLayout({ project, children, heroBackground, heroAspectR
             borderTopRightRadius: "var(--radius-frame)",
           }}
         >
-          {/* The content column is truly centered (mx-auto, equal margins on
-              both sides) from `xl` (1152px, see globals.css) up — same as
-              it's always been. Below that, down to `md`, is a squeezed tablet
-              zone the original symmetric split never accounted for: it
-              reserved an identical, unused block of whitespace on the right
-              (mirroring the TOC's left-side space) at *every* width, which
-              starves the column exactly where it can least afford it — a
-              ~900px viewport was down to a ~270px column. Between `md` and
-              `xl` the column instead gets a plain left margin (just the
-              TOC + gap) and eats every remaining pixel, no mirrored margin —
-              then `xl`+ reverts to the original centered treatment, since
-              by then the symmetric column is already comfortable on its own.
-              This does mean a real jump at 1152px (content suddenly loses
-              the right-hand space it had a pixel below) rather than a smooth
-              taper — deliberate: interpolating the two would need a
-              continuous width formula instead of a breakpoint, and the seam
-              only ever lands on an already-workable column on both sides of
-              it (~800px just below, ~520px just above) rather than back in
-              badly-squeezed territory. */}
+          {/* Content column is centered (mx-auto, equal margins) from `xl`
+              (1152px) up. Between `md` and `xl` it instead gets a plain left
+              margin (TOC + gap) and eats all remaining width, rather than
+              also mirroring that space on the right — a symmetric split
+              would starve the column on tablet widths. This is a hard jump
+              at 1152px rather than a smooth taper, by design: the seam lands
+              on an already-workable column width on both sides of it. */}
           <div className="container-main">
-            {/* min(...) guarantees the column's left margin never drops below
-                16rem in the `md`–`xl` tablet tier (17.5rem again at
-                `xl`+, see the aside's own left offset below) — otherwise
-                the TOC gets pushed off-screen to the left on any viewport
-                narrower than max-w + that margin. Only applied from `md` up
-                — below that there's no TOC to reserve space for, and a
-                positive left margin goes negative on narrow viewports,
-                collapsing the whole column.
-                The tablet tier's TOC↔content gap is tighter than `xl`+'s
-                (16rem vs. 17.5rem, i.e. 16px vs. 40px between the TOC's own
-                w-60 and the column) — this tier is already reclaiming space
-                from the old mirrored right-margin bug, so the gap itself can
-                afford to give a little more of that space to the column too,
-                rather than sitting at the same width the roomier desktop
-                tier uses. */}
+            {/* min(...) keeps the column's left margin from dropping below
+                16rem in the `md`–`xl` tablet tier (17.5rem at `xl`+, matching
+                the aside's own left offset below) — otherwise the TOC gets
+                pushed off-screen on any viewport narrower than max-w + that
+                margin. Only applied from `md` up, since below that there's
+                no TOC to reserve space for. */}
             <div className="relative max-w-full md:ml-[16rem] md:max-w-[calc(100%-16rem)] xl:mx-auto xl:max-w-[min(120rem,calc(100%-35rem))]">
               <aside className="absolute top-0 h-full w-60 left-[-17.5rem] md:left-[-16rem] xl:left-[-17.5rem]">
                 <div className="sticky top-0 pt-9 pb-16">

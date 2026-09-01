@@ -45,61 +45,30 @@
   --color-icon-social:    var(--color-neutral-200);
 
   /* ─── Breakpoint scale ─────────────────────────────────────────────────
-     A shared, universal set of widths every component picks from, instead
-     of one global mobile/desktop switch (old `sm`) plus a bespoke pixel
-     value invented per component that needed something later. `sm`/`md`
-     match Tailwind's own defaults; `lg`/`xl`/`2xl` are overridden below
-     because this site's content wants different steps than Tailwind's
-     stock 1024/1280/1536 — each override absorbs a breakpoint that used
-     to be its own one-off token. */
-  --breakpoint-sm: 40rem; /* 640px — the site's "chrome" switch: nav
+     A shared set of widths every component picks from, instead of a
+     bespoke pixel value invented per component. `sm`/`md` match Tailwind's
+     defaults; `lg`/`xl`/`2xl` are tuned to this site's own content. */
+  --breakpoint-sm: 40rem; /* 640px — the site's chrome switch: nav
     (Nav.tsx/MobileNav.tsx/CaseStudyLayout's overlay), the hero's
     static→fixed peel (HeroShell.tsx/CaseStudyHero.tsx/HeroForeground.tsx),
-    #site-footer's own static→fixed swap, and --nav-height/--radius-frame
-    below, which those all read from. Deliberately its own, earlier tier
-    than `md`: the chrome mechanic (does the hero pin and peel from behind
-    the frame, is the nav a fixed bar or the bottom pill) is a different
-    question from how the *content* inside the frame is laid out (grid
-    columns, card stacking, container padding) — a narrow viewport can have
-    "mobile" single-column content while still getting the fixed-chrome
-    treatment, same as a wide one. Nav/hero/footer must all three switch at
-    this exact same breakpoint, whatever it's tuned to — split them across
-    two and a fixed nav bar ends up sitting above a hero that's still
-    static and scrolling underneath it (or symmetrically for the footer). */
-  --breakpoint-md: 48rem; /* 768px — the site's main content-layout switch:
-    page layout direction and most spacing flip here. Everything defaults
-    to `md` unless a component has actual evidence to move — the chrome
-    mechanic above is the one deliberate exception, not a precedent for
-    moving anything else off `md` without similar evidence. */
+    #site-footer's static→fixed swap, and --nav-height/--radius-frame
+    below. Separate from `md` because the chrome mechanic (fixed vs. static
+    shell) is independent of the content layout inside the frame (grid
+    columns, card stacking, padding) — nav/hero/footer all switch together
+    at this breakpoint, or a fixed nav ends up above a still-scrolling hero. */
+  --breakpoint-md: 48rem; /* 768px — main content-layout switch: page
+    direction and most spacing flip here by default. */
 
-  /* Absorbs the former `--breakpoint-discover-wide` / `--breakpoint-cs-screens`
-     (previously two separate tokens that happened to land on the same
-     960px by coincidence, kept apart so retuning one couldn't silently
-     move the other — now that both are meant to sit on the shared scale,
-     landing on the same tier is the point, not a risk to guard against).
-     Used by DiscoverMore's 2x2→4-col bento grid (`md`'s ~72px padding +
-     gaps leaves 4 columns too narrow for titles like "Google Calendar
-     enhanced task management" before this width) and ScreenSpotlight's
-     stacked→side-by-side flow (tested live against its worst case, an
-     8-screen flow — anywhere from `md` to ~800px the flow-tab label clips
-     and the thumbnail row runs out of THUMB_MIN_WIDTH room). */
+  /* DiscoverMore's 2x2→4-col bento grid and ScreenSpotlight's
+     stacked→side-by-side flow. */
   --breakpoint-lg: 60rem; /* 960px */
 
-  /* Absorbs the former `--breakpoint-cs-toc` — case study content column,
-     where the TOC's reserved margin stops being mirrored on the right
-     (see CaseStudyLayout.tsx). Sits between the old `lg` (1024px, where
-     the column would still be squeezed under the symmetric treatment) and
-     stock `xl` (1280px, further out than this needed) — that gap is why
-     this tier is 1152px instead of Tailwind's default 1280px. */
+  /* Case study content column, where the TOC's reserved margin stops being
+     mirrored on the right (see CaseStudyLayout.tsx). */
   --breakpoint-xl: 72rem; /* 1152px */
 
-  /* Absorbs the former `--breakpoint-about-photos` — About hero, where the
-     photo trio has room to sit beside the intro text again instead of
-     stacked beneath it (see AboutHero.tsx). Below this, text (full width)
-     + a fixed 40px gap + the photo row (830px at real desktop size) would
-     need ~1326px of viewport including container-main's padding; rounded
-     up to a clean 1344px for breathing room, not the bare minimum — why
-     this tier is 1344px instead of Tailwind's default 1536px. */
+  /* About hero, where the photo trio sits beside the intro text instead of
+     stacking beneath it (see AboutHero.tsx). */
   --breakpoint-2xl: 84rem; /* 1344px */
 
   /* Radii */
@@ -147,15 +116,10 @@
 }
 
 :root {
-  /* Top nav is hidden below `sm` (bottom pill nav takes over), so there's no
-     bar to clear. Restored at `sm` — py-4 (32px) + text-base line height (24px).
-     Pinned to `sm` — see --breakpoint-sm's own comment above: this is the
-     site's chrome breakpoint, shared with HeroShell/CaseStudyHero's
-     static→fixed switch and #site-footer's own. All of those have to move
-     together — a nav swap any earlier than the hero's own fixed switch puts
-     a fixed, opaque bar above a hero that's still scrolling past underneath
-     it. Deliberately *not* `md`, which is what the content inside the frame
-     (grids, columns, container padding) uses for its own, separate switch. */
+  /* Nav is hidden below `sm` (bottom pill nav takes over); restored at `sm`
+     — py-4 (32px) + text-base line height (24px). Shares --breakpoint-sm
+     with the hero and footer's own static→fixed switch, since all three
+     have to move together. */
   --nav-height: 0px;
 }
 
@@ -179,30 +143,17 @@ body {
 }
 
 /* ─── Heading scale ────────────────────────────────────────────────────────
-   A real element-level cascade, not just a convention repeated by hand: h1
-   here is the exact "text-balance text-3xl font-medium leading-[1.2]
-   text-primary" combo every case study headline (Section.tsx's own
-   `headline`, and every hand-rolled <h1> in glucal.tsx's "problem" section)
-   already used verbatim — this just makes that the tag's real default
-   instead of a class string copy-pasted at each call site. h2 is the
-   design system's 20px sub-heading tier. Both stay in @layer base so a
-   bare <h1>/<h2> picks these up, but any explicit Tailwind size class
-   (e.g. text-3xl on an h2 that needs to read at headline size) still wins —
-   a class selector outranks a bare element selector regardless of layer. */
+   h1/h2 are the sizes case study headlines already use, promoted to real
+   element defaults. Stay in @layer base so a bare <h1>/<h2> picks these up,
+   but an explicit Tailwind size class still wins (class beats element
+   selector regardless of layer). */
 @layer base {
   h1 {
     text-wrap: balance;
-    /* 30px — text-3xl's real value. Hardcoded, not var(--text-3xl): Tailwind
-       v4 only emits a @theme variable to :root when a compiled utility class
-       references it, and hand-written CSS isn't a utility class (same
-       tree-shaking pitfall as --color-* — see the accent rules below, which
-       hardcode hex for the same reason). */
+    /* 30px — text-3xl's value, hardcoded because Tailwind v4 only emits a
+       @theme var to :root when a compiled utility class references it. */
     font-size: 30px;
-    /* 500 — hardcoded, not var(--font-weight-medium): that token lives under
-       @theme inline, which this file's own doc comment above notes bakes
-       values into compiled utility output without ever emitting a real CSS
-       variable, so hand-written CSS can't reference it either. */
-    font-weight: 500;
+    font-weight: 500; /* hardcoded for the same reason */
     line-height: 1.2;
     color: var(--color-primary);
   }
@@ -210,7 +161,7 @@ body {
   h2 {
     text-wrap: balance;
     font-size: 20px;
-    font-weight: 500; /* hardcoded — see h1's own note above */
+    font-weight: 500;
     line-height: 1.3;
     color: var(--color-primary);
   }
@@ -218,12 +169,10 @@ body {
 
 /* ─── Main frame — radius transitions ──────────────────────────────────────── */
 
-/* --radius-frame is 20px on mobile; bump to the full 36px at `sm` — the
-   site's chrome breakpoint (see --breakpoint-sm's comment above), matching
-   DESKTOP_QUERY in ScrollRevealController and --nav-height. Not `md`: this
-   radius is what the peel animation interpolates toward, so it has to track
-   the same switch as the peel mechanic itself, not the content grid inside
-   the frame. */
+/* --radius-frame is 20px on mobile, 36px at `sm` — the site's chrome
+   breakpoint, matching DESKTOP_QUERY in ScrollRevealController and
+   --nav-height. This radius is what the peel animation interpolates
+   toward, so it tracks the chrome switch, not `md`'s content grid. */
 @media (min-width: 640px) {
   :root {
     --radius-frame: 36px;
@@ -243,21 +192,9 @@ body {
   border-radius: 0;
   border-top-left-radius:  var(--radius-frame);
   border-top-right-radius: var(--radius-frame);
-  /* Shadow lives directly on the frame, not a separate pseudo-layer behind
-     it. That split (and later, fading the pseudo-layer's opacity in and out
-     to paper over its shape drifting from the live one) was tried to keep a
-     40px box-shadow repaint off the scroll-driven border-radius changes
-     (Safari/WebKit repaints that combination ~2x slower than Chromium —
-     see DotField's own Safari investigation) — but *any* separate shadow
-     layer, faded or not, puts a second shape behind the frame with its own
-     edge, and the moment that edge doesn't exactly coincide with the
-     frame's live one (which it can't, mid-peel, without also animating the
-     shadow layer and reintroducing the exact repaint cost being avoided) a
-     sliver of it shows through as a stray tint — visible for most of the
-     peel, not just at the extremes, since even a fading shadow only
-     approaches invisible, it isn't gone. One shape means one edge: nothing
-     to ever fall out of sync with the radius below, at the cost of the
-     Safari repaint this used to dodge. */
+  /* Shadow lives directly on the frame, not a separate layer behind it —
+     a separate layer's edge can't stay pixel-synced with the frame's own
+     animated radius mid-peel, and shows through as a stray tint. */
   box-shadow: 0 0 40px 0 rgba(0, 0, 0, 0.07), inset 0 0 0 1px rgba(0, 0, 0, 0.06);
   transition:
     border-top-left-radius     650ms var(--ease-out),
@@ -290,15 +227,10 @@ body {
 
 /* ─── Layout utilities ─────────────────────────────────────────────────────── */
 
-/* Frames (#main-frame, the fixed nav/footer bars, hero shells) always
-   stretch edge-to-edge — these two utilities are what every frame uses to
-   hold its actual content, so capping + centering here is enough to cover
-   all of them without touching each one individually. 120rem (1920px)
-   reuses the same cap CaseStudyLayout already puts on its own content
-   column (see its xl:max-w-[min(120rem,...)] div) so very wide screens
-   read as one consistent width sitewide instead of each section picking
-   its own. Below that width margin-inline:auto is a no-op, so nothing
-   changes until a screen is actually wide enough to need it. */
+/* Frames (#main-frame, the fixed nav/footer bars, hero shells) stretch
+   edge-to-edge; these utilities hold their actual content. 120rem (1920px)
+   matches the cap CaseStudyLayout puts on its own content column, so wide
+   screens read as one consistent width sitewide. */
 @utility container-main {
   width: 100%;
   max-width: 120rem;
@@ -332,12 +264,9 @@ body {
 
 /* Thumbnail box scales; default = no transform. Ratio comes from whichever
    --thumb-ratio-* custom property CaseStudyCard sets: below the release
-   breakpoint, use --thumb-ratio-mobile if a section opted in, otherwise fall
-   back to the card's own desktop ratio; at/above it, always the card's own
-   ratio. Plain `.card-thumb` releases at `md` (768px — Case Studies);
-   `.card-thumb-mobile-wide` releases later, at `lg` (960px — Discover More;
-   matches --breakpoint-lg above — keep the two in sync), since 4 columns
-   right at `md` leaves each one too narrow. */
+   breakpoint, --thumb-ratio-mobile if a section opted in, else the desktop
+   ratio. `.card-thumb` releases at `md`; `.card-thumb-mobile-wide` releases
+   later at `lg`, since 4 columns right at `md` leaves each one too narrow. */
 .card-thumb {
   transition: transform 400ms cubic-bezier(0.22, 1, 0.36, 1);
   aspect-ratio: var(--thumb-ratio-mobile, var(--thumb-ratio-desktop));
@@ -369,21 +298,11 @@ body {
     transform 400ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* A flat opacity fade, not a transform — the earlier scale(0.99) sink (same
-   effect as .card-thumb below) fought the slide's own fixed viewport clip
-   and fade overlay: a scaling image shrinks toward its own center while the
-   hard clip edge and the (non-scaling) fade layered on top of it both stay
-   put, so the visible sliver's edge shifted relative to its own mask rather
-   than reading as one object moving. A flat scrim has no such mismatch — it
-   doesn't move or resize, so it looks right regardless of how much of the
-   slide is actually visible.
-   Darkens (neutral-900) rather than lightens — these mockups already sit
-   close to white, so a white scrim had almost no headroom to register
-   against them and doubled up confusingly with the fade gradient on the
-   same edge. Darkening moves the opposite direction from an already-light
-   surface, so it reads at a much lower, subtler opacity — the same "state
-   layer" convention most design systems use: darken hover/press states on
-   light surfaces, lighten them on dark ones. */
+/* Flat opacity fade, not a transform — a scaling image fights the slide's
+   fixed clip and fade overlay, since it shrinks toward its own center while
+   the clip edge stays put. Darkens (neutral-900) rather than lightens:
+   these mockups sit close to white already, so a dark scrim registers at a
+   lower, subtler opacity than a light one would. */
 .iteration-slide-overlay {
   transition: opacity 300ms cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -406,10 +325,8 @@ body {
     transform: translateY(0);
   }
 
-  /* [aria-current="false"] excludes the active slide, which already fills
-     the view and has nothing to invite a click toward. 0.08 — enough to
-     register as a deliberate darkening against a light mockup without
-     reading as a shadow or a rendering artifact. */
+  /* Excludes the active slide, which already fills the view and has
+     nothing to invite a click toward. */
   .iteration-slide[aria-current="false"]:hover .iteration-slide-overlay {
     opacity: 0.08;
   }
@@ -418,47 +335,36 @@ body {
 /* ─── About hero photos — hover lift + click-to-advance shimmer ──────────── */
 .about-photo {
   transform: rotate(var(--photo-rotate, 0deg)) scale(var(--photo-press, 1));
-  /* Resting shadow reused verbatim from the About sticky panel
-     (AboutContent.tsx) — same soft, barely-there elevation, just applied to
-     a smaller floating element here. Hover below swaps in the tighter,
-     darker lift shadow this rule already carried before this change. */
+  /* Same resting shadow as the About sticky panel (AboutContent.tsx). */
   box-shadow: 0 4px 20px -6px rgba(22, 25, 29, 0.06);
   /* Slight overshoot on the transform curve reads as a very soft spring settle */
   transition: transform 500ms cubic-bezier(0.3, 1.3, 0.5, 1), box-shadow 500ms var(--ease-out);
 }
 
 /* ─── Mobile nav shell (chip + panel) — press state ───────────────────────
-   Same --var-driven scale-down-on-press technique as .about-photo above
-   (set directly on pointerdown/up via style.setProperty, not React state, so
-   it's off the render path) — just its own quick, no-overshoot timing
-   instead of that curve's soft spring settle, since a nav control's tap
-   feedback should read as instant, not springy.
-   Applied to the chip+panel's shared wrapper, not just the chip that's
-   actually pressed — a transform never moves an element relative to its own
-   descendants (including absolutely-positioned ones), so scaling this
-   shared ancestor keeps the panel and chip pixel-aligned at any scale.
-   Scaling only the chip would shrink it around its own center while the
-   panel stayed full-size, visibly cutting off the seam where they meet. */
+   Scale-down-on-press, set directly via style.setProperty on pointerdown/up
+   (not React state) to stay off the render path; quick, no-overshoot timing
+   so it reads as instant tap feedback rather than a spring.
+   Applied to the chip+panel's shared wrapper, not just the chip — a
+   transform doesn't move a descendant relative to its scaled ancestor, so
+   scaling the shared wrapper keeps panel and chip pixel-aligned. Scaling
+   only the chip would shrink it around its own center and cut off the seam
+   where it meets the panel. */
 .mobile-nav-shell {
   transform: scale(var(--chip-press, 1));
   transition: transform var(--duration-fast) var(--ease-out);
 }
 
-/* Same press-scale technique as .mobile-nav-shell above, applied to the
-   case-study back button instead — a separate element/ref/variable since
-   it's a sibling of the shell, not a descendant, so it needs its own scale
-   that doesn't move in lockstep with the chip's. */
+/* Same press-scale technique, for the case-study back button — a sibling
+   of the shell, so it needs its own scale variable. */
 .mobile-nav-back {
   transform: scale(var(--back-press, 1));
   transition: transform var(--duration-fast) var(--ease-out);
 }
 
-/* Same --var-driven technique, applied to the panel's own menu items: a
-   neutral-100 (#ECEDEF — hand-written CSS reads the hex directly, not
-   var(--color-neutral-100), since @theme color vars only reach :root when a
-   Tailwind class already references them) pill fades in behind the label on
-   press. Color, not a transform, so this is a plain background-color
-   transition rather than scale. */
+/* Same technique for the panel's own menu items: a neutral-100 pill fades
+   in behind the label on press (background-color, not scale). Hex is
+   hardcoded — @theme color vars only reach :root via a Tailwind class. */
 .mobile-nav-link {
   background-color: var(--link-press-bg, transparent);
   transition: background-color var(--duration-fast) var(--ease-out);
@@ -466,11 +372,9 @@ body {
 
 @media (hover: hover) and (pointer: fine) {
   .about-photo:hover {
-    /* Straighten only partway — a smaller rotation swing per photo instead of snapping flat */
+    /* Straighten only partway rather than snapping flat */
     transform: rotate(calc(var(--photo-rotate, 0deg) * 0.3)) scale(calc(var(--photo-press, 1) * 1.008)) translateY(-2px);
-    /* Same neutral-900 tint as the resting shadow above, just pushed
-       further out and darker — a clearly bigger shadow underneath the
-       lift, instead of the previous version's barely-perceptible bump. */
+    /* Same neutral-900 tint as the resting shadow, pushed further out and darker */
     box-shadow: 0 16px 32px -10px rgba(22, 25, 29, 0.28);
   }
 }
@@ -496,14 +400,11 @@ body {
 .about-photo-shimmer-bar {
   position: absolute;
   inset: -60% -25%;
-  /* No filter: blur() and no mix-blend-mode here — both force this large,
-     transform-animated element into Chromium's isolated-compositing path,
-     which showed a straight hairline seam mid-sweep at certain sub-pixel
-     positions (confirmed by removing each independently). Softness comes
-     entirely from the gradient's own wide stops, and the sweep itself is
-     plain compositing (no blend mode) in --color-neutral-200 (#D1D4D8) —
-     hex value hardcoded since @theme vars only emit to :root when
-     referenced by a Tailwind utility, not from hand-written CSS. */
+  /* No blur filter or mix-blend-mode — both push this large, animated
+     element into Chromium's isolated-compositing path, which showed a
+     hairline seam mid-sweep at some sub-pixel positions. Softness comes
+     from the gradient's own wide stops instead. Hex hardcoded since @theme
+     vars only reach :root via a Tailwind utility, not hand-written CSS. */
   background: linear-gradient(
     112deg,
     transparent 10%,
@@ -607,12 +508,10 @@ body {
 .cs-header-content > *:nth-child(3) { animation-delay: 300ms; }
 .cs-header-content > *:nth-child(4) { animation-delay: 340ms; }
 
-/* ─── Scrollbar-hidden track — IterationCarousel's own horizontal scroller.
-   `scrollbar-width: none` covers Firefox; the pseudo-element below covers
-   Chrome/Safari. The track still scrolls (via drag or the prev/next
-   buttons' scrollIntoView) — this only hides the OS scrollbar chrome, which
-   would otherwise sit awkwardly under a set of images that already have
-   their own affordance for moving between them. ─────────────────────────── */
+/* ─── Scrollbar-hidden track — IterationCarousel's horizontal scroller.
+   Still scrolls via drag or scrollIntoView; this only hides the OS
+   scrollbar chrome. `scrollbar-width: none` covers Firefox, the
+   pseudo-element below covers Chrome/Safari. ──────────────────────────── */
 .no-scrollbar {
   scrollbar-width: none;
 }

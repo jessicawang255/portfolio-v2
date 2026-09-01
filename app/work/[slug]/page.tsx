@@ -33,10 +33,9 @@ export default async function CaseStudyPage({
   }
 
   let HeroBackground: React.ComponentType<{ project: Project }> | null = null
-  // The image's own width/height ratio, read from the hero module's
-  // `heroAspectRatio` export (see e.g. hero/glucal.tsx) — undefined when a
-  // case study has no custom hero (CaseStudyLayout falls back to a fixed vh
-  // height there, since DefaultHeroBackground has no image to size against).
+  // Read from the hero module's `heroAspectRatio` export (see hero/glucal.tsx);
+  // undefined when there's no custom hero, so CaseStudyLayout falls back to
+  // a fixed vh height instead.
   let heroAspectRatio: number | undefined
   try {
     const mod = await import(`@/content/case-studies/hero/${slug}.tsx`)

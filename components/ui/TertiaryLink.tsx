@@ -19,15 +19,9 @@ function faviconUrl(href: string): string | null {
   }
 }
 
-// Universal tertiary text link — one shade darker than body text at rest
-// (neutral-700 vs. body's neutral-600), so it reads as distinct regardless
-// of the underline's opacity, while staying comfortably above AA contrast
-// (unlike a lighter-than-body alternative, which drops below it). Darkens
-// further to neutral-900 on hover — the underline (30%→100% opacity) is the
-// real hover signal, but 700→900 gives the color shift enough of its own
-// gap to read as a change too, rather than 700→800's near-imperceptible one.
-// Optional leading icon: none, the linked site's favicon (auto-fetched from
-// its domain), or a custom image.
+// Tertiary text link, one shade darker than body text, darkening further on
+// hover alongside the underline. Optional leading icon: none, the linked
+// site's favicon (auto-fetched), or a custom image.
 export function TertiaryLink({ href, children, icon = { type: "none" }, className, ...rest }: Props) {
   const iconSrc = icon.type === "favicon" ? faviconUrl(href) : icon.type === "custom" ? icon.src : null
 

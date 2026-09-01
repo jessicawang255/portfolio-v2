@@ -39,13 +39,9 @@ const foodLogApproaches = [
     // there's room to say what it actually does; `name` stays short for
     // the comparison table's column headers below.
     label: "Modal overlay",
-    // .mp4, not the original glucal-design-5.webp — an animated WebP has
-    // no play/pause control a browser exposes to JS, so VideoCompare
-    // (playing one clip at a time, the other paused behind a click-to-play
-    // scrim) needs a real <video> element. Re-encoded frame-for-frame from
-    // the original WebP (ffmpeg's own WebP-animation decoder choked on the
-    // source file directly, so this went through Pillow frame extraction
-    // first) — same 390×844, same 10fps.
+    // .mp4, not the original glucal-design-5.webp — an animated WebP has no
+    // JS-exposed play/pause control, and VideoCompare needs a real <video>
+    // element to pause one clip while the other plays.
     src: "/images/case-studies/glucal/glucal-design-5.mp4",
     alt: "The log food form appearing as a modal over the list of already-logged foods",
   },
@@ -82,11 +78,10 @@ const foodLogComparison = [
 type FindingTone = "good" | "mixed" | "bad"
 
 // A colored glyph carries the verdict in every comparison table below —
-// check / subtract / × per tone — instead of a flat dot or Decision #2's
-// original neutral check/×. Shape and color now agree instead of either
-// channel carrying the meaning alone. Same red/yellow/green language as
-// glucal-design-2.png's tinted cells, muted to sit quietly next to the
-// page's neutral-gray palette.
+// check / subtract / × per tone — so shape and color agree instead of
+// either channel carrying the meaning alone. Same red/yellow/green
+// language as glucal-design-2.png's tinted cells, muted to sit quietly
+// against the page's neutral-gray palette.
 const TONE_COLOR: Record<FindingTone, string> = {
   good: "#4E9F5E",
   mixed: "#D9A441",
@@ -156,11 +151,8 @@ const buttonIterations = [
   },
 ]
 
-// Three tiers (good / mixed / bad) instead of Decision #2's binary
-// pro/con, since these findings genuinely aren't binary: iteration 2's
-// "unclear optionality" is a real caveat, not a flat negative the way
-// "no way out" was — "mixed" gets its own subtract glyph rather than
-// reusing check/×, since it's neither.
+// Three tiers (good / mixed / bad), since these findings genuinely aren't
+// binary — "mixed" gets its own subtract glyph rather than reusing check/×.
 const buttonComparison = [
   {
     criterion: "Perceived optionality",
@@ -245,11 +237,9 @@ export default function Glucal() {
         headline="gluCal: The all-in-one calculator and log to simplify insulin dosing"
         primary
       >
-        {/* Own gap and top margin, on top of Section's default 24px
-            between children / 28px below the headline — three distinct
-            product screens read better with more breathing room, both from
-            each other and from the headline above, than the tighter rhythm
-            that suits prose blocks elsewhere in this file. */}
+        {/* Own gap and top margin, on top of Section's defaults — three
+            distinct product screens need more breathing room than the
+            tighter rhythm that suits prose blocks elsewhere. */}
         <div className="flex flex-col gap-10 md:gap-16 mt-6 md:mt-10 w-full">
           {solutionFeatures.map((feature) => (
             <div key={feature.number} className="flex flex-col gap-6 md:flex-row md:items-start md:gap-16">
@@ -406,12 +396,9 @@ export default function Glucal() {
           </div>
         </div>
 
-        {/* mt-10/md:mt-24 stack on top of this children wrapper's own gap-6
-            (see Section.tsx) so the total gap above this headline — 24px +
-            40px = 64px, 24px + 96px = 120px — matches the gap-16/md:gap-30
-            the page's own top-level flex uses between sections, even though
-            this headline is a mid-section child rather than its own
-            section. */}
+        {/* mt-10/md:mt-24 stacks on this wrapper's own gap-6 (Section.tsx)
+            so the total gap above this headline matches the gap-16/md:gap-30
+            the page uses between top-level sections. */}
         <h1 className="text-balance text-3xl font-medium leading-[1.2] text-primary mt-10 md:mt-24">
           However, users still expressed that logging food seemed like a separate process from inputting carb amounts.
         </h1>

@@ -2,12 +2,9 @@
 
 import { useId, useRef, useState, useCallback, useEffect } from 'react'
 
-// ⚠️ Safari note: animated SVG filters combined with CSS transforms (e.g. the
-// float animation) can cause per-frame rasterization in Safari, degrading
-// performance. Mitigated here by keeping willChange:'transform' on the animated
-// child and the filter reference on a sibling wrapper, but test on Safari if
-// performance is a concern. The effect is disabled entirely under
-// prefers-reduced-motion.
+// ⚠️ Safari: animated SVG filters + CSS transforms can cause per-frame
+// rasterization. Mitigated by keeping willChange:'transform' on the animated
+// child and the filter on a sibling wrapper. Disabled under prefers-reduced-motion.
 
 export function ErosionFilterDef({ id, scale }: { id: string; scale: number }) {
   return (
@@ -16,12 +13,8 @@ export function ErosionFilterDef({ id, scale }: { id: string; scale: number }) {
       style={{ position: 'absolute', width: 0, height: 0, overflow: 'hidden' }}
     >
       <defs>
-        {/*
-          High-frequency fractalNoise (0.75) creates near-pixel-level randomness,
-          so individual pixels scatter to nearly independent locations rather than
-          warping in blobs. Large scale (0→70) spreads them into the reference
-          dispersion cloud. Filter region is generous to contain the scatter.
-        */}
+        {/* High-frequency fractalNoise (0.75) scatters pixels near-independently
+            rather than warping in blobs; scale (0→70) spreads the scatter. */}
         <filter id={id} x="-70%" y="-70%" width="240%" height="240%" colorInterpolationFilters="sRGB">
           <feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="1" seed="42" result="noise"/>
           <feDisplacementMap

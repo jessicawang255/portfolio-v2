@@ -8,24 +8,19 @@ type Props = {
   sections: TocSection[]
 }
 
-// A gentle, standard ease-out for the subsection reveal itself — entering
-// content gets ease-out, but a mild curve rather than an aggressive one so
-// it settles smoothly instead of reading as a spring.
+// Mild ease-out for the subsection reveal, so it settles smoothly instead of
+// reading as a spring.
 const EASE_OUT: [number, number, number, number] = [0.33, 1, 0.68, 1]
-// The links below the reveal aren't entering — they're already on screen
-// and just shifting to make room — so per the easing decision framework
-// ("on-screen movement" gets ease-in-out, not ease-out) they use this
-// instead, which keeps the reflow feeling calm rather than snappy.
+// The links below the reveal are already on screen and just shifting to make
+// room, not entering, so they get ease-in-out instead.
 const EASE_IN_OUT: [number, number, number, number] = [0.65, 0, 0.35, 1]
 const LAYOUT_TRANSITION = { duration: 0.22, ease: EASE_IN_OUT }
-// Ease-in-out visually settles well before its nominal duration ends (the
-// last stretch of motion is imperceptibly slow), so the reveal below can
-// start once the shift is mostly done rather than waiting for all of it.
+// Ease-in-out visually settles before its nominal duration ends, so the
+// reveal can start once the shift is mostly done.
 const SUBSECTION_REVEAL_DELAY = LAYOUT_TRANSITION.duration * 0.7
 
-// Ceiling on how long a click-triggered scroll can suppress the observer,
-// in case `scrollend` never fires (unsupported browser, or the scroll gets
-// interrupted). Comfortably longer than any in-page smooth scroll takes.
+// Ceiling on how long a click-triggered scroll can suppress the observer, in
+// case `scrollend` never fires. Comfortably longer than any smooth scroll takes.
 const NAVIGATION_TIMEOUT_MS = 1000
 
 function slugify(text: string): string {
@@ -74,11 +69,9 @@ export function TableOfContents({ sections }: Props) {
   const [isPinned, setIsPinned] = useState(false)
   const reduce = useReducedMotion()
 
-  // While true, the scroll-spy observer below ignores what it sees — set
-  // for the duration of a click-triggered scroll so sections it passes
-  // through on the way to the destination never register as "active" and
-  // flash their subsections open. We control this scroll ourselves, so we
-  // know exactly when to stop listening rather than guessing with a timer.
+  // While true, the scroll-spy observer below ignores what it sees, so
+  // sections passed through en route to a click-triggered scroll's
+  // destination never register as "active" and flash their subsections open.
   const isNavigatingRef = useRef(false)
   const navigationTokenRef = useRef(0)
 
@@ -92,8 +85,8 @@ export function TableOfContents({ sections }: Props) {
     el.scrollIntoView({ behavior: "smooth", block: "start" })
 
     const resume = () => {
-      // A newer navigation started before this one settled — let that one
-      // own the suppression window instead of ending it early.
+      // A newer navigation started before this settled — let it own the
+      // suppression window instead of ending it early.
       if (navigationTokenRef.current !== token) return
       isNavigatingRef.current = false
     }
@@ -128,10 +121,9 @@ export function TableOfContents({ sections }: Props) {
     return () => observer.disconnect()
   }, [sections])
 
-  // The TOC rail (aside) is `sticky top-0` inside #cs-content, so it pins to
-  // the viewport top exactly when #cs-content's top edge reaches y=0. Only
-  // show the list once that's true, rather than as soon as it scrolls into
-  // flow further down the page.
+  // The TOC rail is `sticky top-0` inside #cs-content, so it pins to the
+  // viewport top exactly when #cs-content's top edge reaches y=0. Only show
+  // the list once that's true.
   useEffect(() => {
     const content = document.getElementById("cs-content")
     if (!content) return
@@ -159,9 +151,8 @@ export function TableOfContents({ sections }: Props) {
         {sections.map((section) => {
           const id = slugify(section.title)
           const subIds = (section.subsections ?? []).map(slugify)
-          // Stays expanded for the whole section family — the parent
-          // heading itself, or any of its own subsections — and only
-          // collapses once scroll moves to an unrelated top-level section.
+          // Stays expanded for the whole section family — the heading itself
+          // or any of its subsections — until scroll moves to another section.
           const isExpanded = subIds.length > 0 && (activeId === id || subIds.includes(activeId))
 
           return (
@@ -180,11 +171,9 @@ export function TableOfContents({ sections }: Props) {
                     animate={{
                       opacity: 1,
                       y: 0,
-                      // The siblings below are still sliding down to make
-                      // room when this mounts — wait for most of that shift
-                      // before fading in, so the two are never visibly
-                      // overlapping without holding the reveal back longer
-                      // than it needs to be.
+                      // Siblings below are still sliding down to make room
+                      // when this mounts — wait for most of that shift before
+                      // fading in.
                       transition: reduce
                         ? { duration: 0 }
                         : { duration: 0.22, ease: EASE_OUT, delay: SUBSECTION_REVEAL_DELAY },

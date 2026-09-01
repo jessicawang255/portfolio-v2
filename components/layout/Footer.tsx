@@ -22,25 +22,15 @@ const socialLinks = [
   { label: "GitHub",   href: "https://github.com/jessicawang255" },
 ]
 
-// `before:inset-[…]` pads each link's hit area out toward the 44px touch-
-// target minimum (see IconButton's own `::before` for the same trick).
-// Vertical inset caps at -10px, the largest value that clears 44px without
-// one row's hit area reaching past the midpoint into a neighboring row —
-// which is why rows also need real space between them: `gap-6` below (24px)
-// on mobile, where fingers aren't as precise as a mouse, dropping to `gap-1`
-// from `md` up where each row is a small, precisely-clickable target.
-// Horizontal inset stays generous at every size (-16px) since nothing sits
-// beside a stacked link — single-character labels like "X" need it most.
+// `before:inset-[…]` pads each link's hit area toward the 44px touch-target
+// minimum (see IconButton's own `::before`). Vertical inset caps at -10px
+// so one row's hit area can't reach past the midpoint into a neighbor.
 const FOOTER_LINK_CLASS = "relative text-base font-normal text-nav-link hover:text-nav-link-hover transition-colors duration-150 before:absolute before:inset-x-[-16px] before:inset-y-[-10px] before:content-['']"
 
 // Popover reveal — same on-screen-settle curve as TableOfContents' subsection reveal.
 const PANEL_EASE: [number, number, number, number] = [0.33, 1, 0.68, 1]
 // Sized to the widest colophon row ("Built on Next.js, TypeScript, and
-// Tailwind.") plus padding, so that row never wraps — a wrapped line with
-// text-balance looks intentional (roughly even lines) only when there IS a
-// second line to balance against; forcing this one to stay single-line
-// avoids the alternative of a short balanced first line trailing off with a
-// visible gap before the panel's edge.
+// Tailwind.") plus padding, so that row never wraps.
 const PANEL_WIDTH = 352
 const PANEL_VIEWPORT_MARGIN = 16
 
@@ -109,25 +99,15 @@ function EyeIcon() {
   return <MaskIcon src="/icons/eye-fill.svg" />
 }
 
-// Sitewide total, persisted server-side (see app/api/views/route.ts) — the
-// footer is a fixture in the root layout, so there's one count, not a
-// per-page one. Counted at most once per browser, not per tab/session:
-// sessionStorage resets on every new tab (it's scoped per top-level
-// browsing context), which double-counted a single visitor opening a
-// second tab — localStorage is scoped to the browser/device itself, so a
-// fresh browser POSTs (increment + return new total) and flags itself
-// there; any later visit, in any tab, just GETs the current total instead
-// of re-incrementing it. Clearing site data or switching browser/device
-// still counts as a new visitor — this is an approximation, not a precise
-// unique-visitor count, by design (no server-side tracking).
+// Sitewide total, persisted server-side (see app/api/views/route.ts).
+// Counted at most once per browser: localStorage (not sessionStorage, which
+// resets per tab) flags a browser once it's POSTed and incremented; any
+// later visit just GETs the current total. An approximation, not a precise
+// unique-visitor count, by design.
 const VIEW_STORAGE_FLAG = "site-view-counted"
 
-// Only the canonical production host increments the count. Every other
-// origin this component can render on — Vercel preview deployments (a
-// fresh URL per push, so localStorage's per-origin dedupe never applies)
-// and local dev (REDIS_URL is pulled from Vercel into .env.local, so it
-// talks to the same real counter) — would otherwise inflate a count meant
-// to track actual site visitors, not the person building the site.
+// Only the canonical production host increments the count — preview
+// deployments and local dev share the same real counter otherwise.
 const PRODUCTION_HOST = new URL(siteUrl).hostname
 
 function ViewCounter() {
@@ -164,16 +144,13 @@ function ViewCounter() {
   )
 }
 
-// The footer sits behind #main-frame (z-0, see comment below) so its bottom
-// corners can peel back — but that means anything positioned *inside* the
-// footer is stuck under #main-frame's higher stacking context too, no
-// matter its own z-index. Portal the panel to <body> and position it with
-// fixed viewport coordinates so it escapes that context entirely.
+// The footer sits behind #main-frame so its bottom corners can peel back —
+// but that puts anything positioned inside the footer under #main-frame's
+// stacking context too. Portal the panel to <body> with fixed viewport
+// coordinates so it escapes that context entirely.
 function ColophonButton() {
   const [open, setOpen] = useState(false)
-  // Gates the portal — stays false until the button is actually clicked, so
-  // `document.body` is never touched during SSR or the hydration render.
-  // Once true it stays true; AnimatePresence handles hide/show from then on.
+  // Gates the portal so `document.body` is never touched during SSR/hydration.
   const [hasOpenedOnce, setHasOpenedOnce] = useState(false)
   const [coords, setCoords] = useState<{ bottom: number; left?: number; right?: number } | null>(null)
   const btnRef = useRef<HTMLButtonElement>(null)
@@ -184,15 +161,10 @@ function ColophonButton() {
     const rect = btnRef.current?.getBoundingClientRect()
     if (!rect) return
     // The trigger sits at the left edge of its column on mobile
-    // (`items-start`) but the right edge on desktop (`md:items-end`) — below
-    // `md`, anchor the panel's left edge to the button's left edge like
-    // before; from `md` up, anchor its *right* edge to the button's right
-    // edge instead, so the panel lines up with the column's right edge
-    // (every child in the column shares that edge) rather than trailing off
-    // whichever `left` the word "Colophon" itself happens to start at.
-    const isDesktop = window.innerWidth >= 768 // this site's `md` (768px) —
-    // was hardcoded to stock Tailwind's default `md` (640px) here, 128px
-    // off from the `md:items-end` layout flip above it actually tracks
+    // (`items-start`) but the right edge on desktop (`md:items-end`), so
+    // anchor the panel to whichever edge matches, rather than trailing off
+    // wherever the word "Colophon" happens to start.
+    const isDesktop = window.innerWidth >= 768 // this site's `md`
     const bottom = window.innerHeight - rect.top + 12
     if (isDesktop) {
       const right = Math.max(window.innerWidth - rect.right, PANEL_VIEWPORT_MARGIN)
@@ -219,9 +191,7 @@ function ColophonButton() {
     function handleKeyDown(e: KeyboardEvent) {
       if (e.key === "Escape") setOpen(false)
     }
-    // Scroll changes the button's viewport position (the footer is only
-    // `fixed` from `sm` up, and scrolls with content below it) — rather than
-    // tracking it live, just close the panel.
+    // Scroll changes the button's viewport position; close rather than track it live.
     function handleScroll() {
       setOpen(false)
     }
@@ -329,14 +299,9 @@ function ColophonButton() {
   )
 }
 
-// Static (scrolls with content) below `sm`, matching the header/nav's mobile
-// behavior. Fixed from `sm` up — pinned behind the content frame so its
-// bottom corners can peel back to reveal it on scroll (see
-// ScrollRevealController, which animates that peel and reserves body
-// padding-bottom for it at the desktop breakpoint). `sm` is the site's
-// chrome breakpoint (see --breakpoint-sm in globals.css) — deliberately
-// earlier than `md`, which the grid below uses for its own column layout;
-// the footer can be desktop-fixed while its content is still mobile-stacked.
+// Static below `sm`, matching the nav's mobile behavior. Fixed from `sm`
+// up — pinned behind the content frame so its bottom corners can peel back
+// to reveal it on scroll (see ScrollRevealController).
 export function Footer() {
   const pathname = usePathname()
 

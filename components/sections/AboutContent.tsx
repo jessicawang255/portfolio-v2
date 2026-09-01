@@ -11,9 +11,8 @@ import type { Song } from "@/lib/spotify"
 
 type PanelSection = { id: string; label: string }
 
-// Only these three sections sit beside the sticky panel — "My Playlist" and
-// "Some Statistics" both live outside that grid entirely, so the panel
-// scrolls away before either of them.
+// Only these three sections sit beside the sticky panel — playlist and
+// stats render outside that grid.
 const panelSections: PanelSection[] = [
   { id: "journey",     label: "MY EXPERIENCE" },
   { id: "communities", label: "MY COMMUNITIES" },
@@ -22,10 +21,7 @@ const panelSections: PanelSection[] = [
 
 type JourneyItem = { id: string; company: string; role: string; period: string; href: string }
 
-// Volunteer/community-leadership roles (Framer, Hack Western, Western
-// Founders Network) live only in "My Communities" below, not here — this
-// list stands in for the resume (see the "View resume" button on its
-// header), so it's scoped to employment.
+// Employment only — volunteer/leadership roles live in "My Communities" below.
 const journeyItems: JourneyItem[] = [
   { id: "royal-bank-of-canada",     company: "Royal Bank of Canada",               role: "Software Engineering Intern", period: "NOW",  href: "https://www.rbcroyalbank.com" },
   { id: "cibc",                     company: "Canadian Imperial Bank of Commerce", role: "Software Engineering Intern", period: "2025", href: "https://www.cibc.com" },
@@ -79,16 +75,13 @@ const communities: Community[] = [
 ]
 
 // Rich content shown in the sticky panel when a journey/community row is
-// hovered. Keyed by the row's id. Rows without an entry fall back to the
-// plain "Active: {id}" panel text.
+// hovered, keyed by row id. Rows without an entry fall back to plain text.
 type PanelTextBlock =
   | { type: "p"; text: string }
   | { type: "bullets"; items: string[] }
 
-// Same src-as-discriminant pattern as components/cs/ImageBlock.tsx: omit
-// src/alt to render an aspect-ratio placeholder, or supply both for the real
-// photo. Files live at public/images/about/{row-id}/{row-id}-{n}.{jpg,png},
-// numbered by position in the entry's images array (e.g. hack-western-1.jpg).
+// Omit src/alt to render an aspect-ratio placeholder, or supply both for the
+// real photo. Files live at public/images/about/{row-id}/{row-id}-{n}.{jpg,png}.
 type PanelImage =
   | { caption?: string; aspect: string; width?: string; src: string; alt: string; objectPosition?: string }
   | { caption?: string; aspect: string; width?: string; src?: undefined; alt?: never; objectPosition?: string }
@@ -302,10 +295,8 @@ const FALLBACK_PLAYLIST: Song[] = [
   { id: "song-dustcutter-2",     title: "DUSTCUTTER",        artist: "Quadeca",               art: "", href: "#" },
 ]
 
-// Identifies the destination platform (like CommunityRow's per-item icon)
-// rather than a generic "leaves the site" arrow — SongRow always links out
-// to Spotify, so the icon itself carries that information now that the
-// "Play on Spotify" label is gone.
+// Icon-only — SongRow always links out to Spotify, so the mark itself
+// signals the destination.
 function SpotifyIcon() {
   return (
     <span
@@ -330,21 +321,16 @@ function SpotifyIcon() {
 function SectionHeader({ label, action }: { label: string; action?: React.ReactNode }) {
   return (
     <div className="mb-6 flex items-center justify-between">
-      {/* font-normal — see CaseStudies.tsx's identical eyebrow for why:
-          the bare `h2` selector in globals.css defaults to the 500
-          sub-heading weight, which this label was never meant to be. */}
+      {/* font-normal overrides the h2 default weight (500) — this label isn't a sub-heading. */}
       <h2 className="font-mono text-sm font-normal uppercase leading-[1.2] text-neutral-400">{label}</h2>
       {action}
     </div>
   )
 }
 
-// 2px radius per spec. Renders the real photo once src/alt are set on the
-// PanelImage entry, otherwise falls back to an aspect-ratio placeholder.
-// `objectPosition` overrides the crop anchor (default center) for photos
-// where the box's aspect ratio is wider than the source, so cropping the
-// overflow happens on one side only (e.g. "top" to keep a subject's head
-// framed instead of centering the crop).
+// Renders the real photo once src/alt are set, otherwise an aspect-ratio
+// placeholder. objectPosition overrides the crop anchor for photos where the
+// box is wider than the source (e.g. "top" to keep a subject's head framed).
 function AboutPanelImage({ caption, aspect, width, src, alt, objectPosition }: PanelImage) {
   return (
     <div style={{ width: width ?? "100%" }}>
@@ -377,19 +363,15 @@ function AboutPanelImage({ caption, aspect, width, src, alt, objectPosition }: P
   )
 }
 
-// Shown in the sticky panel while the "fun" section's content is hovered —
-// same hover-triggered behavior as journey/communities, just keyed off the
-// whole content block instead of individual rows (see the onMouseEnter wired
-// up where this is used). Custom layout (shared caption spanning the first
-// pair of photos) doesn't fit the generic masonry PanelContentView renders,
-// so it's hand-built here instead of going through panelContent.
+// Shown in the sticky panel while "fun" is hovered — keyed off the whole
+// content block rather than individual rows. Hand-built rather than routed
+// through panelContent/PanelContentView since the shared-caption layout
+// doesn't fit the generic masonry.
 function FunPanelContent() {
   return (
     <div className="flex flex-col gap-9">
       <div>
-        {/* Top-aligned, independent heights — the left photo is cropped
-            shorter (389/493, anchored to the top) so its bottom edge sits
-            above the right photo's rather than lining up with it. */}
+        {/* Left photo cropped shorter (anchored top) so its bottom edge sits above the right photo's. */}
         <div className="flex items-start gap-6">
           <div className="w-[29%] shrink-0">
             <AboutPanelImage
@@ -491,11 +473,9 @@ function JourneyRow({
       onMouseLeave={onUnhover}
       className="group relative -mx-3 flex items-center justify-between gap-6 border-x border-x-transparent border-y border-y-transparent px-3 py-3 transition-colors duration-150 hover:border-y-neutral-900/3 hover:bg-neutral-75 hover:duration-0 lg:hover:cursor-help"
     >
-      {/* Below `lg` the sticky panel is hidden, so there's no hover preview
-          making an icon-only click target legible — the whole row becomes
-          the link instead. aria-hidden + tabIndex -1: a mouse/touch hit-area
-          only, not a second stop for assistive tech — the IconButton below
-          stays the one reachable, always-present link. */}
+      {/* Below `lg` the sticky panel is hidden, so the whole row becomes the
+          click target. aria-hidden + tabIndex -1 keep this out of the tab
+          order — the IconButton below is the one reachable link. */}
       <a
         href={item.href}
         target={external ? "_blank" : undefined}
@@ -506,16 +486,12 @@ function JourneyRow({
       />
       <div>
         <p className="text-balance text-base font-medium leading-[1.3] text-neutral-900">{item.company}</p>
-        {/* mt-0.5: restores the space leading-[1.3] trims off the title's
-            bottom half-leading (relative to text-base's default 1.5) so
-            the gap to the role line below reads the same as before. */}
+        {/* mt-0.5 restores the gap leading-[1.3] trims off the title's line-height. */}
         <p className="mt-0.5 text-balance text-base text-neutral-500">{item.role}</p>
       </div>
-      {/* Crossfades in place rather than sitting beside the period — the row
-          itself isn't the link (only the icon is, unlike CommunityRow), so
-          this swaps what the trailing slot shows instead of adding to it.
-          group-focus-within alongside group-hover so tabbing to the
-          IconButton reveals it too, not just mouse hover. */}
+      {/* Crossfades the trailing slot between period and icon — the row isn't
+          the link, only the icon is. group-focus-within mirrors group-hover
+          so tabbing to the icon reveals it too. */}
       <div className="relative h-6 w-6 shrink-0">
         <span className="absolute inset-0 flex items-center justify-end font-mono text-sm uppercase text-neutral-400 transition-[opacity,filter] duration-150 ease-out group-hover:opacity-0 group-hover:blur-[2px] group-focus-within:opacity-0 group-focus-within:blur-[2px]">
           {item.period}
@@ -544,11 +520,9 @@ function CommunityRow({
       onMouseLeave={onUnhover}
       className="group relative -mx-3 flex items-center justify-between gap-6 border-x border-x-transparent border-y border-y-transparent px-3 py-4 transition-colors duration-150 hover:border-y-neutral-900/3 hover:bg-neutral-75 hover:duration-0 lg:hover:cursor-help"
     >
-      {/* Below `lg` the sticky panel is hidden, so there's no hover preview
-          making an icon-only click target legible — the whole row becomes
-          the link instead. aria-hidden + tabIndex -1: a mouse/touch hit-area
-          only, not a second stop for assistive tech — the IconButton below
-          stays the one reachable, always-present link. */}
+      {/* Below `lg` the sticky panel is hidden, so the whole row becomes the
+          click target. aria-hidden + tabIndex -1 keep this out of the tab
+          order — the IconButton below is the one reachable link. */}
       <a
         href={item.href}
         target={external ? "_blank" : undefined}
@@ -564,9 +538,7 @@ function CommunityRow({
         />
         <div>
           <p className="text-balance text-base font-medium leading-[1.3] text-neutral-900">{item.name}</p>
-          {/* mt-0.5: restores the space leading-[1.3] trims off the
-              title's bottom half-leading — see JourneyRow's identical
-              comment above. */}
+          {/* mt-0.5 restores the gap leading-[1.3] trims off the title's line-height. */}
           <p className="mt-0.5 text-balance text-base text-neutral-500">{item.description}</p>
         </div>
       </div>
@@ -580,9 +552,8 @@ function CommunityRow({
 }
 
 // Stand-in art tile: one of the 12 unused flowers (from the pre-redesign
-// brand system), assigned per song. A subtle rotate/scale on hover rather
-// than cycling or revealing a real photo — the flower itself is the artwork.
-// Scale-down echoes MoreCaseStudies' thumbnail hover (scale-95).
+// brand system), assigned per song. The flower itself is the artwork —
+// just a subtle rotate/scale on hover, no cycling or real photo.
 function SongArt({ flowerIdx, isHovered }: { flowerIdx: number; isHovered: boolean }) {
   const reduce = useReducedMotion()
   const FlowerComponent = FLOWERS[flowerIdx % FLOWERS.length].component
@@ -608,9 +579,8 @@ function SongArt({ flowerIdx, isHovered }: { flowerIdx: number; isHovered: boole
   )
 }
 
-// Same hover language as JourneyRow/CommunityRow, since the sticky panel is
-// out of view by the time this section scrolls in — the "hover shows related
-// content elsewhere" distinction isn't perceivable here.
+// Same hover treatment as JourneyRow/CommunityRow, though there's no sticky
+// panel in view to trigger by the time this section scrolls in.
 function SongRow({ item, flowerIdx }: { item: Song; flowerIdx: number }) {
   const [isHovered, setIsHovered] = useState(false)
   return (
@@ -626,25 +596,18 @@ function SongRow({ item, flowerIdx }: { item: Song; flowerIdx: number }) {
         <SongArt flowerIdx={flowerIdx} isHovered={isHovered} />
         <div>
           <p className="text-balance text-base font-medium leading-[1.3] text-neutral-900">{item.title}</p>
-          {/* mt-0.5: restores the space leading-[1.3] trims off the
-              title's bottom half-leading — see JourneyRow's identical
-              comment above. */}
+          {/* mt-0.5 restores the gap leading-[1.3] trims off the title's line-height. */}
           <p className="mt-0.5 text-balance text-base text-neutral-500">{item.artist}</p>
         </div>
       </div>
-      {/* Shown (opacity-revealed on hover) at every breakpoint, same as
-          JourneyRow's/CommunityRow's icons — touch has no hover to reveal
-          it, but a mouse in a narrow window still does. Icon-only (no "Play
-          on Spotify" label) — the Spotify mark itself carries that
-          information, same as CommunityRow's per-item platform icons
-          (Instagram/website) rather than a generic external-link arrow. */}
+      {/* Revealed on hover at every breakpoint — touch has no hover, but a
+          mouse in a narrow window still does. Icon-only since the Spotify
+          mark itself signals the destination. */}
       <span className="flex shrink-0 items-center text-neutral-200 opacity-0 transition-opacity duration-150 group-hover:opacity-100">
-        {/* group/icon is scoped to just this icon (not the row's own
-            `group`), so the tint/scale/tick and tooltip below only react to
-            a hover precise enough to land on the 24px mark itself — same
-            split, and the same hover treatment, as IconButton (hand-matched
-            rather than nesting a real IconButton <a> inside this row's own
-            <a>, which would be invalid HTML). */}
+        {/* group/icon scopes the hover tint/scale/tooltip to just the 24px
+            icon, not the whole row — hand-matches IconButton's hover
+            treatment rather than nesting a real IconButton <a> inside this
+            row's own <a> (invalid HTML). */}
         <span
           className="group/icon relative inline-flex transition-[color,scale] duration-150 before:absolute before:inset-[-11px] before:content-[''] hover:scale-110 hover:text-nav-link-hover motion-safe:hover:animate-[icon-tick_var(--duration-slow)_var(--ease-out)]"
           aria-hidden="true"
@@ -670,11 +633,9 @@ export function AboutContent({ spotifyPlaylist }: { spotifyPlaylist: Song[] | nu
   const [activeId, setActiveId] = useState<string>("")
   const [hoveredId, setHoveredId] = useState<string | null>(null)
 
-  // A row's onMouseLeave doesn't clear hoveredId directly — it schedules a
-  // clear a beat later, giving the cursor time to land on the sticky panel
-  // in transit. Entering a row or the panel cancels that pending clear, so
-  // content only actually disappears once the mouse has left both surfaces
-  // without landing on the other.
+  // onMouseLeave doesn't clear hoveredId immediately — it's delayed so the
+  // cursor has time to land on the sticky panel. Entering a row or the panel
+  // cancels the pending clear.
   const unhoverTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const cancelScheduledUnhover = () => {
@@ -714,11 +675,9 @@ export function AboutContent({ spotifyPlaylist }: { spotifyPlaylist: Song[] | nu
 
   const displayId = hoveredId ?? activeId
   const panelText = "Hover on an item to learn more…"
-  // Unlike journey/communities, "fun" has no hoverable rows to key off of —
-  // the whole section's content div is the hover target (wired below) — so
-  // this checks hoveredId directly rather than falling back to activeId.
-  // Falling back would make the fun panel appear just from scrolling the
-  // section into view, same as the old (undesired) behavior.
+  // "fun" has no hoverable rows to key off — its whole content block is the
+  // hover target — so this checks hoveredId directly rather than falling
+  // back to activeId, which would show the panel just from scrolling into view.
   const isFun = hoveredId === "fun"
   const panelEntry = displayId ? panelContent[displayId] : undefined
   const panelKey = isFun ? "entry-fun" : panelEntry ? `entry-${displayId}` : `text-${panelText}`
@@ -726,9 +685,7 @@ export function AboutContent({ spotifyPlaylist }: { spotifyPlaylist: Song[] | nu
   return (
     <div className="container-main pt-9 pb-9">
       <div className="grid grid-cols-1 gap-x-[54px] lg:grid-cols-[minmax(0,min(586px,40%))_1fr]">
-        {/* Left column — sections 1-4 */}
-        {/* gap-20 flat at every breakpoint — matches Home's own section gap
-            (see app/(home)/page.tsx), not a responsive step. */}
+        {/* Left column — sections 1-4. gap-20 matches the section gap used on Home. */}
         <div className="flex flex-col gap-20">
           <motion.section
             id="journey"
@@ -753,19 +710,10 @@ export function AboutContent({ spotifyPlaylist }: { spotifyPlaylist: Song[] | nu
             </motion.div>
             <div className="flex flex-col gap-0">
               {journeyItems.map((item) => (
-                // relative + a standing (not hover-conditional) z — fadeUp's
-                // y-transform leaves each row as its own stacking context
-                // even after settling (transform: translateY(0px) ≠ none),
-                // which otherwise traps the icon's tooltip below whichever
-                // sibling row happens to come later in the DOM. Elevating
-                // the whole row here (not just the tooltip) lets it clear
-                // every sibling regardless of paint order — kept on
-                // permanently rather than toggled by hover/focus-within,
-                // since toggling it off the instant the mouse leaves used to
-                // yank the row back into normal paint order while its
-                // tooltip was still fading out, flashing a stale fragment of
-                // it. Rows never overlap each other at rest, so a standing
-                // z-10 on every one is free.
+                // relative z-10 keeps each row above its siblings so the
+                // tooltip below isn't clipped by whichever row comes later in
+                // the DOM — needed even at rest since fadeUp's transform never
+                // fully clears to `none`.
                 <motion.div key={item.id} variants={fadeUp} className="relative z-10">
                   <JourneyRow
                     item={item}
@@ -904,7 +852,9 @@ export function AboutContent({ spotifyPlaylist }: { spotifyPlaylist: Song[] | nu
             // above the tallest measured panel entry (~755px), so it only kicks
             // in on genuinely oversized screens; overflow-y-auto is the fallback
             // for anything that outgrows it regardless.
-            className="sticky flex h-[clamp(0px,calc(100vh-var(--nav-height)-16px),60rem)] flex-col overflow-y-auto rounded-2xl border border-neutral-100 bg-neutral-75 p-9 shadow-[0_4px_20px_-6px_rgba(22,25,29,0.06)]"  // could add this shadow: shadow-[0_0_30px_-10px_rgba(22,25,29,0.08)]
+            // Fills the viewport (minus nav clearance) up to a 60rem cap;
+            // overflow-y-auto is the fallback for anything taller than that.
+            className="sticky flex h-[clamp(0px,calc(100vh-var(--nav-height)-16px),60rem)] flex-col overflow-y-auto rounded-2xl border border-neutral-100 bg-neutral-75 p-9 shadow-[0_4px_20px_-6px_rgba(22,25,29,0.06)]"
             style={{ top: "calc(var(--nav-height) - 20px)" }}
           >
             {reduce ? (
@@ -938,10 +888,8 @@ export function AboutContent({ spotifyPlaylist }: { spotifyPlaylist: Song[] | nu
         </div>
       </div>
 
-      {/* Playlist — outside the two-column grid; renders full width once the
-          sticky panel's container (above) has scrolled out of the way.
-          mt-20 — matches the gap-20 used between the sections above (and on
-          Home), not a separately-tuned value. */}
+      {/* Playlist renders full width, outside the two-column grid, once the
+          sticky panel has scrolled past. mt-20 matches the section gap above. */}
       <motion.section
         id="playlist"
         className="mt-20"
@@ -956,12 +904,9 @@ export function AboutContent({ spotifyPlaylist }: { spotifyPlaylist: Song[] | nu
             Based off my Spotify&rsquo;s most played songs in the past 6 months.
           </p>
         </motion.div>
-        {/* Column count steps down (3 → 2 → 1) before a row is narrow enough
-            to force the title into conflict with the trailing icon —
-            thresholds are measured against the longest current title, not
-            arbitrary breakpoints. Re-measure if playlist content changes
-            meaningfully (was previously measured against "Play on Spotify",
-            now just the icon — may tolerate a narrower threshold, unverified). */}
+        {/* Column count (3→2→1) steps down before a row gets too narrow for
+            the title against the trailing icon; thresholds are measured
+            against the longest current title. */}
         <div className="flex flex-col min-[960px]:grid min-[960px]:grid-flow-col min-[960px]:grid-cols-2 min-[960px]:grid-rows-5 min-[960px]:gap-x-12 min-[1360px]:grid-cols-3 min-[1360px]:grid-rows-3 min-[1360px]:gap-x-16">
           {playlist.map((item, index) => (
             <motion.div key={item.id} variants={fadeUp}>
@@ -971,8 +916,8 @@ export function AboutContent({ spotifyPlaylist }: { spotifyPlaylist: Song[] | nu
         </div>
       </motion.section>
 
-      {/* Statistics — outside the two-column grid; renders full width once the
-          sticky panel's container (above) has scrolled out of the way. */}
+      {/* Statistics renders full width, outside the two-column grid, once the
+          sticky panel has scrolled past. */}
       {/* <motion.section
         id="stats"
         className="mt-20"

@@ -7,16 +7,14 @@ type Props = {
   currentSlug: string
 }
 
-// Rendered inline inside CaseStudyLayout's content column (cs-header-content),
-// after {children} — inherits that column's width/alignment rather than
-// defining its own, so it lines up exactly with the case study body above it.
+// Rendered inline inside CaseStudyLayout's content column, after {children} —
+// inherits that column's width/alignment rather than defining its own.
 export async function MoreCaseStudies({ currentSlug }: Props) {
   const others = projects.filter((p) => p.slug !== currentSlug)
   if (others.length === 0) return null
 
   // Same per-slug lazy-loading pattern as the hero background in
-  // app/work/[slug]/page.tsx — falls back to the project's flat color when a
-  // case study doesn't have a hero image yet.
+  // app/work/[slug]/page.tsx.
   const rows = await Promise.all(
     others.map(async (project) => {
       let heroImg: StaticImageData | null = null
@@ -48,16 +46,12 @@ export async function MoreCaseStudies({ currentSlug }: Props) {
             <Link
               key={slug}
               href={`/work/${slug}`}
-              // Same row-hover language as JourneyRow/SongRow in AboutContent:
-              // full-bleed background on hover, instant on enter (duration-0),
-              // eased back out on leave (duration-150).
+              // Same row-hover language as JourneyRow/SongRow in AboutContent.
               className="group -mx-3 flex items-center justify-between gap-6 border-x border-x-transparent border-y border-y-transparent px-3 py-4 outline-none transition-colors duration-150 hover:border-y-neutral-900/3 hover:bg-neutral-75 hover:duration-0 focus-visible:ring-2 focus-visible:ring-accent"
             >
               <div className="flex min-w-0 items-center gap-6">
                 {/* Sized to the hero images' 6000x2830 aspect ratio so they
-                    fill the box with no letterboxing. Scales down
-                    127x60 -> 121x57, anchored at its own center — the title
-                    stays put rather than shifting with it. */}
+                    fill the box with no letterboxing. */}
                 <div
                   className="relative h-[60px] w-[127px] shrink-0 overflow-hidden rounded-base transition-[scale] duration-200 group-hover:scale-95"
                   style={bgStyle}
@@ -71,10 +65,6 @@ export async function MoreCaseStudies({ currentSlug }: Props) {
                   <h3 className="text-balance text-base font-medium leading-[1.3] text-neutral-800">
                     {title}
                   </h3>
-                  {/* mt-0.5 — same title-to-subtitle gap as CaseStudyCard's
-                      gap-0.5 and About's JourneyRow/CommunityRow/SongRow, so
-                      this text pattern renders at the exact same pixel gap
-                      everywhere on the site, not just a visually-close one. */}
                   <p className="mt-0.5 text-balance text-base text-neutral-500">
                     {name}
                     {name && status && (
@@ -85,11 +75,8 @@ export async function MoreCaseStudies({ currentSlug }: Props) {
                 </div>
               </div>
 
-              {/* Same icon sizing as IconButton (24) but with no hover
-                  interaction of its own — rendered as a plain span, not a
-                  nested IconButton <a>, since the whole row above is
-                  already a Link (nested <a> tags are invalid HTML). Reveals
-                  with the row's existing group-hover opacity fade. */}
+              {/* Plain span, not a nested IconButton <a>, since the whole
+                  row is already a Link (nested <a> tags are invalid HTML). */}
               <span
                 className="hidden shrink-0 items-center leading-none text-neutral-200 opacity-0 transition-opacity duration-150 group-hover:opacity-100 md:flex"
                 aria-hidden="true"

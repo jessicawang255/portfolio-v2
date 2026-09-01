@@ -26,9 +26,7 @@ function extractMetaContent(html: string, property: string): string | null {
 }
 
 // Spotify's public track page exposes title/artist/art via Open Graph meta
-// tags — no API key, developer app, or Premium account required, since this
-// isn't the gated Web API. Not an official/versioned API, so it could break
-// if Spotify changes their page markup, but it's the only auth-free option.
+// tags — auth-free, but unofficial, so it could break if the markup changes.
 async function getTrackMetadata(url: string): Promise<Song | null> {
   const id = extractTrackId(url)
   if (!id) return null

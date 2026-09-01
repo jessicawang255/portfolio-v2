@@ -9,42 +9,27 @@ type Props = {
   // image (bento layout on the home page). Overrides thumbnailWidth/Height.
   imageRatio?: [number, number]
   // Overrides the box ratio below `mobileBreakpoint` only (see
-  // --thumb-ratio-mobile in globals.css) — lets a grid of cards with
-  // different natural ratios line up to one shared ratio on mobile while
-  // each card keeps its own ratio above that breakpoint.
+  // --thumb-ratio-mobile in globals.css), so a grid of cards with different
+  // natural ratios can share one ratio on mobile.
   mobileImageRatio?: [number, number]
-  // Which breakpoint releases the box back to its own ratio: `md` (768px,
-  // default — Case Studies) or `lg` (960px — Discover More, whose 4 columns
-  // need more room before `md` stops being too narrow). Only meaningful
-  // alongside mobileImageRatio.
+  // Breakpoint that releases the box back to its own ratio: `md` (768px,
+  // default) or `lg` (960px, for grids that need more room before `md`).
+  // Only meaningful alongside mobileImageRatio.
   mobileBreakpoint?: "md" | "lg"
-  // Where a cropped video thumbnail anchors within its box — `center`
-  // (default) or `top` to keep the top of the frame intact and crop from
-  // the bottom instead. No effect on images or on boxes that don't crop.
+  // Where a cropped video thumbnail anchors: `center` (default) or `top` to
+  // crop from the bottom instead. No effect on images.
   videoPosition?: "center" | "top"
-  // Shrinks the image within its box by this percentage on every side
-  // instead of filling the box edge-to-edge. Only sensible when the asset's
-  // own background — baked into the file, or transparent over the card's bg
-  // color — matches the box color, so the margin this reveals reads as
-  // intentional padding rather than a mismatched border.
+  // Shrinks the image within its box by this percentage per side instead of
+  // filling edge-to-edge. Only looks right when the asset's own background
+  // matches the box color, so the reveal reads as padding, not a border.
   imageInset?: number
-  // How the image fills the inset box: `contain` (default) shows the whole
-  // asset uncropped, so any padding baked into the file stays exactly as
-  // drawn. `cover` scales up and crops instead — for an asset whose own
-  // canvas has uneven built-in padding (e.g. Snippets: ~12% empty margin
-  // above the screenshots, ~0% below), cropping into the excess is the only
-  // way to balance it without re-exporting the file, and is only safe
-  // toward the edge that actually has slack to spare. No effect without
-  // imageInset.
+  // How the image fills the inset box: `contain` (default) shows it
+  // uncropped; `cover` scales up and crops, for an asset with uneven
+  // built-in padding. No effect without imageInset.
   imageFit?: "contain" | "cover"
-  // Title size: `lg` (default, flat 18px) for Case Studies, whose mobile
-  // grid is a single full-width column so 18px never gets cramped.
-  // `responsive` (16px below `lg`, 18px from `lg` up) for Discover More,
-  // whose 2-col grid stays narrow through the whole phone/small-tablet
-  // range and wraps multi-word titles to 3 lines at 18px there. Pinned to
-  // the same `lg` breakpoint as Discover More's own grid-cols-2→4 switch
-  // (see DiscoverMore.tsx) so the two can't drift apart — the bump always
-  // lands exactly when the grid actually gives each card more room.
+  // Title size: `lg` (default, flat 18px) or `responsive` (16px below `lg`,
+  // 18px above) for narrower grids that need the extra room. Pinned to the
+  // same `lg` breakpoint as Discover More's grid-cols switch.
   titleSize?: "lg" | "responsive"
 }
 
@@ -91,16 +76,13 @@ export function CaseStudyCard({
   const isWideMobile = mobileBreakpoint === "lg"
 
   // With no explicit imageRatio, size the box to the thumbnail's own aspect
-  // ratio instead of forcing a uniform crop — lets Discover More's bento
-  // layout follow each asset's natural dimensions.
+  // ratio instead of forcing a uniform crop.
   const usesThumbnailRatio = !imageRatio && thumbnailWidth && thumbnailHeight
   const ratio = imageRatio ?? (usesThumbnailRatio ? [thumbnailWidth!, thumbnailHeight!] : undefined)
 
-  // aspect-ratio (not a pixel height) so the box scales proportionally with
-  // its fluid grid-column width instead of stretching width while height
-  // stays fixed. Set as CSS custom properties rather than `aspectRatio`
-  // directly so globals.css can swap in `--thumb-ratio-mobile` below `md`
-  // when a section (Discover More) opts every card into one shared ratio.
+  // aspect-ratio (not a pixel height) scales the box with its fluid
+  // grid-column width. Set as CSS custom properties so globals.css can swap
+  // in `--thumb-ratio-mobile` below `md`.
   const thumbStyle = {
     ...(ratio ? { "--thumb-ratio-desktop": `${ratio[0]} / ${ratio[1]}` } : {}),
     ...(mobileImageRatio
@@ -118,10 +100,6 @@ export function CaseStudyCard({
         rel={isExternal ? "noopener noreferrer" : undefined}
         className="flex flex-col gap-4 md:gap-3 rounded-[--radius-xl] outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-4"
       >
-        {/* Thumbnail — aspect-ratio (set in thumbStyle) governs the box at
-            every width, mobile included, so height shrinks with width
-            instead of the box holding a fixed mobile height and letting the
-            crop vary card-to-card. */}
         <div
           className={`card-thumb relative w-full overflow-hidden${isWideMobile ? " card-thumb-mobile-wide" : ""}`}
           style={thumbStyle}
@@ -144,9 +122,8 @@ export function CaseStudyCard({
             />
           )}
           {thumbnail && !isVideo && (imageInset ? (
-            // `fill` forces width/height:100% of its own positioned parent
-            // (Next throws if you fight that in style) — so to inset the
-            // image, inset a wrapper instead and let `fill` fill that.
+            // `fill` forces width/height:100% of its positioned parent, so
+            // inset a wrapper instead and let `fill` fill that.
             <div className="absolute" style={{ inset: `${imageInset}%` }}>
               <Image
                 src={thumbnail}
@@ -173,14 +150,7 @@ export function CaseStudyCard({
           ))}
         </div>
 
-        {/* Text block */}
         <div className="card-text flex items-start justify-between gap-6 px-0 md:px-3.5">
-          {/* gap-0.5 — same title-to-subtitle gap as MoreCaseStudies' mt-0.5
-              and About's JourneyRow/CommunityRow/SongRow, so this text
-              pattern renders at the exact same pixel gap everywhere on the
-              site, not just a visually-close one. One value at every
-              breakpoint (dropped the old gap-0/md:gap-1 split) for the same
-              reason. */}
           <div className="flex flex-col gap-0.5">
             <h3
               className={`text-balance font-medium leading-[1.3] text-neutral-800 ${
@@ -201,8 +171,7 @@ export function CaseStudyCard({
             )}
           </div>
 
-          {/* Hover-reveal arrow — desktop only (see `hover: hover` gate in
-              globals.css); dropped on mobile since there's no hover to reveal it. */}
+          {/* Desktop only — no hover to reveal it on mobile. */}
           <span className="card-arrow hidden shrink-0 leading-none text-neutral-200 md:inline" aria-hidden="true">
             <ArrowUpRight />
           </span>

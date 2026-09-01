@@ -13,11 +13,10 @@ const TRAIL_DAMPING   = .5
 const TRAIL_STRENGTH  = .6   // trail halo intensity relative to primary
 const ACCENT_COLOR    = "#AAAFB5"  // default hover/glow colour
 
-// Dot size/spacing/glow-radius per screen breakpoint — keeps the field at a
-// consistent visual density instead of looking coarse on phones or overly
-// fine on very large monitors. `minWidth` checks against window.innerWidth;
-// breakpoints match Tailwind's default sm/lg/2xl scale. The lg tier (1024px)
-// is the original fixed values this component always used.
+// Dot size/spacing/glow-radius per screen breakpoint, so the field stays at
+// a consistent visual density instead of looking coarse on phones or overly
+// fine on large monitors. `minWidth` checks window.innerWidth; breakpoints
+// match Tailwind's default sm/lg/2xl scale.
 type Tier = { minWidth: number; grid: number; dot: number; influence: number; sizeBoost: number }
 const TIERS: Tier[] = [
   { minWidth: 0,    grid: 20, dot: 1.0, influence: 100, sizeBoost: .6 },  // phones
@@ -83,12 +82,9 @@ export function DotField({
   // Always-fresh ref so the canvas loop can read the latest color without
   // the effect needing to re-run (which would reset all spring state).
   const accentColorRef = useRef(accentRgb)
-  // Exposes startRAF from inside the effect so the nudge effect below
-  // can kick the loop when the color changes while the cursor is idle.
+  // Exposes startRAF so this can kick the loop when color changes while idle.
   const startRAFRef = useRef<() => void>(() => {})
 
-  // Refresh the ref and kick the RAF whenever accentColor changes, so the
-  // lerp runs even if the cursor hasn't moved.
   useEffect(() => {
     accentColorRef.current = accentRgb
     startRAFRef.current()
@@ -109,8 +105,7 @@ export function DotField({
     let dots: { x: number; y: number; baseAlpha: number }[] = []
     let staticLayer: HTMLCanvasElement | null = null
 
-    // Active tier's values — reassigned in resize() as the breakpoint
-    // changes; everything else reads these instead of fixed constants.
+    // Active tier's values, reassigned in resize() as the breakpoint changes.
     let grid       = TIERS[0].grid
     let dotRadius  = TIERS[0].dot
     let haloRadius = TIERS[0].influence
@@ -125,7 +120,7 @@ export function DotField({
       }
     }
 
-    // Pre-render static grey field once; blitted each frame as a single GPU copy.
+    // Pre-render the static grey field once; blitted each frame as one GPU copy.
     function buildStaticLayer() {
       const sl   = document.createElement("canvas")
       sl.width   = canvas!.width
@@ -143,10 +138,9 @@ export function DotField({
 
     function resize() {
       if (viewport) {
-        // Tracks the current viewport each time this runs. Grid spacing
-        // is a fixed pixel value per tier, never derived from W/H, so
-        // growing the window tiles in new rows/columns of dots at the same
-        // size rather than scaling the existing ones up.
+        // Grid spacing is a fixed pixel value per tier, never derived from
+        // W/H, so growing the window tiles in new rows/columns of dots
+        // rather than scaling the existing ones up.
         W = window.innerWidth
         H = window.innerHeight
       } else {
@@ -170,10 +164,8 @@ export function DotField({
       drawFrame()
     }
 
-    // ── Animated accent colour ────────────────────────────────────────────────
     // Lerps toward accentColorRef.current each tick so colour transitions are
     // smooth rather than instant when the flower changes.
-
     let animR = accentColorRef.current[0]
     let animG = accentColorRef.current[1]
     let animB = accentColorRef.current[2]
@@ -233,8 +225,7 @@ export function DotField({
           ? smoothstep(1 - dist2 / haloRadius) * influence * TRAIL_STRENGTH
           : 0
 
-        // Dominant contribution per dot — primary wins in its zone, trail glows
-        // in the wake. Single fill call per dot keeps the loop tight.
+        // Primary wins in its zone, trail glows in the wake.
         const prox = Math.max(prox1, prox2)
         if (prox < 0.005) continue
 
@@ -299,17 +290,15 @@ export function DotField({
 
     // ── Events ────────────────────────────────────────────────────────────────
 
-    // Safari's document-level mouseenter/mouseleave are unreliable (a
-    // long-standing WebKit quirk — they can simply never fire), so the
-    // "entering" teleport can't depend on onEnter alone. `hasEntered`
-    // lets onMove fall back to doing the same teleport off a plain
-    // mousemove, which fires consistently in every browser.
+    // Safari's document-level mouseenter/mouseleave can simply never fire, so
+    // `hasEntered` lets onMove fall back to the same teleport off a plain
+    // mousemove instead.
     let hasEntered = false
 
     function enterAt(x: number, y: number) {
       cursorX = x
       cursorY = y
-      // Teleport both springs to entry point — trail develops organically from movement
+      // Teleport both springs to the entry point; trail develops from movement.
       springX = x; springY = y; springVX = 0; springVY = 0
       trailX  = x; trailY  = y; trailVX  = 0; trailVY  = 0
       infTarget  = 1
@@ -344,10 +333,9 @@ export function DotField({
     // ── Mount ─────────────────────────────────────────────────────────────────
 
     if (viewport) {
-      // Anchored to the top-left at all times (see canvas style below), and
-      // re-tiled on resize: canvas.width/height (the pixel backing buffer)
-      // and canvas.style.width/height are set together in resize() so the
-      // CSS box never scales ahead of the redrawn bitmap.
+      // canvas.width/height (the pixel backing buffer) and canvas.style
+      // width/height are set together in resize() so the CSS box never
+      // scales ahead of the redrawn bitmap.
       window.addEventListener("resize", resize)
       resize()
       if (!reduced && isDesktop) {

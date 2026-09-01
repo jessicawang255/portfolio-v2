@@ -20,15 +20,11 @@ const PlayIcon = () => (
   </svg>
 )
 
-// Two looped demo clips shown side by side — autoplaying both at once made
-// them compete for attention, which defeats the point of putting them side
-// by side to compare in the first place. Only one plays at a time: the
-// first item autoplays on mount so the comparison is visible with zero
-// interaction, the second sits paused behind a "click to play" scrim.
-// Clicking a paused clip plays it and pauses whichever was playing —
-// always exactly one active, deliberately with no way to pause it directly
-// (no hover control, no click-to-pause): playing the other clip is the
-// only way to stop the current one.
+// Two looped demo clips shown side by side, only one playing at a time —
+// autoplaying both would have them compete for attention. The first
+// autoplays on mount; the second sits paused behind a "click to play" scrim.
+// Clicking a paused clip plays it and pauses the other; there's no direct
+// way to pause a clip except by playing the other one.
 export function VideoCompare({ items, className }: VideoCompareProps) {
   const [activeIndex, setActiveIndex] = useState(0)
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([])
@@ -58,10 +54,7 @@ export function VideoCompare({ items, className }: VideoCompareProps) {
           <div key={item.name} className="flex flex-col items-center gap-3">
             <p className="text-sm font-mono uppercase leading-[1.2] text-neutral-400">{item.label}</p>
             <div
-              // Same lighter shadow as AboutContent's panel — this
-              // component is only used by gluCal, which deliberately
-              // diverges from hack-western.tsx's heavier case-study-image
-              // shadow for a softer treatment across its own screens.
+              // Lighter shadow than the standard case-study-image shadow, for a softer treatment.
               className="relative w-full max-w-72 overflow-hidden rounded-[26px] border border-neutral-100 shadow-[0_4px_20px_-6px_rgba(22,25,29,0.06)]"
               style={{ aspectRatio: "390 / 844" }}
             >

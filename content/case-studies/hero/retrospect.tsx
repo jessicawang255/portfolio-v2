@@ -10,7 +10,7 @@ import heroImg from "./retrospect-hero.png"
 // independently of height.
 export const heroAspectRatio = heroImg.width / heroImg.height
 
-// Same flat navy background as before (project.bg) — this file exists only to add the foreground screenshots on top of it.
+// Reuses project.bg's flat navy background; this file only adds the foreground screenshots on top.
 export default function RetrospectHero({ project }: { project: Project }) {
   return (
     <>
