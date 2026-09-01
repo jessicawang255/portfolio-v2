@@ -272,7 +272,7 @@ export function ScreenSpotlight({ flows, className }: ScreenSpotlightProps) {
         {activeScreen.body}
       </p>
       {activeScreen.note && (
-        <p className="mt-[18px] max-w-full text-xs italic text-neutral-300 lg:max-w-[340px]">
+        <p className="mt-[18px] max-w-full text-[13px] italic leading-[1.5] text-neutral-400 lg:max-w-[340px]">
           {activeScreen.note}
         </p>
       )}

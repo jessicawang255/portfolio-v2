@@ -56,6 +56,7 @@ const finalProductFlows = [
                         height: 2592,
                         alt: "Home screen showing Jessica's Box sealed, with a countdown timer and an expandable collaborator list",
                         body: "Home screen showing your current capsule, sealed and counting down until it can be opened, along with the list of collaborators.",
+                        note: "PS. You can scroll down on this screen to see the full list of collaborators!",
                     },
                 ],
             },
@@ -103,7 +104,6 @@ const finalProductFlows = [
                         ...STD,
                         alt: "Let's start filling up your capsule transition screen",
                         body: "Transition screen before you start adding items to the capsule.",
-                        note: "Later: a 1.5s transition, not a screen you tap through.",
                     },
                     {
                         src: `${SCREENS_DIR}/goodies.png`,
