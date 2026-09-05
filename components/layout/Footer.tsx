@@ -269,6 +269,10 @@ function ColophonButton() {
                   .
                 </p>
                 <p className="text-balance font-normal text-base">
+                  Set in <span className="font-sans">Avenir Next</span> and{" "}
+                  <span className="font-mono">Roboto Mono</span>.
+                </p>
+                <p className="text-balance font-normal text-base">
                   Hosted on{" "}
                   <TertiaryLink href="https://vercel.com/" target="_blank" rel="noopener noreferrer">
                     Vercel
