@@ -39,7 +39,7 @@ export function Hero() {
           variants={fadeUp}
           className="mb-4 max-w-lg text-balance font-normal text-neutral-600 text-base"
         >
-          I&rsquo;m a product designer. Right now, I&rsquo;m most curious about how AI will reshape interfaces and systems.
+          I design experiences that foster community and delight. Right now, I&rsquo;m most curious about how AI will reshape the way we interact and connect.
         </motion.p>
 
         <motion.p
