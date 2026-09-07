@@ -139,7 +139,7 @@ export default function Autumn() {
         <IterationCarousel
           items={[
             {
-              src: "/images/case-studies/autumn/autumn-design-2.png",
+              src: "/images/case-studies/autumn/autumn-design-2.jpg",
               alt: "Refined Knowledge Hub flow: a simplified categories-overview-to-individual-category structure, with the Support Library page followed by all articles sorted by category and a closing call-to-action",
               width: 2000,
               height: 3584,

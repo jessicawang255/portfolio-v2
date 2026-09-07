@@ -342,7 +342,7 @@ export default function Retrospect() {
                 primary
             >
                 <ImageBlock
-                    src="/images/case-studies/retrospect/retrospect-overview.png"
+                    src="/images/case-studies/retrospect/retrospect-overview.jpg"
                     alt="Grid of Retrospect app screens covering onboarding, capsule creation, collaborator status, sealing, and the sealed capsule reveal"
                     width={2400}
                     height={1432}
@@ -381,7 +381,7 @@ export default function Retrospect() {
                 primary
             >
                 <ImageBlock
-                    src="/images/case-studies/retrospect/retrospect-research-1.png"
+                    src="/images/case-studies/retrospect/retrospect-research-1.jpg"
                     alt="Five-star App Store reviews for Lapse, BeReal, and Locket praising their real, unfiltered, and connective experiences"
                     width={2400}
                     height={742}
@@ -479,7 +479,7 @@ export default function Retrospect() {
                 </div>
 
                 <ImageBlock
-                    src="/images/case-studies/retrospect/retrospect-flows-6.png"
+                    src="/images/case-studies/retrospect/retrospect-flows-6.jpg"
                     alt="Comparison of a list view versus a swipeable card carousel for a capsule's song selection"
                     width={2400}
                     height={988}
