@@ -147,7 +147,7 @@ export function TableOfContents({ sections }: Props) {
       inert={!isPinned}
       className={`transition-opacity duration-300 ${isPinned ? "opacity-100" : "opacity-0"}`}
     >
-      <ul className="flex flex-col gap-3 list-none m-0 p-0">
+      <ul className="flex flex-col gap-2 list-none m-0 p-0">
         {sections.map((section) => {
           const id = slugify(section.title)
           const subIds = (section.subsections ?? []).map(slugify)
@@ -160,7 +160,7 @@ export function TableOfContents({ sections }: Props) {
               key={id}
               layout="position"
               transition={reduce ? { duration: 0 } : LAYOUT_TRANSITION}
-              className="flex flex-col gap-3"
+              className="flex flex-col gap-2"
             >
               <TocLink title={section.title} id={id} isActive={activeId === id} onNavigate={handleNavigate} />
               <AnimatePresence initial={false} mode="popLayout">
@@ -179,7 +179,7 @@ export function TableOfContents({ sections }: Props) {
                         : { duration: 0.22, ease: EASE_OUT, delay: SUBSECTION_REVEAL_DELAY },
                     }}
                     exit={{ opacity: 0, y: reduce ? 0 : -3, transition: reduce ? { duration: 0 } : { duration: 0.16, ease: EASE_OUT } }}
-                    className="flex flex-col gap-3 pl-4 list-none m-0 p-0"
+                    className="flex flex-col gap-2 pl-4 list-none m-0 p-0"
                   >
                     {section.subsections!.map((subtitle) => {
                       const subId = slugify(subtitle)
