@@ -183,9 +183,9 @@ export function AboutHero() {
             Say hi, I&rsquo;d love to connect!
           </motion.p>
 
-          <motion.div variants={fadeUp} className="flex items-center gap-4">
+          <motion.div variants={fadeUp} className="flex items-center gap-3">
             {socials.map(({ label, href, icon, copyText }) => (
-              <IconButton key={label} href={href} label={label} icon={icon} copyText={copyText} />
+              <IconButton key={label} href={href} label={label} icon={icon} copyText={copyText} variant="boxed" size={22} />
             ))}
           </motion.div>
         </div>
