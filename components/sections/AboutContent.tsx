@@ -603,7 +603,7 @@ function SongRow({ item, flowerIdx }: { item: Song; flowerIdx: number }) {
       {/* Revealed on hover at every breakpoint — touch has no hover, but a
           mouse in a narrow window still does. Icon-only since the Spotify
           mark itself signals the destination. */}
-      <span className="flex shrink-0 items-center text-neutral-200 opacity-0 transition-opacity duration-150 group-hover:opacity-100">
+      <span className="flex shrink-0 items-center text-icon-social opacity-0 transition-opacity duration-150 group-hover:opacity-100">
         {/* group/icon scopes the hover tint/scale/tooltip to just the 24px
             icon, not the whole row — hand-matches IconButton's hover
             treatment rather than nesting a real IconButton <a> inside this

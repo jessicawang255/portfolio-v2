@@ -69,7 +69,7 @@ export function IconButton({ href, label, icon, size = 24, className, copyText, 
       onClick={handleClick}
       className={
         boxed
-          ? `group/icon relative z-50 inline-flex h-11 w-11 items-center justify-center text-icon-social transition-colors duration-150 before:absolute before:inset-[-11px] before:content-[''] hover:text-nav-link-hover ${className ?? ""}`
+          ? `group/icon relative z-50 inline-flex h-11 w-11 items-center justify-center text-neutral-300 transition-colors duration-150 before:absolute before:inset-[-11px] before:content-[''] hover:text-nav-link-hover ${className ?? ""}`
           : `group/icon relative z-50 inline-flex text-icon-social transition-[color,scale] duration-150 before:absolute before:inset-[-11px] before:content-[''] hover:scale-110 hover:text-nav-link-hover motion-safe:hover:animate-[icon-tick_var(--duration-slow)_var(--ease-out)] ${className ?? ""}`
       }
       {...rest}
@@ -83,7 +83,7 @@ export function IconButton({ href, label, icon, size = 24, className, copyText, 
         // hover, thinner + lower reads as it sinking flush on press.
         <span
           aria-hidden="true"
-          className="absolute inset-0 rounded-base border border-neutral-100/80 border-b-[2px] bg-surface shadow-[0px_2px_2px_0_rgba(0,0,0,0.04)] transition-[top,border-bottom-width,box-shadow,background-color] duration-150 group-hover/icon:top-[-2px] group-hover/icon:border-b-[4px] group-hover/icon:shadow-[0px_4px_8px_0_rgba(0,0,0,0.04)] group-active/icon:top-[1px] group-active/icon:border-b-[1px] group-active/icon:bg-neutral-100/80 group-active/icon:shadow-[0px_1px_1px_0_rgba(0,0,0,0.04)]"
+          className="absolute inset-0 rounded-base border border-neutral-100 border-b-[2px] bg-surface shadow-[0px_2px_2px_0_rgba(0,0,0,0.04)] transition-[top,border-bottom-width,box-shadow,background-color] duration-150 group-hover/icon:top-[-2px] group-hover/icon:border-b-[4px] group-hover/icon:shadow-[0px_4px_8px_0_rgba(0,0,0,0.04)] group-active/icon:top-[1px] group-active/icon:border-b-[1px] group-active/icon:bg-neutral-100 group-active/icon:shadow-[0px_1px_1px_0_rgba(0,0,0,0.04)]"
         />
       )}
       <span
