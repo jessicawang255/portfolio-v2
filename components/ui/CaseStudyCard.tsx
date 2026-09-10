@@ -88,7 +88,10 @@ export function CaseStudyCard({
     ...(mobileImageRatio
       ? { "--thumb-ratio-mobile": `${mobileImageRatio[0]} / ${mobileImageRatio[1]}` }
       : {}),
-    borderRadius: 16,
+    // var() (not a plain px value) so `.case-study-card:hover .card-thumb`
+    // in globals.css can override it — an inline style otherwise beats any
+    // stylesheet rule regardless of specificity.
+    borderRadius: "var(--thumb-radius, 16px)",
     ...bgStyle,
   } as CSSProperties
 

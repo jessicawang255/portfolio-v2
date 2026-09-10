@@ -268,7 +268,9 @@ body {
    ratio. `.card-thumb` releases at `md`; `.card-thumb-mobile-wide` releases
    later at `lg`, since 4 columns right at `md` leaves each one too narrow. */
 .card-thumb {
-  transition: transform 400ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition:
+    transform      400ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-radius  400ms cubic-bezier(0.22, 1, 0.36, 1);
   aspect-ratio: var(--thumb-ratio-mobile, var(--thumb-ratio-desktop));
 }
 
@@ -309,9 +311,10 @@ body {
 
 /* ─── Card hover — only on pointer devices ──────────────────────────────────── */
 @media (hover: hover) and (pointer: fine) {
-  /* Thumbnail sinks back */
+  /* Thumbnail sinks back and rounds out slightly, in step with the shrink */
   .case-study-card:hover .card-thumb {
     transform: scale(0.98);
+    --thumb-radius: 20px;
   }
 
   /* Text floats up so visual gap from thumb stays consistent */
