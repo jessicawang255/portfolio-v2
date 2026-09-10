@@ -311,12 +311,12 @@ body {
 @media (hover: hover) and (pointer: fine) {
   /* Thumbnail sinks back */
   .case-study-card:hover .card-thumb {
-    transform: scale(0.97);
+    transform: scale(0.98);
   }
 
   /* Text floats up so visual gap from thumb stays consistent */
   .case-study-card:hover .card-text {
-    transform: translateY(-6px);
+    transform: translateY(-4px);
   }
 
   /* Arrow reveals */

@@ -39,7 +39,7 @@ export function DiscoverMore() {
       </motion.h2>
 
       {/* 4 columns from `lg`, not `md` — at `md` each column is too narrow and titles wrap word-by-word. */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 items-start">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-[18px] items-start">
         {discoverItems.map((item) => (
           <motion.div key={item.slug} variants={fadeUp}>
             <CaseStudyCard

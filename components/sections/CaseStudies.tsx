@@ -29,7 +29,7 @@ export function CaseStudies() {
       <div className="flex flex-col gap-y-9 md:gap-y-16">
         {/* Row 1: 5/4 split. Each row triggers on its own visibility; both cards fade up together, no stagger. */}
         <motion.div
-          className="grid grid-cols-1 gap-9 md:grid-cols-[5fr_4fr]"
+          className="grid grid-cols-1 gap-[18px] md:grid-cols-[5fr_4fr]"
           initial={reduce ? "visible" : "hidden"}
           whileInView="visible"
           viewport={{ once: true, margin: "-80px" }}
@@ -44,7 +44,7 @@ export function CaseStudies() {
 
         {/* Row 2: right card dominant */}
         <motion.div
-          className="grid grid-cols-1 gap-9 md:grid-wide-right"
+          className="grid grid-cols-1 gap-[18px] md:grid-wide-right"
           initial={reduce ? "visible" : "hidden"}
           whileInView="visible"
           viewport={{ once: true, margin: "-80px" }}
