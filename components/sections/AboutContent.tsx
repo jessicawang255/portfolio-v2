@@ -19,14 +19,14 @@ const panelSections: PanelSection[] = [
   { id: "fun",         label: "WHAT I DO FOR FUN" },
 ]
 
-type JourneyItem = { id: string; company: string; role: string; period: string; href: string }
+type JourneyItem = { id: string; company: string; role: string; period: string; href: string; icon: string }
 
 // Employment only — volunteer/leadership roles live in "My Communities" below.
 const journeyItems: JourneyItem[] = [
-  { id: "royal-bank-of-canada",     company: "Royal Bank of Canada",               role: "Software Engineering Intern", period: "NOW",  href: "https://www.rbcroyalbank.com" },
-  { id: "cibc",                     company: "Canadian Imperial Bank of Commerce", role: "Software Engineering Intern", period: "2025", href: "https://www.cibc.com" },
-  { id: "the-residency",            company: "The Residency",                      role: "Design Lead",                 period: "2024", href: "https://www.livetheresidency.com" },
-  { id: "autumn",                   company: "Autumn",                             role: "Product Design Intern",       period: "2024", href: "https://www.autumn.co" },
+  { id: "royal-bank-of-canada",     company: "Royal Bank of Canada",               role: "Software Engineering Intern", period: "NOW",  href: "https://www.rbcroyalbank.com",      icon: "/images/about/experience/rbc-about.svg" },
+  { id: "cibc",                     company: "Canadian Imperial Bank of Commerce", role: "Software Engineering Intern", period: "2025", href: "https://www.cibc.com",              icon: "/images/about/experience/cibc-about.svg" },
+  { id: "the-residency",            company: "The Residency",                      role: "Design Lead",                 period: "2024", href: "https://www.livetheresidency.com", icon: "/images/about/experience/residency-about.svg" },
+  { id: "autumn",                   company: "Autumn",                             role: "Product Design Intern",       period: "2024", href: "https://www.autumn.co",             icon: "/images/about/experience/autumn-about.svg" },
 ]
 
 type Community = {
@@ -471,7 +471,7 @@ function JourneyRow({
     <div
       onMouseEnter={onHover}
       onMouseLeave={onUnhover}
-      className="group relative -mx-3 flex items-center justify-between gap-6 border-x border-x-transparent border-y border-y-transparent px-3 py-3 transition-colors duration-150 hover:border-y-neutral-900/3 hover:bg-neutral-75 hover:duration-0 lg:hover:cursor-help"
+      className="group relative -mx-3 flex items-center justify-between gap-6 border-x border-x-transparent border-y border-y-transparent px-3 py-4 transition-colors duration-150 hover:border-y-neutral-900/3 hover:bg-neutral-75 hover:duration-0 lg:hover:cursor-help"
     >
       {/* Below `lg` the sticky panel is hidden, so the whole row becomes the
           click target. aria-hidden + tabIndex -1 keep this out of the tab
@@ -484,10 +484,16 @@ function JourneyRow({
         tabIndex={-1}
         className="absolute inset-0 lg:hidden"
       />
-      <div>
-        <p className="text-balance text-base font-medium leading-[1.3] text-neutral-900">{item.company}</p>
-        {/* mt-0.5 restores the gap leading-[1.3] trims off the title's line-height. */}
-        <p className="mt-0.5 text-balance text-base text-neutral-500">{item.role}</p>
+      <div className="flex items-center gap-6">
+        <div
+          className="h-15 w-15 shrink-0 bg-contain bg-center bg-no-repeat transition-[scale] duration-200 group-hover:scale-95"
+          style={{ backgroundImage: `url(${item.icon})` }}
+        />
+        <div>
+          <p className="text-balance text-base font-medium leading-[1.3] text-neutral-900">{item.company}</p>
+          {/* mt-0.5 restores the gap leading-[1.3] trims off the title's line-height. */}
+          <p className="mt-0.5 text-balance text-base text-neutral-500">{item.role}</p>
+        </div>
       </div>
       {/* Crossfades the trailing slot between period and icon — the row isn't
           the link, only the icon is. group-focus-within mirrors group-hover
@@ -533,7 +539,7 @@ function CommunityRow({
       />
       <div className="flex items-center gap-6">
         <div
-          className="h-14 w-14 shrink-0 bg-contain bg-center bg-no-repeat transition-[scale] duration-200 group-hover:scale-95"
+          className="h-15 w-15 shrink-0 bg-contain bg-center bg-no-repeat transition-[scale] duration-200 group-hover:scale-95"
           style={{ backgroundImage: `url(${item.logo})` }}
         />
         <div>
@@ -559,7 +565,7 @@ function SongArt({ flowerIdx, isHovered }: { flowerIdx: number; isHovered: boole
   const FlowerComponent = FLOWERS[flowerIdx % FLOWERS.length].component
 
   return (
-    <div className="relative h-15 w-15 shrink-0 overflow-hidden rounded-base border border-neutral-100 bg-neutral-100 transition-[scale] duration-200 group-hover:scale-95">
+    <div className="relative h-15 w-15 shrink-0 overflow-hidden rounded-[14px] border border-neutral-100 bg-neutral-100 transition-[scale] duration-200 group-hover:scale-95">
       <motion.div
         animate={reduce ? undefined : { rotate: isHovered ? 30 : 0 }}
         transition={reduce ? undefined : { duration: 0.2, ease: "easeOut" }}
