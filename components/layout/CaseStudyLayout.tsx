@@ -7,6 +7,7 @@ import { CaseStudyHero } from "@/components/layout/CaseStudyHero"
 import { DefaultHeroBackground } from "@/components/layout/DefaultHeroBackground"
 import { CaseStudyMeta, type MetaField } from "@/components/layout/CaseStudyMeta"
 import { IconButton } from "@/components/ui/IconButton"
+import { COMPACT_HERO_HEIGHT } from "@/components/layout/heroCompactHeight"
 
 type Props = {
   project: Project
@@ -37,12 +38,6 @@ const FALLBACK_HERO_HEIGHT = "65vh"
 // right before the reveal finishes. Not visible at rest: #cs-content covers
 // this sliver.
 const HERO_BG_EXTRA = 80
-
-// Below `lg` (phone + tablet)'s own flat, viewport-relative height —
-// deliberately not derived from heroAspectRatio, since at those widths that
-// formula is exactly what makes the hero read as too short. A placeholder
-// each case study's hero can grow into with real content; see CaseStudyHero.
-const COMPACT_HERO_HEIGHT = "40svh"
 
 export function CaseStudyLayout({ project, children, heroBackground, heroAspectRatio }: Props) {
   const { title, name, role, timeline, team, skills, accent, toc = [] } = project
