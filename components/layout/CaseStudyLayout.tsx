@@ -6,6 +6,7 @@ import { ScrollRevealController } from "@/components/layout/ScrollRevealControll
 import { CaseStudyHero } from "@/components/layout/CaseStudyHero"
 import { DefaultHeroBackground } from "@/components/layout/DefaultHeroBackground"
 import { CaseStudyMeta, type MetaField } from "@/components/layout/CaseStudyMeta"
+import { IconButton } from "@/components/ui/IconButton"
 
 type Props = {
   project: Project
@@ -18,20 +19,6 @@ type Props = {
   // `heroAspectRatio` export) — sizes the hero container to the image's
   // real proportions. Undefined when there's no custom hero image.
   heroAspectRatio?: number
-}
-
-function ChevronLeft() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-      <path
-        d="M9 11L5 7L9 3"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  )
 }
 
 const navLinks: { label: string; href: string; target?: string }[] = [
@@ -157,13 +144,15 @@ export function CaseStudyLayout({ project, children, heroBackground, heroAspectR
             <div className="relative max-w-full md:ml-[16rem] md:max-w-[calc(100%-16rem)] xl:mx-auto xl:max-w-[min(120rem,calc(100%-35rem))]">
               <aside className="absolute top-0 h-full w-60 left-[-17.5rem] md:left-[-16rem] xl:left-[-17.5rem]">
                 <div className="sticky top-0 pt-9 pb-16">
-                  <Link
+                  <IconButton
                     href="/"
-                    className="flex items-center gap-1 text-base text-subtle font-normal hover:text-[var(--cs-accent)] transition-colors duration-150 mb-8"
-                  >
-                    <ChevronLeft />
-                    Back
-                  </Link>
+                    label="Back"
+                    icon="/icons/arrow-left-line.svg"
+                    variant="boxed"
+                    size={20}
+                    className="mb-8"
+                    tooltip={false}
+                  />
                   <TableOfContents sections={toc} />
                 </div>
               </aside>

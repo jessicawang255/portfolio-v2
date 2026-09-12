@@ -19,6 +19,10 @@ type Props = {
   // skeuomorphic 44px card around the icon (hero social row) — the icon
   // still wiggles on hover but the card itself doesn't scale, it rises.
   variant?: "plain" | "boxed"
+  // Set false to suppress the floating hover tooltip (e.g. a Back button
+  // whose destination is obvious from context) — `label` still drives the
+  // aria-label either way.
+  tooltip?: boolean
 } & Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, "href" | "className" | "aria-label">
 
 const COPIED_RESET_MS = 1600
@@ -26,7 +30,7 @@ const COPIED_RESET_MS = 1600
 // Icon-only link: mask-image icon that tints on hover, plus a floating
 // label tooltip that fades in after a beat of sustained hover and drops
 // out instantly on mouse-leave.
-export function IconButton({ href, label, icon, size = 24, className, copyText, variant = "plain", onClick, ...rest }: Props) {
+export function IconButton({ href, label, icon, size = 24, className, copyText, variant = "plain", tooltip = true, onClick, ...rest }: Props) {
   const external = href.startsWith("http")
   const resolvedLabel = label ?? getIconTooltip(icon, href)
   const [copied, setCopied] = useState(false)
@@ -109,15 +113,17 @@ export function IconButton({ href, label, icon, size = 24, className, copyText, 
       {/* Hidden below `md`: hover has no meaning on touch, and this
           tooltip's whitespace-nowrap box still counts toward page width at
           opacity-0, which can push a narrow viewport into horizontal scroll. */}
-      <span
-        aria-hidden="true"
-        className="pointer-events-none absolute bottom-full left-1/2 z-50 mb-1 hidden origin-bottom
-        -translate-x-1/2 scale-90 whitespace-nowrap rounded-[var(--radius-sm)] bg-neutral-900/90
-        px-1.5 py-0.5 text-xs text-neutral-50 opacity-0 transition-[opacity,scale] duration-[var(--duration-slow)]
-        ease-in group-hover/icon:scale-100 group-hover/icon:opacity-100 group-hover/icon:ease-[var(--ease-out)] group-hover/icon:delay-400 md:block"
-      >
-        {displayLabel}
-      </span>
+      {tooltip && (
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute bottom-full left-1/2 z-50 mb-1 hidden origin-bottom
+          -translate-x-1/2 scale-90 whitespace-nowrap rounded-[var(--radius-sm)] bg-neutral-900/90
+          px-1.5 py-0.5 text-xs text-neutral-50 opacity-0 transition-[opacity,scale] duration-[var(--duration-slow)]
+          ease-in group-hover/icon:scale-100 group-hover/icon:opacity-100 group-hover/icon:ease-[var(--ease-out)] group-hover/icon:delay-400 md:block"
+        >
+          {displayLabel}
+        </span>
+      )}
     </a>
   )
 }
