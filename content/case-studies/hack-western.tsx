@@ -8,6 +8,13 @@ import { Outcomes } from "@/components/cs/Outcomes"
 import { MediaFrame } from "@/components/cs/MediaFrame"
 import { StickerAnimation } from "@/components/cs/StickerAnimation"
 import { Reflections } from "@/components/cs/Reflections"
+import hwChallenge from "@/public/images/case-studies/hack-western/hw-challenge.png"
+import hwFinal from "@/public/images/case-studies/hack-western/hw-final.png"
+import hwIdeation1 from "@/public/images/case-studies/hack-western/hw-ideation-1.png"
+import hwIdeation4 from "@/public/images/case-studies/hack-western/hw-ideation-4.png"
+import hwMobile1 from "@/public/images/case-studies/hack-western/hw-mobile-1.gif"
+import hwStickerbook from "@/public/images/case-studies/hack-western/hw-stickerbook.png"
+import hwTheme from "@/public/images/case-studies/hack-western/hw-theme.png"
 
 export default function HackWestern() {
   return (
@@ -44,10 +51,8 @@ export default function HackWestern() {
         primary
       >
         <ImageBlock
-          src="/images/case-studies/hack-western/hw-challenge.png"
+          src={hwChallenge}
           alt="Sticky notes reading 'Create a unique, innovative, and memorable experience for all hackers' and 'Appeal to a diverse audience by making the event beginner-friendly'"
-          width={2400}
-          height={961}
         />
       </Section>
 
@@ -59,10 +64,8 @@ export default function HackWestern() {
         primary
       >
         <ImageBlock
-          src="/images/case-studies/hack-western/hw-theme.png"
+          src={hwTheme}
           alt="Moodboard of scrapbooking and minimal illustration references alongside questionnaire form responses used to choose the Hack Western 12 theme"
-          width={2400}
-          height={1948}
           caption="Theme Ideation and Sentiment Analysis"
         />
 
@@ -81,10 +84,8 @@ export default function HackWestern() {
         primary
       >
         <ImageBlock
-          src="/images/case-studies/hack-western/hw-ideation-1.png"
+          src={hwIdeation1}
           alt="Feature brainstorm grid covering personalized stickers, characters/avatars, a collaborative public board, personalized digital collectibles, freeform canvas drawing, and hacker personas"
-          width={2400}
-          height={971}
           caption="Delight-drive feature exploration"
         />
       </Section>
@@ -122,10 +123,8 @@ export default function HackWestern() {
         body="I wanted the interface to reflect the infinite canvas theme, while staying intuitive to use. Thus, I focused on keeping the core interactions familiar."
       >
         <ImageBlock
-          src="/images/case-studies/hack-western/hw-ideation-4.png"
+          src={hwIdeation4}
           alt="Wireframe comparison of navigation layouts, with the side panel navigation option selected as the final direction"
-          width={2400}
-          height={1660}
           caption="Wireframe Explorations"
         />
         <p className="text-base text-neutral-600">I decided on a side panel, with the stickers stacked at the back for a few key reasons:</p>
@@ -156,10 +155,8 @@ export default function HackWestern() {
         primary
       >
         <ImageBlock
-          src="/images/case-studies/hack-western/hw-mobile-1.gif"
+          src={hwMobile1}
           alt="Desktop application form surrounded by unlocked stickers, including a University of Toronto Mississauga badge, a Hack Western Newcomer ribbon, and a Novice Hacker name tag"
-          width={2384}
-          height={1397}
           caption="Desktop Sticker Collecting"
         />
         <p className="text-base text-neutral-600">
@@ -218,10 +215,8 @@ export default function HackWestern() {
         primary
       >
         <ImageBlock
-          src="/images/case-studies/hack-western/hw-stickerbook.png"
+          src={hwStickerbook}
           alt="Stickerbook page where applicants drag and arrange their collected stickers, with a submission confirmation and share option"
-          width={2400}
-          height={1590}
           caption="Applicant Stickerbook Overview"
         />
       </Section>
@@ -233,10 +228,8 @@ export default function HackWestern() {
         primary
       >
         <ImageBlock
-          src="/images/case-studies/hack-western/hw-overview.png"
-          alt="Screens from the Hack Western 12 application portal, including the long answers step, character customization, application review, and landing page"
-          width={2400}
-          height={1213}
+          src={hwFinal}
+          alt="A canvas of drawings from Hack Western 12 attendees"
         />
       </Section>
 

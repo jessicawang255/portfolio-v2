@@ -1,6 +1,12 @@
 import { Section } from "@/components/cs/Section"
 import { ImageBlock } from "@/components/cs/ImageBlock"
 import { Callout, Outcomes, IterationCarousel, Reflections } from "@/components/cs"
+import autumnDemo from "@/public/images/case-studies/autumn/autumn-demo.gif"
+import autumnDesign1 from "@/public/images/case-studies/autumn/autumn-design-1.png"
+import autumnMarket from "@/public/images/case-studies/autumn/autumn-market.png"
+import autumnProblem from "@/public/images/case-studies/autumn/autumn-problem.png"
+import autumnTouchpoints1 from "@/public/images/case-studies/autumn/autumn-touchpoints-1.png"
+import autumnTouchpoints2 from "@/public/images/case-studies/autumn/autumn-touchpoints-2.png"
 
 export default function Autumn() {
   return (
@@ -13,10 +19,8 @@ export default function Autumn() {
         primary
       >
         <ImageBlock
-          src="/images/case-studies/autumn/autumn-demo.gif"
+          src={autumnDemo}
           alt="Screen recording of the Autumn Support Library"
-          width={2000}
-          height={1000}
         />
       </Section>
 
@@ -35,11 +39,9 @@ export default function Autumn() {
         primary
       >
         <ImageBlock
-          src="/images/case-studies/autumn/autumn-problem.png"
+          src={autumnProblem}
           alt="Four problem cards: limited opportunities to build relationships with potential users, difficulty building brand awareness and trust before the moment of need, reduced data collection opportunities for product iteration, and traditional user retention metrics don't apply"
           caption="Low-Frequency Marketplace Challenges"
-          width={2400}
-          height={548}
         />
 
         <Callout
@@ -55,10 +57,8 @@ export default function Autumn() {
         primary
       >
         <ImageBlock
-          src="/images/case-studies/autumn/autumn-market.png"
+          src={autumnMarket}
           alt="Frequency-of-use comparison of Zillow, LinkedIn, and Uber, plotting each product's core usage and auxiliary tools from low to high frequency"
-          width={2000}
-          height={986}
         />
 
       </Section>
@@ -70,18 +70,14 @@ export default function Autumn() {
         primary
       >
         <ImageBlock
-          src="/images/case-studies/autumn/autumn-touchpoints-1.png"
+          src={autumnTouchpoints1}
           alt="Touchpoint timeline showing only a reactive crisis-moment touchpoint: a stressed, grieving user discovering Autumn by searching for providers after a loss"
           caption="Existing user discovery journey"
-          width={2000}
-          height={470}
         />
         <ImageBlock
-          src="/images/case-studies/autumn/autumn-touchpoints-2.png"
+          src={autumnTouchpoints2}
           alt="Expanded touchpoint timeline adding a proactive early-bereavement-planning touchpoint, where a curious, calm user browses Autumn's educational content before a crisis moment occurs"
           caption="After introducing support library"
-          width={2000}
-          height={498}
         />
       </Section>
       
@@ -109,10 +105,8 @@ export default function Autumn() {
           />
 
           <ImageBlock
-            src="/images/case-studies/autumn/autumn-design-1.png"
+            src={autumnDesign1}
             alt="Before and after comparison of an Autumn provider search results page, ending with provider cards for John Doe and Jane Smith under the message 'Loss is hard. Find a provider near you to help make it easier.'"
-            width={2000}
-            height={4643}
             caption="Initial Knowledge Hub flow"
           />
 
@@ -163,10 +157,8 @@ export default function Autumn() {
         primary
       >
         <ImageBlock
-          src="/images/case-studies/autumn/autumn-demo.gif"
+          src={autumnDemo}
           alt="Screen recording of the Autumn Support Library"
-          width={2000}
-          height={1000}
         />
       </Section>
 

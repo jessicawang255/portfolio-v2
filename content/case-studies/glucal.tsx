@@ -1,6 +1,10 @@
 import Image from "next/image"
 import { ImageBlock } from "@/components/cs/ImageBlock"
 import { Callout, Section, Reflections, VideoCompare } from "@/components/cs"
+import glucalCompetition from "@/public/images/case-studies/glucal/glucal-competition.png"
+import glucalDesign1 from "@/public/images/case-studies/glucal/glucal-design-1.png"
+import glucalDesign4 from "@/public/images/case-studies/glucal/glucal-design-4.png"
+import glucalResearch from "@/public/images/case-studies/glucal/glucal-research.png"
 
 // Real exported pixel dimensions of every glucal-final-*.webp crop — all
 // three share one aspect ratio (unlike ScreenSpotlight's per-screen crops),
@@ -277,10 +281,8 @@ export default function Glucal() {
         primary
       >
         <ImageBlock
-          src="/images/case-studies/glucal/glucal-research.png"
+          src={glucalResearch}
           alt="Research findings summary"
-          width={2000}
-          height={750}
         />
 
         <Callout
@@ -297,10 +299,8 @@ export default function Glucal() {
         primary
       >
         <ImageBlock
-          src="/images/case-studies/glucal/glucal-competition.png"
+          src={glucalCompetition}
           alt="Competitive analysis of existing glucose tracking apps"
-          width={2000}
-          height={1367}
         />
 
         <Callout
@@ -316,10 +316,8 @@ export default function Glucal() {
         primary
       >
         <ImageBlock
-          src="/images/case-studies/glucal/glucal-design-1.png"
+          src={glucalDesign1}
           alt="Early wireframes"
-          width={2000}
-          height={841}
         />
       </Section>
 
@@ -521,10 +519,8 @@ export default function Glucal() {
         body="When a user logs food alongside an insulin calculation, two entries are created — one in the insulin log, one in the food diary — connected by a shared carb count. If that carb count is edited later in one log, should it update the other, and should the associated insulin dose update too?"
       >
         <ImageBlock
-          src="/images/case-studies/glucal/glucal-design-4.png"
+          src={glucalDesign4}
           alt="Two options compared: storing the carb count independently in each log, versus linking it so editing the count in one log updates the other"
-          width={1904}
-          height={682}
         />
 
         <p className="text-balance text-base leading-normal text-neutral-600">

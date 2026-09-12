@@ -5,6 +5,15 @@ import { ImageBlock } from "@/components/cs/ImageBlock"
 import { IterationCarousel } from "@/components/cs/IterationCarousel"
 import { ScreenSpotlight } from "@/components/cs/ScreenSpotlight"
 import { Reflections } from "@/components/cs/Reflections"
+import retrospectFlows1 from "@/public/images/case-studies/retrospect/retrospect-flows-1.png"
+import retrospectFlows2 from "@/public/images/case-studies/retrospect/retrospect-flows-2.png"
+import retrospectFlows3 from "@/public/images/case-studies/retrospect/retrospect-flows-3.png"
+import retrospectFlows5 from "@/public/images/case-studies/retrospect/retrospect-flows-5.png"
+import retrospectFlows6 from "@/public/images/case-studies/retrospect/retrospect-flows-6.jpg"
+import retrospectInspiration from "@/public/images/case-studies/retrospect/retrospect-inspiration.png"
+import retrospectOverview from "@/public/images/case-studies/retrospect/retrospect-overview.jpg"
+import retrospectResearch1 from "@/public/images/case-studies/retrospect/retrospect-research-1.jpg"
+import retrospectResearch2 from "@/public/images/case-studies/retrospect/retrospect-research-2.png"
 
 const SCREENS_DIR = "/images/case-studies/retrospect/screens"
 
@@ -342,10 +351,8 @@ export default function Retrospect() {
                 primary
             >
                 <ImageBlock
-                    src="/images/case-studies/retrospect/retrospect-overview.jpg"
+                    src={retrospectOverview}
                     alt="Grid of Retrospect app screens covering onboarding, capsule creation, collaborator status, sealing, and the sealed capsule reveal"
-                    width={2400}
-                    height={1432}
                 />
             </Section>
 
@@ -357,10 +364,8 @@ export default function Retrospect() {
                 primary
             >
                 <ImageBlock
-                    src="/images/case-studies/retrospect/retrospect-inspiration.png"
+                    src={retrospectInspiration}
                     alt="App icons for BeReal, Locket, Lapse, and Airbuds"
-                    width={2400}
-                    height={756}
                 />
 
                 <p className="text-base text-neutral-600 leading-normal">
@@ -381,10 +386,8 @@ export default function Retrospect() {
                 primary
             >
                 <ImageBlock
-                    src="/images/case-studies/retrospect/retrospect-research-1.jpg"
+                    src={retrospectResearch1}
                     alt="Five-star App Store reviews for Lapse, BeReal, and Locket praising their real, unfiltered, and connective experiences"
-                    width={2400}
-                    height={742}
                     caption="App Store reviews for Lapse, BeReal, and Locket"
                 />
 
@@ -401,10 +404,8 @@ export default function Retrospect() {
             >
 
                 <ImageBlock
-                    src="/images/case-studies/retrospect/retrospect-research-2.png"
+                    src={retrospectResearch2}
                     alt="Existing digital time capsule apps — Virtual Time Capsule, a mobile capsule app, Cupaloy, and Miigen's family time capsule builder"
-                    width={2400}
-                    height={1705}
                     caption="Existing competitors"
                 />
             </Section>
@@ -417,17 +418,13 @@ export default function Retrospect() {
                 primary
             >
                 <ImageBlock
-                    src="/images/case-studies/retrospect/retrospect-flows-1.png"
+                    src={retrospectFlows1}
                     alt="Interaction design map covering the open app flow, dashboard, capsule creation, group capsule sealing discussion, and opening a capsule"
-                    width={2400}
-                    height={1439}
                     caption="User flows"
                 />
                 <ImageBlock
-                    src="/images/case-studies/retrospect/retrospect-flows-2.png"
+                    src={retrospectFlows2}
                     alt="Low-fidelity wireframes for onboarding, main pages like the shelf and archive, and the full create-a-time-capsule flow"
-                    width={2400}
-                    height={1590}
                     caption="Wireframes"
                 />
             </Section>
@@ -439,10 +436,8 @@ export default function Retrospect() {
                 body="I began by designing in a simple linear flow, refining each screen as I received feedback."
             >
                 <ImageBlock
-                    src="/images/case-studies/retrospect/retrospect-flows-3.png"
+                    src={retrospectFlows3}
                     alt="Initial linear flow for adding photos, voice recordings, songs, notes, prompts, and drawings to a capsule"
-                    width={2400}
-                    height={1059}
                     caption="Initial capsule creation flow and screens"
                 />
                 <p className="text-base text-neutral-600 leading-normal">
@@ -465,10 +460,8 @@ export default function Retrospect() {
                 />
 
                 <ImageBlock
-                    src="/images/case-studies/retrospect/retrospect-flows-5.png"
+                    src={retrospectFlows5}
                     alt="Revised carousel treatment applied consistently across photos, voice recordings, songs, notes, prompts, and drawings"
-                    width={2400}
-                    height={904}
                     caption="Consolidated capsule creation flow, with carousels"
                 />
                 <div className="flex flex-col gap-3">
@@ -479,10 +472,8 @@ export default function Retrospect() {
                 </div>
 
                 <ImageBlock
-                    src="/images/case-studies/retrospect/retrospect-flows-6.jpg"
+                    src={retrospectFlows6}
                     alt="Comparison of a list view versus a swipeable card carousel for a capsule's song selection"
-                    width={2400}
-                    height={988}
                     caption="Songs: list vs. carousel view comparison"
                 />
             </Section>
