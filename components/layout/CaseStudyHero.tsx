@@ -59,7 +59,16 @@ export function CaseStudyHero({
           otherwise paint over the footer. */}
       <div
         id="cs-hero-frame"
-        className="static sm:fixed inset-x-0 top-0 overflow-hidden pointer-events-none mt-[calc(-1*var(--nav-height))] sm:mt-0 h-[var(--cs-hero-height-compact-flow)] sm:h-[var(--cs-hero-height-compact)] lg:h-[var(--cs-hero-height)]"
+        // `relative`, not `static`, below `sm`: every hero's background layer
+        // sizes itself as a percentage of this box (Next's `Image fill`, or
+        // plain `inset-0`/`h-full`) rather than an explicit height, so it
+        // needs this to actually be its containing block. `static` let that
+        // fall through to the initial containing block (~viewport height)
+        // instead of this box's real ~40svh, which is what made every
+        // background render zoomed in below `sm` — it was covering a box
+        // far taller than the visible hero. `relative` with no offset still
+        // doesn't move anything, so this is a no-op for layout otherwise.
+        className="relative sm:fixed inset-x-0 top-0 overflow-hidden pointer-events-none mt-[calc(-1*var(--nav-height))] sm:mt-0 h-[var(--cs-hero-height-compact-flow)] sm:h-[var(--cs-hero-height-compact)] lg:h-[var(--cs-hero-height)]"
         style={{
           zIndex: 5,
           ["--cs-hero-height" as string]: height,
