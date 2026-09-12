@@ -127,11 +127,9 @@ function mulberry32(seed: number) {
 export default function HackWesternHeroClient({
   project,
   backgroundImg,
-  aspectRatio,
 }: {
   project: Project
   backgroundImg: import("next/image").StaticImageData
-  aspectRatio: number
 }) {
   const reduced = useReducedMotion()
   const [ready, setReady] = useState(false)
@@ -444,16 +442,15 @@ export default function HackWesternHeroClient({
   }, [reduced, ready])
 
   return (
-    // In-flow (not absolute) and sized by aspect-ratio below `sm`, where
-    // #cs-hero-frame is `static`/`h-auto` and has no other in-flow child to
-    // size against. From `sm` up it switches to absolute/inset-0, matching
-    // #cs-hero-frame's own fixed box exactly — which is taller than the
-    // design height by CaseStudyLayout's HERO_BG_EXTRA buffer, so the
-    // background still reaches the frame's true bottom edge instead of
-    // leaving a gap that peeks through #cs-content's rounded corner. Items
-    // don't inherit that extra height as a positioning error only because
-    // their left/top are vw-based (see syncDom/rest values below), not
-    // relative to this box's own resolved height.
+    // Always absolute/inset-0/h-full, matching #cs-hero-frame's own box at
+    // every breakpoint — which has an explicit height throughout (compact
+    // below `lg`, aspect-ratio-driven at `lg`+ — see CaseStudyHero) and is
+    // taller than the design height by CaseStudyLayout's HERO_BG_EXTRA
+    // buffer, so the background still reaches the frame's true bottom edge
+    // instead of leaving a gap that peeks through #cs-content's rounded
+    // corner. Items don't inherit that extra height as a positioning error
+    // only because their left/top are vw-based (see syncDom/rest values
+    // below), not relative to this box's own resolved height.
     //
     // role="img" + aria-label carries the one description the old single
     // flattened image gave AT users — every item image below is decorative
@@ -461,8 +458,7 @@ export default function HackWesternHeroClient({
     <div
       role="img"
       aria-label={project.title}
-      className="relative w-full sm:absolute sm:inset-x-0 sm:top-0 sm:h-full"
-      style={{ aspectRatio }}
+      className="absolute inset-x-0 top-0 h-full w-full"
     >
       <Image src={backgroundImg} alt="" fill className="object-cover" sizes="100vw" />
       {ITEMS.map((item, i) => {

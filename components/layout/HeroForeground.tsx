@@ -12,14 +12,15 @@ import Image, { type StaticImageData } from "next/image"
 // ScrollRevealController, which fades + scales this the same way Work/About's
 // hero content fades (the background stays fully static; see CaseStudyHero).
 //
-// Below `sm` this is the only in-flow child of CaseStudyHero's container
-// (the background is `absolute inset-0`) — its natural height is what
-// CaseStudyHero shrink-wraps to on mobile.
+// Always absolute, top-anchored: CaseStudyHero's container has an explicit
+// height at every breakpoint (compact below `lg`, aspect-ratio-driven at
+// `lg`+ — see CaseStudyHero), so this never needs to be in normal flow to
+// give the container something to size against.
 export function HeroForeground({ src, alt }: { src: StaticImageData; alt: string }) {
   const [loaded, setLoaded] = useState(false)
 
   return (
-    <div id="cs-hero-content" className="relative sm:absolute inset-x-0 top-0" style={{ transformOrigin: "center top" }}>
+    <div id="cs-hero-content" className="absolute inset-x-0 top-0" style={{ transformOrigin: "center top" }}>
       <Image
         src={src}
         alt={alt}

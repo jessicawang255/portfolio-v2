@@ -16,5 +16,5 @@ import HackWesternHeroClient from "./hack-western-hero-client"
 export const heroAspectRatio = backgroundImg.width / backgroundImg.height
 
 export default function HackWesternHero({ project }: { project: Project }) {
-  return <HackWesternHeroClient project={project} backgroundImg={backgroundImg} aspectRatio={heroAspectRatio} />
+  return <HackWesternHeroClient project={project} backgroundImg={backgroundImg} />
 }

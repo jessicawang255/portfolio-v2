@@ -38,6 +38,12 @@ const FALLBACK_HERO_HEIGHT = "65vh"
 // this sliver.
 const HERO_BG_EXTRA = 80
 
+// Below `lg` (phone + tablet)'s own flat, viewport-relative height —
+// deliberately not derived from heroAspectRatio, since at those widths that
+// formula is exactly what makes the hero read as too short. A placeholder
+// each case study's hero can grow into with real content; see CaseStudyHero.
+const COMPACT_HERO_HEIGHT = "40svh"
+
 export function CaseStudyLayout({ project, children, heroBackground, heroAspectRatio }: Props) {
   const { title, name, role, timeline, team, skills, accent, toc = [] } = project
 
@@ -107,6 +113,9 @@ export function CaseStudyLayout({ project, children, heroBackground, heroAspectR
           // hero — spacerHeight gives that same amount back so the pull-up
           // bites into slack space above the image, not the image itself.
           spacerHeight={`calc(${HERO_HEIGHT} + var(--radius-frame))`}
+          compactHeight={`calc(${COMPACT_HERO_HEIGHT} + ${HERO_BG_EXTRA}px)`}
+          compactSpacerHeight={`calc(${COMPACT_HERO_HEIGHT} + var(--radius-frame))`}
+          compactFlowHeight={COMPACT_HERO_HEIGHT}
         >
           <HeroBackground project={project} />
         </CaseStudyHero>
