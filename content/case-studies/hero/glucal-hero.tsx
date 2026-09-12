@@ -3,6 +3,7 @@ import { HeroForeground } from "@/components/layout/HeroForeground"
 import type { Project } from "@/content/work"
 import backgroundImg from "./glucal-hero-background.png"
 import foregroundImg from "./glucal-hero-foreground.png"
+import foregroundMobileImg from "./glucal-hero-mobile.png"
 
 // Read by app/work/[slug]/page.tsx alongside the default export — lets
 // CaseStudyLayout size the hero container to this image's real proportions
@@ -20,7 +21,7 @@ export default function GlucalHero({ project }: { project: Project }) {
       <div className="absolute inset-0">
         <Image src={backgroundImg} alt="" fill className="object-cover" sizes="100vw" />
       </div>
-      <HeroForeground src={foregroundImg} alt={project.title} />
+      <HeroForeground src={foregroundImg} mobileSrc={foregroundMobileImg} alt={project.title} />
     </>
   )
 }

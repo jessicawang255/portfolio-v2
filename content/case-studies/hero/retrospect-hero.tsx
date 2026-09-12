@@ -1,6 +1,7 @@
 import { HeroForeground } from "@/components/layout/HeroForeground"
 import type { Project } from "@/content/work"
 import foregroundImg from "./retrospect-hero-foreground.png"
+import foregroundMobileImg from "./retrospect-hero-mobile.png"
 
 // Read by app/work/[slug]/page.tsx alongside the default export — lets
 // CaseStudyLayout size the hero container to this image's real proportions
@@ -28,7 +29,7 @@ export default function RetrospectHero({ project }: { project: Project }) {
           className="h-full w-full object-cover"
         />
       </div>
-      <HeroForeground src={foregroundImg} alt={project.title} />
+      <HeroForeground src={foregroundImg} mobileSrc={foregroundMobileImg} alt={project.title} />
     </>
   )
 }

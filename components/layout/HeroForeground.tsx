@@ -4,17 +4,23 @@ import { useState } from "react"
 import Image, { type StaticImageData } from "next/image"
 import { COMPACT_HERO_HEIGHT } from "./heroCompactHeight"
 
-// A case study's foreground product screenshot — a transparent PNG statically
-// imported by the hero component that uses it, so Next infers width/height
-// from the file itself.
+// A case study's foreground product screenshot(s) — transparent PNGs
+// statically imported by the hero component that uses them, so Next infers
+// width/height from the files themselves.
 //
-// At `lg`+ this box is exactly `100vw / aspectRatio` — the image's own real
-// proportions — so `object-cover` has nothing to crop and renders pixel-
-// identical to plain natural sizing. Below `lg` the box switches to the flat
-// COMPACT_HERO_HEIGHT instead of scaling the image down by its aspect ratio
+// At `lg`+ this box is exactly `100vw / (src.width/src.height)` — `src`'s own
+// real proportions — so `object-cover` has nothing to crop and renders
+// pixel-identical to plain natural sizing. Below `lg` the box switches to the
+// flat COMPACT_HERO_HEIGHT instead of scaling `src` down by its aspect ratio
 // (which is what read as far too short there) — `object-cover` then crops
-// the image's sides to fill that taller, narrower box rather than shrinking
-// it, so the screenshot stays close to its designed size on phone/tablet.
+// the sides to fill that taller, narrower box rather than shrinking, so the
+// screenshot stays close to its designed size on phone/tablet.
+//
+// `mobileSrc` (optional) swaps in a separate image purpose-built for that
+// compact crop instead of reusing `src` — real art direction, not just a
+// different crop window on the same file, so this renders two <Image>s and
+// toggles which is visible via CSS rather than swapping one `src`. Falls
+// back to `src` for any hero that hasn't gotten a dedicated mobile image yet.
 //
 // id="cs-hero-content" is targeted by the case-study instance of
 // ScrollRevealController, which fades + scales this the same way Work/About's
@@ -24,8 +30,17 @@ import { COMPACT_HERO_HEIGHT } from "./heroCompactHeight"
 // height at every breakpoint (compact below `lg`, aspect-ratio-driven at
 // `lg`+ — see CaseStudyHero), so this never needs to be in normal flow to
 // give the container something to size against.
-export function HeroForeground({ src, alt }: { src: StaticImageData; alt: string }) {
-  const [loaded, setLoaded] = useState(false)
+export function HeroForeground({
+  src,
+  mobileSrc,
+  alt,
+}: {
+  src: StaticImageData
+  mobileSrc?: StaticImageData
+  alt: string
+}) {
+  const [compactLoaded, setCompactLoaded] = useState(false)
+  const [desktopLoaded, setDesktopLoaded] = useState(false)
   const aspectRatio = src.width / src.height
 
   return (
@@ -38,15 +53,30 @@ export function HeroForeground({ src, alt }: { src: StaticImageData; alt: string
         ["--cs-hero-content-height-desktop" as string]: `calc(100vw / ${aspectRatio})`,
       }}
     >
+      {/* Below `lg` only — hidden (not unmounted) above it so the crossfade-
+          in on first load doesn't retrigger every time the breakpoint is
+          crossed. The inverted `sizes` on each keeps the browser from
+          fetching the hidden one's smallest candidate and getting stuck with
+          it if the viewport is later resized past `lg` client-side. */}
+      <Image
+        src={mobileSrc ?? src}
+        alt={alt}
+        fill
+        className={`block lg:hidden object-cover transition-opacity duration-500 ease-out ${
+          compactLoaded ? "opacity-100" : "opacity-0"
+        }`}
+        sizes="(min-width: 1024px) 0px, 100vw"
+        onLoad={() => setCompactLoaded(true)}
+      />
       <Image
         src={src}
         alt={alt}
         fill
-        className={`object-cover transition-opacity duration-500 ease-out ${
-          loaded ? "opacity-100" : "opacity-0"
+        className={`hidden lg:block object-cover transition-opacity duration-500 ease-out ${
+          desktopLoaded ? "opacity-100" : "opacity-0"
         }`}
-        sizes="100vw"
-        onLoad={() => setLoaded(true)}
+        sizes="(min-width: 1024px) 100vw, 0px"
+        onLoad={() => setDesktopLoaded(true)}
       />
     </div>
   )

@@ -2,6 +2,7 @@ import { DefaultHeroBackground } from "@/components/layout/DefaultHeroBackground
 import { HeroForeground } from "@/components/layout/HeroForeground"
 import type { Project } from "@/content/work"
 import heroImg from "./autumn-hero.png"
+import heroMobileImg from "./autumn-hero-mobile.png"
 
 // Read by app/work/[slug]/page.tsx alongside the default export — lets
 // CaseStudyLayout size the hero container to this image's real proportions
@@ -15,7 +16,7 @@ export default function AutumnHero({ project }: { project: Project }) {
   return (
     <>
       <DefaultHeroBackground project={project} />
-      <HeroForeground src={heroImg} alt={project.title} />
+      <HeroForeground src={heroImg} mobileSrc={heroMobileImg} alt={project.title} />
     </>
   )
 }
