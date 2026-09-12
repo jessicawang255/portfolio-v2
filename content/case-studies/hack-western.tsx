@@ -1,3 +1,4 @@
+import Image from "next/image"
 import { Section } from "@/components/cs/Section"
 import { Callout } from "@/components/cs/Callout"
 import { TwoColumn } from "@/components/cs/TwoColumn"
@@ -18,11 +19,13 @@ export default function HackWestern() {
         body="As a Design Organizer, I led the design of our Hack Western 12 application portal, with the goal of making applying feel welcoming and fun."
         primary
       >
-        <ImageBlock
+        <Image
           src="/images/case-studies/hack-western/hw-overview.png"
           alt="Screens from the Hack Western 12 application portal, including the long answers step, character customization, application review, and landing page"
           width={2400}
           height={1213}
+          sizes="100vw"
+          className="w-full h-auto"
         />
       </Section>
 

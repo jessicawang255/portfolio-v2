@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useMemo, useRef, useState, type RefObject } from "react"
+import { usePathname } from "next/navigation"
 import { useReducedMotion } from "framer-motion"
 
 
@@ -76,6 +77,11 @@ export function DotField({
   viewport?: boolean
 }) {
   const canvasRef      = useRef<HTMLCanvasElement>(null)
+  // Case study heroes fill the viewport edge to edge, so the field behind
+  // them is never visible there — skip mounting the canvas (and tear down
+  // the animation loop/listeners via the effect below) on those routes.
+  const pathname       = usePathname()
+  const hideOnCaseStudy = pathname.startsWith("/work/")
   const reduced        = useReducedMotion()
   const isDesktop      = useIsDesktop()
   const accentRgb       = useMemo(() => hexToRgb(accentColor), [accentColor])
@@ -91,6 +97,7 @@ export function DotField({
   }, [accentRgb])
 
   useEffect(() => {
+    if (hideOnCaseStudy) return
     const canvas    = canvasRef.current
     if (!canvas) return
     const container = containerRef?.current
@@ -370,7 +377,9 @@ export function DotField({
         staticLayer = null
       }
     }
-  }, [reduced, isDesktop, containerRef, viewport])
+  }, [reduced, isDesktop, containerRef, viewport, hideOnCaseStudy])
+
+  if (hideOnCaseStudy) return null
 
   return (
     <canvas

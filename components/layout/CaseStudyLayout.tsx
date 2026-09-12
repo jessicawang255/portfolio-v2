@@ -136,13 +136,13 @@ export function CaseStudyLayout({ project, children, heroBackground, heroAspectR
               on an already-workable column width on both sides of it. */}
           <div className="container-main">
             {/* min(...) keeps the column's left margin from dropping below
-                16rem in the `md`–`xl` tablet tier (17.5rem at `xl`+, matching
+                17rem in the `md`–`xl` tablet tier (18.5rem at `xl`+, matching
                 the aside's own left offset below) — otherwise the TOC gets
                 pushed off-screen on any viewport narrower than max-w + that
                 margin. Only applied from `md` up, since below that there's
                 no TOC to reserve space for. */}
-            <div className="relative max-w-full md:ml-[16rem] md:max-w-[calc(100%-16rem)] xl:mx-auto xl:max-w-[min(120rem,calc(100%-35rem))]">
-              <aside className="absolute top-0 h-full w-60 left-[-17.5rem] md:left-[-16rem] xl:left-[-17.5rem]">
+            <div className="relative max-w-full md:ml-[17rem] md:max-w-[calc(100%-17rem)] xl:mx-auto xl:max-w-[min(120rem,calc(100%-37rem))]">
+              <aside className="absolute top-0 h-full w-60 left-[-18.5rem] md:left-[-17rem] xl:left-[-18.5rem]">
                 <div className="sticky top-0 pt-9 pb-16">
                   <IconButton
                     href="/"

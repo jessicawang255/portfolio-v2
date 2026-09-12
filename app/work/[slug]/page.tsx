@@ -33,12 +33,12 @@ export default async function CaseStudyPage({
   }
 
   let HeroBackground: React.ComponentType<{ project: Project }> | null = null
-  // Read from the hero module's `heroAspectRatio` export (see hero/glucal.tsx);
+  // Read from the hero module's `heroAspectRatio` export (see hero/glucal-hero.tsx);
   // undefined when there's no custom hero, so CaseStudyLayout falls back to
   // a fixed vh height instead.
   let heroAspectRatio: number | undefined
   try {
-    const mod = await import(`@/content/case-studies/hero/${slug}.tsx`)
+    const mod = await import(`@/content/case-studies/hero/${slug}-hero.tsx`)
     HeroBackground = mod.default
     heroAspectRatio = mod.heroAspectRatio
   } catch {
