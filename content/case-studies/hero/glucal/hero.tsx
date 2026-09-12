@@ -1,9 +1,9 @@
 import Image from "next/image"
 import { HeroForeground } from "@/components/layout/HeroForeground"
 import type { Project } from "@/content/work"
-import backgroundImg from "./glucal-hero-background.png"
-import foregroundImg from "./glucal-hero-foreground.png"
-import foregroundMobileImg from "./glucal-hero-mobile.png"
+import backgroundImg from "./background.png"
+import foregroundImg from "./foreground.png"
+import foregroundMobileImg from "./foreground-mobile.png"
 
 // Read by app/work/[slug]/page.tsx alongside the default export — lets
 // CaseStudyLayout size the hero container to this image's real proportions
@@ -11,6 +11,12 @@ import foregroundMobileImg from "./glucal-hero-mobile.png"
 // the reveal never leaves a gap or crops the image as viewport width changes
 // independently of height.
 export const heroAspectRatio = backgroundImg.width / backgroundImg.height
+
+// Read by MoreCaseStudies for this case study's row thumbnail — the
+// foreground (transparent PNG overlay), not the opaque full-bleed
+// background: it's what HeroForeground actually renders, so it's already
+// designed to read well at a small size.
+export const thumbnail = foregroundImg
 
 // Background is a plain absolute-fill image (no scroll animation, unlike
 // HeroForeground's foreground) — matches CaseStudyHero's fixed frame, which

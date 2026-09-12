@@ -13,16 +13,18 @@ export async function MoreCaseStudies({ currentSlug }: Props) {
   const others = projects.filter((p) => p.slug !== currentSlug)
   if (others.length === 0) return null
 
-  // Same per-slug lazy-loading pattern as the hero background in
-  // app/work/[slug]/page.tsx.
+  // Same per-slug hero module app/work/[slug]/page.tsx dynamically imports —
+  // reads its `thumbnail` export (see e.g. hero/autumn/hero.tsx) rather than
+  // guessing a raw image path of its own, so there's one source of truth per
+  // case study for "the image that represents it."
   const rows = await Promise.all(
     others.map(async (project) => {
       let heroImg: StaticImageData | null = null
       try {
-        const mod = await import(`@/content/case-studies/hero/${project.slug}-hero.png`)
-        heroImg = mod.default
+        const mod = await import(`@/content/case-studies/hero/${project.slug}/hero.tsx`)
+        heroImg = mod.thumbnail ?? null
       } catch {
-        // No hero image for this case study yet
+        // No hero module for this case study yet
       }
       return { project, heroImg }
     })

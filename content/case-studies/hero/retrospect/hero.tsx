@@ -1,7 +1,7 @@
 import { HeroForeground } from "@/components/layout/HeroForeground"
 import type { Project } from "@/content/work"
-import foregroundImg from "./retrospect-hero-foreground.png"
-import foregroundMobileImg from "./retrospect-hero-mobile.png"
+import foregroundImg from "./foreground.png"
+import foregroundMobileImg from "./foreground-mobile.png"
 
 // Read by app/work/[slug]/page.tsx alongside the default export — lets
 // CaseStudyLayout size the hero container to this image's real proportions
@@ -11,6 +11,11 @@ import foregroundMobileImg from "./retrospect-hero-mobile.png"
 // video — the video's native aspect ratio doesn't match the design and is
 // just object-cover'd to fill whatever box this resolves to.
 export const heroAspectRatio = foregroundImg.width / foregroundImg.height
+
+// Read by MoreCaseStudies for this case study's row thumbnail — there's no
+// standalone background image to use instead (the real background is the
+// video below), so this reuses the same foreground HeroForeground renders.
+export const thumbnail = foregroundImg
 
 // Background is a plain absolute-fill looping video (no scroll animation,
 // unlike HeroForeground's foreground) — matches CaseStudyHero's fixed frame,
