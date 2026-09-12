@@ -1,23 +1,11 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
-import { motion, AnimatePresence, useReducedMotion } from "framer-motion"
 import type { TocSection } from "@/content/work"
 
 type Props = {
   sections: TocSection[]
 }
-
-// Mild ease-out for the subsection reveal, so it settles smoothly instead of
-// reading as a spring.
-const EASE_OUT: [number, number, number, number] = [0.33, 1, 0.68, 1]
-// The links below the reveal are already on screen and just shifting to make
-// room, not entering, so they get ease-in-out instead.
-const EASE_IN_OUT: [number, number, number, number] = [0.65, 0, 0.35, 1]
-const LAYOUT_TRANSITION = { duration: 0.22, ease: EASE_IN_OUT }
-// Ease-in-out visually settles before its nominal duration ends, so the
-// reveal can start once the shift is mostly done.
-const SUBSECTION_REVEAL_DELAY = LAYOUT_TRANSITION.duration * 0.7
 
 // Ceiling on how long a click-triggered scroll can suppress the observer, in
 // case `scrollend` never fires. Comfortably longer than any smooth scroll takes.
@@ -67,11 +55,10 @@ function TocLink({
 export function TableOfContents({ sections }: Props) {
   const [activeId, setActiveId] = useState<string>("")
   const [isPinned, setIsPinned] = useState(false)
-  const reduce = useReducedMotion()
 
   // While true, the scroll-spy observer below ignores what it sees, so
   // sections passed through en route to a click-triggered scroll's
-  // destination never register as "active" and flash their subsections open.
+  // destination never briefly register as "active".
   const isNavigatingRef = useRef(false)
   const navigationTokenRef = useRef(0)
 
@@ -150,54 +137,29 @@ export function TableOfContents({ sections }: Props) {
       <ul className="flex flex-col gap-2 list-none m-0 p-0">
         {sections.map((section) => {
           const id = slugify(section.title)
-          const subIds = (section.subsections ?? []).map(slugify)
-          // Stays expanded for the whole section family — the heading itself
-          // or any of its subsections — until scroll moves to another section.
-          const isExpanded = subIds.length > 0 && (activeId === id || subIds.includes(activeId))
+          const subsections = section.subsections ?? []
 
           return (
-            <motion.li
-              key={id}
-              layout="position"
-              transition={reduce ? { duration: 0 } : LAYOUT_TRANSITION}
-              className="flex flex-col gap-2"
-            >
+            <li key={id} className="flex flex-col gap-2">
               <TocLink title={section.title} id={id} isActive={activeId === id} onNavigate={handleNavigate} />
-              <AnimatePresence initial={false} mode="popLayout">
-                {isExpanded && (
-                  <motion.ul
-                    key="subsections"
-                    initial={{ opacity: 0, y: reduce ? 0 : -3 }}
-                    animate={{
-                      opacity: 1,
-                      y: 0,
-                      // Siblings below are still sliding down to make room
-                      // when this mounts — wait for most of that shift before
-                      // fading in.
-                      transition: reduce
-                        ? { duration: 0 }
-                        : { duration: 0.22, ease: EASE_OUT, delay: SUBSECTION_REVEAL_DELAY },
-                    }}
-                    exit={{ opacity: 0, y: reduce ? 0 : -3, transition: reduce ? { duration: 0 } : { duration: 0.16, ease: EASE_OUT } }}
-                    className="flex flex-col gap-2 pl-4 list-none m-0 p-0"
-                  >
-                    {section.subsections!.map((subtitle) => {
-                      const subId = slugify(subtitle)
-                      return (
-                        <li key={subId}>
-                          <TocLink
-                            title={subtitle}
-                            id={subId}
-                            isActive={activeId === subId}
-                            onNavigate={handleNavigate}
-                          />
-                        </li>
-                      )
-                    })}
-                  </motion.ul>
-                )}
-              </AnimatePresence>
-            </motion.li>
+              {subsections.length > 0 && (
+                <ul className="flex flex-col gap-2 pl-4 list-none m-0 p-0">
+                  {subsections.map((subtitle) => {
+                    const subId = slugify(subtitle)
+                    return (
+                      <li key={subId}>
+                        <TocLink
+                          title={subtitle}
+                          id={subId}
+                          isActive={activeId === subId}
+                          onNavigate={handleNavigate}
+                        />
+                      </li>
+                    )
+                  })}
+                </ul>
+              )}
+            </li>
           )
         })}
       </ul>
