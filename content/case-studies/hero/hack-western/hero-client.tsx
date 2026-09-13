@@ -209,6 +209,16 @@ export default function HackWesternHeroClient({
   // (`overflow-hidden`); `itemsLayerRef` is the natural-height content
   // inside it, scaled up enough to guarantee it reaches that box's bottom
   // with a little to spare — the spare gets clipped, never visible.
+  //
+  // `scaleY`, not `scale`: the pile's left/right walls already sit exactly
+  // on itemsLayerRef's own edges (0 and 100% width — see the physics
+  // effect's CANVAS_WIDTH mapping), so it needs zero horizontal correction
+  // at any breakpoint. A uniform `scale()` here stretched both axes from
+  // "center top", so any sticker resting near a wall (by design — several
+  // are meant to sit flush against the pile's edge) got pushed sideways
+  // past it, straight into itemsClipRef's clip — exactly the "stickers go
+  // outside the frame" bug this was. `scaleY` grows only downward from the
+  // same origin, leaving every item's x position untouched.
   useEffect(() => {
     const mql = window.matchMedia(COMPACT_TIER_QUERY)
 
@@ -221,7 +231,7 @@ export default function HackWesternHeroClient({
       const targetHeight = mql.matches && probe ? probe.getBoundingClientRect().height : naturalHeight
       clip.style.height = `${targetHeight}px`
       layer.style.transform =
-        naturalHeight > 0 ? `scale(${(targetHeight / naturalHeight) * PILE_OVERSCAN})` : ""
+        naturalHeight > 0 ? `scaleY(${(targetHeight / naturalHeight) * PILE_OVERSCAN})` : ""
     }
 
     sync()
