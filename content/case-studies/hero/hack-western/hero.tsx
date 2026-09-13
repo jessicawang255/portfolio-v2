@@ -1,5 +1,6 @@
 import type { Project } from "@/content/work"
 import backgroundImg from "./background.png"
+import mobileImg from "./foreground-mobile.png"
 import thumbnailImg from "./thumbnail.png"
 import HackWesternHeroClient from "./hero-client"
 
@@ -25,5 +26,5 @@ export const heroAspectRatio = backgroundImg.width / backgroundImg.height
 export const thumbnail = thumbnailImg
 
 export default function HackWesternHero({ project }: { project: Project }) {
-  return <HackWesternHeroClient project={project} backgroundImg={backgroundImg} />
+  return <HackWesternHeroClient project={project} backgroundImg={backgroundImg} mobileImg={mobileImg} />
 }

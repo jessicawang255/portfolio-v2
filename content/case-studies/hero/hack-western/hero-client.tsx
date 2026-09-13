@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState, useSyncExternalStore } from "react"
 import Image from "next/image"
 import { useReducedMotion } from "framer-motion"
 import Matter from "matter-js"
@@ -72,6 +72,17 @@ const MAX_RUN_STEPS = 1200
 // `sm` up (see CaseStudyHero) — matches its DESKTOP_QUERY.
 const DESKTOP_QUERY = "(min-width: 640px)"
 
+// Matches `--breakpoint-lg` in globals.css (60rem) — the same cutoff the
+// `lg:` classes below switch on. Below it, a dedicated flattened mobileImg
+// (see the render below) replaces the sim entirely, the same convention
+// every other case study's hero uses for its own foreground art (see
+// HeroForeground's `mobileSrc`): CANVAS_WIDTH is a wide, landscape-ish
+// composition, and several stickers are pinned right at its edges by
+// design — real estate that just doesn't exist on a phone-width screen, no
+// matter how the pile is scaled or cropped. Running Matter.js at all there
+// is wasted work for a sim nobody sees below this width.
+const LG_QUERY = "(min-width: 60rem)"
+
 // The pusher representing #cs-content's leading edge — thick so a fast
 // fling can't tunnel a sticker through it, heavy so the stickers never
 // budge *it*, no bounce (it's a wall, not another sticker).
@@ -124,17 +135,44 @@ function mulberry32(seed: number) {
   }
 }
 
+// Tracks LG_QUERY via useSyncExternalStore rather than a plain
+// matchMedia-in-an-effect + setState (flagged by this repo's lint config as
+// a cascading-render risk) — the standard shape for subscribing to
+// external, synchronously-readable browser state. getServerSnapshot fixes
+// it at `false` for the server (which has no viewport to check); the real
+// value is picked up client-side right after.
+function subscribeToLgQuery(callback: () => void) {
+  const mql = window.matchMedia(LG_QUERY)
+  mql.addEventListener("change", callback)
+  return () => mql.removeEventListener("change", callback)
+}
+function getLgSnapshot() {
+  return window.matchMedia(LG_QUERY).matches
+}
+function getLgServerSnapshot() {
+  return false
+}
+
 export default function HackWesternHeroClient({
   project,
   backgroundImg,
+  mobileImg,
 }: {
   project: Project
   backgroundImg: import("next/image").StaticImageData
+  mobileImg: import("next/image").StaticImageData
 }) {
   const reduced = useReducedMotion()
   const [ready, setReady] = useState(false)
   const loadedCount = useRef(0)
   const itemRefs = useRef<(HTMLDivElement | null)[]>([])
+  const [mobileLoaded, setMobileLoaded] = useState(false)
+
+  // Only gates whether the effect below ever builds the sim — the
+  // sim-vs-static-image markup itself is CSS-only (`lg:` classes below,
+  // always rendered both ways) and never reads this, so there's no server/
+  // client markup mismatch to guard against here.
+  const isDesktopTier = useSyncExternalStore(subscribeToLgQuery, getLgSnapshot, getLgServerSnapshot)
 
   function handleItemLoad() {
     loadedCount.current += 1
@@ -142,7 +180,7 @@ export default function HackWesternHeroClient({
   }
 
   useEffect(() => {
-    if (reduced || !ready) return
+    if (reduced || !ready || !isDesktopTier) return
 
     const mql = window.matchMedia(DESKTOP_QUERY)
 
@@ -439,7 +477,7 @@ export default function HackWesternHeroClient({
       Matter.Composite.clear(engine.world, false)
       Matter.Engine.clear(engine)
     }
-  }, [reduced, ready])
+  }, [reduced, ready, isDesktopTier])
 
   return (
     // Always absolute/inset-0/h-full, matching #cs-hero-frame's own box at
@@ -461,6 +499,22 @@ export default function HackWesternHeroClient({
       className="absolute inset-x-0 top-0 h-full w-full"
     >
       <Image src={backgroundImg} alt="" fill className="object-cover" sizes="100vw" />
+
+      {/* Below `lg` only — a dedicated flattened shot of the pile at rest
+          (transparent PNG, composited straight over backgroundImg above),
+          replacing the sim entirely; see LG_QUERY. Crossfades in on load the
+          same way HeroForeground's mobileSrc does, rather than popping in. */}
+      <Image
+        src={mobileImg}
+        alt=""
+        fill
+        className={`object-cover lg:hidden transition-opacity duration-500 ease-out ${
+          mobileLoaded ? "opacity-100" : "opacity-0"
+        }`}
+        sizes="(min-width: 60rem) 0px, 100vw"
+        onLoad={() => setMobileLoaded(true)}
+      />
+
       {ITEMS.map((item, i) => {
         const widthPct = (item.src.width / CANVAS_WIDTH) * 100
         // Reduced motion: skip the simulation and render each item straight
@@ -475,7 +529,11 @@ export default function HackWesternHeroClient({
             ref={(el) => {
               itemRefs.current[i] = el
             }}
-            className="absolute"
+            // hidden below `lg`: mobileImg above stands in for the whole
+            // pile there. CSS-only (not a conditional unmount) so these
+            // still start loading immediately on `lg`+, same tradeoff
+            // HeroForeground makes for its own two images.
+            className="absolute hidden lg:block"
             style={
               reduced
                 ? { left: `${restLeftVw}vw`, top: `${restTopVw}vw`, width: `${widthPct}%`, transform: `rotate(${item.rotate}deg)` }
