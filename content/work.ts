@@ -14,6 +14,16 @@ export type Project = {
   disciplines?: string[]
   bg: string
   accent?: string
+  // "light": nav overlay text is flat neutral-300, fully white on hover —
+  // for a hero that's uniformly dark enough for flat text alone to read
+  // (e.g. Retrospect). Omit for the default (neutral-500/neutral-800).
+  navTheme?: "light"
+  // For a hero whose color/value varies too much for flat text to reliably
+  // read against on its own (e.g. gluCal's noisy multi-tone gradient):
+  // forces solid white nav text and adds a dark top-down gradient scrim
+  // behind it, so contrast is guaranteed rather than tuned per-background.
+  // Independent of navTheme — set this instead of navTheme, not with it.
+  navScrim?: boolean
   thumbnail?: string
   thumbnailWidth?: number
   thumbnailHeight?: number
@@ -108,6 +118,7 @@ export const projects: Project[] = [
     disciplines: ["Interaction design", "Prototyping"],
     bg: "#0d1240",
     accent: "retrospect",
+    navTheme: "light",
     thumbnail: "/images/case-studies/retrospect/retrospect-thumbnail.mp4",
     thumbnailWidth: 1600,
     thumbnailHeight: 932,
@@ -162,6 +173,7 @@ export const projects: Project[] = [
     disciplines: ["User research", "Mobile design"],
     bg: "#FFE4E4",
     accent: "glucal",
+    navScrim: true,
     thumbnail: "/images/case-studies/glucal/glucal-thumbnail.png",
     thumbnailWidth: 1309,
     thumbnailHeight: 911,

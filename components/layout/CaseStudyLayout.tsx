@@ -40,9 +40,21 @@ const FALLBACK_HERO_HEIGHT = "65vh"
 const HERO_BG_EXTRA = 80
 
 export function CaseStudyLayout({ project, children, heroBackground, heroAspectRatio }: Props) {
-  const { title, name, role, timeline, team, skills, accent, toc = [] } = project
+  const { title, name, role, timeline, team, skills, accent, navTheme, navScrim, toc = [] } = project
 
   const HeroBackground = heroBackground ?? DefaultHeroBackground
+
+  // Default nav-link colors read too faint over some heroes. "light" swaps
+  // in a flat neutral-300/white pair for a hero that's uniformly dark enough
+  // for that alone to read (e.g. Retrospect). navScrim instead forces solid
+  // white — paired with the dark gradient behind it (see the header below),
+  // that's a guarantee rather than a tuned color, for a hero whose value
+  // varies too much for any single flat text color to reliably read against.
+  const navLinkClass = navScrim
+    ? "text-white hover:opacity-70 transition-opacity duration-150"
+    : navTheme === "light"
+    ? "text-neutral-300 hover:text-neutral-50 transition-colors duration-150"
+    : "text-nav-link hover:text-nav-link-hover transition-colors duration-150"
 
   // The hero foreground image renders at `w-full` inside a full-viewport-width
   // container (see HeroForeground/CaseStudyHero), so its real rendered height
@@ -65,13 +77,27 @@ export function CaseStudyLayout({ project, children, heroBackground, heroAspectR
       {/* Transparent nav overlay — above hero (z:5), below content card (z:10).
           Bottom pill nav takes over below `sm`. */}
       <header className="fixed inset-x-0 top-0 hidden pointer-events-none sm:block" style={{ zIndex: 6 }}>
+        {navScrim && (
+          // Dark top-down fade behind the nav text — not clipped by the
+          // header's own (unset) height, so it reaches past the nav bar
+          // into the hero. Guarantees contrast regardless of what's under
+          // it, unlike relying on the hero's own color/value. `-z-10`
+          // (not just DOM order) is load-bearing here: an absolutely
+          // positioned box paints after static in-flow content regardless
+          // of source order, so without it this sat on top of the nav
+          // links and darkened them instead of backing them.
+          <div
+            aria-hidden="true"
+            className="absolute inset-x-0 top-0 -z-10 h-48 bg-gradient-to-b from-black/55 via-black/20 to-transparent"
+          />
+        )}
         <nav
           className="container-chrome flex items-center justify-between py-4 pointer-events-auto"
           aria-label="Primary navigation"
         >
           <Link
             href="/"
-            className="text-base font-normal text-nav-link hover:text-nav-link-hover transition-colors duration-150"
+            className={`text-base font-normal ${navLinkClass}`}
           >
             Jessica Wang
           </Link>
@@ -82,7 +108,7 @@ export function CaseStudyLayout({ project, children, heroBackground, heroAspectR
                   href={href}
                   target={target}
                   rel={target === "_blank" ? "noopener noreferrer" : undefined}
-                  className="text-base font-normal text-nav-link hover:text-nav-link-hover transition-colors duration-150"
+                  className={`text-base font-normal ${navLinkClass}`}
                 >
                   {label}
                 </Link>
