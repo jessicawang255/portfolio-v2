@@ -105,7 +105,7 @@ export const projects: Project[] = [
       { title: "App. Portal Ideation", subsections: ["Revamping the User Flow", "Wireframing"] },
       { title: "Designing for Mobile" },
       { title: "Stickerbook" },
-      { title: "Final Product" },
+      { title: "Result" },
       {title: "Reflections" },
     ],
   },
