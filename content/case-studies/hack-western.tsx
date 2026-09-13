@@ -222,8 +222,8 @@ export default function HackWestern() {
       </Section>
 
       <Section
-        id="final-product"
-        tag="Final Product"
+        id="result"
+        tag="Result"
         headline="The redesigned portal shipped to 2,000+ hackers and received overwhelmingly positive feedback!"
         primary
       >
