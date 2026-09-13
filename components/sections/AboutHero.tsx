@@ -8,7 +8,7 @@ import { IconButton } from "@/components/ui/IconButton"
 const socials = [
   { label: "LinkedIn", href: "https://www.linkedin.com/in/jwang255/", icon: "/icons/linkedin.svg" },
   { label: "X",        href: "https://x.com/jossici", icon: "/icons/x.svg" },
-  { label: "Copy Email",    href: "mailto:jessica.wang255@gmail.com", icon: "/icons/mail.svg", copyText: "jessica.wang255@gmail.com" },
+  { label: "Copy Email",    href: "mailto:jessica.wang255@gmail.com", icon: "/icons/mail.svg", copyText: "jessica.wang255@gmail.com", mobileCopiedTooltip: true },
   { label: "GitHub",   href: "https://github.com/jessicawang255", icon: "/icons/github.svg" },
 ]
 
@@ -172,7 +172,7 @@ export function AboutHero() {
             variants={fadeUp}
             className="mt-6 max-w-lg text-balance text-base font-normal text-neutral-600"
           >
-            On any given day, you might find me producing music, climbing
+            Right now, I'm studying computer science and business at Western University. On any given day, you might find me producing music, climbing
             rocks, learning about the stars, or collecting design inspo on X.
           </motion.p>
 
@@ -184,8 +184,8 @@ export function AboutHero() {
           </motion.p>
 
           <motion.div variants={fadeUp} className="flex items-center gap-3">
-            {socials.map(({ label, href, icon, copyText }) => (
-              <IconButton key={label} href={href} label={label} icon={icon} copyText={copyText} variant="boxed" size={22} />
+            {socials.map(({ label, href, icon, copyText, mobileCopiedTooltip }) => (
+              <IconButton key={label} href={href} label={label} icon={icon} copyText={copyText} mobileCopiedTooltip={mobileCopiedTooltip} variant="boxed" size={22} />
             ))}
           </motion.div>
         </div>
