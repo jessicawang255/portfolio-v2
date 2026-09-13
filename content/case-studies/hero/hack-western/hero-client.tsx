@@ -6,7 +6,6 @@ import { useReducedMotion } from "framer-motion"
 import Matter from "matter-js"
 import type { Project } from "@/content/work"
 import { headerProgress } from "@/components/layout/headerFade"
-import { COMPACT_HERO_HEIGHT } from "@/components/layout/heroCompactHeight"
 import hack from "./stickers/hack.svg"
 import western from "./stickers/western.svg"
 import twelve from "./stickers/twelve.svg"
@@ -73,12 +72,6 @@ const MAX_RUN_STEPS = 1200
 // `sm` up (see CaseStudyHero) — matches its DESKTOP_QUERY.
 const DESKTOP_QUERY = "(min-width: 640px)"
 
-// Matches the `lg` breakpoint CaseStudyHero switches its own height formula
-// at (see heroCompactHeight.ts) — unrelated to DESKTOP_QUERY above (that one
-// gates the cover/pin physics). This one only decides which "true" height
-// the composition below should visually fill; see syncCompositionScale.
-const COMPACT_TIER_QUERY = "(max-width: 1023.98px)"
-
 // The pusher representing #cs-content's leading edge — thick so a fast
 // fling can't tunnel a sticker through it, heavy so the stickers never
 // budge *it*, no bounce (it's a wall, not another sticker).
@@ -142,56 +135,11 @@ export default function HackWesternHeroClient({
   const [ready, setReady] = useState(false)
   const loadedCount = useRef(0)
   const itemRefs = useRef<(HTMLDivElement | null)[]>([])
-  const itemsLayerRef = useRef<HTMLDivElement>(null)
-  const compactProbeRef = useRef<HTMLDivElement>(null)
-  const aspectRatio = backgroundImg.width / backgroundImg.height
 
   function handleItemLoad() {
     loadedCount.current += 1
     if (loadedCount.current >= ITEMS.length) setReady(true)
   }
-
-  // Below `lg`, CaseStudyHero gives the hero a flat COMPACT_HERO_HEIGHT
-  // instead of the aspect-ratio formula (see heroCompactHeight.ts) — taller
-  // than the sticker composition's own natural `100vw / aspectRatio` height,
-  // which otherwise left it cramped at the top with empty background below.
-  // Scales the whole composition (this component's items — not the
-  // background image, which already fills the box correctly on its own via
-  // `object-cover`) up from its center to fill that real height instead,
-  // matching how HeroForeground crops rather than shrinks its image at the
-  // same breakpoint. Independent of the physics effect below (which no-ops
-  // under reduced motion) — this has to keep working for reduced-motion
-  // users too, since their static rest positions need the same fix.
-  useEffect(() => {
-    const mql = window.matchMedia(COMPACT_TIER_QUERY)
-
-    function sync() {
-      const layer = itemsLayerRef.current
-      const probe = compactProbeRef.current
-      if (!layer) return
-      if (!mql.matches || !probe) {
-        layer.style.transform = ""
-        return
-      }
-      const naturalHeight = window.innerWidth / aspectRatio
-      const targetHeight = probe.getBoundingClientRect().height
-      layer.style.transform = naturalHeight > 0 ? `scale(${targetHeight / naturalHeight})` : ""
-    }
-
-    sync()
-    window.addEventListener("resize", sync)
-    mql.addEventListener("change", sync)
-    // Covers viewport-height-only changes (e.g. mobile browser chrome
-    // show/hide affecting `svh`) that don't always fire `resize`.
-    const ro = new ResizeObserver(sync)
-    if (compactProbeRef.current) ro.observe(compactProbeRef.current)
-
-    return () => {
-      window.removeEventListener("resize", sync)
-      mql.removeEventListener("change", sync)
-      ro.disconnect()
-    }
-  }, [aspectRatio])
 
   useEffect(() => {
     if (reduced || !ready) return
@@ -215,13 +163,11 @@ export default function HackWesternHeroClient({
         if (!el) return
         const width = ITEMS[i].src.width
         const height = ITEMS[i].src.height
-        // vw, not %: keeps both axes on the same CANVAS_WIDTH-derived scale
-        // (item width below is already vw-based via widthPct). The parent
-        // layer's own box is exactly the natural `100vw / aspectRatio`
-        // height this math assumes — see itemsLayerRef below — so this
-        // doesn't need to account for any taller compact-tier box itself;
-        // that layer gets scaled up as a whole instead (see the useEffect
-        // above), carrying every vw-positioned item along with it.
+        // vw, not %: the wrapper's own box is taller than the hero's design
+        // height at `sm`+ (see the comment on the wrapper below), so a
+        // height-relative % would land items lower than intended. Every
+        // item's width is already vw-based (CANVAS_WIDTH/100vw), so pinning
+        // top to the same ratio keeps both axes on one consistent scale.
         const leftVw = ((body.position.x - width / 2) / CANVAS_WIDTH) * 100
         const topVw = ((body.position.y - height / 2) / CANVAS_WIDTH) * 100
         const rotateDeg = (body.angle * 180) / Math.PI
@@ -502,7 +448,9 @@ export default function HackWesternHeroClient({
     // taller than the design height by CaseStudyLayout's HERO_BG_EXTRA
     // buffer, so the background still reaches the frame's true bottom edge
     // instead of leaving a gap that peeks through #cs-content's rounded
-    // corner.
+    // corner. Items don't inherit that extra height as a positioning error
+    // only because their left/top are vw-based (see syncDom/rest values
+    // below), not relative to this box's own resolved height.
     //
     // role="img" + aria-label carries the one description the old single
     // flattened image gave AT users — every item image below is decorative
@@ -513,61 +461,31 @@ export default function HackWesternHeroClient({
       className="absolute inset-x-0 top-0 h-full w-full"
     >
       <Image src={backgroundImg} alt="" fill className="object-cover" sizes="100vw" />
+      {ITEMS.map((item, i) => {
+        const widthPct = (item.src.width / CANVAS_WIDTH) * 100
+        // Reduced motion: skip the simulation and render each item straight
+        // at its designed resting spot, no drop. vw-based for the same
+        // reason as syncDom's live positions above.
+        const restLeftVw = (item.x / CANVAS_WIDTH) * 100
+        const restTopVw = (item.y / CANVAS_WIDTH) * 100
 
-      {/* Invisible — exists only so syncCompositionScale can read
-          COMPACT_HERO_HEIGHT as real pixels via getBoundingClientRect,
-          rather than parsing the CSS string by hand (stays correct even if
-          that value's syntax changes, e.g. to a calc()). */}
-      <div
-        ref={compactProbeRef}
-        aria-hidden="true"
-        className="invisible absolute left-0 top-0 w-px"
-        style={{ height: COMPACT_HERO_HEIGHT }}
-      />
-
-      {/* Sized to the composition's own natural (`100vw / aspectRatio`)
-          height at every breakpoint — identical to what this box's height
-          always was before the compact tier existed. Below `lg` the
-          useEffect above scales this up from center to actually fill
-          COMPACT_HERO_HEIGHT, cropping the now-wider sides against
-          #cs-hero-frame's own `overflow-hidden` (not this layer's own — it
-          stays unclipped so a sticker that overshoots this box slightly,
-          e.g. from rotation or physics jitter, isn't clipped any tighter
-          than it always was); at `lg`+ it's an explicit no-op (empty
-          transform), so desktop is unaffected. Items' left/top stay
-          vw-based (see syncDom/rest values below) — relative to this
-          layer's un-scaled box, not #cs-hero-frame's own (taller) one. */}
-      <div
-        ref={itemsLayerRef}
-        className="absolute left-0 top-0 w-full"
-        style={{ height: `calc(100vw / ${aspectRatio})`, transformOrigin: "center center" }}
-      >
-        {ITEMS.map((item, i) => {
-          const widthPct = (item.src.width / CANVAS_WIDTH) * 100
-          // Reduced motion: skip the simulation and render each item straight
-          // at its designed resting spot, no drop. vw-based for the same
-          // reason as syncDom's live positions above.
-          const restLeftVw = (item.x / CANVAS_WIDTH) * 100
-          const restTopVw = (item.y / CANVAS_WIDTH) * 100
-
-          return (
-            <div
-              key={item.src.src}
-              ref={(el) => {
-                itemRefs.current[i] = el
-              }}
-              className="absolute"
-              style={
-                reduced
-                  ? { left: `${restLeftVw}vw`, top: `${restTopVw}vw`, width: `${widthPct}%`, transform: `rotate(${item.rotate}deg)` }
-                  : { width: `${widthPct}%`, visibility: "hidden" }
-              }
-            >
-              <Image src={item.src} alt="" className="w-full h-auto" onLoad={handleItemLoad} />
-            </div>
-          )
-        })}
-      </div>
+        return (
+          <div
+            key={item.src.src}
+            ref={(el) => {
+              itemRefs.current[i] = el
+            }}
+            className="absolute"
+            style={
+              reduced
+                ? { left: `${restLeftVw}vw`, top: `${restTopVw}vw`, width: `${widthPct}%`, transform: `rotate(${item.rotate}deg)` }
+                : { width: `${widthPct}%`, visibility: "hidden" }
+            }
+          >
+            <Image src={item.src} alt="" className="w-full h-auto" onLoad={handleItemLoad} />
+          </div>
+        )
+      })}
     </div>
   )
 }
