@@ -23,21 +23,40 @@ type Props = {
   // whose destination is obvious from context) — `label` still drives the
   // aria-label either way.
   tooltip?: boolean
+  // Below `md` the hover tooltip is normally hidden outright (touch has no
+  // hover to trigger it), so a tap-to-copy leaves no visible confirmation.
+  // Set true to force the "Copied!" tooltip visible below `md` for the same
+  // beat it already gets from `:hover` above `md` — opt in per instance, not
+  // a general mobile-tooltip switch.
+  mobileCopiedTooltip?: boolean
 } & Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, "href" | "className" | "aria-label">
 
 const COPIED_RESET_MS = 1600
+// Must track `--duration-slow` (globals.css) — the tooltip's own fade-out
+// length. The "Copied!" text is held this much longer than the visual reset
+// so it doesn't flip back to the normal label mid-fade, while still opaque.
+const COPIED_FADE_MS = 300
 
 // Icon-only link: mask-image icon that tints on hover, plus a floating
 // label tooltip that fades in after a beat of sustained hover and drops
 // out instantly on mouse-leave.
-export function IconButton({ href, label, icon, size = 24, className, copyText, variant = "plain", tooltip = true, onClick, ...rest }: Props) {
+export function IconButton({ href, label, icon, size = 24, className, copyText, variant = "plain", tooltip = true, mobileCopiedTooltip = false, onClick, ...rest }: Props) {
   const external = href.startsWith("http")
   const resolvedLabel = label ?? getIconTooltip(icon, href)
   const [copied, setCopied] = useState(false)
+  // Lags `copied` by COPIED_FADE_MS on the way back down, so the label stays
+  // "Copied!" through the tooltip's own fade-out instead of reverting the
+  // instant the reset timer fires (which read as a flash of the normal
+  // label before the tooltip had actually disappeared).
+  const [copiedLabel, setCopiedLabel] = useState(false)
   const resetTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
+  const labelTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
   const boxed = variant === "boxed"
 
-  useEffect(() => () => clearTimeout(resetTimer.current), [])
+  useEffect(() => () => {
+    clearTimeout(resetTimer.current)
+    clearTimeout(labelTimer.current)
+  }, [])
 
   function handleClick(e: React.MouseEvent<HTMLAnchorElement>) {
     onClick?.(e)
@@ -47,8 +66,13 @@ export function IconButton({ href, label, icon, size = 24, className, copyText, 
     navigator.clipboard.writeText(copyText).then(
       () => {
         setCopied(true)
+        setCopiedLabel(true)
         clearTimeout(resetTimer.current)
-        resetTimer.current = setTimeout(() => setCopied(false), COPIED_RESET_MS)
+        clearTimeout(labelTimer.current)
+        resetTimer.current = setTimeout(() => {
+          setCopied(false)
+          labelTimer.current = setTimeout(() => setCopiedLabel(false), COPIED_FADE_MS)
+        }, COPIED_RESET_MS)
       },
       () => {
         // Clipboard API unavailable (e.g. insecure context) — fall back to
@@ -58,7 +82,7 @@ export function IconButton({ href, label, icon, size = 24, className, copyText, 
     )
   }
 
-  const displayLabel = copied ? "Copied!" : resolvedLabel
+  const displayLabel = copiedLabel ? "Copied!" : resolvedLabel
 
   return (
     // `before:inset-[-11px]` pads the hit area out to ~44px square (the
@@ -116,10 +140,12 @@ export function IconButton({ href, label, icon, size = 24, className, copyText, 
       {tooltip && (
         <span
           aria-hidden="true"
-          className="pointer-events-none absolute bottom-full left-1/2 z-50 mb-1 hidden origin-bottom
+          className={`pointer-events-none absolute bottom-full left-1/2 z-50 mb-1 origin-bottom
           -translate-x-1/2 scale-90 whitespace-nowrap rounded-[var(--radius-sm)] bg-neutral-900/90
           px-1.5 py-0.5 text-xs text-neutral-50 opacity-0 transition-[opacity,scale] duration-[var(--duration-slow)]
-          ease-in group-hover/icon:scale-100 group-hover/icon:opacity-100 group-hover/icon:ease-[var(--ease-out)] group-hover/icon:delay-400 md:block"
+          ease-in group-hover/icon:scale-100 group-hover/icon:opacity-100 group-hover/icon:ease-[var(--ease-out)] group-hover/icon:delay-400
+          ${mobileCopiedTooltip ? "block" : "hidden md:block"}
+          ${mobileCopiedTooltip && copied ? "max-md:!scale-100 max-md:!opacity-100" : ""}`}
         >
           {displayLabel}
         </span>
