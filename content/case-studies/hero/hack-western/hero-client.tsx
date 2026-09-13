@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef, useState, useSyncExternalStore } from "react"
+import { useEffect, useRef, useState } from "react"
 import Image from "next/image"
 import { useReducedMotion } from "framer-motion"
 import Matter from "matter-js"
@@ -76,15 +76,8 @@ const DESKTOP_QUERY = "(min-width: 640px)"
 // Matches the `lg` breakpoint CaseStudyHero switches its own height formula
 // at (see heroCompactHeight.ts) — unrelated to DESKTOP_QUERY above (that one
 // gates the cover/pin physics). This one only decides which "true" height
-// the composition below should visually fill; see the `sync` effect below.
+// the composition below should visually fill; see syncCompositionScale.
 const COMPACT_TIER_QUERY = "(max-width: 1023.98px)"
-
-// The settled pile's lowest sticker consistently rests ~3-4% short of the
-// canvas's own floor line at every viewport width tested (rotated rectangles
-// resting on a floor/each other don't tile it edge-to-edge) — this closes
-// that gap with margin to spare. Safe to be generous: the excess is always
-// clipped by itemsClipRef's own overflow-hidden, never visible.
-const PILE_OVERSCAN = 1.06
 
 // The pusher representing #cs-content's leading edge — thick so a fast
 // fling can't tunnel a sticker through it, heavy so the stickers never
@@ -123,22 +116,6 @@ const DROP_GAP = 220 // extra px per array index on top of DROP_BASE
 const JITTER_X = 120 // max random horizontal offset added to each item's drop column
 const JITTER_SEED = 11023 // seeds the jitter RNG so the pile replays identically every load
 
-// Reads "has this component finished its first client render" without a
-// setState-in-effect (flagged by this repo's lint config) — the standard
-// useSyncExternalStore shape for a value that's fixed at false on the server
-// (see useReducedMotion's own hydration comment below) and becomes fixed at
-// true once mounted; the empty subscribe is fine since this never changes
-// again after that, so nothing ever needs to notify a re-render.
-function subscribeNever() {
-  return () => {}
-}
-function getMountedSnapshot() {
-  return true
-}
-function getMountedServerSnapshot() {
-  return false
-}
-
 type Body = Matter.Body
 
 // Deterministic PRNG (mulberry32) — JITTER_X replays into the exact same
@@ -161,24 +138,10 @@ export default function HackWesternHeroClient({
   project: Project
   backgroundImg: import("next/image").StaticImageData
 }) {
-  // Gated behind `mounted` rather than used directly: framer-motion resolves
-  // `prefers-reduced-motion` synchronously against the real browser on the
-  // client, but the server always renders as if it were off — when a
-  // visitor's OS actually has it on, that's a real markup mismatch on the
-  // very first hydration pass (confirmed via a hydration-mismatch warning
-  // naming this exact tree), which React doesn't patch up: everything below
-  // got stuck showing its initial (invisible, unpositioned) state instead of
-  // the reduced-motion one. Forcing `false` until `mounted` flips (see
-  // useSyncExternalStore helpers above) matches the server on first paint no
-  // matter what the OS setting is, then a normal (non-hydration) re-render
-  // picks up the real value right after.
-  const rawReducedMotion = useReducedMotion()
-  const mounted = useSyncExternalStore(subscribeNever, getMountedSnapshot, getMountedServerSnapshot)
-  const reduced = mounted ? Boolean(rawReducedMotion) : false
+  const reduced = useReducedMotion()
   const [ready, setReady] = useState(false)
   const loadedCount = useRef(0)
   const itemRefs = useRef<(HTMLDivElement | null)[]>([])
-  const itemsClipRef = useRef<HTMLDivElement>(null)
   const itemsLayerRef = useRef<HTMLDivElement>(null)
   const compactProbeRef = useRef<HTMLDivElement>(null)
   const aspectRatio = backgroundImg.width / backgroundImg.height
@@ -194,34 +157,25 @@ export default function HackWesternHeroClient({
   // which otherwise left it cramped at the top with empty background below.
   // Scales the whole composition (this component's items — not the
   // background image, which already fills the box correctly on its own via
-  // `object-cover`) up to fill that real height instead, matching how
-  // HeroForeground crops rather than shrinks its image at the same
-  // breakpoint. Independent of the physics effect below (which no-ops
+  // `object-cover`) up from its center to fill that real height instead,
+  // matching how HeroForeground crops rather than shrinks its image at the
+  // same breakpoint. Independent of the physics effect below (which no-ops
   // under reduced motion) — this has to keep working for reduced-motion
   // users too, since their static rest positions need the same fix.
-  //
-  // Also applies a small overscan at *every* breakpoint, including `lg`+:
-  // the settled pile's lowest sticker rests a few percent short of the
-  // canvas's own floor line (confirmed against the pre-compact-tier code —
-  // rotated rectangles resting on a floor/each other just don't tile it
-  // edge-to-edge), which otherwise reads as a gap between the pile and
-  // #cs-content below it. `itemsClipRef` is the real target-height box
-  // (`overflow-hidden`); `itemsLayerRef` is the natural-height content
-  // inside it, scaled up enough to guarantee it reaches that box's bottom
-  // with a little to spare — the spare gets clipped, never visible.
   useEffect(() => {
     const mql = window.matchMedia(COMPACT_TIER_QUERY)
 
     function sync() {
-      const clip = itemsClipRef.current
       const layer = itemsLayerRef.current
       const probe = compactProbeRef.current
-      if (!clip || !layer) return
+      if (!layer) return
+      if (!mql.matches || !probe) {
+        layer.style.transform = ""
+        return
+      }
       const naturalHeight = window.innerWidth / aspectRatio
-      const targetHeight = mql.matches && probe ? probe.getBoundingClientRect().height : naturalHeight
-      clip.style.height = `${targetHeight}px`
-      layer.style.transform =
-        naturalHeight > 0 ? `scale(${(targetHeight / naturalHeight) * PILE_OVERSCAN})` : ""
+      const targetHeight = probe.getBoundingClientRect().height
+      layer.style.transform = naturalHeight > 0 ? `scale(${targetHeight / naturalHeight})` : ""
     }
 
     sync()
@@ -560,7 +514,7 @@ export default function HackWesternHeroClient({
     >
       <Image src={backgroundImg} alt="" fill className="object-cover" sizes="100vw" />
 
-      {/* Invisible — exists only so the `sync` effect above can read
+      {/* Invisible — exists only so syncCompositionScale can read
           COMPACT_HERO_HEIGHT as real pixels via getBoundingClientRect,
           rather than parsing the CSS string by hand (stays correct even if
           that value's syntax changes, e.g. to a calc()). */}
@@ -571,64 +525,48 @@ export default function HackWesternHeroClient({
         style={{ height: COMPACT_HERO_HEIGHT }}
       />
 
-      {/* itemsClipRef: the *real* target-height box — COMPACT_HERO_HEIGHT
-          below `lg`, the natural `100vw / aspectRatio` formula at `lg`+ (both
-          set imperatively by the useEffect above; the inline height here is
-          only the SSR/pre-mount fallback, matching the `lg`+ value). Its
-          `overflow-hidden` is what actually crops the composition — both the
-          intentional side-crop below `lg` and PILE_OVERSCAN's intentional
-          bottom overshoot at every breakpoint.
-
-          itemsLayerRef inside it holds the actual items, at their natural
-          (unscaled) height, transformed up by the useEffect. transform-origin
-          is "center top", not "center center": this box's own top edge
-          already coincides with itemsClipRef's top (both are 0), so scaling
-          from there keeps that edge fixed and grows the box downward —
-          landing flush with (and slightly past, by design — see
-          PILE_OVERSCAN) itemsClipRef's bottom. "center center" scales around
-          this box's own (much higher, since it's short pre-scale) center
-          instead, which pushes the whole composition upward — clipped at the
-          top, short at the bottom.
-
-          Items' left/top stay vw-based (see syncDom/rest values below) —
-          relative to itemsLayerRef's un-scaled box, not itemsClipRef's
-          (taller) one. */}
+      {/* Sized to the composition's own natural (`100vw / aspectRatio`)
+          height at every breakpoint — identical to what this box's height
+          always was before the compact tier existed. Below `lg` the
+          useEffect above scales this up from center to actually fill
+          COMPACT_HERO_HEIGHT, cropping the now-wider sides against
+          #cs-hero-frame's own `overflow-hidden` (not this layer's own — it
+          stays unclipped so a sticker that overshoots this box slightly,
+          e.g. from rotation or physics jitter, isn't clipped any tighter
+          than it always was); at `lg`+ it's an explicit no-op (empty
+          transform), so desktop is unaffected. Items' left/top stay
+          vw-based (see syncDom/rest values below) — relative to this
+          layer's un-scaled box, not #cs-hero-frame's own (taller) one. */}
       <div
-        ref={itemsClipRef}
-        className="absolute left-0 top-0 w-full overflow-hidden"
-        style={{ height: `calc(100vw / ${aspectRatio})` }}
+        ref={itemsLayerRef}
+        className="absolute left-0 top-0 w-full"
+        style={{ height: `calc(100vw / ${aspectRatio})`, transformOrigin: "center center" }}
       >
-        <div
-          ref={itemsLayerRef}
-          className="absolute left-0 top-0 w-full"
-          style={{ height: `calc(100vw / ${aspectRatio})`, transformOrigin: "center top" }}
-        >
-          {ITEMS.map((item, i) => {
-            const widthPct = (item.src.width / CANVAS_WIDTH) * 100
-            // Reduced motion: skip the simulation and render each item straight
-            // at its designed resting spot, no drop. vw-based for the same
-            // reason as syncDom's live positions above.
-            const restLeftVw = (item.x / CANVAS_WIDTH) * 100
-            const restTopVw = (item.y / CANVAS_WIDTH) * 100
+        {ITEMS.map((item, i) => {
+          const widthPct = (item.src.width / CANVAS_WIDTH) * 100
+          // Reduced motion: skip the simulation and render each item straight
+          // at its designed resting spot, no drop. vw-based for the same
+          // reason as syncDom's live positions above.
+          const restLeftVw = (item.x / CANVAS_WIDTH) * 100
+          const restTopVw = (item.y / CANVAS_WIDTH) * 100
 
-            return (
-              <div
-                key={item.src.src}
-                ref={(el) => {
-                  itemRefs.current[i] = el
-                }}
-                className="absolute"
-                style={
-                  reduced
-                    ? { left: `${restLeftVw}vw`, top: `${restTopVw}vw`, width: `${widthPct}%`, transform: `rotate(${item.rotate}deg)` }
-                    : { width: `${widthPct}%`, visibility: "hidden" }
-                }
-              >
-                <Image src={item.src} alt="" className="w-full h-auto" onLoad={handleItemLoad} />
-              </div>
-            )
-          })}
-        </div>
+          return (
+            <div
+              key={item.src.src}
+              ref={(el) => {
+                itemRefs.current[i] = el
+              }}
+              className="absolute"
+              style={
+                reduced
+                  ? { left: `${restLeftVw}vw`, top: `${restTopVw}vw`, width: `${widthPct}%`, transform: `rotate(${item.rotate}deg)` }
+                  : { width: `${widthPct}%`, visibility: "hidden" }
+              }
+            >
+              <Image src={item.src} alt="" className="w-full h-auto" onLoad={handleItemLoad} />
+            </div>
+          )
+        })}
       </div>
     </div>
   )
