@@ -9,7 +9,7 @@ import { fadeUp } from "@/lib/motion"
 const MOBILE_RATIO: [number, number] = [740, 504]
 
 export function CaseStudies() {
-  const [p0, p1, p2, p3] = projects
+  const [p0, p1, p2, p3, p4] = projects
   const reduce = useReducedMotion()
 
   return (
@@ -54,6 +54,20 @@ export function CaseStudies() {
           </motion.div>
           <motion.div variants={fadeUp}>
             <CaseStudyCard project={p2} imageRatio={[719, 475]} mobileImageRatio={MOBILE_RATIO} />
+          </motion.div>
+        </motion.div>
+
+        {/* Row 3: standalone full-width card — 5th project has no pair yet.
+            No imageRatio override — sizes to project.thumbnailWidth/Height
+            (its own real thumbnail) instead of a guessed box. */}
+        <motion.div
+          className="grid grid-cols-1"
+          initial={reduce ? "visible" : "hidden"}
+          whileInView="visible"
+          viewport={{ once: true, margin: "-80px" }}
+        >
+          <motion.div variants={fadeUp}>
+            <CaseStudyCard project={p4} mobileImageRatio={MOBILE_RATIO} />
           </motion.div>
         </motion.div>
       </div>

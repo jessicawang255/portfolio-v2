@@ -193,4 +193,30 @@ export const projects: Project[] = [
       { title: "Reflections" },
     ],
   },
+  {
+    // TODO: everything below is placeholder scaffolding — see project todo
+    // for what needs to be filled in before this ships.
+    slug: "phoenix",
+    title: "Blockchain-based foreign exchange",
+    name: "Phoenix",
+    status: "Shipped 2026",
+    year: 2026,
+    bg: "#E5E5E5",
+    accent: "phoenix",
+    thumbnail: "/images/case-studies/phoenix/phoenix-thumbnail.png",
+    thumbnailWidth: 1600,
+    thumbnailHeight: 900,
+    role: "Software engineer + designer",
+    timeline: "May - Aug 2026",
+    team: ["1 business analyst", "1 data engineer", "1 software engineer"],
+    skills: ["User research", "Product strategy", "Systems design", "Software engineering"],
+    toc: [
+      { title: "Overview" },
+      { title: "The Problem" },
+      { title: "Research" },
+      { title: "The Journey" },
+      { title: "Results" },
+      { title: "Reflections" },
+    ],
+  },
 ]
