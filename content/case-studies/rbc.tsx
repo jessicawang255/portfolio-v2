@@ -15,14 +15,13 @@ export default function Rbc() {
         id="overview"
         tag="Overview"
         headline="My team designed, built, and deployed a blockchain-based foreign exchange platform in 4 months, winning a $20,000 grant!"
-        body="Summer 2026, I interned at RBC as part of their Amplify program — a specialized internship where you're paired into small teams 
-        to design and build a solution for a real business challenge. We got to do it all: from understanding the problem space, 
-        interviewing stakeholders across the bank, to ideating on solutions, designing, developing, deploying, and presenting our 
-        work to senior leaders."
+        body="Summer 2026, I interned at RBC through their Amplify program, where teams of 3-4 interns are paired to design and build a solution
+         to a real business challenge within the bank."
         primary
       >
 
-        <p className="text-base text-neutral-600 leading-normal"> My team built a blockchain-based foreign exchange tool that explores how RBC could offer foreign exchange between tokenized deposits in the (near) future. As a developer, I was hands-on with coding smart contracts on Ethereum (something I never would have pictured myself doing!), and I learned so, so much about foreign exchange and the world of digital assets, stablecoins, and blockchain.</p>
+        <p className="text-base text-neutral-600 leading-normal">I worked with RBC's Digital Asset Innovation team. Over a few months, the team went from 
+          understanding the challenge to designing, building, and presenting our solution to senior leaders across the bank.</p>
         
         <ImageBlock
           src={rbcOverview}
@@ -65,11 +64,8 @@ export default function Rbc() {
 
         <div className="flex flex-col">
           <h1 className="text-balance text-3xl font-medium leading-[1.2] text-primary mt-4">
-            Our solutioning led us to explore several different routes and decisions.
+            Our solutioning led us to explore several different routes, each raising its own open questions the deeper we dug.
           </h1>
-          <p className="text-balance text-base leading-normal text-neutral-600 mt-7">
-            Every avenue we explored raised its own open question, and the list kept growing the deeper we dug:
-          </p>
         </div>
 
         <ImageBlock
@@ -79,14 +75,14 @@ export default function Rbc() {
 
         <Callout
           label="Disclaimer"
-          heading="This project is under NDA, so I can't share our designs and details of our solution."
+          heading="This project is under NDA, so I can't share our designs and the details of our solution."
         />
       </Section>
 
       <Section
         id="results"
         tag="Results"
-        headline="We designed, built, and deployed our now-patent-pending solution, pitching our product to RBC's C-suite executives and winning first place out of all Amplify teams!"
+        headline="We pitched our patent-pending solution to RBC's C-suite executives, winning first place out of 19 Amplify teams!"
         primary
       >
         <ImageBlock
