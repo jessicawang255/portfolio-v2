@@ -64,10 +64,9 @@ export function IterationCarousel({ items, className }: IterationCarouselProps) 
       }
       // Measured from the wrapper, not trackRef — trackRef's own `-mx-[1px]`
       // (below, for its slide borders) shifts its left edge 1px further left
-      // than the wrapper's. Reusing that as trackWidth on the wrapper too
-      // used to push the wrapper's right edge 1px past clientWidth, causing
-      // a permanent 1px page-level horizontal scrollbar on every case study
-      // that uses this carousel.
+      // than the wrapper's, and reusing that as the wrapper's own width used
+      // to push its right edge 1px past clientWidth (a permanent 1px
+      // horizontal scrollbar).
       const wrapperLeft = wrapper.getBoundingClientRect().left
       // clientWidth (not window.innerWidth) excludes the scrollbar, so the
       // track's right edge lands flush with the actual content area.
@@ -117,25 +116,16 @@ export function IterationCarousel({ items, className }: IterationCarouselProps) 
 
   return (
     <div ref={rootRef} className={`flex flex-col ${className ?? ""}`} role="group" aria-label="Design iterations">
-      {/* Sticky release boundary — a negative margin-bottom on the track
-          wrapper below pulls this div's own auto-height up by
-          STICKY_RELEASE_BUFFER px, so the caption (bounded by this div, not
-          the root) releases that much before the image's true bottom edge.
-          The spacer after this div gives back the same amount, so the
-          root's total height is unaffected — only the release point moved. */}
+      {/* Release boundary — a negative margin-bottom on the track wrapper
+          below pulls this div's auto-height up by STICKY_RELEASE_BUFFER px,
+          so the caption releases that much before the image's true bottom
+          edge. The spacer after this div gives the height back. */}
       <div>
-      {/* Sticky bounded by the release-boundary div above, so it releases
-          STICKY_RELEASE_BUFFER px before the track's bottom edge scrolls
-          past. top-0 (not an offset) so the white backdrop below (inset-0
-          on this div) covers exactly this div's box, with nothing left for
-          the scrolling track to show through.
-          Bled to the same trackWidth as the track/fade below so the
-          gradient backdrop covers the peeking slide too — same
-          -mx-[1px]/px-[1px] as the track, to avoid a 1px sliver of border
-          showing through sub-pixel rounding drift. The gradient is a
-          separate absolutely-positioned layer, not a background on the
-          caption row itself, so the row's own width stays the natural
-          column width and the nav controls don't drift with the bled backdrop. */}
+      {/* Sticky, bounded by the release-boundary div above. Bled to the same
+          trackWidth as the track/fade below so the gradient backdrop covers
+          the peeking slide too; the gradient is a separate absolute layer,
+          not a background on the caption row, so the row's own width stays
+          natural and the nav controls don't drift with the bled backdrop. */}
       <div
         className="sticky top-0 z-10 -mx-[1px] w-full px-[1px]"
         style={trackWidth != null ? { width: trackWidth } : undefined}
@@ -246,21 +236,14 @@ export function IterationCarousel({ items, className }: IterationCarouselProps) 
 
       {/* -mx-[1px] px-[1px] gives the first/last slide's border somewhere to
           render without getting clipped by the track's own overflow-x.
-          Width stays at the CSS default until the JS measurement resolves,
-          matching the very first paint anyway. paddingRight reserves extra
-          scrollable room past the last slide — without it, the browser's own
-          scrollLeft ceiling can fall short of what's needed to bring the
-          last slide flush left, since the track bleeds close to the
-          viewport edge. */}
-      {/* The fade lives outside the scrolling track, not as its child — an
+          paddingRight reserves extra scrollable room past the last slide —
+          without it the browser's scrollLeft ceiling falls short of bringing
+          the last slide flush left, since the track bleeds near the edge. */}
+      {/* Fade lives outside the scrolling track, not as its child — an
           absolutely-positioned descendant of overflow-x:auto still scrolls
-          with the track's content, so nesting it inside made it drift with
-          the slides. This wrapper is relative and un-scrolling, with the
-          fade as its sibling. It needs the same bled trackWidth so `right: 0`
-          lands at the true viewport edge, not the un-bled column edge.
-          marginBottom is the sticky-release-early mechanic — it pulls the
-          release-boundary div's own height up by STICKY_RELEASE_BUFFER px,
-          while the track itself still renders at full size underneath. */}
+          with the content. marginBottom is the sticky-release-early
+          mechanic (see release boundary above) — it pulls this wrapper's
+          height up while the track still renders full size underneath. */}
       <div
         ref={bleedWrapperRef}
         className="relative"
@@ -290,21 +273,15 @@ export function IterationCarousel({ items, className }: IterationCarouselProps) 
                 className="w-full shrink-0 snap-start"
                 style={slideWidth != null ? { width: slideWidth, flexShrink: 0 } : undefined}
               >
-                {/* A real <button>, not an onClick on the div above — gets
-                    keyboard focus/activation for free, and doesn't fight the
-                    div's own job as the snap-align + IntersectionObserver
-                    target. Stays clickable and in the tab order even when
-                    active (a no-op) so tab order doesn't reshuffle as the
-                    active slide changes. Native drag/wheel scrolling on the
-                    track is unaffected — browsers only fire `click` on a
-                    release with no significant drag in between. */}
-                {/* A flat white scrim, not a scale — a partial, clip-and-fade-
-                    edged sliver of the image doesn't read well shrinking
-                    toward its own center while the fixed viewport clip/fade
-                    overlay stays put. .iteration-slide-overlay (globals.css)
-                    fades opacity in on hover, gated to pointer-fine devices,
-                    skipped for prefers-reduced-motion, scoped to
-                    [aria-current="false"]. */}
+                {/* A real <button>, not onClick on the div above — gets
+                    keyboard focus for free and stays in the tab order even
+                    when active, so tab order doesn't reshuffle as the active
+                    slide changes. Native drag/wheel scroll is unaffected —
+                    browsers only fire `click` on a release with no drag. */}
+                {/* Flat white scrim, not a scale — a scaling image fights the
+                    fixed viewport clip/fade overlay. .iteration-slide-overlay
+                    (globals.css) fades in on hover, pointer-fine only,
+                    skipped for reduced motion, scoped to non-active slides. */}
                 <button
                   type="button"
                   onClick={() => goTo(index)}

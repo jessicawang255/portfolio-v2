@@ -126,11 +126,9 @@ export function MobileNav() {
   // Separates the white chip from the neutral-75 panel tucked behind it.
   const chipLiftShadow = "0 0 10px 0 rgba(0,0,0,0.04)"
 
-  // How far down from the chip's own top edge the panel's bottom edge is
-  // anchored. `bottom` on an absolute box measures from the container's
-  // bottom, and this wrapper's height is exactly the chip's height — so a
-  // plain `bottom: 24px` would anchor the panel deep inside the chip's own
-  // span instead of just behind its top.
+  // How far the panel's bottom edge tucks behind the chip's top edge —
+  // `bottom` on an absolute box measures from the container's bottom, and
+  // this wrapper's height is exactly the chip's height.
   const PANEL_OVERLAP = 24
 
   return (

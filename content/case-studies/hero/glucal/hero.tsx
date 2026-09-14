@@ -5,11 +5,8 @@ import backgroundImg from "./background.png"
 import foregroundImg from "./foreground.png"
 import foregroundMobileImg from "./foreground-mobile.png"
 
-// Read by app/work/[slug]/page.tsx alongside the default export — lets
-// CaseStudyLayout size the hero container to this image's real proportions
-// (see CaseStudyLayout's HERO_HEIGHT) instead of an arbitrary vh guess, so
-// the reveal never leaves a gap or crops the image as viewport width changes
-// independently of height.
+// Read by app/work/[slug]/page.tsx to size the hero container (see
+// CaseStudyLayout's HERO_HEIGHT).
 export const heroAspectRatio = backgroundImg.width / backgroundImg.height
 
 // Read by MoreCaseStudies for this case study's row thumbnail — the

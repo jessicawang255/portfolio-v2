@@ -28,10 +28,9 @@ type Props = {
 const FALLBACK_HERO_HEIGHT = "65vh"
 
 // Extra height on the fixed background container only (see CaseStudyHero's
-// `height` vs `spacerHeight`) — a buffer during the scroll-peel so the
-// background doesn't run out from behind the frame's rounding top corner
-// right before the reveal finishes. Not visible at rest: #cs-content covers
-// this sliver.
+// `height` vs `spacerHeight`) — a buffer so the background doesn't run out
+// from behind the frame's rounding top corner during the scroll-peel. Not
+// visible at rest: #cs-content covers this sliver.
 const HERO_BG_EXTRA = 80
 
 export function CaseStudyLayout({ project, children, heroBackground, heroAspectRatio }: Props) {
@@ -39,12 +38,10 @@ export function CaseStudyLayout({ project, children, heroBackground, heroAspectR
 
   const HeroBackground = heroBackground ?? DefaultHeroBackground
 
-  // Default nav-link colors read too faint over some heroes. "light" is for
-  // a hero that's uniformly dark enough for a flat color to read on its own
-  // (e.g. Retrospect, RBC); navScrim instead adds a dark gradient behind the
-  // nav (see the header below) as a contrast guarantee for a hero whose
-  // value varies too much for any flat color to reliably read against
-  // otherwise (e.g. gluCal). Both share the same flat neutral-100/300 pair.
+  // "light" is for a hero uniformly dark enough for a flat color to read on
+  // its own (e.g. Retrospect, RBC); navScrim instead adds a dark gradient
+  // behind the nav for a hero whose value varies too much for a flat color
+  // to reliably read against (e.g. gluCal).
   const navLinkClass = navTheme === "light" || navScrim
     ? "text-neutral-100 hover:text-neutral-300 transition-colors duration-150"
     : "text-nav-link hover:text-nav-link-hover transition-colors duration-150"
@@ -71,14 +68,10 @@ export function CaseStudyLayout({ project, children, heroBackground, heroAspectR
           Bottom pill nav takes over below `sm`. */}
       <header className="fixed inset-x-0 top-0 hidden pointer-events-none sm:block" style={{ zIndex: 6 }}>
         {navScrim && (
-          // Dark top-down fade behind the nav text — not clipped by the
-          // header's own (unset) height, so it reaches past the nav bar
-          // into the hero. Guarantees contrast regardless of what's under
-          // it, unlike relying on the hero's own color/value. `-z-10`
-          // (not just DOM order) is load-bearing here: an absolutely
+          // Dark top-down fade behind the nav text, reaching past the nav
+          // bar into the hero. `-z-10` is load-bearing — an absolutely
           // positioned box paints after static in-flow content regardless
-          // of source order, so without it this sat on top of the nav
-          // links and darkened them instead of backing them.
+          // of source order, so without it this sat on top of the nav links.
           <div
             aria-hidden="true"
             className="absolute inset-x-0 top-0 -z-10 h-48 bg-gradient-to-b from-black/55 via-black/20 to-transparent"
@@ -160,10 +153,8 @@ export function CaseStudyLayout({ project, children, heroBackground, heroAspectR
           <div className="container-main">
             {/* min(...) keeps the column's left margin from dropping below
                 17rem in the `md`–`xl` tablet tier (18.5rem at `xl`+, matching
-                the aside's own left offset below) — otherwise the TOC gets
-                pushed off-screen on any viewport narrower than max-w + that
-                margin. Only applied from `md` up, since below that there's
-                no TOC to reserve space for. */}
+                the aside's left offset) — otherwise the TOC gets pushed
+                off-screen on a viewport narrower than max-w + that margin. */}
             <div className="relative max-w-full md:ml-[17rem] md:max-w-[calc(100%-17rem)] xl:mx-auto xl:max-w-[min(120rem,calc(100%-37rem))]">
               <aside className="absolute top-0 h-full w-60 left-[-18.5rem] md:left-[-17rem] xl:left-[-18.5rem]">
                 <div className="sticky top-0 pt-9 pb-16">

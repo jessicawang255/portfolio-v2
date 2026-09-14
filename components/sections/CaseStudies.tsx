@@ -81,19 +81,11 @@ export function CaseStudies() {
           </motion.div>
           <motion.div
             variants={fadeUp}
-            // Desktop-only: this panel just fills the blank column left by
-            // RBC having no pair yet — on mobile the row already stacks
-            // to one full-width column with nothing blank to fill, and it'd
-            // just be dead weight below the card. Drop it once a 6th case
-            // study takes this slot instead.
-            // self-start: sizes to min-h below, not the RBC card's full
-            // (thumb + text) row height. justify-between (not centered)
-            // pushes the text to the top and the icon row to the bottom, so
-            // they flex apart to fill that height instead of sitting
-            // bunched together in the middle.
-            // shadow mimics a 1px black-6% border, same idiom as Footer's
-            // Colophon panel — since neutral-75 is nearly white, a real
-            // border would either vanish (neutral) or overpower it (gray).
+            // Desktop-only: fills the blank column left by RBC having no
+            // pair yet — drop this once a 6th case study takes the slot.
+            // self-start sizes to min-h, not the RBC card's full row height.
+            // shadow mimics a 1px black-6% border, since neutral-75 is
+            // nearly white and a real border would vanish or overpower it.
             className="hidden md:flex flex-col justify-between self-start min-h-[14rem] rounded-2xl bg-neutral-75 p-8 shadow-[0_0_0_1px_rgba(0,0,0,0.06)]"
           >
             <p className="text-balance text-base font-normal text-neutral-600">

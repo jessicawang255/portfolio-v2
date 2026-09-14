@@ -32,11 +32,8 @@ type Props = {
 }
 
 // Drives every scroll-tied animation shared between a page's content frame,
-// its hero, and #site-footer: the frame's own border-radius peel (top edge
-// as it's covered, bottom edge as the footer is revealed beneath it), the
-// hero's fade + scale as it's covered, and the footer's matching fade +
-// scale as it's revealed. One instance per page type (Work/About vs. case
-// studies), parameterized by which frame/hero elements it targets — see
+// its hero, and #site-footer: the frame's border-radius peel, the hero's
+// fade + scale as it's covered, and the footer's matching reveal. See
 // headerFade.ts and footerFade.ts for the actual reveal math.
 export function ScrollRevealController({ frameId, heroId, heroFrameId }: Props) {
   const pathname = usePathname()
@@ -63,27 +60,21 @@ export function ScrollRevealController({ frameId, heroId, heroFrameId }: Props) 
       function applyRadius(y: number) {
         const el = document.getElementById(frameId) ?? frame!
 
-        // Recomputed every frame rather than cached: a hero's spacer can
-        // correct its SSR-approximated height once its own ResizeObserver
-        // measures the real one, which would otherwise leave offsetTop
-        // stale. offsetTop alone is the scroll distance needed to bring the
-        // frame's top to viewport y=0 — see headerProgress in headerFade.ts.
+        // Recomputed every frame, not cached: a hero's spacer can correct
+        // its SSR-approximated height once its ResizeObserver fires, which
+        // would otherwise leave offsetTop stale.
         const triggerAt = Math.max(el.offsetTop, 0)
         const p = headerProgress(y, triggerAt)
         const top = headerRadius(p, maxRadius)
         el.style.borderTopLeftRadius  = `${top}px`
         el.style.borderTopRightRadius = `${top}px`
 
-        // footerH/footerAbsTop recomputed every frame for the same reason as
-        // triggerAt above: total scrollHeight can still grow after mount,
-        // which would otherwise pin footerAbsTop to a stale, too-small value.
+        // Recomputed every frame — scrollHeight can still grow after mount.
         const footerH = footer!.offsetHeight
         const footerAbsTop = document.documentElement.scrollHeight - footerH
-        // Widens the reveal's scroll distance beyond just footerH (ramp
-        // starts REVEAL_EXTRA px earlier, still finishes at the same
-        // scroll-to-bottom point) — footerH alone is a narrow window,
-        // easy to stop a scroll gesture inside and land on a half-peeled,
-        // half-opaque footer.
+        // Widens the reveal's scroll distance so the ramp starts earlier —
+        // footerH alone is a narrow window, easy to stop a scroll gesture
+        // inside and land on a half-peeled, half-opaque footer.
         const REVEAL_EXTRA = 400
         const footerReveal = footerRatio(y, footerAbsTop - REVEAL_EXTRA, footerH + REVEAL_EXTRA, window.innerHeight)
         const bottom = footerReveal * maxRadius
@@ -98,12 +89,9 @@ export function ScrollRevealController({ frameId, heroId, heroFrameId }: Props) 
           heroEl.style.transform = mql.matches ? `scale(${fadeScale(p)})` : ""
         }
 
-        // p reaching 1 means the frame has fully covered the hero and (since
-        // headerProgress is monotonic in scrollY) stays at 1 for the rest of
-        // the scroll, so it's a safe signal to hide the hero entirely —
-        // removing it from painting and hit-testing so it can't bleed its
-        // background over the footer or steal clicks on a short viewport
-        // where the two overlap (see CaseStudyHero.tsx).
+        // p reaching 1 (fully covered) hides the hero entirely, so it can't
+        // bleed its background over the footer or steal clicks on a short
+        // viewport where the two overlap.
         if (heroFrameId) {
           const heroFrame = document.getElementById(heroFrameId)
           if (heroFrame) heroFrame.style.visibility = mql.matches && p >= 1 ? "hidden" : ""

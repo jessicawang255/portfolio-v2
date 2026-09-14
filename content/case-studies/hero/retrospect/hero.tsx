@@ -3,18 +3,15 @@ import type { Project } from "@/content/work"
 import foregroundImg from "./foreground.png"
 import foregroundMobileImg from "./foreground-mobile.png"
 
-// Read by app/work/[slug]/page.tsx alongside the default export — lets
-// CaseStudyLayout size the hero container to this image's real proportions
-// (see CaseStudyLayout's HERO_HEIGHT) instead of an arbitrary vh guess, so
-// the reveal never leaves a gap or crops the image as viewport width changes
-// independently of height. Derived from the foreground, not the background
-// video — the video's native aspect ratio doesn't match the design and is
-// just object-cover'd to fill whatever box this resolves to.
+// Read by app/work/[slug]/page.tsx to size the hero container (see
+// CaseStudyLayout's HERO_HEIGHT). Derived from the foreground, not the
+// background video — the video's aspect ratio doesn't match the design and
+// is just object-cover'd to fill whatever box this resolves to.
 export const heroAspectRatio = foregroundImg.width / foregroundImg.height
 
 // Read by MoreCaseStudies for this case study's row thumbnail — there's no
-// standalone background image to use instead (the real background is the
-// video below), so this reuses the same foreground HeroForeground renders.
+// standalone background image (the real background is the video below), so
+// this reuses the same foreground HeroForeground renders.
 export const thumbnail = foregroundImg
 
 // Background is a plain absolute-fill looping video (no scroll animation,

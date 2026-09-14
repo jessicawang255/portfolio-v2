@@ -44,10 +44,8 @@ export function IconButton({ href, label, icon, size = 24, className, copyText, 
   const external = href.startsWith("http")
   const resolvedLabel = label ?? getIconTooltip(icon, href)
   const [copied, setCopied] = useState(false)
-  // Lags `copied` by COPIED_FADE_MS on the way back down, so the label stays
-  // "Copied!" through the tooltip's own fade-out instead of reverting the
-  // instant the reset timer fires (which read as a flash of the normal
-  // label before the tooltip had actually disappeared).
+  // Lags `copied` by COPIED_FADE_MS so the label stays "Copied!" through the
+  // tooltip's own fade-out instead of flashing the normal label mid-fade.
   const [copiedLabel, setCopiedLabel] = useState(false)
   const resetTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
   const labelTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
@@ -103,12 +101,9 @@ export function IconButton({ href, label, icon, size = 24, className, copyText, 
       {...rest}
     >
       {boxed && (
-        // The visual card, separate from the `<a>`'s own layout box: it's
-        // absolutely positioned so resizing it on hover/press (top moves,
-        // bottom stays put) never resizes the `<a>` itself — nothing in the
-        // flex row it sits in has to reflow. Bottom border width and `top`
-        // move together: thicker + higher reads as the block rising on
-        // hover, thinner + lower reads as it sinking flush on press.
+        // Absolutely positioned so resizing it on hover/press never resizes
+        // the `<a>` itself. Border width and `top` move together: thicker +
+        // higher reads as rising on hover, thinner + lower as sinking on press.
         <span
           aria-hidden="true"
           className="absolute inset-0 rounded-base border border-neutral-100 border-b-[2px] bg-surface shadow-[0px_2px_2px_0_rgba(0,0,0,0.04)] transition-[top,border-bottom-width,box-shadow,background-color] duration-150 group-hover/icon:top-[-2px] group-hover/icon:border-b-[4px] group-hover/icon:shadow-[0px_4px_8px_0_rgba(0,0,0,0.04)] group-active/icon:top-[1px] group-active/icon:border-b-[1px] group-active/icon:bg-neutral-100 group-active/icon:shadow-[0px_1px_1px_0_rgba(0,0,0,0.04)]"

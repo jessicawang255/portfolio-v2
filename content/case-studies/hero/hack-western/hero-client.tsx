@@ -18,10 +18,8 @@ import drawButton from "./stickers/draw-button.svg"
 import basics from "./stickers/basics.svg"
 import returnee from "./stickers/returnee.svg"
 
-// The reference frame everything below is measured against (a Figma frame,
-// left/top of each layer's unrotated bounding box). Real physics — not these
-// numbers — decides where things actually land, so x/y here only seed each
-// item's drop column and rotate only seeds its starting tilt; see ITEMS.
+// Figma frame coordinates. Physics decides final position — x/y here only
+// seed each item's drop column, rotate only seeds its starting tilt.
 const CANVAS_WIDTH = 3000
 const CANVAS_HEIGHT = 1200
 
@@ -32,12 +30,9 @@ type Item = {
   rotate: number
 }
 
-// Back-to-front (reverse of the front-to-back z-index order we were handed).
-// Array order is paint order (later = stacks on top, no explicit z-index
-// needed) and drop order (see DROP_GAP below) — items later in the array
-// start their fall from higher up, so the bottom of the pile mostly lands
-// first and the topmost sticker drops in last, the way it would if someone
-// actually dropped these in one at a time.
+// Array order is both paint order (later = stacks on top) and drop order
+// (later items start higher — see DROP_GAP), so the pile lands bottom-first
+// like someone actually dropping these in one at a time.
 const ITEMS: Item[] = [
   { src: returnee,   x: 2381.08, y: 1052.85, rotate: 0.3 },
   { src: basics,     x: 1904.55, y: 608.13,  rotate: -22.35 },
@@ -55,32 +50,23 @@ const ITEMS: Item[] = [
 // Thick enough that nothing tunnels through at these body sizes/speeds.
 const WALL_THICKNESS = 400
 
-// Fixed simulation step — stability, not determinism now that the pusher
-// (see below) is driven by live scroll input: a tick can run several of
-// these substeps back to back to cover a big real-time gap (a fast fling
-// between two rAF frames) without a single oversized step letting a fast
-// body tunnel through another.
+// Fixed simulation step, run in substeps so a big real-time gap (a fast
+// scroll fling between two rAF frames) doesn't let a fast body tunnel
+// through another.
 const FIXED_DT = 1000 / 60
 const MAX_SUBSTEPS_PER_TICK = 8
-// Resets every time the loop (re)starts (the initial drop, or a scroll/
-// resize wake) — a safety net in case something never sleeps, e.g. the
-// pusher resting exactly at a sticker's edge and jittering on numerical
-// noise forever. ~20s of simulated time per run.
+// Safety net in case something never sleeps (e.g. the pusher jittering on
+// numerical noise at a sticker's edge forever). ~20s of simulated time.
 const MAX_RUN_STEPS = 1200
 
 // Case studies only pin the hero and let #cs-content slide over it from
 // `sm` up (see CaseStudyHero) — matches its DESKTOP_QUERY.
 const DESKTOP_QUERY = "(min-width: 640px)"
 
-// Matches `--breakpoint-lg` in globals.css (60rem) — the same cutoff the
-// `lg:` classes below switch on. Below it, a dedicated flattened mobileImg
-// (see the render below) replaces the sim entirely, the same convention
-// every other case study's hero uses for its own foreground art (see
-// HeroForeground's `mobileSrc`): CANVAS_WIDTH is a wide, landscape-ish
-// composition, and several stickers are pinned right at its edges by
-// design — real estate that just doesn't exist on a phone-width screen, no
-// matter how the pile is scaled or cropped. Running Matter.js at all there
-// is wasted work for a sim nobody sees below this width.
+// Matches `--breakpoint-lg` in globals.css — below it a flattened mobileImg
+// replaces the sim entirely (same convention as HeroForeground's mobileSrc),
+// since CANVAS_WIDTH's wide composition has stickers pinned at edges that
+// don't exist on a phone-width screen. No point running Matter.js for that.
 const LG_QUERY = "(min-width: 60rem)"
 
 // The pusher representing #cs-content's leading edge — thick so a fast
@@ -103,17 +89,14 @@ const CATEGORY_ITEM = 0x0001
 const CATEGORY_BOUNDARY = 0x0002
 const CATEGORY_PUSHER = 0x0004
 
-// "Feel" of the drop, picked by comparing several candidates against each
-// other (bounce/friction/gravity) and then several drop columns at that same
-// feel (JITTER_X/JITTER_SEED) — see the git history for the rejected ones.
+// Hand-tuned "feel" of the drop.
 const GRAVITY_Y = 1.5
 const RESTITUTION = 0.35
 const FRICTION = 0.6
 const FRICTION_AIR = 0.005
-// Matter's default (0.001) scaled up — gravity accelerates every mass
-// equally, so this doesn't change how the initial drop looks or feels, but
-// a heavier sticker gains less velocity from the *same* collision impulse,
-// so the pusher launches them a shorter distance on contact.
+// Matter's default (0.001) scaled up — doesn't affect the drop (gravity
+// accelerates every mass equally) but a heavier sticker gains less velocity
+// from the pusher's collision impulse, so it launches a shorter distance.
 const ITEM_DENSITY = 0.01
 const DROP_BASE = 400 // px above the canvas the back-most item starts from
 const DROP_GAP = 220 // extra px per array index on top of DROP_BASE
@@ -135,12 +118,9 @@ function mulberry32(seed: number) {
   }
 }
 
-// Tracks LG_QUERY via useSyncExternalStore rather than a plain
-// matchMedia-in-an-effect + setState (flagged by this repo's lint config as
-// a cascading-render risk) — the standard shape for subscribing to
-// external, synchronously-readable browser state. getServerSnapshot fixes
-// it at `false` for the server (which has no viewport to check); the real
-// value is picked up client-side right after.
+// useSyncExternalStore, not matchMedia-in-an-effect + setState, to avoid a
+// cascading render. getServerSnapshot fixes `false` for SSR; the real value
+// is picked up client-side right after.
 function subscribeToLgQuery(callback: () => void) {
   const mql = window.matchMedia(LG_QUERY)
   mql.addEventListener("change", callback)
@@ -168,10 +148,8 @@ export default function HackWesternHeroClient({
   const itemRefs = useRef<(HTMLDivElement | null)[]>([])
   const [mobileLoaded, setMobileLoaded] = useState(false)
 
-  // Only gates whether the effect below ever builds the sim — the
-  // sim-vs-static-image markup itself is CSS-only (`lg:` classes below,
-  // always rendered both ways) and never reads this, so there's no server/
-  // client markup mismatch to guard against here.
+  // Only gates whether the sim gets built — the sim-vs-static-image markup
+  // itself is CSS-only (`lg:` classes below), so no hydration mismatch risk.
   const isDesktopTier = useSyncExternalStore(subscribeToLgQuery, getLgSnapshot, getLgServerSnapshot)
 
   function handleItemLoad() {
@@ -184,11 +162,10 @@ export default function HackWesternHeroClient({
 
     const mql = window.matchMedia(DESKTOP_QUERY)
 
-    // Reassigned wholesale by buildSimulation() (on mount, and again on
-    // every "scrolled fully out, then fully back" cycle — see
-    // onScrollOrResize) — every function below reads these live rather than
-    // closing over a one-time snapshot, so a rebuild takes effect immediately
-    // without re-registering any listener.
+    // Reassigned wholesale by buildSimulation() (on mount, and again on every
+    // full-out-then-back scroll cycle — see onScrollOrResize); every function
+    // below reads these live so a rebuild takes effect without re-registering
+    // any listener.
     let engine: Matter.Engine
     let bodies: Body[]
     let pusher: Body
@@ -201,11 +178,10 @@ export default function HackWesternHeroClient({
         if (!el) return
         const width = ITEMS[i].src.width
         const height = ITEMS[i].src.height
-        // vw, not %: the wrapper's own box is taller than the hero's design
-        // height at `sm`+ (see the comment on the wrapper below), so a
-        // height-relative % would land items lower than intended. Every
-        // item's width is already vw-based (CANVAS_WIDTH/100vw), so pinning
-        // top to the same ratio keeps both axes on one consistent scale.
+        // vw, not %: the wrapper is taller than the hero's design height at
+        // `sm`+ (see the wrapper comment below), so height-relative % would
+        // land items too low. Width is already vw-based, so top uses the
+        // same scale to keep both axes consistent.
         const leftVw = ((body.position.x - width / 2) / CANVAS_WIDTH) * 100
         const topVw = ((body.position.y - height / 2) / CANVAS_WIDTH) * 100
         const rotateDeg = (body.angle * 180) / Math.PI
@@ -216,9 +192,8 @@ export default function HackWesternHeroClient({
       })
     }
 
-    // Builds (or rebuilds, on a full-visibility reset) the entire drop from
-    // scratch — same starting conditions every time, so a reset genuinely
-    // looks like the page was just loaded.
+    // Rebuilds the entire drop from scratch with the same starting
+    // conditions, so a reset genuinely looks like the page just loaded.
     function buildSimulation() {
       if (engine) {
         Matter.Composite.clear(engine.world, false)
@@ -230,9 +205,8 @@ export default function HackWesternHeroClient({
 
       engine = Matter.Engine.create()
       engine.gravity.y = GRAVITY_Y
-      // Lets the loop actually stop between scrolls instead of ticking
-      // forever — sleeping bodies still wake automatically the instant the
-      // pusher (or anything else awake) touches them.
+      // Lets the loop stop between scrolls — sleeping bodies still wake
+      // automatically the instant something touches them.
       engine.enableSleeping = true
 
       const bodyOptions: Matter.IChamferableBodyDefinition = {
@@ -256,11 +230,9 @@ export default function HackWesternHeroClient({
         })
       })
 
-      // Floor sits at the canvas's bottom edge; walls at its left/right
-      // edges — together they keep the pile inside the hero instead of
-      // spilling past where #cs-hero-frame clips it (overflow-hidden). Only
-      // collide with stickers (see CATEGORY_BOUNDARY), never the pusher
-      // below, which starts out coincident with the floor at rest.
+      // Floor + walls keep the pile inside the hero instead of spilling past
+      // where #cs-hero-frame clips it. Only collide with stickers, never the
+      // pusher (which starts coincident with the floor at rest).
       const boundaryOptions: Matter.IChamferableBodyDefinition = {
         isStatic: true,
         collisionFilter: { category: CATEGORY_BOUNDARY, mask: CATEGORY_ITEM },
@@ -287,23 +259,18 @@ export default function HackWesternHeroClient({
         boundaryOptions
       )
 
-      // Stand-in for #cs-content's real top edge — repositioned every tick
-      // to track it (see measurePusherTargetY), so scrolling the actual
-      // frame over the hero physically shoves the pile out of its way
-      // instead of just visually covering it. Rests exactly on the floor's
-      // top surface at scroll position 0 (see PUSHER_THICKNESS/2 offset),
-      // matching where the real content card sits at rest.
+      // Stand-in for #cs-content's real top edge, repositioned every tick to
+      // track it (see measurePusherTargetY), so scrolling the frame over the
+      // hero physically shoves the pile instead of just covering it.
       pusher = Matter.Bodies.rectangle(
         CANVAS_WIDTH / 2,
         CANVAS_HEIGHT - PUSHER_THICKNESS / 2,
         CANVAS_WIDTH + WALL_THICKNESS * 2,
         PUSHER_THICKNESS,
         {
-          // Low friction on purpose — a grippy contact between a full-width
-          // bar and a tilted sticker imparts a lot of torque as it slides
-          // underneath, which is what was flipping stickers end over end on
-          // even a small push. It should shove them out of the way, not
-          // spin them.
+          // Low friction on purpose — a grippy full-width bar sliding under
+          // a tilted sticker imparts torque, flipping it end over end. It
+          // should shove stickers out of the way, not spin them.
           friction: 0.05,
           restitution: 0,
           collisionFilter: { category: CATEGORY_PUSHER, mask: CATEGORY_ITEM },
@@ -317,15 +284,13 @@ export default function HackWesternHeroClient({
       pusherY = pusher.position.y
       pusherTargetY = pusherY
 
-      // Position everything at its off-screen starting spot before the
-      // first paint, so there's no frame where items flash in at (0, 0)
-      // pre-drop (or, on a reset, flash at wherever they'd settled before).
+      // Position everything at its off-screen starting spot before the first
+      // paint, so items don't flash in at (0, 0) pre-drop.
       syncDom()
     }
 
-    // #cs-content's real top edge, in canvas units — matches the vw-based
-    // mapping syncDom uses, so the pusher and the stickers agree on scale.
-    // Below `sm` there's no pinned/covering effect at all (see
+    // #cs-content's real top edge, in canvas units, matching syncDom's
+    // vw-based scale. Below `sm` there's no covering effect (see
     // CaseStudyHero), so the pusher just stays parked at the floor.
     function measurePusherTargetY() {
       if (!mql.matches) return CANVAS_HEIGHT - PUSHER_THICKNESS / 2
@@ -335,12 +300,9 @@ export default function HackWesternHeroClient({
       return (screenTop / window.innerWidth) * CANVAS_WIDTH - PUSHER_THICKNESS / 2
     }
 
-    // Same 0–1 scroll progress ScrollRevealController drives the frame's
-    // radius/fade from (p=0 at rest, p=1 once #cs-content has fully covered
-    // the hero) — reusing it, rather than deriving our own threshold from
-    // pusherTargetY, keeps "out of screen" exactly in sync with the point
-    // the hero actually becomes invisible (heroFrameId gets
-    // visibility:hidden at p>=1 — see ScrollRevealController).
+    // Same 0–1 progress ScrollRevealController drives the frame's fade from,
+    // so "out of screen" here stays in sync with when the hero actually
+    // becomes invisible there.
     function coverProgress() {
       const contentEl = document.getElementById("cs-content")
       if (!contentEl) return 0
@@ -361,10 +323,6 @@ export default function HackWesternHeroClient({
       const realDt = lastTickTime ? Math.min(now - lastTickTime, 250) : FIXED_DT
       lastTickTime = now
 
-      // Substep so a big real-time gap (a fast fling between two rAF
-      // frames) still moves the pusher through many small, collision-safe
-      // increments instead of one large jump a fast sticker could tunnel
-      // through — see PUSHER_THICKNESS/MAX_SUBSTEPS_PER_TICK above.
       const substeps = Math.min(Math.max(Math.round(realDt / FIXED_DT), 1), MAX_SUBSTEPS_PER_TICK)
       const stepDelta = (pusherTargetY - pusherY) / substeps
 
@@ -372,19 +330,14 @@ export default function HackWesternHeroClient({
         pusherY += stepDelta
         Matter.Body.setPosition(pusher, { x: pusher.position.x, y: pusherY })
         // Matter's velocity is "distance per Engine.update call" when delta
-        // matches Common._baseDelta (1000/60, which FIXED_DT is) — so the
-        // per-substep displacement *is* the velocity value here, not a
-        // per-second figure. Lets the solver's contact response scale with
-        // how fast the real scroll is actually moving.
+        // matches FIXED_DT, so the per-substep displacement doubles as the
+        // velocity, letting contact response scale with real scroll speed.
         Matter.Body.setVelocity(pusher, { x: 0, y: stepDelta })
         Matter.Engine.update(engine, FIXED_DT)
 
-        // Only clamps the *overshoot* past the pusher's own speed (the
-        // launch), not the carrying motion itself — a sticker riding along
-        // at the pusher's own speed isn't bouncing, it's just being pushed.
-        // Angular velocity gets damped outright (not just the overshoot) —
-        // a full-width bar sliding under a tilted sticker imparts a lot of
-        // torque, which is what was flipping stickers end over end.
+        // Clamps only the overshoot past the pusher's own speed — a sticker
+        // riding along at the pusher's speed isn't bouncing, it's being
+        // pushed. Angular velocity is damped outright (see PUSHER friction).
         for (const collision of Matter.Query.collides(pusher, bodies)) {
           if (!collision.collided) continue
           const item = collision.bodyA === pusher ? collision.bodyB : collision.bodyA
@@ -480,19 +433,13 @@ export default function HackWesternHeroClient({
   }, [reduced, ready, isDesktopTier])
 
   return (
-    // Always absolute/inset-0/h-full, matching #cs-hero-frame's own box at
-    // every breakpoint — which has an explicit height throughout (compact
-    // below `lg`, aspect-ratio-driven at `lg`+ — see CaseStudyHero) and is
-    // taller than the design height by CaseStudyLayout's HERO_BG_EXTRA
-    // buffer, so the background still reaches the frame's true bottom edge
-    // instead of leaving a gap that peeks through #cs-content's rounded
-    // corner. Items don't inherit that extra height as a positioning error
-    // only because their left/top are vw-based (see syncDom/rest values
-    // below), not relative to this box's own resolved height.
+    // Matches #cs-hero-frame's own box, which is taller than the design
+    // height by CaseStudyLayout's HERO_BG_EXTRA buffer — items don't inherit
+    // that as a positioning error since their left/top are vw-based (see
+    // syncDom), not relative to this box's resolved height.
     //
-    // role="img" + aria-label carries the one description the old single
-    // flattened image gave AT users — every item image below is decorative
-    // (alt="") since none of them individually represents the case study.
+    // role="img" + aria-label describes the whole pile; each item image is
+    // decorative (alt="") on its own.
     <div
       role="img"
       aria-label={project.title}
@@ -500,10 +447,8 @@ export default function HackWesternHeroClient({
     >
       <Image src={backgroundImg} alt="" fill className="object-cover" sizes="100vw" />
 
-      {/* Below `lg` only — a dedicated flattened shot of the pile at rest
-          (transparent PNG, composited straight over backgroundImg above),
-          replacing the sim entirely; see LG_QUERY. Crossfades in on load the
-          same way HeroForeground's mobileSrc does, rather than popping in. */}
+      {/* Below `lg` only — a flattened shot of the pile at rest, replacing
+          the sim entirely (see LG_QUERY). Crossfades in on load. */}
       <Image
         src={mobileImg}
         alt=""
@@ -517,9 +462,7 @@ export default function HackWesternHeroClient({
 
       {ITEMS.map((item, i) => {
         const widthPct = (item.src.width / CANVAS_WIDTH) * 100
-        // Reduced motion: skip the simulation and render each item straight
-        // at its designed resting spot, no drop. vw-based for the same
-        // reason as syncDom's live positions above.
+        // Reduced motion: skip the sim, render each item at its resting spot.
         const restLeftVw = (item.x / CANVAS_WIDTH) * 100
         const restTopVw = (item.y / CANVAS_WIDTH) * 100
 
@@ -529,10 +472,8 @@ export default function HackWesternHeroClient({
             ref={(el) => {
               itemRefs.current[i] = el
             }}
-            // hidden below `lg`: mobileImg above stands in for the whole
-            // pile there. CSS-only (not a conditional unmount) so these
-            // still start loading immediately on `lg`+, same tradeoff
-            // HeroForeground makes for its own two images.
+            // hidden below `lg` (mobileImg stands in there); CSS-only so
+            // these still start loading immediately on `lg`+.
             className="absolute hidden lg:block"
             style={
               reduced

@@ -48,14 +48,10 @@
      A shared set of widths every component picks from, instead of a
      bespoke pixel value invented per component. `sm`/`md` match Tailwind's
      defaults; `lg`/`xl`/`2xl` are tuned to this site's own content. */
-  --breakpoint-sm: 40rem; /* 640px — the site's chrome switch: nav
-    (Nav.tsx/MobileNav.tsx/CaseStudyLayout's overlay), the hero's
-    static→fixed peel (HeroShell.tsx/CaseStudyHero.tsx/HeroForeground.tsx),
-    #site-footer's static→fixed swap, and --nav-height/--radius-frame
-    below. Separate from `md` because the chrome mechanic (fixed vs. static
-    shell) is independent of the content layout inside the frame (grid
-    columns, card stacking, padding) — nav/hero/footer all switch together
-    at this breakpoint, or a fixed nav ends up above a still-scrolling hero. */
+  --breakpoint-sm: 40rem; /* 640px — the site's chrome switch: nav, hero
+    static→fixed peel, footer static→fixed swap, and --nav-height/
+    --radius-frame below, all switch together here (independent of `md`'s
+    content layout), or a fixed nav ends up above a still-scrolling hero. */
   --breakpoint-md: 48rem; /* 768px — main content-layout switch: page
     direction and most spacing flip here by default. */
 
@@ -227,10 +223,9 @@ body {
 
 /* ─── Layout utilities ─────────────────────────────────────────────────────── */
 
-/* Frames (#main-frame, the fixed nav/footer bars, hero shells) stretch
-   edge-to-edge; these utilities hold their actual content. 120rem (1920px)
-   matches the cap CaseStudyLayout puts on its own content column, so wide
-   screens read as one consistent width sitewide. */
+/* Frames stretch edge-to-edge; these utilities hold their actual content.
+   120rem matches CaseStudyLayout's own content-column cap, so wide screens
+   read as one consistent width sitewide. */
 @utility container-main {
   width: 100%;
   max-width: 120rem;
@@ -262,11 +257,9 @@ body {
 
 /* ─── Case study card — base transition states ──────────────────────────────── */
 
-/* Thumbnail box scales; default = no transform. Ratio comes from whichever
-   --thumb-ratio-* custom property CaseStudyCard sets: below the release
-   breakpoint, --thumb-ratio-mobile if a section opted in, else the desktop
-   ratio. `.card-thumb` releases at `md`; `.card-thumb-mobile-wide` releases
-   later at `lg`, since 4 columns right at `md` leaves each one too narrow. */
+/* Ratio comes from whichever --thumb-ratio-* CaseStudyCard sets. `.card-thumb`
+   releases at `md`; `.card-thumb-mobile-wide` releases later at `lg`, since 4
+   columns right at `md` leaves each one too narrow. */
 .card-thumb {
   transition:
     transform      400ms cubic-bezier(0.22, 1, 0.36, 1),
@@ -301,10 +294,8 @@ body {
 }
 
 /* Flat opacity fade, not a transform — a scaling image fights the slide's
-   fixed clip and fade overlay, since it shrinks toward its own center while
-   the clip edge stays put. Darkens (neutral-900) rather than lightens:
-   these mockups sit close to white already, so a dark scrim registers at a
-   lower, subtler opacity than a light one would. */
+   fixed clip/fade overlay. Darkens rather than lightens: these mockups sit
+   close to white already, so a dark scrim registers at a subtler opacity. */
 .iteration-slide-overlay {
   transition: opacity 300ms cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -345,14 +336,10 @@ body {
 }
 
 /* ─── Mobile nav shell (chip + panel) — press state ───────────────────────
-   Scale-down-on-press, set directly via style.setProperty on pointerdown/up
-   (not React state) to stay off the render path; quick, no-overshoot timing
-   so it reads as instant tap feedback rather than a spring.
-   Applied to the chip+panel's shared wrapper, not just the chip — a
-   transform doesn't move a descendant relative to its scaled ancestor, so
-   scaling the shared wrapper keeps panel and chip pixel-aligned. Scaling
-   only the chip would shrink it around its own center and cut off the seam
-   where it meets the panel. */
+   Scale-down-on-press, set via style.setProperty on pointerdown/up (not
+   React state) to stay off the render path. Applied to the shared wrapper,
+   not just the chip — scaling only the chip would cut off the seam where
+   it meets the panel. */
 .mobile-nav-shell {
   transform: scale(var(--chip-press, 1));
   transition: transform var(--duration-fast) var(--ease-out);

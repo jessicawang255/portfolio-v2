@@ -4,32 +4,22 @@ import { useState } from "react"
 import Image, { type StaticImageData } from "next/image"
 import { COMPACT_HERO_HEIGHT } from "./heroCompactHeight"
 
-// A case study's foreground product screenshot(s) — transparent PNGs
-// statically imported by the hero component that uses them, so Next infers
-// width/height from the files themselves.
+// A case study's foreground product screenshot(s), statically imported by
+// the hero component that uses them so Next infers width/height.
 //
-// At `lg`+ this box is exactly `100vw / (src.width/src.height)` — `src`'s own
-// real proportions — so `object-cover` has nothing to crop and renders
-// pixel-identical to plain natural sizing. Below `lg` the box switches to the
-// flat COMPACT_HERO_HEIGHT instead of scaling `src` down by its aspect ratio
-// (which is what read as far too short there) — `object-cover` then crops
-// the sides to fill that taller, narrower box rather than shrinking, so the
-// screenshot stays close to its designed size on phone/tablet.
+// At `lg`+ this box is exactly `100vw / (src.width/src.height)`, so
+// `object-cover` has nothing to crop. Below `lg` the box switches to the
+// flat COMPACT_HERO_HEIGHT instead of scaling `src` down (which read as far
+// too short) — `object-cover` then crops the sides to fill that taller,
+// narrower box instead of shrinking.
 //
-// `mobileSrc` (optional) swaps in a separate image purpose-built for that
-// compact crop instead of reusing `src` — real art direction, not just a
-// different crop window on the same file, so this renders two <Image>s and
-// toggles which is visible via CSS rather than swapping one `src`. Falls
-// back to `src` for any hero that hasn't gotten a dedicated mobile image yet.
+// `mobileSrc` (optional) swaps in a separate image art-directed for that
+// compact crop, rendering two <Image>s and toggling visibility via CSS
+// rather than swapping one `src`. Falls back to `src` if there's no
+// dedicated mobile image yet.
 //
-// id="cs-hero-content" is targeted by the case-study instance of
-// ScrollRevealController, which fades + scales this the same way Work/About's
-// hero content fades (the background stays fully static; see CaseStudyHero).
-//
-// Always absolute, top-anchored: CaseStudyHero's container has an explicit
-// height at every breakpoint (compact below `lg`, aspect-ratio-driven at
-// `lg`+ — see CaseStudyHero), so this never needs to be in normal flow to
-// give the container something to size against.
+// id="cs-hero-content" is targeted by ScrollRevealController, which fades +
+// scales this the same way Work/About's hero content fades.
 export function HeroForeground({
   src,
   mobileSrc,

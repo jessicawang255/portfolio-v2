@@ -846,20 +846,10 @@ export function AboutContent({ spotifyPlaylist }: { spotifyPlaylist: Song[] | nu
           <div
             onMouseEnter={cancelScheduledUnhover}
             onMouseLeave={() => setHoveredId(null)}
-            // Fills the viewport (minus the nav clearance the `top` offset already
-            // eats into) rather than a fixed 83vh, so it reads as edge-to-edge on
-            // any screen. The -16px keeps the bottom gap equal to the 36px top
-            // offset (top eats nav-height - 20px, so height needs one more -16px
-            // to leave a matching 36px at the bottom) — a symmetric frame rather
-            // than a lopsided one. clamp() (not separate min-h/max-h) because the
-            // viewport-fill value regularly exceeds the cap on ordinary screens —
-            // with min-h + max-h, min-height wins that conflict per spec and the
-            // cap never actually applies. Capped at 60rem (960px) — comfortably
-            // above the tallest measured panel entry (~755px), so it only kicks
-            // in on genuinely oversized screens; overflow-y-auto is the fallback
-            // for anything that outgrows it regardless.
-            // Fills the viewport (minus nav clearance) up to a 60rem cap;
-            // overflow-y-auto is the fallback for anything taller than that.
+            // Fills the viewport (minus nav clearance) up to a 60rem cap, so it
+            // reads as edge-to-edge without growing past the tallest panel
+            // entry on oversized screens; overflow-y-auto covers the rest.
+            // clamp() (not min-h/max-h) since min-height wins that conflict.
             className="sticky flex h-[clamp(0px,calc(100vh-var(--nav-height)-16px),60rem)] flex-col overflow-y-auto rounded-2xl border border-neutral-100 bg-neutral-75 p-9 shadow-[0_4px_20px_-6px_rgba(22,25,29,0.06)]"
             style={{ top: "calc(var(--nav-height) - 20px)" }}
           >
