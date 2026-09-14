@@ -39,6 +39,10 @@ export function IterationCarousel({ items, className }: IterationCarouselProps) 
   // trusted as the slide width. The root is never bled, so it's stable.
   const rootRef = useRef<HTMLDivElement>(null)
   const captionRowRef = useRef<HTMLDivElement>(null)
+  // Anchors the bleed calculation below — unlike trackRef, this wrapper
+  // carries no offsetting margin of its own, so its left edge is the one
+  // true reference point for "flush with the viewport".
+  const bleedWrapperRef = useRef<HTMLDivElement>(null)
   const trackRef = useRef<HTMLDivElement>(null)
   const slideRefs = useRef<(HTMLDivElement | null)[]>([])
   const [slideWidth, setSlideWidth] = useState<number | null>(null)
@@ -47,8 +51,8 @@ export function IterationCarousel({ items, className }: IterationCarouselProps) 
   useEffect(() => {
     function measure() {
       const root = rootRef.current
-      const track = trackRef.current
-      if (!root || !track) return
+      const wrapper = bleedWrapperRef.current
+      if (!root || !wrapper) return
       setSlideWidth(root.getBoundingClientRect().width)
       // Below `md` there's no TOC-reserved margin to bleed into and no room
       // for a peeking next slide — bleeding the track there would push the
@@ -58,10 +62,16 @@ export function IterationCarousel({ items, className }: IterationCarouselProps) 
         setTrackWidth(null)
         return
       }
-      const trackLeft = track.getBoundingClientRect().left
+      // Measured from the wrapper, not trackRef — trackRef's own `-mx-[1px]`
+      // (below, for its slide borders) shifts its left edge 1px further left
+      // than the wrapper's. Reusing that as trackWidth on the wrapper too
+      // used to push the wrapper's right edge 1px past clientWidth, causing
+      // a permanent 1px page-level horizontal scrollbar on every case study
+      // that uses this carousel.
+      const wrapperLeft = wrapper.getBoundingClientRect().left
       // clientWidth (not window.innerWidth) excludes the scrollbar, so the
       // track's right edge lands flush with the actual content area.
-      setTrackWidth(Math.max(0, document.documentElement.clientWidth - trackLeft))
+      setTrackWidth(Math.max(0, document.documentElement.clientWidth - wrapperLeft))
     }
     measure()
     window.addEventListener("resize", measure)
@@ -252,6 +262,7 @@ export function IterationCarousel({ items, className }: IterationCarouselProps) 
           release-boundary div's own height up by STICKY_RELEASE_BUFFER px,
           while the track itself still renders at full size underneath. */}
       <div
+        ref={bleedWrapperRef}
         className="relative"
         style={{
           ...(trackWidth != null ? { width: trackWidth } : {}),
