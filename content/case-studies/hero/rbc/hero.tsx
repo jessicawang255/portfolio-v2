@@ -1,6 +1,7 @@
-import { DefaultHeroBackground } from "@/components/layout/DefaultHeroBackground"
+import Image from "next/image"
 import { HeroForeground } from "@/components/layout/HeroForeground"
 import type { Project } from "@/content/work"
+import backgroundImg from "./background.png"
 import foregroundImg from "./foreground.png"
 
 // Read by app/work/[slug]/page.tsx alongside the default export — lets
@@ -16,11 +17,15 @@ export const heroAspectRatio = foregroundImg.width / foregroundImg.height
 // project.bg-colored box at thumbnail size too.
 export const thumbnail = foregroundImg
 
-// Reuses project.bg's flat placeholder background; this file only adds the foreground art on top.
-export default function PhoenixHero({ project }: { project: Project }) {
+// Background is a plain absolute-fill image (no scroll animation, unlike
+// HeroForeground's foreground) — matches CaseStudyHero's fixed frame, which
+// never moves until #cs-content covers it.
+export default function RbcHero({ project }: { project: Project }) {
   return (
     <>
-      <DefaultHeroBackground project={project} />
+      <div className="absolute inset-0">
+        <Image src={backgroundImg} alt="" fill className="object-cover" sizes="100vw" />
+      </div>
       <HeroForeground src={foregroundImg} alt={project.title} />
     </>
   )

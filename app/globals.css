@@ -548,7 +548,7 @@ body {
 [data-accent="retrospect"]   { --cs-accent: #8051BA; }
 [data-accent="autumn"]       { --cs-accent: #C89867; }
 [data-accent="glucal"]       { --cs-accent: #FF8F89; }
-[data-accent="phoenix"]      { --cs-accent: #E25118; }
+[data-accent="rbc"]          { --cs-accent: #E25118; }
 
 /* ─── Text selection highlight — hex values directly; avoids @theme tree-shaking */
 :root {

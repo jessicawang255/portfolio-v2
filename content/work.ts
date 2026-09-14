@@ -30,8 +30,11 @@ export type Project = {
   // External destination (live site, GitHub, Devpost, etc). Falls back to
   // the internal /work/{slug} case study page when omitted.
   href?: string
-  // Case study detail fields
-  role?: string
+  // Case study detail fields. role is usually one line, but can be an array
+  // to force a break — see CaseStudyMeta, which already renders string[]
+  // fields (team/skills) as separate lines — instead of relying on natural
+  // wrapping, which a max-content grid column never does.
+  role?: string | string[]
   timeline?: string
   team?: string[]
   skills?: string[]
@@ -196,25 +199,25 @@ export const projects: Project[] = [
   {
     // TODO: everything below is placeholder scaffolding — see project todo
     // for what needs to be filled in before this ships.
-    slug: "phoenix",
+    slug: "rbc",
     title: "Blockchain-based foreign exchange",
-    name: "Phoenix",
+    name: "Royal Bank of Canada",
     status: "Shipped 2026",
     year: 2026,
-    bg: "#E5E5E5",
-    accent: "phoenix",
-    thumbnail: "/images/case-studies/phoenix/phoenix-thumbnail.png",
-    thumbnailWidth: 1600,
-    thumbnailHeight: 900,
-    role: "Software engineer + designer",
+    bg: "#EA6F3E",
+    accent: "rbc",
+    navTheme: "light",
+    thumbnail: "/images/case-studies/rbc/rbc-thumbnail.png",
+    thumbnailWidth: 3062,
+    thumbnailHeight: 2000,
+    role: ["Software engineer", "+ designer"],
     timeline: "May - Aug 2026",
     team: ["1 business analyst", "1 data engineer", "1 software engineer"],
     skills: ["User research", "Product strategy", "Systems design", "Software engineering"],
     toc: [
       { title: "Overview" },
-      { title: "The Problem" },
-      { title: "Research" },
-      { title: "The Journey" },
+      { title: "Problem" },
+      { title: "Journey" },
       { title: "Results" },
       { title: "Reflections" },
     ],

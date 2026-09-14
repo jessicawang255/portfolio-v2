@@ -8,6 +8,7 @@ import { DefaultHeroBackground } from "@/components/layout/DefaultHeroBackground
 import { CaseStudyMeta, type MetaField } from "@/components/layout/CaseStudyMeta"
 import { IconButton } from "@/components/ui/IconButton"
 import { COMPACT_HERO_HEIGHT } from "@/components/layout/heroCompactHeight"
+import { navLinks } from "@/lib/navLinks"
 
 type Props = {
   project: Project
@@ -21,12 +22,6 @@ type Props = {
   // real proportions. Undefined when there's no custom hero image.
   heroAspectRatio?: number
 }
-
-const navLinks: { label: string; href: string; target?: string }[] = [
-  { label: "Work",   href: "/" },
-  { label: "About",  href: "/about" },
-  { label: "Resume", href: "/JessicaWang_Resume.pdf", target: "_blank" },
-]
 
 // Fallback when a case study has no hero image to size against (plain
 // DefaultHeroBackground color/gradient, no intrinsic proportions).
@@ -44,16 +39,14 @@ export function CaseStudyLayout({ project, children, heroBackground, heroAspectR
 
   const HeroBackground = heroBackground ?? DefaultHeroBackground
 
-  // Default nav-link colors read too faint over some heroes. "light" swaps
-  // in a flat neutral-300/white pair for a hero that's uniformly dark enough
-  // for that alone to read (e.g. Retrospect). navScrim instead forces solid
-  // white — paired with the dark gradient behind it (see the header below),
-  // that's a guarantee rather than a tuned color, for a hero whose value
-  // varies too much for any single flat text color to reliably read against.
-  const navLinkClass = navScrim
-    ? "text-white hover:opacity-70 transition-opacity duration-150"
-    : navTheme === "light"
-    ? "text-neutral-300 hover:text-neutral-50 transition-colors duration-150"
+  // Default nav-link colors read too faint over some heroes. "light" is for
+  // a hero that's uniformly dark enough for a flat color to read on its own
+  // (e.g. Retrospect, RBC); navScrim instead adds a dark gradient behind the
+  // nav (see the header below) as a contrast guarantee for a hero whose
+  // value varies too much for any flat color to reliably read against
+  // otherwise (e.g. gluCal). Both share the same flat neutral-100/300 pair.
+  const navLinkClass = navTheme === "light" || navScrim
+    ? "text-neutral-100 hover:text-neutral-300 transition-colors duration-150"
     : "text-nav-link hover:text-nav-link-hover transition-colors duration-150"
 
   // The hero foreground image renders at `w-full` inside a full-viewport-width
