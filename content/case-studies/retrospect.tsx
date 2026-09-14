@@ -465,7 +465,7 @@ export default function Retrospect() {
                     caption="Consolidated capsule creation flow, with carousels"
                 />
                 <div className="flex flex-col gap-3">
-                    <h2 className="text-balance text-xl font-medium text-neutral-800 leading-[1.2]">I made one exception to the carousel layout for the song media type.</h2>
+                    <h2 className="text-xl font-medium text-neutral-800 leading-[1.2]">I made one exception to the carousel layout for the song media type.</h2>
                     <p className="text-base text-neutral-600 leading-normal">
                         During user testing, participants said that while the carousel worked well for other media, it didn’t capture the overall &ldquo;feeling&rdquo; of a group of songs together. They wanted to see multiple tracks together, similar to how playlists feel. Based on this insight, I used a list view for songs instead of the carousel.
                     </p>

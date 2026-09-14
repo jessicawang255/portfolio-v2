@@ -234,25 +234,25 @@ function ColophonButton() {
             >
               <p className="mb-2 font-mono text-sm uppercase leading-[1.2] text-neutral-400">Colophon</p>
               <div className="flex flex-col gap-1">
-                <p className="text-balance font-normal text-base">
+                <p className="text-pretty font-normal text-base">
                   Set in <span className="font-sans">Avenir Next</span> and{" "}
                   <span className="font-mono">Roboto Mono</span>.
                 </p>
-                <p className="text-balance font-normal text-base">
+                <p className="text-pretty font-normal text-base">
                   Designed in{" "}
                   <TertiaryLink href="https://www.figma.com/" target="_blank" rel="noopener noreferrer">
                     Figma
                   </TertiaryLink>
                   .
                 </p>
-                <p className="text-balance font-normal text-base">
+                <p className="text-pretty font-normal text-base">
                   Motion from{" "}
                   <TertiaryLink href="https://www.lottielab.com/" target="_blank" rel="noopener noreferrer">
                     LottieLab
                   </TertiaryLink>
                   .
                 </p>
-                <p className="text-balance font-normal text-base">
+                <p className="text-pretty font-normal text-base">
                   Built on{" "}
                   <TertiaryLink href="https://nextjs.org/" target="_blank" rel="noopener noreferrer">
                     Next.js
@@ -267,21 +267,21 @@ function ColophonButton() {
                   </TertiaryLink>
                   .
                 </p>
-                <p className="text-balance font-normal text-base">
+                <p className="text-pretty font-normal text-base">
                   Hosted on{" "}
                   <TertiaryLink href="https://vercel.com/" target="_blank" rel="noopener noreferrer">
                     Vercel
                   </TertiaryLink>
                   .
                 </p>
-                <p className="text-balance font-normal text-base">
+                <p className="text-pretty font-normal text-base">
                   Source on{" "}
                   <TertiaryLink href="https://github.com/" target="_blank" rel="noopener noreferrer">
                     GitHub
                   </TertiaryLink>
                   .
                 </p>
-                <p className="text-balance font-normal text-base">
+                <p className="text-pretty font-normal text-base">
                   With help from{" "}
                   <TertiaryLink href="https://claude.com/product/claude-code" target="_blank" rel="noopener noreferrer">
                     Claude Code

@@ -206,10 +206,10 @@ export default function Glucal() {
               <span className="w-1.5 h-1.5 rounded-full bg-[var(--cs-accent)] shrink-0" aria-hidden="true" />
               <p className="text-sm font-mono uppercase leading-[1.2] text-neutral-400">The Problem</p>
             </div>
-            <h1 className="text-balance text-3xl font-medium leading-[1.2] text-primary mt-4">
+            <h1 className="text-3xl font-medium leading-[1.2] text-primary mt-4">
               75 million people worldwide inject insulin daily.
             </h1>
-            <p className="text-balance text-base leading-normal text-neutral-600 mt-7">
+            <p className="text-pretty text-base leading-normal text-neutral-600 mt-7">
               This involves counting carbohydrates and calculating personalized doses, every time they eat. 5+ times a day. Every. Single. Day.
             </p>
           </div>
@@ -226,10 +226,10 @@ export default function Glucal() {
         </div>
 
         <div className="mt-7 w-full">
-          <h1 className="text-balance text-3xl font-medium leading-[1.2] text-primary mt-4">
+          <h1 className="text-3xl font-medium leading-[1.2] text-primary mt-4">
             Despite being a daily task, there&rsquo;s no straightforward tool that simplifies insulin calculation.
           </h1>
-          <p className="text-balance text-base leading-normal text-neutral-600 mt-7">
+          <p className="text-pretty text-base leading-normal text-neutral-600 mt-7">
             The process is <strong className="text-[var(--cs-accent)] font-semibold">tedious</strong>, <strong className="text-[var(--cs-accent)] font-semibold">monotonous</strong>, and <strong className="text-[var(--cs-accent)] font-semibold">complicated</strong>. No one wants to do math before each meal! Existing tools are either frustrating to use, or don&rsquo;t address the specific need.
           </p>
         </div>
@@ -262,7 +262,7 @@ export default function Glucal() {
                 className="w-full max-w-56 shrink-0 h-auto rounded-[8px] border border-neutral-100 shadow-[0_4px_20px_-6px_rgba(22,25,29,0.06)] mx-auto md:mx-0"
               />
               <div className="flex-1 min-w-0 max-w-xl">
-                <h2 className="text-balance">
+                <h2>
                   {feature.number}. {feature.title}
                 </h2>
                 <p className="mt-3 text-base leading-normal text-neutral-600">
@@ -327,7 +327,7 @@ export default function Glucal() {
         headline="How do we show that logging food is associated with the carb count input?"
         body="Users have the option to log the food they’re eating when calculating insulin. If a user logs food, the carbs input field is automatically filled with that information."
       >
-        <p className="text-balance text-base leading-normal text-neutral-600">
+        <p className="text-pretty text-base leading-normal text-neutral-600">
           The &ldquo;log food&rdquo; button needed to appear <strong className="text-[var(--cs-accent)] font-semibold">1. optional</strong> and <strong className="text-[var(--cs-accent)] font-semibold">2. associated with the carbs input field</strong>.
         </p>
 
@@ -397,10 +397,10 @@ export default function Glucal() {
         {/* mt-10/md:mt-24 stacks on this wrapper's own gap-6 (Section.tsx)
             so the total gap above this headline matches the gap-16/md:gap-30
             the page uses between top-level sections. */}
-        <h1 className="text-balance text-3xl font-medium leading-[1.2] text-primary mt-10 md:mt-24">
+        <h1 className="text-3xl font-medium leading-[1.2] text-primary mt-10 md:mt-24">
           However, users still expressed that logging food seemed like a separate process from inputting carb amounts.
         </h1>
-        <p className="text-balance text-base leading-normal text-neutral-600">
+        <p className="text-pretty text-base leading-normal text-neutral-600">
           One user suggested to <strong className="text-[var(--cs-accent)] font-semibold">nest the button within the carb input field</strong>. When the button is nested within the field, it visually indicates that the log food action is part of the carbs input process, rather than a separate action that is simply associated with carbs.
         </p>
 
@@ -451,7 +451,7 @@ export default function Glucal() {
           </div>
         </div>
 
-        <p className="text-balance text-base leading-normal text-neutral-600">
+        <p className="text-pretty text-base leading-normal text-neutral-600">
           Perfect! This was a great solution that I would not have come up with without the help of user feedback!
         </p>
       </Section>
@@ -506,7 +506,7 @@ export default function Glucal() {
           </div>
         </div>
 
-        <h2 className="text-balance">
+        <h2>
           The modal wins on all three counts — a clear way to exit, a familiar pattern, and no scrolling.
         </h2>
       </Section>
@@ -523,11 +523,11 @@ export default function Glucal() {
           alt="Two options compared: storing the carb count independently in each log, versus linking it so editing the count in one log updates the other"
         />
 
-        <p className="text-balance text-base leading-normal text-neutral-600">
+        <p className="text-pretty text-base leading-normal text-neutral-600">
           I weighed this against two priorities for gluCal: <strong className="text-[var(--cs-accent)] font-semibold">simplicity</strong> (the app should reduce thinking, not add to it) and <strong className="text-[var(--cs-accent)] font-semibold">flexibility </strong>(real life is messy — people don&rsquo;t always log insulin and food together, or in order).
         </p>
 
-        <p className="text-balance text-base leading-normal text-neutral-600">
+        <p className="text-pretty text-base leading-normal text-neutral-600">
           Keeping the carb counts independent supports both: users can edit either log without triggering unexpected changes elsewhere, and it avoids the technical complexity of syncing data across gluCal&rsquo;s two separate database tables.
         </p>
 

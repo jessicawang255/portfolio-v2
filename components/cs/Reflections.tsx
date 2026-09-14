@@ -28,9 +28,9 @@ export function Reflections({ id, tag, items }: ReflectionsProps) {
         {items.map((item, i) => (
           <div key={i} className="flex flex-col gap-3">
             {item.heading && (
-              <h2 className="text-balance text-xl font-medium text-neutral-800 leading-[1.2]">{item.heading}</h2>
+              <h2 className="text-xl font-medium text-neutral-800 leading-[1.2]">{item.heading}</h2>
             )}
-            <p className="text-balance text-base text-neutral-600 leading-normal">{item.body}</p>
+            <p className="text-pretty text-base text-neutral-600 leading-normal">{item.body}</p>
           </div>
         ))}
       </div>

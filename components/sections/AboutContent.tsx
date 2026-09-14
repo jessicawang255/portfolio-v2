@@ -490,9 +490,9 @@ function JourneyRow({
           style={{ backgroundImage: `url(${item.icon})` }}
         />
         <div>
-          <p className="text-balance text-base font-medium leading-[1.3] text-neutral-900">{item.company}</p>
+          <p className="text-pretty text-base font-medium leading-[1.3] text-neutral-900">{item.company}</p>
           {/* mt-0.5 restores the gap leading-[1.3] trims off the title's line-height. */}
-          <p className="mt-0.5 text-balance text-base text-neutral-500">{item.role}</p>
+          <p className="mt-0.5 text-pretty text-base text-neutral-500">{item.role}</p>
         </div>
       </div>
       {/* Crossfades the trailing slot between period and icon — the row isn't
@@ -543,9 +543,9 @@ function CommunityRow({
           style={{ backgroundImage: `url(${item.logo})` }}
         />
         <div>
-          <p className="text-balance text-base font-medium leading-[1.3] text-neutral-900">{item.name}</p>
+          <p className="text-pretty text-base font-medium leading-[1.3] text-neutral-900">{item.name}</p>
           {/* mt-0.5 restores the gap leading-[1.3] trims off the title's line-height. */}
-          <p className="mt-0.5 text-balance text-base text-neutral-500">{item.description}</p>
+          <p className="mt-0.5 text-pretty text-base text-neutral-500">{item.description}</p>
         </div>
       </div>
       <IconButton
@@ -601,9 +601,9 @@ function SongRow({ item, flowerIdx }: { item: Song; flowerIdx: number }) {
       <div className="flex items-center gap-6">
         <SongArt flowerIdx={flowerIdx} isHovered={isHovered} />
         <div>
-          <p className="text-balance text-base font-medium leading-[1.3] text-neutral-900">{item.title}</p>
+          <p className="text-pretty text-base font-medium leading-[1.3] text-neutral-900">{item.title}</p>
           {/* mt-0.5 restores the gap leading-[1.3] trims off the title's line-height. */}
-          <p className="mt-0.5 text-balance text-base text-neutral-500">{item.artist}</p>
+          <p className="mt-0.5 text-pretty text-base text-neutral-500">{item.artist}</p>
         </div>
       </div>
       {/* Revealed on hover at every breakpoint — touch has no hover, but a

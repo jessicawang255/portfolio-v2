@@ -145,7 +145,7 @@ body {
    selector regardless of layer). */
 @layer base {
   h1 {
-    text-wrap: balance;
+    text-wrap: pretty;
     /* 30px — text-3xl's value, hardcoded because Tailwind v4 only emits a
        @theme var to :root when a compiled utility class references it. */
     font-size: 30px;
@@ -155,7 +155,7 @@ body {
   }
 
   h2 {
-    text-wrap: balance;
+    text-wrap: pretty;
     font-size: 20px;
     font-weight: 500;
     line-height: 1.3;

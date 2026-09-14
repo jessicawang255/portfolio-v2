@@ -156,7 +156,7 @@ export function CaseStudyCard({
         <div className="card-text flex items-start justify-between gap-6 px-0 md:px-3.5">
           <div className="flex flex-col gap-0.5">
             <h3
-              className={`text-balance font-medium leading-[1.3] text-neutral-800 ${
+              className={`text-pretty font-medium leading-[1.3] text-neutral-800 ${
                 titleSize === "responsive" ? "text-base lg:text-lg" : "text-lg"
               }`}
             >
@@ -164,7 +164,7 @@ export function CaseStudyCard({
             </h3>
 
             {hasMetadata && (
-              <p className="text-balance text-base text-neutral-500">
+              <p className="text-pretty text-base text-neutral-500">
                 {name}
                 {name && status && (
                   <span className="mx-1.5" aria-hidden="true">·</span>

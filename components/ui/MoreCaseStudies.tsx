@@ -64,10 +64,10 @@ export async function MoreCaseStudies({ currentSlug }: Props) {
                 </div>
 
                 <div className="min-w-0">
-                  <h3 className="text-balance text-base font-medium leading-[1.3] text-neutral-800">
+                  <h3 className="text-pretty text-base font-medium leading-[1.3] text-neutral-800">
                     {title}
                   </h3>
-                  <p className="mt-0.5 text-balance text-base text-neutral-500">
+                  <p className="mt-0.5 text-pretty text-base text-neutral-500">
                     {name}
                     {name && status && (
                       <span className="mx-1.5" aria-hidden="true">·</span>

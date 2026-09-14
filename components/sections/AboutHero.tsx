@@ -153,14 +153,14 @@ export function AboutHero() {
         <div className="flex w-full flex-col 2xl:max-w-[800px]">
           <motion.h1
             variants={fadeUp}
-            className="mb-3 text-balance text-3xl font-medium text-neutral-900"
+            className="mb-3 text-3xl font-medium text-neutral-900"
           >
             Let&rsquo;s get acquainted!
           </motion.h1>
 
           <motion.p
             variants={fadeUp}
-            className="max-w-lg text-balance text-base font-normal text-neutral-600"
+            className="max-w-lg text-pretty text-base font-normal text-neutral-600"
           >
             I&rsquo;m a creative, a problem-solver, and a maker who obsesses
             over details. I&rsquo;m driven by the idea that you can make
@@ -170,7 +170,7 @@ export function AboutHero() {
 
           <motion.p
             variants={fadeUp}
-            className="mt-6 max-w-lg text-balance text-base font-normal text-neutral-600"
+            className="mt-6 max-w-lg text-pretty text-base font-normal text-neutral-600"
           >
             Right now, I'm studying computer science and business at Western University. On any given day, you might find me producing music, climbing
             rocks, learning about the stars, or collecting design inspo on X.
@@ -178,7 +178,7 @@ export function AboutHero() {
 
           <motion.p
             variants={fadeUp}
-            className="mt-6 mb-9 max-w-lg text-balance text-base font-normal text-neutral-600"
+            className="mt-6 mb-9 max-w-lg text-pretty text-base font-normal text-neutral-600"
           >
             Say hi, I&rsquo;d love to connect!
           </motion.p>

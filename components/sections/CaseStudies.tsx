@@ -88,7 +88,7 @@ export function CaseStudies() {
             // nearly white and a real border would vanish or overpower it.
             className="hidden md:flex flex-col justify-between self-start min-h-[14rem] rounded-2xl bg-neutral-75 p-8 shadow-[0_0_0_1px_rgba(0,0,0,0.06)]"
           >
-            <p className="text-balance text-base font-normal text-neutral-600">
+            <p className="text-pretty text-base font-normal text-neutral-600">
               Want to learn more about my work? Contact me!
             </p>
             <div className="flex items-center gap-3">
