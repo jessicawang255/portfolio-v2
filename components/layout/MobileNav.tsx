@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react"
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion"
 import { spring } from "@/lib/motion"
 import { projects } from "@/content/work"
+import { navLinks } from "@/lib/navLinks"
 
 // The site's only mobile nav (see Nav.tsx, which renders nothing below `sm`).
 // Persistent and fixed so it's reachable from anywhere, including case study
@@ -15,14 +16,6 @@ import { projects } from "@/content/work"
 // study's short `name` (not the full `title`, too long for a pill). The
 // panel behind it lists everywhere else: on a case study that's all three
 // top-level links, since none of them is the current page.
-type NavLink = { label: string; href: string; target?: string }
-
-const navLinks: NavLink[] = [
-  { label: "Work",   href: "/" },
-  { label: "About",  href: "/about" },
-  { label: "Resume", href: "/JessicaWang_Resume.pdf", target: "_blank" },
-]
-
 function isCurrentSection(pathname: string, href: string) {
   if (href === "/") return pathname === "/" || pathname.startsWith("/work/")
   return pathname === href || pathname.startsWith(`${href}/`)

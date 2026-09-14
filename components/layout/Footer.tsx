@@ -8,12 +8,7 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion"
 import { TertiaryLink } from "@/components/ui/TertiaryLink"
 import { samePageReload } from "@/lib/samePageNav"
 import { siteUrl } from "@/lib/site"
-
-const navLinks: { label: string; href: string; target?: string }[] = [
-  { label: "Work",   href: "/" },
-  { label: "About",  href: "/about" },
-  { label: "Resume", href: "/JessicaWang_Resume.pdf", target: "_blank" },
-]
+import { navLinks } from "@/lib/navLinks"
 
 const socialLinks = [
   { label: "Email",    href: "mailto:jessica.wang255@gmail.com" },

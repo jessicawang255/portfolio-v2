@@ -3,12 +3,7 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { samePageReload } from "@/lib/samePageNav"
-
-const links: { label: string; href: string; target?: string }[] = [
-  { label: "Work",   href: "/" },
-  { label: "About",  href: "/about" },
-  { label: "Resume", href: "/JessicaWang_Resume.pdf", target: "_blank" },
-]
+import { navLinks } from "@/lib/navLinks"
 
 function isActive(pathname: string, href: string) {
   if (href === "/") return pathname === "/"
@@ -38,7 +33,7 @@ export function Nav() {
         </Link>
 
         <ul className="flex items-center gap-7 list-none m-0 p-0">
-          {links.map(({ label, href, target }) => (
+          {navLinks.map(({ label, href, target }) => (
             <li key={label}>
               <Link
                 href={href}
