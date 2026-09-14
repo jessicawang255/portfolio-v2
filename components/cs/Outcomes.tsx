@@ -17,7 +17,7 @@ export function Outcomes({ metrics }: OutcomesProps) {
         {metrics.map(({ value, label }) => (
           <div key={label} className="max-w-[12rem]">
             <p className="text-2xl font-medium text-primary">{value}</p>
-            <p className="text-base leading-normal text-neutral-500">{label}</p>
+            <p className="mt-1 text-base leading-normal text-neutral-500">{label}</p>
           </div>
         ))}
       </div>
