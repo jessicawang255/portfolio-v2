@@ -3,10 +3,19 @@
 import { motion, useReducedMotion } from "framer-motion"
 import { projects } from "@/content/work"
 import { CaseStudyCard } from "@/components/ui/CaseStudyCard"
+import { IconButton } from "@/components/ui/IconButton"
 import { fadeUp } from "@/lib/motion"
 
 // Shared mobile ratio for every card below `md` (Hack Western's own desktop ratio).
 const MOBILE_RATIO: [number, number] = [740, 504]
+
+// Same social set + boxed treatment as Hero's icon row.
+const socials = [
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/jwang255/", icon: "/icons/linkedin.svg" },
+  { label: "X",        href: "https://x.com/jossici", icon: "/icons/x.svg" },
+  { label: "Copy Email", href: "mailto:jessica.wang255@gmail.com", icon: "/icons/mail.svg", copyText: "jessica.wang255@gmail.com", mobileCopiedTooltip: true },
+  { label: "GitHub",   href: "https://github.com/jessicawang255", icon: "/icons/github.svg" },
+]
 
 export function CaseStudies() {
   const [p0, p1, p2, p3, p4] = projects
@@ -57,17 +66,53 @@ export function CaseStudies() {
           </motion.div>
         </motion.div>
 
-        {/* Row 3: standalone full-width card — 5th project has no pair yet.
-            No imageRatio override — sizes to project.thumbnailWidth/Height
-            (its own real thumbnail) instead of a guessed box. */}
+        {/* Row 3: standalone card — 5th project has no pair yet. Reuses
+            grid-wide-left so the card takes the dominant 3fr column (sized
+            to project.thumbnailWidth/Height); the remaining 2fr column
+            holds a contact panel instead of sitting empty. */}
         <motion.div
-          className="grid grid-cols-1"
+          className="grid grid-cols-1 gap-y-9 gap-x-[18px] md:grid-wide-left"
           initial={reduce ? "visible" : "hidden"}
           whileInView="visible"
           viewport={{ once: true, margin: "-80px" }}
         >
           <motion.div variants={fadeUp}>
             <CaseStudyCard project={p4} mobileImageRatio={MOBILE_RATIO} />
+          </motion.div>
+          <motion.div
+            variants={fadeUp}
+            // Desktop-only: this panel just fills the blank column left by
+            // RBC having no pair yet — on mobile the row already stacks
+            // to one full-width column with nothing blank to fill, and it'd
+            // just be dead weight below the card. Drop it once a 6th case
+            // study takes this slot instead.
+            // self-start: sizes to min-h below, not the RBC card's full
+            // (thumb + text) row height. justify-between (not centered)
+            // pushes the text to the top and the icon row to the bottom, so
+            // they flex apart to fill that height instead of sitting
+            // bunched together in the middle.
+            // shadow mimics a 1px black-6% border, same idiom as Footer's
+            // Colophon panel — since neutral-75 is nearly white, a real
+            // border would either vanish (neutral) or overpower it (gray).
+            className="hidden md:flex flex-col justify-between self-start min-h-[14rem] rounded-2xl bg-neutral-75 p-8 shadow-[0_0_0_1px_rgba(0,0,0,0.06)]"
+          >
+            <p className="text-balance text-base font-normal text-neutral-600">
+              Want to learn more about my work? Contact me!
+            </p>
+            <div className="flex items-center gap-3">
+              {socials.map(({ label, href, icon, copyText, mobileCopiedTooltip }) => (
+                <IconButton
+                  key={label}
+                  href={href}
+                  label={label}
+                  icon={icon}
+                  copyText={copyText}
+                  mobileCopiedTooltip={mobileCopiedTooltip}
+                  variant="boxed"
+                  size={22}
+                />
+              ))}
+            </div>
           </motion.div>
         </motion.div>
       </div>
