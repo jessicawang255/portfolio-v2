@@ -30,7 +30,7 @@ export default function HackWestern() {
           src="/images/case-studies/hack-western/hw-overview.png"
           alt="Screens from the Hack Western 12 application portal, including the long answers step, character customization, application review, and landing page"
           width={2400}
-          height={1213}
+          height={1290}
           sizes="100vw"
           className="w-full h-auto"
         />
@@ -102,14 +102,14 @@ export default function HackWestern() {
                     src: "/images/case-studies/hack-western/hw-ideation-2.png",
                     alt: "Initial application user flow with an annotation to remove the redundant applicant dashboard step after login",
                     width: 2400,
-                    height: 1001,
+                    height: 756,
                     caption: "Initial Application Flow",
                 },
                 {
                     src: "/images/case-studies/hack-western/hw-ideation-3.png",
                     alt: "Revised user flow adding an avatar creation step and a draw-something step, plus an edit-and-share-stickers step after submission",
                     width: 2400,
-                    height: 769,
+                    height: 756,
                     caption: "Revamped Application Flow",
                 },
             ]}
