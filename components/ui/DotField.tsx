@@ -14,6 +14,15 @@ const TRAIL_DAMPING   = .5
 const TRAIL_STRENGTH  = .6   // trail halo intensity relative to primary
 const ACCENT_COLOR    = "#AAAFB5"  // default hover/glow colour
 
+// Cursor push — dots inside the halo get shoved directly away from the
+// cursor, along the line from cursor to dot, then spring back once it moves
+// on. Each dot carries its own push spring (pushX/Y, pushVX/VY) so they
+// settle independently instead of all snapping back in lockstep — the
+// "water" reads as displaced, not just brightened.
+const PUSH_STRENGTH   = 5    // px, max shove at the cursor's center
+const PUSH_STIFFNESS  = 5    // how hard a dot is pulled toward its target displacement
+const PUSH_DAMPING    = 0.2  // velocity retention per frame — higher = more overshoot/bounce on release
+
 // Dot size/spacing/glow-radius per screen breakpoint, so the field stays at
 // a consistent visual density instead of looking coarse on phones or overly
 // fine on large monitors. `minWidth` checks window.innerWidth; breakpoints
@@ -109,7 +118,11 @@ export function DotField({
     // ── Layout state ──────────────────────────────────────────────────────────
 
     let W = 0, H = 0, dpr = 1
-    let dots: { x: number; y: number; baseAlpha: number }[] = []
+    type Dot = {
+      x: number; y: number; baseAlpha: number
+      pushX: number; pushY: number; pushVX: number; pushVY: number // cursor-push spring state, mutated in place each frame
+    }
+    let dots: Dot[] = []
     let staticLayer: HTMLCanvasElement | null = null
 
     // Active tier's values, reassigned in resize() as the breakpoint changes.
@@ -122,7 +135,7 @@ export function DotField({
       dots = []
       for (let y = 0; y <= H; y += grid) {
         for (let x = 0; x <= W; x += grid) {
-          dots.push({ x, y, baseAlpha: 0.38 })
+          dots.push({ x, y, baseAlpha: 0.38, pushX: 0, pushY: 0, pushVX: 0, pushVY: 0 })
         }
       }
     }
@@ -215,7 +228,9 @@ export function DotField({
 
       if (influence < 0.002) return
 
-      for (const { x, y, baseAlpha } of dots) {
+      for (const dot of dots) {
+        const { x, y, baseAlpha } = dot
+
         // Primary halo
         const dx1   = x - springX
         const dy1   = y - springY
@@ -234,7 +249,30 @@ export function DotField({
 
         // Primary wins in its zone, trail glows in the wake.
         const prox = Math.max(prox1, prox2)
-        if (prox < 0.005) continue
+
+        // Cursor push — target displacement points straight from the cursor
+        // through the dot's rest position, scaled up near the center and
+        // fading to nothing at the halo's edge. The dot doesn't jump there;
+        // it's a spring target, so the shove has a little give and the
+        // release has a little bounce, like water settling. Always updated
+        // (even for dots about to be skipped below) so a dot mid-release
+        // keeps decaying back to rest instead of freezing off-grid.
+        const targetPush = dist1 < haloRadius && dist1 > 0.01
+          ? smoothstep(1 - dist1 / haloRadius) * PUSH_STRENGTH * influence
+          : 0
+        const targetPushX = targetPush ? (dx1 / dist1) * targetPush : 0
+        const targetPushY = targetPush ? (dy1 / dist1) * targetPush : 0
+        dot.pushVX += (targetPushX - dot.pushX) * PUSH_STIFFNESS
+        dot.pushVX *= PUSH_DAMPING
+        dot.pushX  += dot.pushVX
+        dot.pushVY += (targetPushY - dot.pushY) * PUSH_STIFFNESS
+        dot.pushVY *= PUSH_DAMPING
+        dot.pushY  += dot.pushVY
+
+        if (prox < 0.005 && Math.abs(dot.pushX) < 0.05 && Math.abs(dot.pushY) < 0.05) continue
+
+        const px = x + dot.pushX
+        const py = y + dot.pushY
 
         const r = (GREY_RGB[0] + (animR - GREY_RGB[0]) * prox) | 0
         const g = (GREY_RGB[1] + (animG - GREY_RGB[1]) * prox) | 0
@@ -244,7 +282,7 @@ export function DotField({
         const radius = dotRadius + sizeBoost * prox
         ctx!.fillStyle = `rgba(${r},${g},${b},${a})`
         ctx!.beginPath()
-        ctx!.arc(x, y, radius, 0, Math.PI * 2)
+        ctx!.arc(px, py, radius, 0, Math.PI * 2)
         ctx!.fill()
       }
     }
