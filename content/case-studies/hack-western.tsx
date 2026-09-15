@@ -16,6 +16,48 @@ import hwMobile1 from "@/public/images/case-studies/hack-western/hw-mobile-1.gif
 import hwStickerbook from "@/public/images/case-studies/hack-western/hw-stickerbook.png"
 import hwTheme from "@/public/images/case-studies/hack-western/hw-theme.png"
 
+// Real exported pixel dimensions of each hw-final-*.mp4 screen recording —
+// unlike glucal's solutionFeatures crops, these aren't a shared aspect
+// ratio, so each item carries its own width/height.
+const finalProductFeatures = [
+  {
+    number: 1,
+    title: "Creating a character",
+    body: "Customize an avatar that follows you through the application.",
+    src: "/images/case-studies/hack-western/hw-final-1.mp4",
+    alt: "Screen recording of a user customizing their avatar character",
+    width: 3022,
+    height: 1880,
+  },
+  {
+    number: 2,
+    title: "Questionnaire",
+    body: "Stickers unlock as you answer questions.",
+    src: "/images/case-studies/hack-western/hw-final-2.mp4",
+    alt: "Screen recording of stickers appearing around the application form as questions are answered",
+    width: 2978,
+    height: 1836,
+  },
+  {
+    number: 3,
+    title: "Draw something",
+    body: "A quick doodle before submitting the application.",
+    src: "/images/case-studies/hack-western/hw-final-3.mp4",
+    alt: "Screen recording of a user drawing something on a canvas before submitting their application",
+    width: 3024,
+    height: 1884,
+  },
+  {
+    number: 4,
+    title: "Onboarding flow",
+    body: "A simple sign-up and login.",
+    src: "/images/case-studies/hack-western/hw-final-4.mp4",
+    alt: "Screen recording of the sign-up and onboarding flow",
+    width: 3024,
+    height: 1884,
+  },
+]
+
 export default function HackWestern() {
   return (
     <div className="flex flex-col gap-16 md:gap-30">
@@ -43,6 +85,48 @@ export default function HackWestern() {
           { value: "7", label: "countries reached" },
         ]}
       />
+
+      <Section
+        id="final-product"
+        tag="What we shipped"
+        primary
+      >
+
+        {/* flex-wrap instead of a breakpoint: each item has a min-width, so
+            the row wraps (video on its own line, text below) whenever the
+            two can't both fit at their minimum size — no viewport/container
+            threshold to keep in sync with the boxes' own sizing. This also
+            self-corrects for CaseStudyLayout's non-monotonic content width
+            (it dips sharply right at its own custom `xl` breakpoint), which
+            a fixed breakpoint can't account for. flex-basis:0 (from flex-1)
+            on both items means their rendered width depends only on the
+            row's available space, not each item's own text length — so
+            captions of different lengths don't produce differently sized
+            video thumbnails. */}
+        <div className="flex flex-col gap-10 md:gap-16 w-full">
+          {finalProductFeatures.map((feature) => (
+            <div key={feature.number} className="flex flex-wrap items-start gap-8">
+              <video
+                src={feature.src}
+                autoPlay
+                loop
+                muted
+                playsInline
+                aria-label={feature.alt}
+                width={feature.width}
+                height={feature.height}
+                className="flex-1 min-w-[400px] h-auto rounded-[8px] border border-neutral-100 shadow-[0_4px_20px_-6px_rgba(22,25,29,0.06)]"
+              />
+              <div className="flex-1 min-w-[200px] max-w-[240px] pt-1">
+                <h2>{feature.title}</h2>
+                <p className="mt-3 text-base leading-normal text-neutral-600">
+                  {feature.body}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </Section>
 
       <Section
         id="challenge"

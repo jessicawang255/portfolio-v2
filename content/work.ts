@@ -103,6 +103,7 @@ export const projects: Project[] = [
     skills: ["Visual design", "Responsive design", "User testing" ],
     toc: [
       { title: "Overview" },
+      { title: "Final Product" },
       { title: "Challenge" },
       { title: "Theme" },
       { title: "App. Portal Ideation", subsections: ["Revamping the User Flow", "Wireframing"] },
