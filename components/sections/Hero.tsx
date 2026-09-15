@@ -37,7 +37,7 @@ export function Hero() {
 
         <motion.p
           variants={fadeUp}
-          className="mb-2 max-w-xl text-pretty font-normal text-neutral-600 text-lg"
+          className="mb-2 max-w-xl text-balance font-normal text-neutral-600 text-lg"
         >
           I'm a technical product designer who creates experiences that foster community and delight.
         </motion.p>
