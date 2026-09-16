@@ -92,17 +92,6 @@ export default function HackWestern() {
         primary
       >
 
-        {/* flex-wrap instead of a breakpoint: each item has a min-width, so
-            the row wraps (video on its own line, text below) whenever the
-            two can't both fit at their minimum size — no viewport/container
-            threshold to keep in sync with the boxes' own sizing. This also
-            self-corrects for CaseStudyLayout's non-monotonic content width
-            (it dips sharply right at its own custom `xl` breakpoint), which
-            a fixed breakpoint can't account for. flex-basis:0 (from flex-1)
-            on both items means their rendered width depends only on the
-            row's available space, not each item's own text length — so
-            captions of different lengths don't produce differently sized
-            video thumbnails. */}
         <div className="flex flex-col gap-10 md:gap-16 w-full">
           {finalProductFeatures.map((feature) => (
             <div key={feature.number} className="flex flex-wrap items-start gap-8">

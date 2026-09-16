@@ -34,10 +34,7 @@ export function Section({ tag, headline, body, primary = false, id, headingLevel
         <p className="text-pretty text-base leading-normal text-neutral-600 mt-7">{body}</p>
       )}
       {children && (
-        // No headline/body above it: match the tag's own mt-4 gap to the
-        // headline instead of the larger mt-7 that separates children from
-        // a preceding headline/body paragraph.
-        <div className={`flex flex-col gap-6 w-full ${headline || body ? "mt-7" : "mt-6"}`}>
+        <div className="flex flex-col gap-6 w-full mt-10">
           {children}
         </div>
       )}

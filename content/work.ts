@@ -14,26 +14,12 @@ export type Project = {
   disciplines?: string[]
   bg: string
   accent?: string
-  // "light": nav overlay text is flat neutral-300, fully white on hover —
-  // for a hero that's uniformly dark enough for flat text alone to read
-  // (e.g. Retrospect). Omit for the default (neutral-500/neutral-800).
   navTheme?: "light"
-  // For a hero whose color/value varies too much for flat text to reliably
-  // read against on its own (e.g. gluCal's noisy multi-tone gradient):
-  // forces solid white nav text and adds a dark top-down gradient scrim
-  // behind it, so contrast is guaranteed rather than tuned per-background.
-  // Independent of navTheme — set this instead of navTheme, not with it.
   navScrim?: boolean
   thumbnail?: string
   thumbnailWidth?: number
   thumbnailHeight?: number
-  // External destination (live site, GitHub, Devpost, etc). Falls back to
-  // the internal /work/{slug} case study page when omitted.
   href?: string
-  // Case study detail fields. role is usually one line, but can be an array
-  // to force a break — see CaseStudyMeta, which already renders string[]
-  // fields (team/skills) as separate lines — instead of relying on natural
-  // wrapping, which a max-content grid column never does.
   role?: string | string[]
   timeline?: string
   team?: string[]
@@ -133,7 +119,7 @@ export const projects: Project[] = [
     toc: [
       { title: "Overview" },
       { title: "Inspiration" },
-      { title: "Research", subsections: ["Competitive Analysis"] },
+      { title: "Research"},
       { title: "Core App Flows", subsections: ["Creating a Capsule", "Collaboration User Flow"] },
       { title: "Final Product" },
       {title: "Reflections" },
