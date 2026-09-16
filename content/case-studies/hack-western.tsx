@@ -31,8 +31,8 @@ const finalProductFeatures = [
   },
   {
     number: 2,
-    title: "Questionnaire",
-    body: "Stickers unlock as you answer questions.",
+    title: "A delightful form experience",
+    body: "Stickers unlock as you answer questions!",
     src: "/images/case-studies/hack-western/hw-final-2.mp4",
     alt: "Screen recording of stickers appearing around the application form as questions are answered",
     width: 2978,
