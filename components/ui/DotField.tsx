@@ -274,6 +274,17 @@ export function DotField({
         const px = x + dot.pushX
         const py = y + dot.pushY
 
+        // The static layer already painted this dot at its rest position —
+        // punch it out before drawing the displaced/highlighted version, or
+        // both remain visible at once.
+        ctx!.save()
+        ctx!.globalCompositeOperation = "destination-out"
+        ctx!.fillStyle = "#000"
+        ctx!.beginPath()
+        ctx!.arc(x, y, dotRadius + 1, 0, Math.PI * 2)
+        ctx!.fill()
+        ctx!.restore()
+
         const r = (GREY_RGB[0] + (animR - GREY_RGB[0]) * prox) | 0
         const g = (GREY_RGB[1] + (animG - GREY_RGB[1]) * prox) | 0
         const b = (GREY_RGB[2] + (animB - GREY_RGB[2]) * prox) | 0
