@@ -34,11 +34,11 @@ const ALPHA_THRESHOLD = 100
 const MAX_STRETCH = 1.5
 
 // The cursor can start pulling the mark well before it reaches the footer.
-const VERTICAL_ACTIVATION_DISTANCE = 700
+const VERTICAL_ACTIVATION_DISTANCE = 350
 // The mark is already at full pull while the cursor is still approaching;
 // only the outer part of the field is a gradual preview of the effect.
-const FULL_STRENGTH_DISTANCE = 260
-const HORIZONTAL_ACTIVATION_PADDING = 180
+const FULL_STRENGTH_DISTANCE = 130
+const HORIZONTAL_ACTIVATION_PADDING = 90
 
 // Repel, mirroring components/ui/DotField.tsx's cursor-push interaction: a
 // lit dot within the halo gets shoved directly away from the (spring-
@@ -179,7 +179,7 @@ export function MagneticWordmark() {
       ctx.fillStyle = WORDMARK_COLOR
       ctx.globalAlpha = BASE_OPACITY
 
-      const radius = Math.min(380, Math.max(200, cssWidth * 0.28))
+      const radius = Math.min(190, Math.max(100, cssWidth * 0.14))
       // Most letters have no descender, so their own bottom already sits
       // above the canvas's absolute bottom (which only "g" reaches) — using
       // that as the anchor would still shift them. Anchor at the shared
