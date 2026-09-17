@@ -47,6 +47,17 @@ export function ScrollRevealController({ frameId, heroId, heroFrameId }: Props) 
 
     let cleanupScroll = () => {}
 
+    // Keeps the page's reserved bottom space in sync with the fixed
+    // footer's actual height for as long as this controller is mounted —
+    // not just once at setup(). An async image inside the footer (see
+    // MagneticWordmark) can resize it well after mount, and a one-time
+    // measurement would leave the page unable to scroll far enough to
+    // reveal the rest of it.
+    const footerResizeObserver = new ResizeObserver(() => {
+      document.body.style.paddingBottom = mql.matches ? `${footer.offsetHeight}px` : ""
+    })
+    footerResizeObserver.observe(footer)
+
     // Re-run whenever the fixed/static breakpoint is crossed (resize, rotation)
     // so the footer math never goes stale relative to Footer.tsx's own layout.
     function setup() {
@@ -130,6 +141,7 @@ export function ScrollRevealController({ frameId, heroId, heroFrameId }: Props) 
     return () => {
       mql.removeEventListener("change", setup)
       cleanupScroll()
+      footerResizeObserver.disconnect()
       document.body.style.paddingBottom = ""
       // #site-footer persists across every route — hand it back to a
       // neutral state for whichever instance takes over next.
