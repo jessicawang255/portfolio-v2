@@ -394,6 +394,17 @@ export default function HackWesternHeroClient({
             heroFullyOut = true
             running = false
             cancelAnimationFrame(rafId)
+            // syncDom() forces each item's own inline `visibility: visible`
+            // every tick (see below), which — being a more specific,
+            // explicitly-set style — overrides the `visibility: hidden`
+            // ScrollRevealController is about to apply to the ancestor
+            // #cs-hero-frame. Clear it here so items actually inherit that
+            // hidden state instead of staying stuck on screen, pinned by
+            // the frame's `position: fixed`, over whatever scrolls under
+            // it (e.g. the footer).
+            itemRefs.current.forEach((el) => {
+              if (el) el.style.visibility = ""
+            })
           }
           return
         }
