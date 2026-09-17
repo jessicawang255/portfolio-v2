@@ -9,6 +9,7 @@ import { TertiaryLink } from "@/components/ui/TertiaryLink"
 import { samePageReload } from "@/lib/samePageNav"
 import { siteUrl } from "@/lib/site"
 import { navLinks } from "@/lib/navLinks"
+import { MagneticWordmark } from "./MagneticWordmark"
 
 const socialLinks = [
   { label: "Email",    href: "mailto:jessica.wang255@gmail.com" },
@@ -367,6 +368,9 @@ export function Footer() {
           </div>
           <ViewCounter />
         </div>
+      </div>
+      <div className="container-chrome overflow-hidden pb-6 md:pb-8">
+        <MagneticWordmark />
       </div>
     </footer>
   )
