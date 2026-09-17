@@ -305,7 +305,7 @@ body {
   /* Thumbnail sinks back and rounds out slightly, in step with the shrink */
   .case-study-card:hover .card-thumb {
     transform: scale(0.98);
-    --thumb-radius: 20px;
+    --thumb-radius: 24px;
   }
 
   /* Text floats up so visual gap from thumb stays consistent */
