@@ -14,15 +14,19 @@ const WORDMARK_COLOR = "#AAAFB5"
 const BASE_OPACITY = 1
 
 // Grid density and how the halftone dots are sampled from the source SVG.
-const DOT_PITCH = 3.5   // or 5
-// const DOT_PITCH = 5
+// Below `sm` the wordmark renders much smaller, so a tighter pitch keeps the
+// dots reading as fine detail instead of chunky pixels.
+const SM_BREAKPOINT = 640
+const DOT_PITCH_DESKTOP = 3.5   // or 5
+// const DOT_PITCH_DESKTOP = 5
+const DOT_PITCH_MOBILE = 2
 const DOT_RADIUS = .8
 const SAMPLE_SCALE = 3
 const ALPHA_THRESHOLD = 100
 
 
 // cool:
-// const DOT_PITCH = 3
+// const DOT_PITCH_DESKTOP = 3
 // const DOT_RADIUS = 0.6
 // const SAMPLE_SCALE = 3
 // const ALPHA_THRESHOLD = 100
@@ -114,6 +118,7 @@ export function MagneticWordmark() {
     let loaded = false
     let cssWidth = 0
     let cssHeight = 0
+    let dotPitch = DOT_PITCH_DESKTOP
     let targetX = 0
     let currentX = 0
     let targetStrength = 0
@@ -161,9 +166,9 @@ export function MagneticWordmark() {
       const scale = cssWidth / SOURCE_WIDTH
 
       let col = 0
-      for (let x = DOT_PITCH / 2; x < cssWidth; x += DOT_PITCH, col++) {
+      for (let x = dotPitch / 2; x < cssWidth; x += dotPitch, col++) {
         const sampleX = Math.round((x / scale) * SAMPLE_SCALE)
-        for (let y = DOT_PITCH / 2; y < cssHeight; y += DOT_PITCH) {
+        for (let y = dotPitch / 2; y < cssHeight; y += dotPitch) {
           dots.push({ x, y, col, sampleX, pushX: 0, pushY: 0, pushVX: 0, pushVY: 0 })
         }
       }
@@ -194,7 +199,7 @@ export function MagneticWordmark() {
       // Stretch influence only ever varies by column, so compute it once
       // per column instead of once per dot.
       for (let col = 0; col < columnCount; col++) {
-        const x = DOT_PITCH / 2 + col * DOT_PITCH
+        const x = dotPitch / 2 + col * dotPitch
         const dx = x - currentX
         influenceByColumn[col] = Math.exp(-(dx * dx) / (radius * radius)) * currentStrength
       }
@@ -273,6 +278,7 @@ export function MagneticWordmark() {
 
       cssWidth = nextWidth
       cssHeight = nextHeight
+      dotPitch = window.innerWidth < SM_BREAKPOINT ? DOT_PITCH_MOBILE : DOT_PITCH_DESKTOP
       canvasElement.width = Math.round(nextWidth * dpr)
       canvasElement.height = Math.round(nextHeight * dpr)
       canvasElement.style.height = `${nextHeight}px`
