@@ -248,8 +248,15 @@ export function MagneticWordmark() {
         const alpha = sampleData[(sampleY * sampleWidth + dot.sampleX) * 4 + 3]
         if (alpha < ALPHA_THRESHOLD) continue
 
+        // Repel has no reserved headroom the way the stretch effect does —
+        // a strong enough push (or spring overshoot) can send a dot past
+        // the canvas edge, where it would just vanish. Clamp the final
+        // render position so it presses up against the edge instead.
+        const drawX = Math.min(cssWidth - DOT_RADIUS, Math.max(DOT_RADIUS, dot.x + dot.pushX))
+        const drawY = Math.min(cssHeight - DOT_RADIUS, Math.max(DOT_RADIUS, dot.y + dot.pushY))
+
         ctx.beginPath()
-        ctx.arc(dot.x + dot.pushX, dot.y + dot.pushY, DOT_RADIUS, 0, Math.PI * 2)
+        ctx.arc(drawX, drawY, DOT_RADIUS, 0, Math.PI * 2)
         ctx.fill()
       }
 
