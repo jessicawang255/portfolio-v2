@@ -37,14 +37,14 @@ export function Hero() {
 
         <motion.p
           variants={fadeUp}
-          className="mb-2 max-w-xl text-balance font-normal text-neutral-600 text-lg"
+          className="mb-2 max-w-xl text-balance font-normal text-neutral-600 text-lg leading-snug"
         >
           I'm a technical product designer who creates experiences that foster community and delight.
         </motion.p>
 
         <motion.p
           variants={fadeUp}
-          className="mb-9 max-w-xl text-pretty font-normal text-neutral-600 text-lg"
+          className="mb-9 max-w-xl text-pretty font-normal text-neutral-600 text-lg leading-snug"
         >
           Most recently designing + building digital asset technology @{" "}
           <TertiaryLink href="https://www.rbcroyalbank.com" target="_blank" rel="noopener noreferrer">
