@@ -395,7 +395,11 @@ export function MagneticWordmark() {
   }, [])
 
   return (
-    <div ref={frameRef} className="relative w-full" style={{ aspectRatio: `${SOURCE_WIDTH} / ${SOURCE_HEIGHT}` }}>
+    // pointer-events-none throughout: the effect tracks the cursor via a
+    // window-level listener, not hover on these elements, and the canvas's
+    // reserved headroom can visually overlap unrelated content above it
+    // (see Footer.tsx's negative margin) that still needs to be clickable.
+    <div ref={frameRef} className="relative w-full pointer-events-none" style={{ aspectRatio: `${SOURCE_WIDTH} / ${SOURCE_HEIGHT}` }}>
       {/* Visible immediately and also provides the accessible, no-JS state. */}
       <div
         ref={fallbackRef}

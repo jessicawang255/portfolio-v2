@@ -369,7 +369,10 @@ export function Footer() {
           <ViewCounter />
         </div>
       </div>
-      <div className="container-chrome overflow-hidden pb-6 md:pb-8">
+      {/* -mt-16: MagneticWordmark's own canvas reserves headroom above its
+          visible glyphs for the stretch effect's reach, which otherwise
+          reads as a large empty gap above the nav row at rest. */}
+      <div className="container-chrome overflow-hidden pb-6 md:pb-8 -mt-16">
         <MagneticWordmark />
       </div>
     </footer>
