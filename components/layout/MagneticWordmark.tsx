@@ -40,6 +40,28 @@ const VERTICAL_ACTIVATION_DISTANCE = 700
 const FULL_STRENGTH_DISTANCE = 260
 const HORIZONTAL_ACTIVATION_PADDING = 180
 
+// Repel, mirroring components/ui/DotField.tsx's cursor-push interaction: a
+// lit dot within the halo gets shoved directly away from the (spring-
+// smoothed) cursor, then springs back once the cursor moves on. It runs
+// independently of the stretch effect — stretch decides which dots are lit
+// (a large, obvious deformation), repel just nudges where a lit dot renders
+// (a small flourish), so stretch reads as dominant by scale alone, with no
+// suppression logic needed between the two.
+const REPEL_HALO_RADIUS = 400
+const REPEL_PUSH_STRENGTH = 12
+const REPEL_STIFFNESS = .6
+const REPEL_DAMPING = 0.3
+// Smooths the raw pointer into a lagging position so the push itself feels
+// fluid rather than snapping frame to frame.
+const CURSOR_SPRING_STIFFNESS = 1
+const CURSOR_SPRING_DAMPING = 0.1
+const SETTLE_EPSILON = 0.05
+
+function smoothstep(t: number) {
+  const c = Math.max(0, Math.min(1, t))
+  return c * c * (3 - 2 * c)
+}
+
 interface Dot {
   x: number
   y: number
@@ -47,6 +69,12 @@ interface Dot {
   // in the column, since the stretch effect never moves a dot horizontally.
   col: number
   sampleX: number
+  // Repel's current displacement from (x, y) and its velocity — this is
+  // the only thing that actually moves a dot; (x, y) itself never changes.
+  pushX: number
+  pushY: number
+  pushVX: number
+  pushVY: number
 }
 
 /**
@@ -55,8 +83,10 @@ interface Dot {
  * lit by sampling the path-based wordmark as if its column were stretched
  * upward from the shared text baseline, like taffy, based on how close that
  * column is to the pointer. The shape animates through the fixed grid;
- * nothing on screen actually travels. Keeping the SVG as the source means
- * this never depends on a visitor having the design font.
+ * nothing on screen actually travels. A lit dot can still be nudged away
+ * from the cursor (see the repel constants above), layered independently on
+ * top of the stretch. Keeping the SVG as the source means this never
+ * depends on a visitor having the design font.
  */
 export function MagneticWordmark() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -88,6 +118,15 @@ export function MagneticWordmark() {
     let currentX = 0
     let targetStrength = 0
     let currentStrength = 0
+    // Raw pointer position (frame-relative) and the lagging spring that
+    // chases it — repel pushes away from the spring, not the raw cursor,
+    // so the motion reads as fluid rather than jumpy.
+    let rawCursorX = 0
+    let rawCursorY = 0
+    let springX = 0
+    let springY = 0
+    let springVX = 0
+    let springVY = 0
     let sampleData: Uint8ClampedArray | null = null
     let sampleWidth = 0
     let sampleHeight = 0
@@ -125,15 +164,17 @@ export function MagneticWordmark() {
       for (let x = DOT_PITCH / 2; x < cssWidth; x += DOT_PITCH, col++) {
         const sampleX = Math.round((x / scale) * SAMPLE_SCALE)
         for (let y = DOT_PITCH / 2; y < cssHeight; y += DOT_PITCH) {
-          dots.push({ x, y, col, sampleX })
+          dots.push({ x, y, col, sampleX, pushX: 0, pushY: 0, pushVX: 0, pushVY: 0 })
         }
       }
       columnCount = col
       influenceByColumn = new Float64Array(columnCount)
     }
 
+    // Returns whether any dot's repel push is still settling, so the caller
+    // knows whether it's safe to stop the animation loop.
     function draw() {
-      if (!loaded || !cssWidth || !cssHeight || !sampleData) return
+      if (!loaded || !cssWidth || !cssHeight || !sampleData) return false
       ctx.clearRect(0, 0, cssWidth, cssHeight)
       ctx.fillStyle = WORDMARK_COLOR
       ctx.globalAlpha = BASE_OPACITY
@@ -158,17 +199,46 @@ export function MagneticWordmark() {
         influenceByColumn[col] = Math.exp(-(dx * dx) / (radius * radius)) * currentStrength
       }
 
+      let pushUnsettled = false
+
       for (const dot of dots) {
         const influence = influenceByColumn[dot.col]
 
-        // Ask: if this column were stretched, what rest-state point would
-        // have landed on this fixed dot? Then light the dot only if that
-        // point actually has ink — this is what makes the shape reveal
-        // itself through the grid instead of the grid moving to match it.
+        // Stretch: ask what rest-state point would have landed on this
+        // fixed dot if its column were stretched, then light the dot only
+        // if that point actually has ink.
         let sourceY = dot.y
         if (influence > 0.0005 && dot.y < baselineY) {
           const stretch = 1 + (MAX_STRETCH - 1) * influence
           sourceY = baselineY - (baselineY - dot.y) / stretch
+        }
+
+        // Repel: push this dot's rendered position directly away from the
+        // spring-smoothed cursor, spring-eased so it can overshoot slightly
+        // and settle back once the cursor moves away.
+        const dx1 = dot.x - springX
+        const dy1 = dot.y - springY
+        const dist1 = Math.sqrt(dx1 * dx1 + dy1 * dy1)
+        let targetPushX = 0
+        let targetPushY = 0
+        if (dist1 < REPEL_HALO_RADIUS && dist1 > 0.01) {
+          const push = smoothstep(1 - dist1 / REPEL_HALO_RADIUS) * REPEL_PUSH_STRENGTH
+          targetPushX = (dx1 / dist1) * push
+          targetPushY = (dy1 / dist1) * push
+        }
+
+        dot.pushVX += (targetPushX - dot.pushX) * REPEL_STIFFNESS
+        dot.pushVX *= REPEL_DAMPING
+        dot.pushX += dot.pushVX
+        dot.pushVY += (targetPushY - dot.pushY) * REPEL_STIFFNESS
+        dot.pushVY *= REPEL_DAMPING
+        dot.pushY += dot.pushVY
+
+        if (
+          Math.abs(dot.pushX) > SETTLE_EPSILON || Math.abs(dot.pushY) > SETTLE_EPSILON ||
+          Math.abs(dot.pushVX) > SETTLE_EPSILON || Math.abs(dot.pushVY) > SETTLE_EPSILON
+        ) {
+          pushUnsettled = true
         }
 
         if (sourceY < restTop) continue
@@ -179,11 +249,12 @@ export function MagneticWordmark() {
         if (alpha < ALPHA_THRESHOLD) continue
 
         ctx.beginPath()
-        ctx.arc(dot.x, dot.y, DOT_RADIUS, 0, Math.PI * 2)
+        ctx.arc(dot.x + dot.pushX, dot.y + dot.pushY, DOT_RADIUS, 0, Math.PI * 2)
         ctx.fill()
       }
 
       ctx.globalAlpha = 1
+      return pushUnsettled
     }
 
     function resize() {
@@ -205,6 +276,8 @@ export function MagneticWordmark() {
       frameElement.style.height = `${nextHeight}px`
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
       targetX = currentX = nextWidth / 2
+      rawCursorX = springX = nextWidth / 2
+      rawCursorY = springY = nextHeight / 2
       buildGrid()
       draw()
     }
@@ -212,17 +285,32 @@ export function MagneticWordmark() {
     function tick() {
       currentX += (targetX - currentX) * 0.16
       currentStrength += (targetStrength - currentStrength) * 0.14
-      draw()
+
+      springVX += (rawCursorX - springX) * CURSOR_SPRING_STIFFNESS
+      springVX *= CURSOR_SPRING_DAMPING
+      springX += springVX
+      springVY += (rawCursorY - springY) * CURSOR_SPRING_STIFFNESS
+      springVY *= CURSOR_SPRING_DAMPING
+      springY += springVY
+
+      const pushUnsettled = draw()
 
       const stillEasing =
         Math.abs(targetX - currentX) > 0.1 ||
-        Math.abs(targetStrength - currentStrength) > 0.002
+        Math.abs(targetStrength - currentStrength) > 0.002 ||
+        Math.abs(rawCursorX - springX) > SETTLE_EPSILON ||
+        Math.abs(rawCursorY - springY) > SETTLE_EPSILON ||
+        Math.abs(springVX) > SETTLE_EPSILON ||
+        Math.abs(springVY) > SETTLE_EPSILON ||
+        pushUnsettled
 
       if (stillEasing) {
         animationFrame = requestAnimationFrame(tick)
       } else {
         currentX = targetX
         currentStrength = targetStrength
+        springX = rawCursorX
+        springY = rawCursorY
         animationFrame = 0
         draw()
       }
@@ -235,7 +323,13 @@ export function MagneticWordmark() {
     function onPointerMove(event: PointerEvent) {
       if (!canAnimate()) return
       const rect = frameElement.getBoundingClientRect()
-      const relativeX = event.clientX - rect.left
+      // Tracked unconditionally — repel has its own, much tighter radius, so
+      // it decides for itself when the cursor is close enough to matter,
+      // independent of the stretch effect's activation field below.
+      rawCursorX = event.clientX - rect.left
+      rawCursorY = event.clientY - rect.top
+
+      const relativeX = rawCursorX
       const verticalDistance = Math.max(
         rect.top - event.clientY,
         0,
