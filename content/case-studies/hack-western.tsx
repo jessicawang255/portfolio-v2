@@ -49,7 +49,7 @@ const finalProductFeatures = [
   },
   {
     number: 4,
-    title: "Onboarding flow",
+    title: "Seamless onboarding",
     body: "A simple sign-up and login.",
     src: "/images/case-studies/hack-western/hw-final-4.mp4",
     alt: "Screen recording of the sign-up and onboarding flow",
@@ -152,7 +152,7 @@ export default function HackWestern() {
       <Section
         id="app-portal-ideation"
         tag="Application Portal Ideation"
-        headline="After defining the theme, I began brainstorming features that would make the application experience feel fun and unique."
+        headline="I brainstormed playful features for the application experience, while weighing technical feasibility."
         body="Ideas ranged from personalized, customizable visuals to interactive, collaborative boards. In the end, we focused on three key features: personalized stickers that changed based on responses, customizable avatars, and a &ldquo;draw something&rdquo; question. These features struck a balance between technical feasibility and playful expression."
         primary
       >
@@ -166,7 +166,7 @@ export default function HackWestern() {
       <Section
         id="revamping-the-user-flow"
         tag="Revamping the User Flow"
-        headline="I simplified the application flow from past years and mapped out where to add each of the new delight features."
+        headline="The existing flow was outdated — I streamlined it, and mapped out where to add each of the new fun features."
         body="In previous years, technical constraints required an extra &ldquo;application dashboard&rdquo; page between logging in and filling out the form. With those limitations removed, users could now go straight from signing in to their application, returning directly where they left off."
       >
         <IterationCarousel
@@ -281,7 +281,7 @@ export default function HackWestern() {
       <Section
         id="stickerbook"
         tag="The Stickerbook"
-        headline='I created a "sticker book" feature to create a personalized token for applicants to save, share, and bring into the event.'
+        headline='I designed a "sticker book" feature that gives applicants a personalized token to save, share, and bring into the event.'
         body="Accessible from their dashboard, the sticker book carried forward into the actual event, where participants could unlock
         new stickers by completing tasks. It also included an option to share their collections on social media, helping spread the word
          and inviting more first-time hackers to join the community."
