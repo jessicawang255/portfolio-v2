@@ -104,7 +104,7 @@ export default function HackWestern() {
                 aria-label={feature.alt}
                 width={feature.width}
                 height={feature.height}
-                className="flex-1 min-w-[400px] h-auto rounded-[8px] border border-neutral-100 shadow-[0_4px_20px_-6px_rgba(22,25,29,0.06)]"
+                className="flex-1 min-w-0 md:min-w-[400px] h-auto rounded-[8px] border border-neutral-100 shadow-[0_4px_20px_-6px_rgba(22,25,29,0.06)]"
               />
               <div className="flex-1 min-w-[200px] max-w-[240px] pt-1">
                 <h2>{feature.title}</h2>
