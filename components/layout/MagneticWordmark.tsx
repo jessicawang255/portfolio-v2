@@ -138,9 +138,26 @@ export function MagneticWordmark() {
     let dots: Dot[] = []
     let columnCount = 0
     let influenceByColumn = new Float64Array(0)
+    // Gates the whole effect on actual proximity to the viewport, not just
+    // the magnetic field's own distance check — without this, a pointermove
+    // anywhere on the page (even scrolled far from the footer) still ran a
+    // full draw() pass just to settle targetStrength back to 0. Only
+    // meaningful below `sm`, where #site-footer is static/in-flow — from
+    // `sm` up it's `position: fixed`, so it sits in the viewport constantly
+    // regardless of scroll (see isFooterRevealed below for that case).
+    let isNearViewport = false
+    // #site-footer itself — ScrollRevealController sets its inline
+    // `visibility` directly (see footerFade.ts) to hide it while it's
+    // covered by #main-frame/#cs-content peeling back over it. That's the
+    // real "is it actually on screen" signal from `sm` up.
+    const footerElement = frameElement.closest<HTMLElement>("#site-footer")
 
     function canAnimate() {
       return media.matches && !reducedMotion.matches
+    }
+
+    function isFooterRevealed() {
+      return !footerElement || footerElement.style.visibility !== "hidden"
     }
 
     function buildSampleData() {
@@ -206,6 +223,11 @@ export function MagneticWordmark() {
 
       let pushUnsettled = false
 
+      // One path for every lit dot, filled once at the end — calling
+      // beginPath()/fill() per dot (as before) pays canvas's per-call
+      // rasterization overhead thousands of times a frame instead of once.
+      ctx.beginPath()
+
       for (const dot of dots) {
         const influence = influenceByColumn[dot.col]
 
@@ -260,11 +282,13 @@ export function MagneticWordmark() {
         const drawX = Math.min(cssWidth - DOT_RADIUS, Math.max(DOT_RADIUS, dot.x + dot.pushX))
         const drawY = Math.min(cssHeight - DOT_RADIUS, Math.max(DOT_RADIUS, dot.y + dot.pushY))
 
-        ctx.beginPath()
+        // moveTo first so each dot starts its own subpath — otherwise arc()
+        // draws an implicit connecting line from the previous dot's edge.
+        ctx.moveTo(drawX + DOT_RADIUS, drawY)
         ctx.arc(drawX, drawY, DOT_RADIUS, 0, Math.PI * 2)
-        ctx.fill()
       }
 
+      ctx.fill()
       ctx.globalAlpha = 1
       return pushUnsettled
     }
@@ -334,7 +358,7 @@ export function MagneticWordmark() {
     }
 
     function onPointerMove(event: PointerEvent) {
-      if (!canAnimate()) return
+      if (!canAnimate() || !isNearViewport || !isFooterRevealed()) return
       const rect = frameElement.getBoundingClientRect()
       // Tracked unconditionally — repel has its own, much tighter radius, so
       // it decides for itself when the cursor is close enough to matter,
@@ -376,6 +400,13 @@ export function MagneticWordmark() {
 
     const observer = new ResizeObserver(resize)
     observer.observe(frameElement)
+    // rootMargin matches the magnetic field's own vertical reach, so the
+    // effect is armed slightly before the field itself would activate.
+    const visibilityObserver = new IntersectionObserver(
+      ([entry]) => { isNearViewport = entry.isIntersecting },
+      { rootMargin: `${VERTICAL_ACTIVATION_DISTANCE}px 0px` }
+    )
+    visibilityObserver.observe(frameElement)
     window.addEventListener("pointermove", onPointerMove, { passive: true })
     media.addEventListener("change", onCapabilityChange)
     reducedMotion.addEventListener("change", onCapabilityChange)
@@ -394,6 +425,7 @@ export function MagneticWordmark() {
     return () => {
       cancelAnimationFrame(animationFrame)
       observer.disconnect()
+      visibilityObserver.disconnect()
       window.removeEventListener("pointermove", onPointerMove)
       media.removeEventListener("change", onCapabilityChange)
       reducedMotion.removeEventListener("change", onCapabilityChange)
