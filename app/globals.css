@@ -429,6 +429,64 @@ body {
   }
 }
 
+/* ─── Hero/about text hover glow ────────────────────────────────────────────
+   Same purpose as the nav scrim (masking the dot grid behind free-floating
+   text) but the shape is a rectangle instead of a full-bleed strip, so it
+   can't be a linear-gradient — a gradient only eases along one axis. Instead
+   the flat 70% plateau is the wrapper's own solid fill (::before sized via
+   inset:0, landing exactly on the wrapped group's box — the heading and every
+   paragraph inside it as one unit, not one glow per line), and the falloff on
+   all four sides is a stack of box-shadow layers whose spread and alpha are
+   sampled from the same --ease-out cubic-bezier as the nav gradient — the
+   shadow equivalent of an eased gradient (see e.g. Josh Comeau's
+   layered-shadow technique). Direct children need their own `.text-glow-item`
+   (position: relative) to lift them into the same stacking bucket as this
+   (positioned) pseudo-element — a plain absolute pseudo paints above
+   non-positioned in-flow content regardless of source order, so without that
+   they'd render behind the glow instead of on top of it. Neutral-75, same as
+   the nav scrim. Hex hardcoded per Tailwind v4 tree-shaking (@theme color
+   vars only reach :root via a Tailwind utility class). */
+.text-glow {
+  position: relative;
+}
+
+.text-glow::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  background-color: rgba(251, 252, 253, 0.7);
+  /* More, finer-grained layers than a first pass, spread over a wider 56px
+     falloff — each layer's own blur (6.4px) is wider than the 4px gap
+     between layers so consecutive rings overlap and blend, instead of
+     reading as a hard-edged ring. */
+  box-shadow:
+    0 0 6.4px 4px rgba(251, 252, 253, 0.433),
+    0 0 6.4px 8px rgba(251, 252, 253, 0.261),
+    0 0 6.4px 12px rgba(251, 252, 253, 0.157),
+    0 0 6.4px 16px rgba(251, 252, 253, 0.095),
+    0 0 6.4px 20px rgba(251, 252, 253, 0.058),
+    0 0 6.4px 24px rgba(251, 252, 253, 0.034),
+    0 0 6.4px 28px rgba(251, 252, 253, 0.019),
+    0 0 6.4px 32px rgba(251, 252, 253, 0.011),
+    0 0 6.4px 36px rgba(251, 252, 253, 0.005),
+    0 0 6.4px 40px rgba(251, 252, 253, 0.002),
+    0 0 6.4px 44px rgba(251, 252, 253, 0.001),
+    0 0 6.4px 48px rgba(251, 252, 253, 0);
+  transition: opacity var(--duration-slow) var(--ease-out);
+}
+
+.text-glow-item {
+  position: relative;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .text-glow:hover::before {
+    opacity: 1;
+  }
+}
+
 /* ─── Page cross-fade ───────────────────────────────────────────────────────── */
 
 /* Old page exits fast; new page enters slightly after */

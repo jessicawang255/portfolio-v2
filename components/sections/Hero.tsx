@@ -28,30 +28,32 @@ export function Hero() {
         animate="visible"
         className="pointer-events-auto relative z-[1] flex flex-col"
       >
-        <motion.h1
-          variants={fadeUp}
-          className="mb-3 font-medium text-neutral-900 text-3xl"
-        >
-          Hi, I'm Jessica.
-        </motion.h1>
+        <div className="text-glow w-fit">
+          <motion.h1
+            variants={fadeUp}
+            className="text-glow-item mb-3 font-medium text-neutral-900 text-3xl"
+          >
+            Hi, I&apos;m Jessica.
+          </motion.h1>
 
-        <motion.p
-          variants={fadeUp}
-          className="mb-3 max-w-xl text-balance font-normal text-neutral-600 text-lg leading-snug"
-        >
-          I'm a technical product designer who creates experiences that foster community and delight.
-        </motion.p>
+          <motion.p
+            variants={fadeUp}
+            className="text-glow-item mb-3 max-w-xl text-balance font-normal text-neutral-600 text-lg leading-snug"
+          >
+            I&apos;m a technical product designer who creates experiences that foster community and delight.
+          </motion.p>
 
-        <motion.p
-          variants={fadeUp}
-          className="mb-9 max-w-xl text-pretty font-normal text-neutral-600 text-lg leading-snug"
-        >
-          Most recently designing + building digital asset technology @{" "}
-          <TertiaryLink href="https://www.rbcroyalbank.com" target="_blank" rel="noopener noreferrer">
-            RBC
-          </TertiaryLink>
-          .
-        </motion.p>
+          <motion.p
+            variants={fadeUp}
+            className="text-glow-item mb-9 max-w-xl text-pretty font-normal text-neutral-600 text-lg leading-snug"
+          >
+            Most recently designing + building digital asset technology @{" "}
+            <TertiaryLink href="https://www.rbcroyalbank.com" target="_blank" rel="noopener noreferrer">
+              RBC
+            </TertiaryLink>
+            .
+          </motion.p>
+        </div>
 
         <motion.div variants={fadeUp} className="flex items-center gap-3">
           {socials.map(({ label, href, icon, copyText, mobileCopiedTooltip }) => (

@@ -151,37 +151,39 @@ export function AboutHero() {
             shrink-0) so if space gets tight, this column wraps before the
             fixed-size photo row gets pushed off-screen. */}
         <div className="flex w-full flex-col 2xl:max-w-[800px]">
-          <motion.h1
-            variants={fadeUp}
-            className="mb-3 text-3xl font-medium text-neutral-900"
-          >
-            Let&rsquo;s get acquainted!
-          </motion.h1>
+          <div className="text-glow">
+            <motion.h1
+              variants={fadeUp}
+              className="text-glow-item mb-3 text-3xl font-medium text-neutral-900"
+            >
+              Let&rsquo;s get acquainted!
+            </motion.h1>
 
-          <motion.p
-            variants={fadeUp}
-            className="max-w-lg text-pretty text-base font-normal text-neutral-600"
-          >
-            I&rsquo;m a creative, a problem-solver, and a maker who obsesses
-            over details. I&rsquo;m driven by the idea that you can make
-            something from nothing, whether that be products, songs, or
-            communities.
-          </motion.p>
+            <motion.p
+              variants={fadeUp}
+              className="text-glow-item max-w-lg text-pretty text-base font-normal text-neutral-600"
+            >
+              I&rsquo;m a creative, a problem-solver, and a maker who obsesses
+              over details. I&rsquo;m driven by the idea that you can make
+              something from nothing, whether that be products, songs, or
+              communities.
+            </motion.p>
 
-          <motion.p
-            variants={fadeUp}
-            className="mt-6 max-w-lg text-pretty text-base font-normal text-neutral-600"
-          >
-            Right now, I'm studying computer science and business at Western University. On any given day, you might find me producing music, climbing
-            rocks, learning about the stars, or collecting design inspo on X.
-          </motion.p>
+            <motion.p
+              variants={fadeUp}
+              className="text-glow-item mt-6 max-w-lg text-pretty text-base font-normal text-neutral-600"
+            >
+              Right now, I&rsquo;m studying computer science and business at Western University. On any given day, you might find me producing music, climbing
+              rocks, learning about the stars, or collecting design inspo on X.
+            </motion.p>
 
-          <motion.p
-            variants={fadeUp}
-            className="mt-6 mb-9 max-w-lg text-pretty text-base font-normal text-neutral-600"
-          >
-            Say hi, I&rsquo;d love to connect!
-          </motion.p>
+            <motion.p
+              variants={fadeUp}
+              className="text-glow-item mt-6 mb-9 max-w-lg text-pretty text-base font-normal text-neutral-600"
+            >
+              Say hi, I&rsquo;d love to connect!
+            </motion.p>
+          </div>
 
           <motion.div variants={fadeUp} className="flex items-center gap-3">
             {socials.map(({ label, href, icon, copyText, mobileCopiedTooltip }) => (
