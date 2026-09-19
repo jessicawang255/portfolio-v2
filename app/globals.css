@@ -450,10 +450,26 @@ body {
   position: relative;
 }
 
+/* Invisible hit-area, wider than the text's own box, so the glow triggers
+   as the cursor approaches rather than only once it's directly over the
+   text (Josh Comeau's negative-inset pseudo-element hitbox technique —
+   hovering it counts as hovering `.text-glow` since it's generated content
+   of that element). Sits below `.text-glow-item` in paint order so the RBC
+   link underneath stays clickable; the glow radius already reads to ~48px
+   at inset 0, so 24px keeps the trigger inside that falloff. */
+.text-glow::after {
+  content: '';
+  position: absolute;
+  inset: -24px;
+  pointer-events: auto;
+  z-index: 0;
+}
+
 .text-glow::before {
   content: '';
   position: absolute;
   inset: 0;
+  z-index: 0;
   pointer-events: none;
   opacity: 0;
   background-color: rgba(251, 252, 253, 0.7);
@@ -479,6 +495,7 @@ body {
 
 .text-glow-item {
   position: relative;
+  z-index: 1;
 }
 
 @media (hover: hover) and (pointer: fine) {

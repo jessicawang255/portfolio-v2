@@ -151,7 +151,7 @@ export function AboutHero() {
             shrink-0) so if space gets tight, this column wraps before the
             fixed-size photo row gets pushed off-screen. */}
         <div className="flex w-full flex-col 2xl:max-w-[800px]">
-          <div className="text-glow">
+          <div className="text-glow w-fit">
             <motion.h1
               variants={fadeUp}
               className="text-glow-item mb-3 text-3xl font-medium text-neutral-900"
