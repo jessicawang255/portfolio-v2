@@ -52,7 +52,7 @@ export function Nav() {
   useEffect(() => {
     function updateZones() {
       zonesRef.current = [logoRef.current, linksRef.current]
-        .filter((el): el is HTMLElement => el !== null)
+        .filter((el): el is HTMLAnchorElement | HTMLUListElement => el !== null)
         .map((el) => {
           const rect = el.getBoundingClientRect()
           return { left: rect.left - REVEAL_RADIUS_X, right: rect.right + REVEAL_RADIUS_X }
