@@ -1,4 +1,5 @@
 import type { ComponentType } from 'react'
+import type { Variants } from 'framer-motion'
 import { Flower01 } from './Flower01'
 import { Flower02 } from './Flower02'
 import { Flower03 } from './Flower03'
@@ -32,5 +33,27 @@ export const FLOWERS: FlowerConfig[] = [
   { id: 'flower-11', component: Flower11, color: [71,  153, 218] }, // #4799DA
   { id: 'flower-12', component: Flower12, color: [148, 85,  195] }, // #9455C3
 ]
+
+// Click-to-swap transition, used with AnimatePresence mode="sync" keyed on the
+// flower. Exit shrinks first; enter is delayed so it starts while exit is
+// still finishing — brief overlap = crossfade, but each phase reads as its
+// own distinct motion.
+export const flowerSwap: Variants = {
+  hidden:  { rotate: -60, scale: 0.4, opacity: 0 },
+  visible: {
+    rotate: 0, scale: 1, opacity: 1,
+    transition: { duration: 0.55, delay: 0.25, ease: [0.42, 0, 0.58, 1] },
+  },
+  exit: {
+    rotate: 60, scale: 0.4, opacity: 0,
+    transition: { duration: 0.4, ease: [0.42, 0, 0.58, 1] },
+  },
+}
+
+export const flowerSwapReduced: Variants = {
+  hidden:  { opacity: 0 },
+  visible: { opacity: 1, transition: { duration: 0.15 } },
+  exit:    { opacity: 0, transition: { duration: 0.15 } },
+}
 
 export { Stem } from './Stem'

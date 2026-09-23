@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useRef } from 'react'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
-import { FLOWERS, Stem } from './flowers'
+import { FLOWERS, Stem, flowerSwap, flowerSwapReduced } from './flowers'
 import { ErosionFilterDef, useErosion } from './ErosionFilter'
 
 export function FlowerIcon({
@@ -115,28 +115,7 @@ export function FlowerIcon({
           <AnimatePresence mode="sync">
             <motion.div
               key={flowerIdx}
-              variants={
-                reducedMotion
-                  ? {
-                      hidden:  { opacity: 0 },
-                      visible: { opacity: 1, transition: { duration: 0.15 } },
-                      exit:    { opacity: 0, transition: { duration: 0.15 } },
-                    }
-                  : {
-                      // Exit shrinks first; enter is delayed so it starts while
-                      // exit is still finishing — brief overlap = crossfade,
-                      // but each phase reads as its own distinct motion.
-                      hidden:  { rotate: -60, scale: 0.4, opacity: 0 },
-                      visible: {
-                        rotate: 0, scale: 1, opacity: 1,
-                        transition: { duration: 0.55, delay: 0.25, ease: [0.42, 0, 0.58, 1] },
-                      },
-                      exit: {
-                        rotate: 60, scale: 0.4, opacity: 0,
-                        transition: { duration: 0.4, ease: [0.42, 0, 0.58, 1] },
-                      },
-                    }
-              }
+              variants={reducedMotion ? flowerSwapReduced : flowerSwap}
               initial="hidden"
               animate="visible"
               exit="exit"
