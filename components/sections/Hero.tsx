@@ -91,9 +91,9 @@ function InlineFlower({ initialIdx, dimmed = false, turned = false }: { initialI
 }
 
 // 64px assets (a 48px tile plus room for its baked-in drop shadow), drawn
-// at 17/24 size for a 34px tile. Offsets are from the word's center, in em so
-// the fan scales with the heading; from* is where each tile rises from,
-// scattered along the word's upper half.
+// at 0.944em: a 34px tile at the 48px desktop heading. Size and offsets are
+// in em (from the word's center) so the whole fan scales with the heading;
+// from* is where each tile rises from, scattered along the word's upper half.
 const communityTiles = [
   { src: "/images/hero/community/pds.png",         x: -2.05, y: -0.6,  rotate: -9, fromX: -1.8,  fromY: -0.3 },
   { src: "/images/hero/community/hackwestern.png", x: -0.7,  y: -0.78, rotate: -4, fromX: -0.6,  fromY: -0.4 },
@@ -149,7 +149,7 @@ function CommunityWord({ active, dimmed, onActiveChange }: HoverWordProps & { ac
         {/* Covers the fan's footprint so the cursor can travel from the word
             up to a tile, across the gaps between tiles, without the hover
             ending. */}
-        <span className="absolute top-[calc(50%-0.78em-28px)] right-[calc(50%-2em-28px)] bottom-1/2 left-[calc(50%-2.05em-28px)] z-0" />
+        <span className="absolute top-[calc(50%-1.36em)] right-[calc(50%-2.58em)] bottom-1/2 left-[calc(50%-2.63em)] z-0" />
         {communityTiles.map((tile) => (
           <motion.span
             key={tile.src}
@@ -158,7 +158,7 @@ function CommunityWord({ active, dimmed, onActiveChange }: HoverWordProps & { ac
             initial="hidden"
             animate={active ? "shown" : "hidden"}
             whileHover={reduce ? undefined : { scale: 0.92, transition: { duration: 0.2, ease: "easeOut" } }}
-            className="absolute top-1/2 left-1/2 z-[2] -mt-[22.67px] -ml-[22.67px] size-[45.33px] bg-contain bg-center bg-no-repeat"
+            className="absolute top-1/2 left-1/2 z-[2] -mt-[0.472em] -ml-[0.472em] size-[0.944em] bg-contain bg-center bg-no-repeat"
             style={{ backgroundImage: `url(${tile.src})` }}
           />
         ))}
