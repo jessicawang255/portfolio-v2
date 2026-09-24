@@ -55,34 +55,38 @@ function InlineFlower({ initialIdx, dimmed = false, turned = false }: { initialI
     setIdx(randomOtherIdx)
   }, [])
 
+  // The span, not the button, sits on the baseline: an empty button's
+  // baseline differs across engines (WebKit drops it below the text).
   return (
-    <button
-      type="button"
-      aria-label="Change flower"
-      onClick={handleClick}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      className={`relative inline-block size-[0.6em] cursor-pointer align-baseline transition-opacity duration-200 ${dimmed ? "opacity-40" : ""}`}
-    >
-      <motion.span
-        animate={reduce ? undefined : { rotate: turned ? 30 : 0, scale: isHovered ? 0.9 : 1 }}
-        transition={reduce ? undefined : { duration: 0.2, ease: "easeOut" }}
-        className="absolute inset-0 will-change-transform"
+    <span className={`relative inline-block size-[0.6em] align-baseline transition-opacity duration-200 ${dimmed ? "opacity-40" : ""}`}>
+      <button
+        type="button"
+        aria-label="Change flower"
+        onClick={handleClick}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        className="absolute inset-0 cursor-pointer"
       >
-        <AnimatePresence mode="sync" initial={false}>
-          <motion.span
-            key={idx}
-            variants={reduce ? flowerSwapReduced : flowerSwap}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            className="absolute inset-0"
-          >
-            <Flower idx={idx} />
-          </motion.span>
-        </AnimatePresence>
-      </motion.span>
-    </button>
+        <motion.span
+          animate={reduce ? undefined : { rotate: turned ? 30 : 0, scale: isHovered ? 0.9 : 1 }}
+          transition={reduce ? undefined : { duration: 0.2, ease: "easeOut" }}
+          className="absolute inset-0 will-change-transform"
+        >
+          <AnimatePresence mode="sync" initial={false}>
+            <motion.span
+              key={idx}
+              variants={reduce ? flowerSwapReduced : flowerSwap}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              className="absolute inset-0"
+            >
+              <Flower idx={idx} />
+            </motion.span>
+          </AnimatePresence>
+        </motion.span>
+      </button>
+    </span>
   )
 }
 
