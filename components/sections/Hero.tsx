@@ -275,14 +275,20 @@ export function Hero() {
         <div className="text-glow w-fit">
           <motion.h1
             variants={fadeUp}
-            className={`text-glow-item font-medium transition-colors duration-200 ${activeWord ? "text-neutral-300" : "text-neutral-900"} text-[36px] md:text-[48px] leading-[1.05] tracking-[-0.015em]`}
+            className={`text-glow-item font-medium transition-colors duration-200 ${activeWord ? "text-neutral-300" : "text-neutral-900"} text-balance text-[36px] md:text-[48px] leading-[1.05] tracking-[-0.015em]`}
           >
-            Jessica is a technical product designer<br className="hidden md:inline" />{" "}
-            who creates experiences that<br className="hidden md:inline" />{" "}
-            foster <CommunityWord active={activeWord === "community"} dimmed={activeWord === "delight"} onActiveChange={setWordActive("community")} />{" "}
-            <InlineFlower initialIdx={0} dimmed={activeWord === "delight"} turned={activeWord === "community"} /> and{" "}
-            <DelightWord dimmed={activeWord === "community"} onActiveChange={setWordActive("delight")} />{" "}
-            <InlineFlower initialIdx={9} dimmed={activeWord === "community"} turned={activeWord === "delight"} />
+            Jessica is a technical product designer who creates experiences that{" "}
+            foster{" "}
+            {/* nowrap keeps each flower on the same line as its word. */}
+            <span className="whitespace-nowrap">
+              <CommunityWord active={activeWord === "community"} dimmed={activeWord === "delight"} onActiveChange={setWordActive("community")} />{" "}
+              <InlineFlower initialIdx={0} dimmed={activeWord === "delight"} turned={activeWord === "community"} />
+            </span>{" "}
+            and{" "}
+            <span className="whitespace-nowrap">
+              <DelightWord dimmed={activeWord === "community"} onActiveChange={setWordActive("delight")} />{" "}
+              <InlineFlower initialIdx={9} dimmed={activeWord === "community"} turned={activeWord === "delight"} />
+            </span>
           </motion.h1>
         </div>
 
