@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useRef, useState } from "react"
+import { useCallback, useRef, useState } from "react"
 import { AnimatePresence, motion, useReducedMotion, type Variants } from "framer-motion"
 import { stagger, fadeUp } from "@/lib/motion"
 import { IconButton } from "@/components/ui/IconButton"
@@ -252,71 +252,12 @@ function DelightWord({ dimmed, onActiveChange }: HoverWordProps) {
   )
 }
 
-type HighlightRect = { left: number; top: number; width: number; height: number }
-
-// The heading's tight line-height is shorter than the font's content area,
-// so native selection boxes overlap the line above and paint over its
-// descenders. Instead, the native highlight is made transparent and these
-// rects — each text fragment's box, resized to the line box and drawn
-// behind the text — tile cleanly line to line.
-function useLineBoxSelection(ref: React.RefObject<HTMLElement | null>) {
-  const [rects, setRects] = useState<HighlightRect[]>([])
-
-  useEffect(() => {
-    function update() {
-      const el = ref.current
-      const sel = document.getSelection()
-      if (!el || !sel || sel.isCollapsed) return setRects([])
-
-      const box = el.getBoundingClientRect()
-      // Undo any scale transform on an ancestor (HeroShell).
-      const scale = box.width / el.offsetWidth || 1
-      const lineHeight = parseFloat(getComputedStyle(el).lineHeight)
-      const next: HighlightRect[] = []
-
-      const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT)
-      for (let node = walker.nextNode(); node; node = walker.nextNode()) {
-        for (let i = 0; i < sel.rangeCount; i++) {
-          const range = sel.getRangeAt(i)
-          if (!range.intersectsNode(node)) continue
-          const sub = document.createRange()
-          sub.selectNodeContents(node)
-          if (range.startContainer === node) sub.setStart(node, range.startOffset)
-          if (range.endContainer === node) sub.setEnd(node, range.endOffset)
-          for (const r of sub.getClientRects()) {
-            if (r.width === 0) continue
-            const centerY = (r.top + r.bottom) / 2
-            next.push({
-              left: (r.left - box.left) / scale,
-              top: (centerY - box.top) / scale - lineHeight / 2,
-              width: r.width / scale,
-              height: lineHeight,
-            })
-          }
-        }
-      }
-      setRects(next)
-    }
-
-    document.addEventListener("selectionchange", update)
-    window.addEventListener("resize", update)
-    return () => {
-      document.removeEventListener("selectionchange", update)
-      window.removeEventListener("resize", update)
-    }
-  }, [ref])
-
-  return rects
-}
-
 export function Hero() {
   const reduce = useReducedMotion()
   // Hovering a highlighted word fades the rest of the heading back.
   const [activeWord, setActiveWord] = useState<"community" | "delight" | null>(null)
   const setWordActive = (word: "community" | "delight") => (active: boolean) =>
     setActiveWord(active ? word : null)
-  const headingRef = useRef<HTMLHeadingElement>(null)
-  const selectionRects = useLineBoxSelection(headingRef)
 
   return (
     <section
@@ -333,9 +274,8 @@ export function Hero() {
       >
         <div className="text-glow w-fit">
           <motion.h1
-            ref={headingRef}
             variants={fadeUp}
-            className={`text-glow-item selection:bg-transparent! font-medium transition-colors duration-200 ${activeWord ? "text-neutral-300" : "text-neutral-900"} text-[36px] md:text-[48px] leading-[1.05] tracking-[-0.015em]`}
+            className={`text-glow-item font-medium transition-colors duration-200 ${activeWord ? "text-neutral-300" : "text-neutral-900"} text-[36px] md:text-[48px] leading-[1.05] tracking-[-0.015em]`}
           >
             Jessica is a technical product designer<br className="hidden md:inline" />{" "}
             who creates experiences that<br className="hidden md:inline" />{" "}
@@ -343,14 +283,6 @@ export function Hero() {
             <InlineFlower initialIdx={0} dimmed={activeWord === "delight"} turned={activeWord === "community"} /> and{" "}
             <DelightWord dimmed={activeWord === "community"} onActiveChange={setWordActive("delight")} />{" "}
             <InlineFlower initialIdx={9} dimmed={activeWord === "community"} turned={activeWord === "delight"} />
-            {selectionRects.map((r, i) => (
-              <span
-                key={i}
-                aria-hidden="true"
-                className="pointer-events-none absolute -z-10 bg-[#E8F3FC]"
-                style={r}
-              />
-            ))}
           </motion.h1>
         </div>
 

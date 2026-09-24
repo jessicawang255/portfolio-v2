@@ -618,7 +618,14 @@ body {
   --selection-text: #0F8BF0;
 }
 
+/* Background is drawn by SelectionHighlight, sized to the line box so tight
+   leading doesn't clip the line above. Form fields keep the native one —
+   their selection isn't exposed as a DOM range. */
 ::selection {
-  background-color: var(--selection-bg);
+  background-color: transparent;
   color: var(--selection-text);
+}
+
+:is(input, textarea)::selection {
+  background-color: var(--selection-bg);
 }

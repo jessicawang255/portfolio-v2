@@ -8,6 +8,7 @@ import { MobileNav } from "@/components/layout/MobileNav"
 import { Footer } from "@/components/layout/Footer"
 import { ScrollRevealController } from "@/components/layout/ScrollRevealController"
 import { ScrollToTop } from "@/components/layout/ScrollToTop"
+import { SelectionHighlight } from "@/components/layout/SelectionHighlight"
 import { siteDescription, siteName, siteUrl } from "@/lib/site"
 import "./globals.css"
 
@@ -58,6 +59,7 @@ export default function RootLayout({
         <MobileNav />
         <ScrollRevealController frameId="main-frame" heroId="hero-content" heroFrameId="hero-content" />
         <ScrollToTop />
+        <SelectionHighlight />
         <Analytics />
       </body>
     </html>
