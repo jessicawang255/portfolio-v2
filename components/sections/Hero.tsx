@@ -5,7 +5,7 @@ import { AnimatePresence, motion, useReducedMotion, type Variants } from "framer
 import { stagger, fadeUp } from "@/lib/motion"
 import { IconButton } from "@/components/ui/IconButton"
 import { TertiaryLink } from "@/components/ui/TertiaryLink"
-import { FLOWERS, flowerSwap, flowerSwapReduced } from "@/components/ui/flowers"
+import { FLOWERS, Flower, flowerSwap, flowerSwapReduced } from "@/components/ui/flowers"
 
 const socials = [
   { label: "LinkedIn", href: "https://www.linkedin.com/in/jwang255/", icon: "/icons/linkedin.svg" },
@@ -55,8 +55,6 @@ function InlineFlower({ initialIdx, dimmed = false, turned = false }: { initialI
     setIdx(randomOtherIdx)
   }, [])
 
-  const Flower = FLOWERS[idx].component
-
   return (
     <button
       type="button"
@@ -78,9 +76,9 @@ function InlineFlower({ initialIdx, dimmed = false, turned = false }: { initialI
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="absolute inset-0 [&>svg]:size-full"
+            className="absolute inset-0"
           >
-            <Flower />
+            <Flower idx={idx} />
           </motion.span>
         </AnimatePresence>
       </motion.span>
@@ -138,12 +136,16 @@ function CommunityWord({ active, dimmed, onActiveChange }: HoverWordProps & { ac
       onMouseEnter={() => onActiveChange(true)}
       onMouseLeave={() => onActiveChange(false)}
     >
-      {/* Tiles come after the word in the DOM but sit at z-0 under its z-[1],
-          so they rise from behind it — still above the line above. */}
+      {/* Tiles sit at z-[2], over the word's z-[1], so the part of each tile
+          that overlaps the word still gets its hover. */}
       <span className="relative z-[1]">
         <Underlined>community</Underlined>
       </span>
-      <span aria-hidden="true" className="pointer-events-none">
+      <span aria-hidden="true" className={active ? "" : "pointer-events-none"}>
+        {/* Covers the fan's footprint so the cursor can travel from the word
+            up to a tile, across the gaps between tiles, without the hover
+            ending. */}
+        <span className="absolute top-[calc(50%-0.78em-28px)] right-[calc(50%-2em-28px)] bottom-1/2 left-[calc(50%-2.05em-28px)] z-0" />
         {communityTiles.map((tile) => (
           <motion.span
             key={tile.src}
@@ -151,7 +153,8 @@ function CommunityWord({ active, dimmed, onActiveChange }: HoverWordProps & { ac
             variants={variants}
             initial="hidden"
             animate={active ? "shown" : "hidden"}
-            className="absolute top-1/2 left-1/2 z-0 -mt-[22.67px] -ml-[22.67px] size-[45.33px] bg-contain bg-center bg-no-repeat"
+            whileHover={reduce ? undefined : { scale: 0.92, transition: { duration: 0.2, ease: "easeOut" } }}
+            className="absolute top-1/2 left-1/2 z-[2] -mt-[22.67px] -ml-[22.67px] size-[45.33px] bg-contain bg-center bg-no-repeat"
             style={{ backgroundImage: `url(${tile.src})` }}
           />
         ))}
@@ -230,18 +233,17 @@ function DelightWord({ dimmed, onActiveChange }: HoverWordProps) {
       <Underlined>delight</Underlined>
       <span aria-hidden="true" className="pointer-events-none">
         {confetti.map((c) => {
-          const Flower = FLOWERS[c.flower].component
           return (
             <motion.span
               key={c.id}
-              className="absolute top-[0.3em] z-[2] [&>svg]:size-full"
+              className="absolute top-[0.3em] z-[2]"
               style={{ left: c.left, width: c.size, height: c.size, marginLeft: `calc(${c.size} / -2)` }}
               initial={{ x: c.x[0], y: c.y[0], rotate: 0, scale: 0, opacity: 1 }}
               animate={{ x: c.x, y: c.y, rotate: c.rotate, scale: c.scale, opacity: c.opacity }}
               transition={{ duration: c.duration, ease: "linear" }}
               onAnimationComplete={() => remove(c.id)}
             >
-              <Flower />
+              <Flower idx={c.flower} />
             </motion.span>
           )
         })}
@@ -338,9 +340,9 @@ export function Hero() {
             Jessica is a technical product designer<br className="hidden md:inline" />{" "}
             who creates experiences that<br className="hidden md:inline" />{" "}
             foster <CommunityWord active={activeWord === "community"} dimmed={activeWord === "delight"} onActiveChange={setWordActive("community")} />{" "}
-            <InlineFlower initialIdx={7} dimmed={activeWord === "delight"} turned={activeWord === "community"} /> and{" "}
+            <InlineFlower initialIdx={0} dimmed={activeWord === "delight"} turned={activeWord === "community"} /> and{" "}
             <DelightWord dimmed={activeWord === "community"} onActiveChange={setWordActive("delight")} />{" "}
-            <InlineFlower initialIdx={6} dimmed={activeWord === "community"} turned={activeWord === "delight"} />
+            <InlineFlower initialIdx={9} dimmed={activeWord === "community"} turned={activeWord === "delight"} />
             {selectionRects.map((r, i) => (
               <span
                 key={i}

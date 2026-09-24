@@ -5,7 +5,7 @@ import Image from "next/image"
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion"
 import { TertiaryLink } from "@/components/ui/TertiaryLink"
 import { IconButton } from "@/components/ui/IconButton"
-import { FLOWERS } from "@/components/ui/flowers"
+import { Flower } from "@/components/ui/flowers"
 import { stagger, fadeUp } from "@/lib/motion"
 import type { Song } from "@/lib/spotify"
 
@@ -562,8 +562,6 @@ function CommunityRow({
 // just a subtle rotate/scale on hover, no cycling or real photo.
 function SongArt({ flowerIdx, isHovered }: { flowerIdx: number; isHovered: boolean }) {
   const reduce = useReducedMotion()
-  const FlowerComponent = FLOWERS[flowerIdx % FLOWERS.length].component
-
   return (
     <div className="relative h-15 w-15 shrink-0 overflow-hidden rounded-[14px] border border-neutral-100 bg-neutral-100 transition-[scale] duration-200 group-hover:scale-95">
       <motion.div
@@ -577,8 +575,8 @@ function SongArt({ flowerIdx, isHovered }: { flowerIdx: number; isHovered: boole
           justifyContent: "center",
         }}
       >
-        <div className="h-[42%] w-[42%] [&>svg]:block [&>svg]:h-full [&>svg]:w-full">
-          <FlowerComponent />
+        <div className="h-[42%] w-[42%]">
+          <Flower idx={flowerIdx} />
         </div>
       </motion.div>
     </div>
