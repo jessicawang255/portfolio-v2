@@ -63,7 +63,7 @@ export default function Rbc() {
         />
 
         <div className="flex flex-col">
-          <h1 className="text-3xl font-medium leading-[1.2] text-primary mt-4">
+          <h1 className="text-3xl font-normal leading-[1.2] text-primary mt-4">
             Our solutioning led us to explore several different routes, each raising its own open questions the deeper we dug.
           </h1>
         </div>
