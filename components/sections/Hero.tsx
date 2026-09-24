@@ -91,9 +91,9 @@ function InlineFlower({ initialIdx, dimmed = false, turned = false }: { initialI
 // the fan scales with the heading; from* is where each tile rises from,
 // scattered along the word's upper half.
 const communityTiles = [
-  { src: "/images/hero/community/pds.svg",         x: -2.05, y: -0.6,  rotate: -9, fromX: -1.8,  fromY: -0.3 },
-  { src: "/images/hero/community/hackwestern.svg", x: -0.7,  y: -0.78, rotate: -4, fromX: -0.6,  fromY: -0.4 },
-  { src: "/images/hero/community/ips.svg",         x: 0.7,   y: -0.75, rotate: 5,  fromX: 0.65,  fromY: -0.38 },
+  { src: "/images/hero/community/pds.png",         x: -2.05, y: -0.6,  rotate: -9, fromX: -1.8,  fromY: -0.3 },
+  { src: "/images/hero/community/hackwestern.png", x: -0.7,  y: -0.78, rotate: -4, fromX: -0.6,  fromY: -0.4 },
+  { src: "/images/hero/community/ips.png",         x: 0.7,   y: -0.75, rotate: 5,  fromX: 0.65,  fromY: -0.38 },
   { src: "/images/hero/community/framer.png",      x: 2.0,   y: -0.62, rotate: 10, fromX: 1.75,  fromY: -0.32 },
 ]
 
