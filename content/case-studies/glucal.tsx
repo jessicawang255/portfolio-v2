@@ -206,7 +206,7 @@ export default function Glucal() {
               <span className="w-1.5 h-1.5 rounded-full bg-[var(--cs-accent)] shrink-0" aria-hidden="true" />
               <p className="text-sm font-mono uppercase leading-[1.2] text-neutral-400">The Problem</p>
             </div>
-            <h1 className="text-3xl font-normal leading-[1.2] text-primary mt-4">
+            <h1 className="text-2xl sm:text-3xl font-normal leading-[1.2] text-primary mt-4">
               75 million people worldwide inject insulin daily.
             </h1>
             <p className="text-pretty text-base leading-normal text-neutral-600 mt-7">
@@ -226,7 +226,7 @@ export default function Glucal() {
         </div>
 
         <div className="mt-7 w-full">
-          <h1 className="text-3xl font-normal leading-[1.2] text-primary mt-4">
+          <h1 className="text-2xl sm:text-3xl font-normal leading-[1.2] text-primary mt-4">
             Despite being a daily task, there&rsquo;s no straightforward tool that simplifies insulin calculation.
           </h1>
           <p className="text-pretty text-base leading-normal text-neutral-600 mt-7">
@@ -397,7 +397,7 @@ export default function Glucal() {
         {/* mt-10/md:mt-24 stacks on this wrapper's own gap-6 (Section.tsx)
             so the total gap above this headline matches the gap-16/md:gap-30
             the page uses between top-level sections. */}
-        <h1 className="text-3xl font-normal leading-[1.2] text-primary mt-10 md:mt-24">
+        <h1 className="text-2xl sm:text-3xl font-normal leading-[1.2] text-primary mt-10 md:mt-24">
           However, users still expressed that logging food seemed like a separate process from inputting carb amounts.
         </h1>
         <p className="text-pretty text-base leading-normal text-neutral-600">

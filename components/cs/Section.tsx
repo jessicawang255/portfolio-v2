@@ -26,7 +26,7 @@ export function Section({ tag, headline, body, primary = false, id, headingLevel
         <p className="text-sm font-mono uppercase leading-[1.2] text-neutral-400">{tag}</p>
       </div>
       {headline && (
-        <Headline className="text-3xl font-normal leading-[1.2] text-primary mt-4">
+        <Headline className="text-2xl sm:text-3xl font-normal leading-[1.2] text-primary mt-4">
           {headline}
         </Headline>
       )}

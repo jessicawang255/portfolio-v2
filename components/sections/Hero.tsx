@@ -279,7 +279,7 @@ export function Hero() {
         <div className="text-glow w-fit">
           <motion.h1
             variants={fadeUp}
-            className={`text-glow-item font-medium transition-colors duration-200 ${activeWord ? "text-neutral-300" : "text-neutral-900"} text-balance md:max-w-[20em] text-[36px] md:text-[48px] leading-[1.1] tracking-[-0.015em]`}
+            className={`text-glow-item font-medium transition-colors duration-200 ${activeWord ? "text-neutral-300" : "text-neutral-900"} text-balance md:max-w-[20em] text-[30px] sm:text-[36px] md:text-[48px] leading-[1.1] tracking-[-0.015em]`}
           >
             Jessica is a technical product designer who creates experiences that{" "}
             foster{" "}
