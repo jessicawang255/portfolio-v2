@@ -456,7 +456,7 @@ export default function HackWesternHeroClient({
       aria-label={project.title}
       className="absolute inset-x-0 top-0 h-full w-full"
     >
-      <Image src={backgroundImg} alt="" fill className="object-cover" sizes="100vw" />
+      <Image src={backgroundImg} alt="" fill className="object-cover object-bottom" sizes="100vw" />
 
       {/* Below `lg` only — a flattened shot of the pile at rest, replacing
           the sim entirely (see LG_QUERY). Crossfades in on load. */}
@@ -464,7 +464,7 @@ export default function HackWesternHeroClient({
         src={mobileImg}
         alt=""
         fill
-        className={`object-cover lg:hidden transition-opacity duration-500 ease-out ${
+        className={`object-cover object-bottom lg:hidden transition-opacity duration-500 ease-out ${
           mobileLoaded ? "opacity-100" : "opacity-0"
         }`}
         sizes="(min-width: 60rem) 0px, 100vw"
