@@ -94,7 +94,7 @@ export default function HackWestern() {
 
         <div className="flex flex-col gap-10 md:gap-16 w-full">
           {finalProductFeatures.map((feature) => (
-            <div key={feature.number} className="flex flex-wrap items-start gap-8">
+            <div key={feature.number} className="flex flex-col md:flex-row md:flex-wrap items-start gap-6 md:gap-8">
               <video
                 src={feature.src}
                 autoPlay
@@ -104,9 +104,9 @@ export default function HackWestern() {
                 aria-label={feature.alt}
                 width={feature.width}
                 height={feature.height}
-                className="flex-1 min-w-0 md:min-w-[400px] h-auto rounded-[8px] border border-neutral-100 shadow-[0_4px_20px_-6px_rgba(22,25,29,0.06)]"
+                className="w-full md:w-auto md:flex-1 md:min-w-[400px] h-auto rounded-[8px] border border-neutral-100 shadow-[0_4px_20px_-6px_rgba(22,25,29,0.06)]"
               />
-              <div className="flex-1 min-w-[200px] max-w-[240px] pt-1">
+              <div className="md:flex-1 md:min-w-[200px] md:max-w-[240px] md:pt-1">
                 <h2>{feature.title}</h2>
                 <p className="mt-3 text-base leading-normal text-neutral-600">
                   {feature.body}
