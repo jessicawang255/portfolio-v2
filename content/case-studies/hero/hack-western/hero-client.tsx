@@ -6,6 +6,7 @@ import { useReducedMotion } from "framer-motion"
 import Matter from "matter-js"
 import type { Project } from "@/content/work"
 import { headerProgress } from "@/components/layout/headerFade"
+import { COMPACT_HERO_HEIGHT } from "@/components/layout/heroCompactHeight"
 import hack from "./stickers/hack.svg"
 import western from "./stickers/western.svg"
 import twelve from "./stickers/twelve.svg"
@@ -68,6 +69,10 @@ const DESKTOP_QUERY = "(min-width: 640px)"
 // since CANVAS_WIDTH's wide composition has stickers pinned at edges that
 // don't exist on a phone-width screen. No point running Matter.js for that.
 const LG_QUERY = "(min-width: 60rem)"
+
+// Height (in mobileImg's own px) of the translucent white bar along its
+// bottom edge, measured from the top of the bar's rounded corners.
+const MOBILE_BAR_HEIGHT = 440
 
 // The pusher representing #cs-content's leading edge — thick so a fast
 // fling can't tunnel a sticker through it, heavy so the stickers never
@@ -443,6 +448,10 @@ export default function HackWesternHeroClient({
     }
   }, [reduced, ready, isDesktopTier])
 
+  // Wide enough to fill the frame's width, and for the part above the bar to
+  // cover the visible hero's height — whichever is larger.
+  const mobileWidth = `max(100cqw, var(--hw-visible-height) * ${mobileImg.width / (mobileImg.height - MOBILE_BAR_HEIGHT)})`
+
   return (
     // Matches #cs-hero-frame's own box, which is taller than the design
     // height by CaseStudyLayout's HERO_BG_EXTRA buffer — items don't inherit
@@ -456,20 +465,42 @@ export default function HackWesternHeroClient({
       aria-label={project.title}
       className="absolute inset-x-0 top-0 h-full w-full"
     >
-      <Image src={backgroundImg} alt="" fill className="object-cover object-bottom" sizes="100vw" />
+      <Image src={backgroundImg} alt="" fill className="object-cover" sizes="100vw" />
 
       {/* Below `lg` only — a flattened shot of the pile at rest, replacing
-          the sim entirely (see LG_QUERY). Crossfades in on load. */}
-      <Image
-        src={mobileImg}
-        alt=""
-        fill
-        className={`object-cover object-bottom lg:hidden transition-opacity duration-500 ease-out ${
+          the sim entirely (see LG_QUERY). Crossfades in on load.
+
+          The image ends in a translucent white bar (its bottom
+          MOBILE_BAR_HEIGHT px) that should never show. So instead of
+          object-cover, the image is sized so just the part above the bar
+          covers the visible hero, and the bar hangs off the bottom, clipped.
+          The visible hero ends where #cs-content rests: COMPACT_HERO_HEIGHT
+          from `sm` up (not this box, which also carries HERO_BG_EXTRA), and
+          --radius-frame short of it below `sm`, where #cs-content's pull-up
+          has no spacer giving it back. */}
+      <div
+        className={`absolute inset-x-0 top-0 overflow-hidden [container-type:inline-size] lg:hidden transition-opacity duration-500 ease-out ${
           mobileLoaded ? "opacity-100" : "opacity-0"
-        }`}
-        sizes="(min-width: 60rem) 0px, 100vw"
-        onLoad={() => setMobileLoaded(true)}
-      />
+        } [--hw-visible-height:calc(var(--hw-compact-height)-var(--radius-frame))] sm:[--hw-visible-height:var(--hw-compact-height)] h-[var(--hw-visible-height)]`}
+        style={{ ["--hw-compact-height" as string]: COMPACT_HERO_HEIGHT }}
+      >
+        <div
+          className="absolute left-1/2 -translate-x-1/2"
+          style={{
+            width: mobileWidth,
+            aspectRatio: `${mobileImg.width} / ${mobileImg.height}`,
+            top: `calc(100% - ${mobileWidth} * ${(mobileImg.height - MOBILE_BAR_HEIGHT) / mobileImg.width})`,
+          }}
+        >
+          <Image
+            src={mobileImg}
+            alt=""
+            fill
+            sizes="(min-width: 60rem) 0px, (max-aspect-ratio: 1/1) 100vh, 100vw"
+            onLoad={() => setMobileLoaded(true)}
+          />
+        </div>
+      </div>
 
       {ITEMS.map((item, i) => {
         const widthPct = (item.src.width / CANVAS_WIDTH) * 100
