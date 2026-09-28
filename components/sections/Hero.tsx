@@ -23,28 +23,16 @@ function Underlined({ children }: { children: React.ReactNode }) {
 }
 
 // One-time glare across the word as the hero loads — the same sweep as the
-// About photos' click shimmer, clipped to the glyphs. It's a copy of the text
-// laid over the real word, so hover/dim colors underneath are untouched, and
-// it unmounts once the sweep ends.
-function ShimmerText({ text, children }: { text: string; children: React.ReactNode }) {
+// About photos' click shimmer, clipped to the glyphs. It paints on the real
+// glyphs rather than a copy laid over them: the word's font is a system font,
+// and a copy's vertical position depends on its metrics, which differ enough
+// on iOS to show the copy a few pixels off.
+function ShimmerText({ children }: { children: React.ReactNode }) {
   const [sweeping, setSweeping] = useState(true)
 
   return (
-    // Stays inline: an inline-block here throws off Safari's text-wrap:
-    // balance, which then adds a line. An inline box is the font's content
-    // area rather than the line-height, so the overlay uses leading-normal to
-    // match that box and sits at its top.
-    <span className="relative">
+    <span className={sweeping ? "hero-shimmer" : undefined} onAnimationEnd={() => setSweeping(false)}>
       {children}
-      {sweeping && (
-        <span
-          aria-hidden="true"
-          className="hero-shimmer pointer-events-none absolute inset-x-0 top-0 whitespace-nowrap leading-normal text-transparent"
-          onAnimationEnd={() => setSweeping(false)}
-        >
-          {text}
-        </span>
-      )}
     </span>
   )
 }
@@ -170,7 +158,7 @@ function CommunityWord({ active, dimmed, onActiveChange }: HoverWordProps & { ac
       {/* Tiles sit at z-[2], over the word's z-[1], so the part of each tile
           that overlaps the word still gets its hover. */}
       <span className="relative z-[1]">
-        <ShimmerText text="community">
+        <ShimmerText>
           <Underlined>community</Underlined>
         </ShimmerText>
       </span>
@@ -263,7 +251,7 @@ function DelightWord({ dimmed, onActiveChange }: HoverWordProps) {
       onMouseEnter={handleMouseEnter}
       onMouseLeave={() => onActiveChange(false)}
     >
-      <ShimmerText text="delight">
+      <ShimmerText>
         <Underlined>delight</Underlined>
       </ShimmerText>
       <span aria-hidden="true" className="pointer-events-none">

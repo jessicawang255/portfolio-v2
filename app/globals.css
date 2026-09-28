@@ -407,18 +407,22 @@ body {
   transform: translateX(-120%);
 }
 
-/* Hero word shimmer — the About glare above, clipped to the glyphs. The
-   gradient is 3× the word's width so the band (~0.7× the word, matching the
-   bar's proportion on a photo tile) starts and ends fully off the text. */
+/* Hero word shimmer — the About glare above, clipped to the glyphs. The text
+   fill comes from the background instead: the glare over a solid layer of the
+   word's own color. The glare is 3× the word's width so the band (~0.7× the
+   word, matching the bar's proportion on a photo tile) starts and ends fully
+   off the text. */
 .hero-shimmer {
-  background-image: linear-gradient(
-    112deg,
-    transparent 38%,
-    rgba(209, 212, 216, 0.9) 50%,
-    transparent 62%
-  );
-  background-size: 300% 100%;
-  background-position: 100% 0;
+  background-image:
+    linear-gradient(
+      112deg,
+      transparent 38%,
+      rgba(209, 212, 216, 0.9) 50%,
+      transparent 62%
+    ),
+    linear-gradient(currentColor, currentColor);
+  background-size: 300% 100%, 100% 100%;
+  background-position: 100% 0, 0 0;
   background-repeat: no-repeat;
   -webkit-background-clip: text;
   background-clip: text;
@@ -427,13 +431,15 @@ body {
 }
 
 @keyframes hero-shimmer-sweep {
-  from { background-position: 100% 0; }
-  to   { background-position: 0% 0; }
+  from { background-position: 100% 0, 0 0; }
+  to   { background-position: 0% 0, 0 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .hero-shimmer {
-    display: none;
+    background-image: none;
+    -webkit-text-fill-color: currentColor;
+    animation: none;
   }
 }
 
