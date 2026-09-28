@@ -30,14 +30,16 @@ function ShimmerText({ text, children }: { text: string; children: React.ReactNo
   const [sweeping, setSweeping] = useState(true)
 
   return (
-    // inline-block so the overlay's box shares the heading's line-height; an
-    // inline parent's box is the taller font content area, shifting it up.
-    <span className="relative inline-block">
+    // Stays inline: an inline-block here throws off Safari's text-wrap:
+    // balance, which then adds a line. An inline box is the font's content
+    // area rather than the line-height, so the overlay uses leading-normal to
+    // match that box and sits at its top.
+    <span className="relative">
       {children}
       {sweeping && (
         <span
           aria-hidden="true"
-          className="hero-shimmer pointer-events-none absolute inset-0 whitespace-nowrap text-transparent"
+          className="hero-shimmer pointer-events-none absolute inset-x-0 top-0 whitespace-nowrap leading-normal text-transparent"
           onAnimationEnd={() => setSweeping(false)}
         >
           {text}
