@@ -22,6 +22,31 @@ function Underlined({ children }: { children: React.ReactNode }) {
   )
 }
 
+// One-time glare across the word as the hero loads — the same sweep as the
+// About photos' click shimmer, clipped to the glyphs. It's a copy of the text
+// laid over the real word, so hover/dim colors underneath are untouched, and
+// it unmounts once the sweep ends.
+function ShimmerText({ text, children }: { text: string; children: React.ReactNode }) {
+  const [sweeping, setSweeping] = useState(true)
+
+  return (
+    // inline-block so the overlay's box shares the heading's line-height; an
+    // inline parent's box is the taller font content area, shifting it up.
+    <span className="relative inline-block">
+      {children}
+      {sweeping && (
+        <span
+          aria-hidden="true"
+          className="hero-shimmer pointer-events-none absolute inset-0 whitespace-nowrap text-transparent"
+          onAnimationEnd={() => setSweeping(false)}
+        >
+          {text}
+        </span>
+      )}
+    </span>
+  )
+}
+
 function randomOtherIdx(current: number) {
   const next = Math.floor(Math.random() * (FLOWERS.length - 1))
   return next >= current ? next + 1 : next
@@ -143,7 +168,9 @@ function CommunityWord({ active, dimmed, onActiveChange }: HoverWordProps & { ac
       {/* Tiles sit at z-[2], over the word's z-[1], so the part of each tile
           that overlaps the word still gets its hover. */}
       <span className="relative z-[1]">
-        <Underlined>community</Underlined>
+        <ShimmerText text="community">
+          <Underlined>community</Underlined>
+        </ShimmerText>
       </span>
       <span aria-hidden="true" className={active ? "" : "pointer-events-none"}>
         {/* Covers the fan's footprint so the cursor can travel from the word
@@ -234,7 +261,9 @@ function DelightWord({ dimmed, onActiveChange }: HoverWordProps) {
       onMouseEnter={handleMouseEnter}
       onMouseLeave={() => onActiveChange(false)}
     >
-      <Underlined>delight</Underlined>
+      <ShimmerText text="delight">
+        <Underlined>delight</Underlined>
+      </ShimmerText>
       <span aria-hidden="true" className="pointer-events-none">
         {confetti.map((c) => {
           return (
