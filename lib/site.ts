@@ -7,4 +7,4 @@ export const siteName = "Jessica Wang"
 
 // Reused everywhere (meta description, OG/twitter descriptions) so they
 // stay in sync with each other instead of drifting.
-export const siteDescription = "I design and build thoughtful things."
+export const siteDescription = "Jessica is a technical product designer who creates experiences that foster community  and delight."
