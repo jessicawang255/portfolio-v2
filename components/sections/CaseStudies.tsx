@@ -47,7 +47,7 @@ export function CaseStudies() {
             <CaseStudyCard project={p0} imageRatio={[740, 504]} mobileImageRatio={MOBILE_RATIO} />
           </motion.div>
           <motion.div variants={fadeUp}>
-            <CaseStudyCard project={p1} imageRatio={[592, 388]} mobileImageRatio={MOBILE_RATIO} />
+            <CaseStudyCard project={p4} imageRatio={[592, 388]} mobileImageRatio={MOBILE_RATIO} />
           </motion.div>
         </motion.div>
 
@@ -59,16 +59,15 @@ export function CaseStudies() {
           viewport={{ once: true, margin: "-80px" }}
         >
           <motion.div variants={fadeUp}>
-            <CaseStudyCard project={p3} imageRatio={[719, 475]} mobileImageRatio={MOBILE_RATIO} />
+            <CaseStudyCard project={p2} imageRatio={[719, 475]} mobileImageRatio={MOBILE_RATIO} />
           </motion.div>
           <motion.div variants={fadeUp}>
-            <CaseStudyCard project={p2} imageRatio={[719, 475]} mobileImageRatio={MOBILE_RATIO} />
+            <CaseStudyCard project={p1} imageRatio={[719, 475]} mobileImageRatio={MOBILE_RATIO} />
           </motion.div>
         </motion.div>
 
-        {/* Row 3: standalone card — 5th project has no pair yet. Reuses
-            grid-wide-left so the card takes the dominant 3fr column (sized
-            to project.thumbnailWidth/Height); the remaining 2fr column
+        {/* Row 3: standalone card, no pair yet. Reuses grid-wide-left so the
+            card takes the dominant 3fr column; the remaining 2fr column
             holds a contact panel instead of sitting empty. */}
         <motion.div
           className="grid grid-cols-1 gap-y-9 gap-x-[18px] md:grid-wide-left"
@@ -77,13 +76,13 @@ export function CaseStudies() {
           viewport={{ once: true, margin: "-80px" }}
         >
           <motion.div variants={fadeUp}>
-            <CaseStudyCard project={p4} mobileImageRatio={MOBILE_RATIO} />
+            <CaseStudyCard project={p3} imageRatio={[3062, 2000]} mobileImageRatio={MOBILE_RATIO} />
           </motion.div>
           <motion.div
             variants={fadeUp}
-            // Desktop-only: fills the blank column left by RBC having no
-            // pair yet — drop this once a 6th case study takes the slot.
-            // self-start sizes to min-h, not the RBC card's full row height.
+            // Desktop-only: fills the blank column left by the unpaired card
+            // — drop this once a 6th case study takes the slot.
+            // self-start sizes to min-h, not the card's full row height.
             // shadow mimics a 1px black-6% border, since neutral-75 is
             // nearly white and a real border would vanish or overpower it.
             className="hidden md:flex flex-col justify-between self-start min-h-[14rem] rounded-2xl bg-neutral-75 p-8 shadow-[0_0_0_1px_rgba(0,0,0,0.06)]"

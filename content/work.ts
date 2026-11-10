@@ -113,7 +113,7 @@ export const projects: Project[] = [
     thumbnailWidth: 1600,
     thumbnailHeight: 932,
     role: "Product Designer",
-    timeline: "Aug 2024 - Feb 2025",
+    timeline: "Aug - Sep 2025",
     team: ["1 product manager", "2 designers", "4 engineers"],
     skills: ["Interaction design", "Prototyping", "User testing"],
     toc: [
