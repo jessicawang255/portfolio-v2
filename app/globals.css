@@ -39,6 +39,9 @@
   --color-muted:        var(--color-neutral-500);
   --color-subtle:       var(--color-neutral-300);
   --color-divider:      #EDEDED;
+  /* Stroke on every case study image, video and media backdrop. Translucent
+     neutral-900 so it reads on white and on neutral-75 backdrops alike. */
+  --color-media-stroke: rgb(22 25 29 / 0.05);
 
   --color-nav-link:       var(--color-neutral-500);
   --color-nav-link-hover: var(--color-neutral-800);

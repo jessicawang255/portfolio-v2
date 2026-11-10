@@ -297,7 +297,7 @@ export function IterationCarousel({ items, className }: IterationCarouselProps) 
                     width={item.width}
                     height={item.height}
                     sizes="100vw"
-                    className="h-auto w-full rounded-[8px] border border-neutral-100"
+                    className="h-auto w-full rounded-[8px] border border-media-stroke"
                   />
                   <span
                     aria-hidden="true"

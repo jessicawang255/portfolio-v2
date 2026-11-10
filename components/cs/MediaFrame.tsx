@@ -14,7 +14,7 @@ export function MediaFrame({ height, caption, className, children }: MediaFrameP
     <div>
       {caption && <p className="mb-2 text-[13px] leading-[1.5] text-neutral-500 italic">{caption}</p>}
       <div
-        className={`flex w-full items-center justify-center rounded-[8px] border border-neutral-100 bg-neutral-75 ${className ?? ""}`}
+        className={`flex w-full items-center justify-center rounded-[8px] border border-media-stroke bg-neutral-75 ${className ?? ""}`}
         style={{ height }}
       >
         {children}

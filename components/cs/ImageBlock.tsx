@@ -14,7 +14,7 @@ export function ImageBlock(props: ImageBlockProps) {
           src={src}
           alt={alt}
           sizes="100vw"
-          className={`w-full h-auto rounded-[8px] border border-neutral-100 ${className ?? ""}`}
+          className={`w-full h-auto rounded-[8px] border border-media-stroke ${className ?? ""}`}
         />
       </div>
     )
@@ -24,7 +24,7 @@ export function ImageBlock(props: ImageBlockProps) {
     <div>
       {caption && <p className="mb-2 text-[13px] leading-[1.5] text-neutral-400 italic">{caption}</p>}
       <div
-        className={`w-full rounded-[8px] border border-neutral-100 bg-neutral-100 ${className ?? ""}`}
+        className={`w-full rounded-[8px] border border-media-stroke bg-neutral-100 ${className ?? ""}`}
         style={{ height }}
       />
     </div>

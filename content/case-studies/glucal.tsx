@@ -257,9 +257,8 @@ export default function Glucal() {
                 // to a single still frame.
                 unoptimized
                 // Same lighter shadow as the button-iteration/nested-button
-                // screens above — this section's own screens were the one
-                // remaining gap, styled with just a border and no shadow.
-                className="w-full max-w-56 shrink-0 h-auto rounded-[8px] border border-neutral-100 shadow-[0_4px_20px_-6px_rgba(22,25,29,0.06)] mx-auto md:mx-0"
+                // screens above.
+                className="w-full max-w-56 shrink-0 h-auto rounded-[8px] border border-media-stroke shadow-[0_4px_20px_-6px_rgba(22,25,29,0.06)] mx-auto md:mx-0"
               />
               <div className="flex-1 min-w-0 max-w-xl">
                 <h2>
@@ -347,7 +346,7 @@ export default function Glucal() {
                   // soft layer at low opacity, tinted neutral-900 rather
                   // than flat black — instead of the heavier dual-layer
                   // shadow other case studies' screens use.
-                  className="h-auto w-full rounded-[16px] border border-neutral-100 shadow-[0_4px_20px_-6px_rgba(22,25,29,0.06)]"
+                  className="h-auto w-full rounded-[16px] border border-media-stroke shadow-[0_4px_20px_-6px_rgba(22,25,29,0.06)]"
                 />
               </div>
             ))}
@@ -415,7 +414,7 @@ export default function Glucal() {
                 height={NESTED_BUTTON_HEIGHT}
                 // Same lighter shadow as AboutContent's panel — see the
                 // button-iteration images above.
-                className="h-auto w-full max-w-72 rounded-[26px] border border-neutral-100 shadow-[0_4px_20px_-6px_rgba(22,25,29,0.06)]"
+                className="h-auto w-full max-w-72 rounded-[26px] border border-media-stroke shadow-[0_4px_20px_-6px_rgba(22,25,29,0.06)]"
               />
             </div>
           </div>

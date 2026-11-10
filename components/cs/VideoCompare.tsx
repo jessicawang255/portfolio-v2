@@ -55,7 +55,7 @@ export function VideoCompare({ items, className }: VideoCompareProps) {
             <p className="text-sm font-mono uppercase leading-[1.2] text-neutral-400">{item.label}</p>
             <div
               // Lighter shadow than the standard case-study-image shadow, for a softer treatment.
-              className="relative w-full max-w-72 overflow-hidden rounded-[26px] border border-neutral-100 shadow-[0_4px_20px_-6px_rgba(22,25,29,0.06)]"
+              className="relative w-full max-w-72 overflow-hidden rounded-[26px] border border-media-stroke shadow-[0_4px_20px_-6px_rgba(22,25,29,0.06)]"
               style={{ aspectRatio: "390 / 844" }}
             >
               <video

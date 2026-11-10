@@ -429,7 +429,7 @@ export function ScreenSpotlight({ flows, className }: ScreenSpotlightProps) {
               top-left-anchored sizing, so the scaled edges land exactly on
               the reserved box's edges. */}
           <div
-            className="rounded-[8px] border border-neutral-100 bg-neutral-75 py-[34px]"
+            className="rounded-[8px] border border-media-stroke bg-neutral-75 py-[34px]"
             style={{
               width: PHONE_CARD_WIDTH,
               height: PHONE_CARD_HEIGHT,
@@ -526,7 +526,7 @@ export function ScreenSpotlight({ flows, className }: ScreenSpotlightProps) {
                           className={`screen-thumb select-none rounded-[9px] object-cover object-top outline transition-opacity duration-200 ease-out focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 ${
                             active
                               ? "opacity-100 outline-[1.5px] outline-[var(--cs-accent)] outline-offset-2"
-                              : "opacity-40 outline-1 outline-neutral-100 hover:opacity-70"
+                              : "opacity-40 outline-1 outline-media-stroke hover:opacity-70"
                           }`}
                         />
                       </button>
