@@ -14,6 +14,16 @@ type SpotifyTrack = {
   external_urls: { spotify: string }
 }
 
+// Explicit songs are fine; only the title text shows on the site. Stems
+// catch variants ("fucking", "shitty"); short words that are prefixes of
+// innocent ones ("ass" → "assume") match exactly.
+const BLOCKED_STEMS = ["fuck", "shit", "bitch", "cunt", "pussy", "motherf", "bastard", "whore", "slut", "nigg", "fag"]
+const BLOCKED_WORDS = ["ass", "asses", "asshole", "assholes", "cock", "cocks", "damn", "dick", "dicks", "dickhead", "goddamn", "hoe", "hoes", "piss", "pissed", "tits", "twat"]
+const BLOCKED_TITLE = new RegExp(
+  `\\b(?:(?:${BLOCKED_STEMS.join("|")})\\w*|(?:${BLOCKED_WORDS.join("|")})\\b)|\\w\\*+\\w`,
+  "i",
+)
+
 async function getAccessToken(): Promise<string | null> {
   const { SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, SPOTIFY_REFRESH_TOKEN } = process.env
   if (!SPOTIFY_CLIENT_ID || !SPOTIFY_CLIENT_SECRET || !SPOTIFY_REFRESH_TOKEN) return null
@@ -39,8 +49,9 @@ export async function getTopTracks(limit: number): Promise<Song[] | null> {
     const token = await getAccessToken()
     if (!token) return null
 
+    // Over-fetch (50 is the API max) so filtered titles get backfilled.
     const res = await fetch(
-      `https://api.spotify.com/v1/me/top/tracks?time_range=medium_term&limit=${limit}`,
+      "https://api.spotify.com/v1/me/top/tracks?time_range=medium_term&limit=50",
       { headers: { Authorization: `Bearer ${token}` } },
     )
     if (!res.ok) {
@@ -49,13 +60,16 @@ export async function getTopTracks(limit: number): Promise<Song[] | null> {
     }
 
     const data: { items: SpotifyTrack[] } = await res.json()
-    const songs = data.items.map((track) => ({
-      id: track.id,
-      title: track.name,
-      artist: track.artists.map((a) => a.name).join(", "),
-      art: track.album.images[0]?.url ?? "",
-      href: track.external_urls.spotify,
-    }))
+    const songs = data.items
+      .filter((track) => !BLOCKED_TITLE.test(track.name))
+      .slice(0, limit)
+      .map((track) => ({
+        id: track.id,
+        title: track.name,
+        artist: track.artists.map((a) => a.name).join(", "),
+        art: track.album.images[0]?.url ?? "",
+        href: track.external_urls.spotify,
+      }))
     return songs.length > 0 ? songs : null
   } catch (err) {
     console.error("Spotify top tracks fetch failed:", err)
