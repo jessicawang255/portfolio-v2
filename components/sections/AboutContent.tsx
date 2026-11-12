@@ -23,7 +23,7 @@ type JourneyItem = { id: string; company: string; role: string; period: string; 
 
 // Employment only — volunteer/leadership roles live in "My Communities" below.
 const journeyItems: JourneyItem[] = [
-  { id: "royal-bank-of-canada",     company: "Royal Bank of Canada",               role: "Software Engineering Intern", period: "NOW",  href: "https://www.rbcroyalbank.com",      icon: "/images/about/experience/rbc-about.svg" },
+  { id: "royal-bank-of-canada",     company: "Royal Bank of Canada",               role: "Software Engineering Intern", period: "2026",  href: "https://www.rbcroyalbank.com",      icon: "/images/about/experience/rbc-about.svg" },
   { id: "cibc",                     company: "Canadian Imperial Bank of Commerce", role: "Software Engineering Intern", period: "2025", href: "https://www.cibc.com",              icon: "/images/about/experience/cibc-about.svg" },
   { id: "the-residency",            company: "The Residency",                      role: "Design Lead",                 period: "2024", href: "https://www.livetheresidency.com", icon: "/images/about/experience/residency-about.svg" },
   { id: "autumn",                   company: "Autumn",                             role: "Product Design Intern",       period: "2024", href: "https://www.autumn.co",             icon: "/images/about/experience/autumn-about.svg" },
