@@ -1,3 +1,5 @@
+import { RegExpMatcher, englishDataset, englishRecommendedTransformers } from "obscenity"
+
 export type Song = {
   id: string
   title: string
@@ -14,15 +16,18 @@ type SpotifyTrack = {
   external_urls: { spotify: string }
 }
 
-// Explicit songs are fine; only the title text shows on the site. Stems
-// catch variants ("fucking", "shitty"); short words that are prefixes of
-// innocent ones ("ass" → "assume") match exactly.
-const BLOCKED_STEMS = ["fuck", "shit", "bitch", "cunt", "pussy", "motherf", "bastard", "whore", "slut", "nigg", "fag"]
-const BLOCKED_WORDS = ["ass", "asses", "asshole", "assholes", "cock", "cocks", "damn", "dick", "dicks", "dickhead", "goddamn", "hoe", "hoes", "piss", "pissed", "tits", "twat"]
-const BLOCKED_TITLE = new RegExp(
-  `\\b(?:(?:${BLOCKED_STEMS.join("|")})\\w*|(?:${BLOCKED_WORDS.join("|")})\\b)|\\w\\*+\\w`,
-  "i",
-)
+// Explicit songs are fine; only the title text shows on the site, so titles
+// with profanity are skipped. The asterisk check catches already-censored
+// titles ("F**k"), which obscenity's matcher doesn't.
+const profanityMatcher = new RegExpMatcher({
+  ...englishDataset.build(),
+  ...englishRecommendedTransformers,
+})
+const CENSORED_WORD = /\w\*+\w/
+
+function hasProfanity(title: string): boolean {
+  return profanityMatcher.hasMatch(title) || CENSORED_WORD.test(title)
+}
 
 async function getAccessToken(): Promise<string | null> {
   const { SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, SPOTIFY_REFRESH_TOKEN } = process.env
@@ -61,7 +66,7 @@ export async function getTopTracks(limit: number): Promise<Song[] | null> {
 
     const data: { items: SpotifyTrack[] } = await res.json()
     const songs = data.items
-      .filter((track) => !BLOCKED_TITLE.test(track.name))
+      .filter((track) => !hasProfanity(track.name))
       .slice(0, limit)
       .map((track) => ({
         id: track.id,
