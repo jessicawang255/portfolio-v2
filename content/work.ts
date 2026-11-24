@@ -25,6 +25,9 @@ export type Project = {
   team?: string[]
   skills?: string[]
   toc?: TocSection[]
+  // Reachable at /work/{slug} but left out of the homepage grid and the
+  // "More Case Studies" list, e.g. a draft before it replaces a live one.
+  hidden?: boolean
 }
 
 export const discoverItems: Project[] = [
@@ -126,6 +129,36 @@ export const projects: Project[] = [
     ],
   },
   {
+    slug: "retrospect_new",
+    hidden: true,
+    title: "A digital time capsule to capture memories with friends",
+    name: "Retrospect",
+    status: "Personal project 2025",
+    year: 2025,
+    disciplines: ["Interaction design", "Prototyping"],
+    bg: "#0d1240",
+    accent: "retrospect",
+    navTheme: "light",
+    thumbnail: "/images/case-studies/retrospect/retrospect-thumbnail.mp4",
+    thumbnailWidth: 1600,
+    thumbnailHeight: 932,
+    role: "Product Designer",
+    timeline: "Aug - Sep 2025",
+    team: ["2 designers", "4 developers"],
+    skills: ["Interaction design", "AI prototyping", "User testing"],
+    toc: [
+      { title: "Overview" },
+      { title: "Inspiration" },
+      { title: "Research" },
+      { title: "The Concept" },
+      { title: "Why Make a Capsule?" },
+      { title: "Adding Memories" },
+      { title: "Sealed Memories" },
+      { title: "Retrospect, in Retrospect" },
+      { title: "Reflections" },
+    ],
+  },
+  {
     slug: "autumn",
     title: "Boosting discovery for a grief support platform",
     name: "Autumn",
@@ -197,9 +230,9 @@ export const projects: Project[] = [
     thumbnail: "/images/case-studies/rbc/rbc-thumbnail.png",
     thumbnailWidth: 3062,
     thumbnailHeight: 2000,
-    role: ["Software engineer", "+ designer"],
+    role: ["Product designer", "+ engineer"],
     timeline: "May - Aug 2026",
-    team: ["1 business analyst", "1 data engineer", "1 software engineer"],
+    team: ["1 business analyst", "1 software engineer", "1 product designer"],
     skills: ["User research", "Product strategy", "Systems design", "Software engineering"],
     toc: [
       { title: "Overview" },

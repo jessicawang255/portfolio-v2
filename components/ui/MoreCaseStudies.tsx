@@ -10,7 +10,7 @@ type Props = {
 // Rendered inline inside CaseStudyLayout's content column, after {children} —
 // inherits that column's width/alignment rather than defining its own.
 export async function MoreCaseStudies({ currentSlug }: Props) {
-  const others = projects.filter((p) => p.slug !== currentSlug)
+  const others = projects.filter((p) => p.slug !== currentSlug && !p.hidden)
   if (others.length === 0) return null
 
   // Same per-slug hero module app/work/[slug]/page.tsx dynamically imports —

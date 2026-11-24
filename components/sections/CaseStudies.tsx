@@ -18,7 +18,7 @@ const socials = [
 ]
 
 export function CaseStudies() {
-  const [p0, p1, p2, p3, p4] = projects
+  const [p0, p1, p2, p3, p4] = projects.filter((p) => !p.hidden)
   const reduce = useReducedMotion()
 
   return (
