@@ -1,534 +1,358 @@
-import { Section } from "@/components/cs/Section"
-import { Callout } from "@/components/cs/Callout"
-import { TwoColumn } from "@/components/cs/TwoColumn"
-import { ImageBlock } from "@/components/cs/ImageBlock"
-import { IterationCarousel } from "@/components/cs/IterationCarousel"
-import { ScreenSpotlight } from "@/components/cs/ScreenSpotlight"
-import { Reflections } from "@/components/cs/Reflections"
-import retrospectFlows1 from "@/public/images/case-studies/retrospect/retrospect-flows-1.png"
-import retrospectFlows2 from "@/public/images/case-studies/retrospect/retrospect-flows-2.png"
-import retrospectFlows3 from "@/public/images/case-studies/retrospect/retrospect-flows-3.png"
-import retrospectFlows5 from "@/public/images/case-studies/retrospect/retrospect-flows-5.png"
-import retrospectFlows6 from "@/public/images/case-studies/retrospect/retrospect-flows-6.jpg"
-import retrospectInspiration from "@/public/images/case-studies/retrospect/retrospect-inspiration.png"
+import Image from "next/image"
+import {
+  Section,
+  Callout,
+  TwoColumn,
+  Outcomes,
+  Reflections,
+  Media,
+  CapsuleFlow,
+  ImageBlock,
+  FlowWalkthrough,
+  PhoneVideo,
+  PhoneVideoCompare,
+  FigmaEmbed,
+} from "@/components/cs"
 import retrospectOverview from "@/public/images/case-studies/retrospect/retrospect-overview.jpg"
+import retrospectInspiration from "@/public/images/case-studies/retrospect/retrospect-inspiration.png"
 import retrospectResearch1 from "@/public/images/case-studies/retrospect/retrospect-research-1.jpg"
-import retrospectResearch2 from "@/public/images/case-studies/retrospect/retrospect-research-2.png"
+import contextScreen from "@/public/images/case-studies/retrospect/context-screen.png"
 
-const SCREENS_DIR = "/images/case-studies/retrospect/screens"
+const DIR = "/images/case-studies/retrospect"
 
-// Every exported crop is 804×1748 except Home's, which was exported taller
-// (804×2592) — see ScreenSpotlight's own scrolling phone window for how
-// that difference is handled without changing the frame's size.
-const STD = { width: 804, height: 1748 }
+function Body({ children, className }: { children: React.ReactNode; className?: string }) {
+  return <p className={`text-pretty text-base leading-normal text-neutral-600 ${className ?? ""}`}>{children}</p>
+}
 
-const finalProductFlows = [
-    {
-        id: "signup-onboarding",
-        label: "Sign up + onboarding",
-        sets: [
-            {
-                label: "",
-                screens: [
-                    {
-                        src: `${SCREENS_DIR}/signup.png`,
-                        ...STD,
-                        alt: "Sign up screen asking for a phone number",
-                        body: "Sign up with just a phone number.",
-                    },
-                    {
-                        src: `${SCREENS_DIR}/invite.png`,
-                        ...STD,
-                        alt: "Better Together screen asking you to invite two friends before the app unlocks",
-                        body: "Invite two friends before you can start using the app.",
-                    },
-                    {
-                        src: `${SCREENS_DIR}/welcome.png`,
-                        ...STD,
-                        alt: "Welcome to Retrospect screen with a gradient background",
-                        body: "Welcome screen shown once onboarding is complete.",
-                    },
-                ],
-            },
-        ],
-    },
-    {
-        id: "home",
-        label: "Home",
-        sets: [
-            {
-                label: "",
-                screens: [
-                    {
-                        src: `${SCREENS_DIR}/home.png`,
-                        width: 804,
-                        height: 2592,
-                        alt: "Home screen showing Jessica's Box sealed, with a countdown timer and an expandable collaborator list",
-                        body: "Home screen showing your current capsule, sealed and counting down until it can be opened, along with the list of collaborators.",
-                        note: "PS. You can scroll down on this screen to see the full list of collaborators!",
-                    },
-                ],
-            },
-        ],
-    },
-    {
-        id: "creating-capsule",
-        label: "Creating a capsule",
-        sets: [
-            {
-                label: "Set up",
-                screens: [
-                    {
-                        src: `${SCREENS_DIR}/vessel.png`,
-                        ...STD,
-                        alt: "Pick a vessel screen showing a carousel of physical capsule containers to choose from",
-                        body: "Choose a container for your capsule.",
-                    },
-                    {
-                        src: `${SCREENS_DIR}/name.png`,
-                        ...STD,
-                        alt: "Give your capsule the perfect name screen with a text field pre-filled with Jessica's Box",
-                        body: "Name your capsule.",
-                    },
-                    {
-                        src: `${SCREENS_DIR}/capsule-type.png`,
-                        ...STD,
-                        alt: "What kind of capsule screen offering a choice between a solo capsule and a shared capsule",
-                        body: "Choose whether the capsule is solo or shared with others.",
-                    },
-                    {
-                        src: `${SCREENS_DIR}/invite-shared.png`,
-                        ...STD,
-                        alt: "Create a Shared Capsule screen with three invite slots and one friend already invited",
-                        body: "Invite friends to collaborate on a shared capsule.",
-                    },
-                    {
-                        src: `${SCREENS_DIR}/join-invite.png`,
-                        ...STD,
-                        alt: "Invite screen shown to a collaborator, reading Jessica has invited you to collaborate on Jessica's Capsule",
-                        body: "Screen shown to a friend when they're invited to join a capsule.",
-                    },
-                    {
-                        src: `${SCREENS_DIR}/fill-start.png`,
-                        ...STD,
-                        alt: "Let's start filling up your capsule transition screen",
-                        body: "Transition screen before you start adding items to the capsule.",
-                    },
-                    {
-                        src: `${SCREENS_DIR}/goodies.png`,
-                        ...STD,
-                        alt: "Put some additional goodies in your capsule screen listing six media types",
-                        body: "Choose which types of media to add: photos, notes, prompts, songs, audio, or drawings.",
-                    },
-                ],
-            },
-            {
-                label: "Photos",
-                screens: [
-                    {
-                        src: `${SCREENS_DIR}/photos-1.png`,
-                        ...STD,
-                        alt: "Add your best photos screen",
-                        body: "Add photos to your capsule.",
-                    },
-                    {
-                        src: `${SCREENS_DIR}/photos-2.png`,
-                        ...STD,
-                        alt: "These look great! screen showing added photos as a carousel with a delete option",
-                        body: "Add photos to your capsule.",
-                    },
-                ],
-            },
-            {
-                label: "Notes",
-                screens: [
-                    {
-                        src: `${SCREENS_DIR}/note-1.png`,
-                        ...STD,
-                        alt: "Write Something screen with an empty field reading Write to your heart's desire",
-                        body: "Write a note to add to your capsule.",
-                    },
-                    {
-                        src: `${SCREENS_DIR}/note-2.png`,
-                        ...STD,
-                        alt: "Write Something screen with the keyboard open and text being typed into the field",
-                        body: "Write a note to add to your capsule.",
-                    },
-                    {
-                        src: `${SCREENS_DIR}/note-3.png`,
-                        ...STD,
-                        alt: "A note in the capsule screen with fading long text",
-                        body: "Write a note to add to your capsule.",
-                    },
-                ],
-            },
-            {
-                label: "Flashcard prompts",
-                screens: [
-                    {
-                        src: `${SCREENS_DIR}/prompt-1.png`,
-                        ...STD,
-                        alt: "A flashcard prompt screen",
-                        body: "Answer a prompt to add to your capsule.",
-                    },
-                    {
-                        src: `${SCREENS_DIR}/prompt-2.png`,
-                        ...STD,
-                        alt: "Answering a prompt screen with the field above the keyboard",
-                        body: "Answer a prompt to add to your capsule.",
-                    },
-                    {
-                        src: `${SCREENS_DIR}/prompt-3.png`,
-                        ...STD,
-                        alt: "An answer saved screen with an editable row",
-                        body: "Answer a prompt to add to your capsule.",
-                    },
-                ],
-            },
-            {
-                label: "Songs",
-                screens: [
-                    {
-                        src: `${SCREENS_DIR}/song-1.png`,
-                        ...STD,
-                        alt: "Add songs screen showing search results for Tyler, the Creator tracks",
-                        body: "Search for and add songs to your capsule.",
-                    },
-                    {
-                        src: `${SCREENS_DIR}/song-2.png`,
-                        ...STD,
-                        alt: "Your Song Selection screen listing four chosen tracks",
-                        body: "Search for and add songs to your capsule.",
-                    },
-                ],
-            },
-            {
-                label: "Audio bytes",
-                screens: [
-                    {
-                        src: `${SCREENS_DIR}/audio-1.png`,
-                        ...STD,
-                        alt: "Record something screen with a record button before recording starts",
-                        body: "Record an audio clip to add to your capsule.",
-                    },
-                    {
-                        src: `${SCREENS_DIR}/audio-2.png`,
-                        ...STD,
-                        alt: "Recording in progress screen reading Recording... You sound great!",
-                        body: "Record an audio clip to add to your capsule.",
-                    },
-                    {
-                        src: `${SCREENS_DIR}/audio-3.png`,
-                        ...STD,
-                        alt: "Sounds great! screen showing the recorded audio byte as a waveform with a delete option",
-                        body: "Record an audio clip to add to your capsule.",
-                    },
-                ],
-            },
-            {
-                label: "Drawings",
-                screens: [
-                    {
-                        src: `${SCREENS_DIR}/draw-1.png`,
-                        ...STD,
-                        alt: "Do your worst, Bob Ross! screen with a blank drawing canvas and a color palette",
-                        body: "Draw something to add to your capsule.",
-                    },
-                    {
-                        src: `${SCREENS_DIR}/draw-2.png`,
-                        ...STD,
-                        alt: "Drawing canvas screen with a finished sketch of a bird next to an ice cream cone",
-                        body: "Draw something to add to your capsule.",
-                    },
-                    {
-                        src: `${SCREENS_DIR}/draw-3.png`,
-                        ...STD,
-                        alt: "Review your Art screen showing the finished drawing centered in a swipeable carousel",
-                        body: "Draw something to add to your capsule.",
-                    },
-                ],
-            },
-            {
-                label: "Sealing",
-                screens: [
-                    {
-                        src: `${SCREENS_DIR}/seal-1.png`,
-                        ...STD,
-                        alt: "Set a date to open your time capsule screen with a date field and three quick presets",
-                        body: "Set a date for when the capsule can be opened.",
-                    },
-                    {
-                        src: `${SCREENS_DIR}/seal-2.png`,
-                        ...STD,
-                        alt: "Capsule Status screen listing each collaborator's Sent status with the seal button disabled",
-                        body: "See each collaborator's status before sealing the capsule.",
-                    },
-                    {
-                        src: `${SCREENS_DIR}/seal-3.png`,
-                        ...STD,
-                        alt: "Sending into the ether screen instructing you to hold down your capsule to seal it",
-                        body: "Hold down the capsule to seal it.",
-                    },
-                    {
-                        src: `${SCREENS_DIR}/seal-4.png`,
-                        ...STD,
-                        alt: "Jessica's Capsule is sealed screen showing the countdown until it can be opened",
-                        body: "Confirmation that the capsule is sealed, with a countdown until it opens.",
-                    },
-                ],
-            },
-        ],
-    },
-    {
-        id: "opening-capsule",
-        label: "Opening a capsule",
-        sets: [
-            {
-                label: "",
-                screens: [
-                    {
-                        src: `${SCREENS_DIR}/open-1.png`,
-                        ...STD,
-                        alt: "Hold to open Jessica's Capsule screen with a Preparing your vessel loading state",
-                        body: "Hold down the capsule to open it.",
-                    },
-                    {
-                        src: `${SCREENS_DIR}/open-2.png`,
-                        ...STD,
-                        alt: "Photo reveal screen with a stack of scattered photos and glitched '10 photos minted' text",
-                        body: "Photos from the capsule are revealed.",
-                    },
-                    {
-                        src: `${SCREENS_DIR}/open-3.png`,
-                        ...STD,
-                        alt: "Audio Bytes reveal screen showing a spinning CD for the capsule's six recordings",
-                        body: "Audio recordings from the capsule are revealed.",
-                    },
-                    {
-                        src: `${SCREENS_DIR}/open-4.png`,
-                        ...STD,
-                        alt: "Prompts reveal screen reading We asked, you answered with a stacked flashcard",
-                        body: "Prompts and answers from the capsule are revealed.",
-                    },
-                    {
-                        src: `${SCREENS_DIR}/open-5.png`,
-                        ...STD,
-                        alt: "Notes reveal teaser screen reading Remember what you wrote? with scattered sticky notes",
-                        body: "Notes from the capsule are revealed.",
-                    },
-                    {
-                        src: `${SCREENS_DIR}/open-6.png`,
-                        ...STD,
-                        alt: "Notes reveal screen showing the full saved note text on a sticky note",
-                        body: "Notes from the capsule are revealed.",
-                    },
-                    {
-                        src: `${SCREENS_DIR}/open-7.png`,
-                        ...STD,
-                        alt: "Songs reveal screen reading Your nostalgia in 10 tracks with the saved playlist",
-                        body: "Songs from the capsule are revealed.",
-                    },
-                    {
-                        src: `${SCREENS_DIR}/open-8.png`,
-                        ...STD,
-                        alt: "Drawing reveal screen reading You're an artist! with the sketch shown in a gold frame",
-                        body: "The drawing from the capsule is revealed.",
-                    },
-                ],
-            },
-        ],
-    },
+const steps = [
+  {
+    stage: "setup" as const,
+    label: "Step 1",
+    heading: "Set up the capsule",
+    body: "Say a group of friends are going on vacation and want a time capsule to capture the memories. Before the trip, one of them names the capsule, picks a cover, and sets it to stay open for the length of the trip. Everyone else gets an invite to join.",
+    clips: [
+      { title: "Create a capsule", body: "Name it, choose a cover, and invite the group.", src: `${DIR}/concept-1-create-capsule.mp4`, alt: "Screen recording of naming a capsule Mexico '25 and choosing a cover" },
+      { title: "Join a capsule", body: "Friends accept the invite and land on the capsule's feed.", src: `${DIR}/concept-2-join-capsule.mp4`, alt: "Screen recording of a friend accepting an invite and joining Mexico '25" },
+    ],
+  },
+  {
+    stage: "contribute" as const,
+    label: "Step 2",
+    heading: "Add memories during the trip",
+    body: "For the week they're in Mexico, the capsule is open for contributions. Anyone in the group can add live photos, library photos, voice memos, quotes, songs, and notes as things happen. The feed shows who added what and when, with a countdown to when the capsule opens, but every memory stays sealed until then.",
+    clips: [
+      { title: "Add photos", body: "Pick shots straight from the camera roll.", src: `${DIR}/concept-3-add-memory-1.mp4`, alt: "Screen recording of adding photos from the library to the capsule" },
+      { title: "Add a quote", body: "Write down what someone said, tag who said it, and confirm before it's sealed.", src: `${DIR}/concept-4-add-quote.mp4`, alt: "Screen recording of writing a quote and tagging who said it" },
+      { title: "Add a song", body: "Search Spotify for the songs that soundtracked the day.", src: `${DIR}/concept-5-add-song.mp4`, alt: "Screen recording of searching Spotify and picking a song to add" },
+    ],
+  },
+  {
+    stage: "open" as const,
+    label: "Step 3",
+    heading: "Open the capsule together",
+    body: "Once the trip is over and everyone's back home, the capsule unlocks. The group can open it together and relive the trip through everything they saved.",
+    clips: [
+      { title: "Open the capsule", body: "Memories play back one at a time, story-style.", src: `${DIR}/concept-6-open-capsule.mp4`, alt: "Screen recording of opening the capsule and revealing 11 memories from 4 people over 7 days" },
+    ],
+  },
 ]
 
-export default function Retrospect() {
-    return (
-        <div className="flex flex-col gap-16 md:gap-30">
-            <Section
-                id="overview"
-                tag="Overview"
-                headline="Retrospect is a social app for collaboratively creating and sharing digital time capsules with photos, songs, drawings, and more media."
-                body="As one of two product designers, I led the 0→1 design of the core experience."
-                primary
-            >
-                <ImageBlock
-                    src={retrospectOverview}
-                    alt="Grid of Retrospect app screens covering onboarding, capsule creation, collaborator status, sealing, and the sealed capsule reveal"
-                />
-            </Section>
+export default function RetrospectNew() {
+  return (
+    <div className="flex flex-col gap-16 md:gap-30">
+      <Section
+        id="overview"
+        tag="Overview"
+        headline="Retrospect is a social app for collaboratively creating and sharing digital time capsules with photos, songs, drawings, and more media."
+        body="As one of two product designers, I led the 0→1 design of the core experience."
+        primary
+      >
+        <ImageBlock
+          src={retrospectOverview}
+          alt="Grid of Retrospect app screens covering onboarding, capsule creation, collaborator status, sealing, and the sealed capsule reveal"
+        />
+      </Section>
 
-            <Section
-                id="inspiration"
-                tag="Inspiration"
-                headline="Niche social apps are on the rise."
-                body="Apps like BeReal, Lapse, Locket, and Airbuds focus on sharing moments through a single, niche purpose. In an age dominated by massive social platforms, users are drawn to these apps for their simplicity, novelty, and playful experiences."
-                primary
-            >
-                <ImageBlock
-                    src={retrospectInspiration}
-                    alt="App icons for BeReal, Locket, Lapse, and Airbuds"
-                />
+      <Outcomes
+        metrics={[
+          { value: "3 months", label: "of closed beta" },
+          { value: "62", label: "beta testers" },
+          { value: "10k+", label: "social media impressions" },
+        ]}
+      />
 
-                <p className="text-base text-neutral-600 leading-normal">
-                    With Retrospect, my team and I wanted to focus on two trends inspired by these existing apps:
-                </p>
+      <Section
+        id="inspiration"
+        tag="Inspiration"
+        headline="It's summer 2025, and a new trend of apps is emerging."
+        body="Apps like BeReal, Lapse, Locket, and Airbuds focus on sharing moments through a single, niche purpose. In an age dominated by massive social platforms, users are drawn to these apps for their simplicity, novelty, and playful experiences."
+        primary
+      >
+        <ImageBlock
+          src={retrospectInspiration}
+          alt="App icons for BeReal, Locket, Lapse, and Airbuds"
+        />
 
-                <TwoColumn
-                    left={<Callout label="Trend #1" heading="Immersive, lighthearted mobile-first experiences" />}
-                    right={<Callout label="Trend #2" heading="Personalized reflection designed for sharing" />}
-                />
+        <Body>With Retrospect, my team and I wanted to focus on two trends inspired by these existing apps:</Body>
 
-            </Section>
+        <TwoColumn
+          left={<Callout label="Trend #1" heading="Immersive, lighthearted mobile-first experiences" />}
+          right={<Callout label="Trend #2" heading="Personalized reflection designed for sharing" />}
+        />
+      </Section>
 
-            <Section
-                id="research"
-                tag="Research"
-                headline="After perusing the App Store and the internet, I discovered that Gen Z users are exploring smaller, more genuine spaces that make connecting feel real and fun."
-                primary
-            >
-                <ImageBlock
-                    src={retrospectResearch1}
-                    alt="Five-star App Store reviews for Lapse, BeReal, and Locket praising their real, unfiltered, and connective experiences"
-                    caption="App Store reviews for Lapse, BeReal, and Locket"
-                />
+      <Section
+        id="research"
+        tag="Research"
+        headline="After perusing the App Store and the internet, I discovered that Gen Z users are exploring smaller, more genuine spaces that make connecting feel real and fun."
+        primary
+      >
+        <ImageBlock
+          src={retrospectResearch1}
+          alt="Five-star App Store reviews for Lapse, BeReal, and Locket praising their real, unfiltered, and connective experiences"
+          caption="App Store reviews for Lapse, BeReal, and Locket"
+        />
 
-                <p className="text-base text-neutral-600 leading-normal">
-                    The team’s research revealed two key findings about trends in the consumer app space: people want apps that help them connect with friends in a real and relaxed way, and sharing is central to how users engage with niche social apps.
-                </p>
-            </Section>
+        <Body>
+          The team’s research revealed two key findings about trends in the consumer app space: people want apps that
+          help them connect with friends in a real and relaxed way, and sharing is central to how users engage with
+          niche social apps.
+        </Body>
 
-            <Section
-                id="competitive-analysis"
-                tag="competitive analysis"
-                headline="Existing digital time capsule apps focus on function over social, playful, and shareable experiences."
-                body="They target a broader, older audience and often lack visually engaging design tailored for young users seeking fun social experiences."
-            >
-
-                <ImageBlock
-                    src={retrospectResearch2}
-                    alt="Existing digital time capsule apps — Virtual Time Capsule, a mobile capsule app, Cupaloy, and Miigen's family time capsule builder"
-                    caption="Existing competitors"
-                />
-            </Section>
-
-            <Section
-                id="core-app-flows"
-                tag="Core App Flows"
-                headline="The goal was to craft an experience where collaboration, play, and personalization are built into every interaction."
-                body="I started by mapping out the interaction design and wireframing."
-                primary
-            >
-                <ImageBlock
-                    src={retrospectFlows1}
-                    alt="Interaction design map covering the open app flow, dashboard, capsule creation, group capsule sealing discussion, and opening a capsule"
-                    caption="User flows"
-                />
-                <ImageBlock
-                    src={retrospectFlows2}
-                    alt="Low-fidelity wireframes for onboarding, main pages like the shelf and archive, and the full create-a-time-capsule flow"
-                    caption="Wireframes"
-                />
-            </Section>
-
-            <Section
-                id="creating-a-capsule"
-                tag="Creating a capsule"
-                headline="Creating a capsule needed to feel flexible and intuitive. Users should be able to add, edit, and organize any kind of memory with ease."
-                body="I began by designing in a simple linear flow, refining each screen as I received feedback."
-            >
-                <ImageBlock
-                    src={retrospectFlows3}
-                    alt="Initial linear flow for adding photos, voice recordings, songs, notes, prompts, and drawings to a capsule"
-                    caption="Initial capsule creation flow and screens"
-                />
-                <p className="text-base text-neutral-600 leading-normal">
-                    I recieved two main pieces of feedback from testers:
-                </p>
-
-                <TwoColumn
-                    left={
-                        <Callout
-                            heading="Users want to include multiple pieces of any media type — not just photos and songs."
-                            body="I'd designed the option to add several photos, but assumed every other media type could only hold one. Testers immediately caught the gap: “Why can I add several photos, but only one voice note?”"
-                        />
-                    }
-                    right={
-                        <Callout
-                            heading="Each media type was also being added and managed differently — one consistent pattern was overdue."
-                            body="I consolidated every media type into the same interface: a carousel. Users could add several items, delete existing ones, and rearrange them — all through one consistent pattern instead of several different ones."
-                        />
-                    }
-                />
-
-                <ImageBlock
-                    src={retrospectFlows5}
-                    alt="Revised carousel treatment applied consistently across photos, voice recordings, songs, notes, prompts, and drawings"
-                    caption="Consolidated capsule creation flow, with carousels"
-                />
-                <div className="flex flex-col gap-3">
-                    <h2 className="text-xl font-medium text-neutral-800 leading-[1.2]">I made one exception to the carousel layout for the song media type.</h2>
-                    <p className="text-base text-neutral-600 leading-normal">
-                        During user testing, participants said that while the carousel worked well for other media, it didn’t capture the overall &ldquo;feeling&rdquo; of a group of songs together. They wanted to see multiple tracks together, similar to how playlists feel. Based on this insight, I used a list view for songs instead of the carousel.
-                    </p>
-                </div>
-
-                <ImageBlock
-                    src={retrospectFlows6}
-                    alt="Comparison of a list view versus a swipeable card carousel for a capsule's song selection"
-                    caption="Songs: list vs. carousel view comparison"
-                />
-            </Section>
-
-            <Section
-                id="collaboration-user-flow"
-                tag="Collaboration user flow"
-                headline="When exploring how collaboration should work for a shared time capsule, I identified two main user flow variations."
-                body="While both flows follow the same general process of adding items and sealing the capsule, they differ in who controls the final capsule sealing — either each contributor individually, or the owner on behalf of everyone. This distinction affects how ownership and coordination are experienced by collaborators."
-                >
-                <IterationCarousel
-                    items={[
-                        {
-                            src: "/images/case-studies/retrospect/retrospect-flows-7.png",
-                            alt: "Collaboration flow where each contributor individually seals the capsule after adding their items",
-                            width: 2400,
-                            height: 1897,
-                            caption: "Everyone individually seals the capsule when they're done adding items",
-                        },
-                        {
-                            src: "/images/case-studies/retrospect/retrospect-flows-8.png",
-                            alt: "Collaboration flow where the owner waits for all collaborators to finish before sealing the capsule for everyone",
-                            width: 2400,
-                            height: 1969,
-                            caption: "A shared screen shows everyone’s status, and the owner seals the capsule once all items are added.",
-                        },
-                    ]}
-                />
-                {/* NEED NEW COMPONENT FOR TABS HERE - REDESIGN */}
-                {/* and add more stuff here */}
-            </Section>
-
-            <Section
-                id="final-product"
-                tag="The Final Product"
-                headline="Capture and share memories with friends. Relive them in Retrospect."
-                primary
-            >
-                <ScreenSpotlight flows={finalProductFlows} />
-            </Section>
-
-        <Reflections
-                id="reflections"
-                tag="it's done! what did i learn?"
-                items={[
-                    {
-                        heading: "MVPs (minimum viable products) are the MVP (most valuable player)",
-                        body: "My team fell victim to scope creep. From the get-go we added collaboration, sharing, and a fancy onboarding, and we tried to build it all at once. I learned how important it is to start with the simplest possible version of the product,  get it in front of users early, and iterate based on real feedback (not assumptions).",
-                    },
-                    {
-                        heading: "Don't just agree, push back",
-                        body: "This was my first time working alongside a PM and developers, and my instinct was to defer. If the PM had already prioritized something, or a dev said another approach would be easier, I assumed they'd thought it through more than I had. I learned that I was the one who'd actually talked to users and reasoned through the interaction, and staying quiet just because someone said their opinion first wasted that.",
-                    },
-                ]}
-            />
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+          <Callout label="Insight #1" heading="People like saving real, authentic memories, not staged ones." />
+          <Callout label="Insight #2" heading="People want to feel close to the people they share with." />
         </div>
-    )
+      </Section>
+
+      <Section
+        id="the-concept"
+        tag="The Concept"
+        headline="Retrospect: a digital time capsule to capture memories with friends."
+      >
+        <FigmaEmbed
+          url="https://www.figma.com/deck/ozWzPhD4INbVLZj1fEyQ9v"
+          title="Retrospect app walkthrough slides"
+        />
+        <FlowWalkthrough steps={steps} />
+      </Section>
+
+      <Section
+        id="why-make-a-capsule"
+        tag="Why make a capsule?"
+        headline="To find out what motivates people to create a time capsule, we built an MVP in one day to test our hypothesis."
+        body="My design teammate and I put together a lightweight design system and rough wireframes in Figma, then used the Figma MCP and Claude Code to build the MVP in practically one shot. The goal was to fail fast and learn as much as we could, as quickly as possible."
+        primary
+      >
+        <Media
+          src={`${DIR}/retrospect-mvp.png`}
+          alt="MVP screens: name your time capsule, fill your box, set a date to open, sealed countdown, your capsule is ready, and the opened capsule"
+          width={3840}
+          height={1946}
+          caption="The one-day MVP, built with Figma MCP and Claude Code"
+        />
+        <div className="mt-10 flex flex-col gap-6">
+          <Callout
+            label="User feedback"
+            heading="People didn't have a reason to create a time capsule."
+            body="We put the MVP in front of 12 testers for a week and asked why they'd want to make one. The answers were all over the place, but motivation was strongest when a capsule was tied to a real event, like a trip, semester, graduation, or birthday."
+          />
+          <Media
+            src={`${DIR}/retrospect-why.png`}
+            alt="Testers' answers to why they would want to create a time capsule: personal diary, mood tracker, progress journal, letters to a loved one, vacation memories, friend group memories"
+            width={3840}
+            height={2160}
+          />
+        </div>
+
+        <Body className="mt-10">
+          So I anchored time capsules to real-life moments. Instead of creating a capsule and waiting months to open it,
+          friends add memories during a set contribution period, then open it together when it ends.
+        </Body>
+
+        <figure className="w-full">
+          <figcaption className="mb-2 text-[13px] leading-[1.5] text-neutral-400 italic">
+            Capsule structure, before and after
+          </figcaption>
+          <div className="divide-y divide-neutral-100 rounded-[8px] border border-media-stroke bg-neutral-75">
+            {(["v1", "v2"] as const).map((version) => (
+              <div key={version} className="flex flex-col gap-3 px-5 pt-5 sm:px-8 sm:pt-6">
+                <p className="text-sm font-mono uppercase leading-[1.2] text-neutral-400">
+                  {version === "v1" ? "v1 · Create, then wait" : "v2 · Contribution period"}
+                </p>
+                <CapsuleFlow version={version} bare />
+              </div>
+            ))}
+          </div>
+        </figure>
+
+        <div className="mt-4 grid grid-cols-1 gap-6 sm:grid-cols-2">
+          <div>
+            <h3 className="text-base font-medium leading-[1.4] text-neutral-800">No dead time</h3>
+            <p className="mt-1 text-pretty text-base leading-normal text-neutral-600">
+              There&rsquo;s no &ldquo;wait&rdquo; stretch where people forget about the app and drop off.
+            </p>
+          </div>
+          <div>
+            <h3 className="text-base font-medium leading-[1.4] text-neutral-800">Value up front</h3>
+            <p className="mt-1 text-pretty text-base leading-normal text-neutral-600">
+              People get something out of the app during the event, not months later.
+            </p>
+          </div>
+        </div>
+      </Section>
+
+      <Section
+        id="adding-memories"
+        tag="Adding memories"
+        headline="What does it look like to add a memory to a time capsule?"
+        body="I mapped memory types on a spectrum, from authentic, like an in-the-moment BeReal, to curated, like an edited Instagram carousel. Looking back on a trip, you want both: the polished highlights and the spontaneous moments in between. So we designed Retrospect to support both ends."
+        primary
+      >
+        <Media
+          src={`${DIR}/memories-spectrum-slide.png`}
+          alt="Memory types on a spectrum from authentic to curated: spontaneous live photos, voice memos, quotes, and camera gallery photos"
+          width={3840}
+          height={2160}
+          caption="Memory types, from authentic to curated"
+        />
+        <div className="mt-10 flex flex-col gap-3">
+          <h2 className="text-xl font-medium leading-[1.4] text-neutral-800">
+            I explored two interaction patterns for adding memories.
+          </h2>
+          <Body>
+            Camera-first opens straight into a camera, and you swipe between memory types. Menu-first starts with a
+            simple menu that takes you to each memory type.
+          </Body>
+        </div>
+        <PhoneVideoCompare
+          items={[
+            {
+              label: "Camera-first",
+              src: `${DIR}/memories-camera-first.mp4`,
+              alt: "Screen recording of the camera-first pattern: the capture screen opens straight away and memory types sit in a swipeable row above the shutter",
+            },
+            {
+              label: "Menu-first",
+              src: `${DIR}/memories-menu-first.mp4`,
+              alt: "Screen recording of the menu-first pattern: a menu of memory types opens first, then the chosen type's capture screen",
+            },
+          ]}
+        />
+        <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-[2fr_3fr] md:items-end md:gap-10">
+          <div className="flex justify-center rounded-[8px] border border-media-stroke bg-neutral-75 px-6 py-10">
+            <Image
+              src={contextScreen}
+              alt="Photos screen with a caption field below the photo, pre-filled day, time, and location chips, and a button to tag people"
+              sizes="220px"
+              className="h-auto w-full max-w-[220px]"
+            />
+          </div>
+          <Callout
+            label="User feedback"
+            heading="Memories are only valuable when they're tied to context."
+            body="Testers kept telling us a photo on its own wasn't enough. They wanted to remember where it was taken, what was happening, and who was there. So a caption field now sits under every memory, with the day, time, and location filled in automatically and a quick way to tag who was there."
+          />
+        </div>
+      </Section>
+
+      <Section
+        id="sealed-memories"
+        tag="Sealed memories"
+        headline="What do sealed memories look like while people contribute?"
+        body="During the contribution period, memories are sealed until the capsule opens. But the capsule still needed to feel alive, so I explored three views for showing contributions without giving anything away."
+        primary
+      >
+        <PhoneVideoCompare
+          items={[
+            {
+              label: "Calendar view",
+              src: `${DIR}/sealed-calendar.mp4`,
+              alt: "Screen recording of the calendar view: contributions grouped under each day of the trip",
+            },
+            {
+              label: "Grid view",
+              src: `${DIR}/sealed-grid.mp4`,
+              alt: "Screen recording of the grid view: sealed contributions shown as blurred tiles",
+            },
+            {
+              label: "List feed view",
+              src: `${DIR}/sealed-list.mp4`,
+              alt: "Screen recording of the list feed view: who added what and when, with sealed thumbnails",
+            },
+          ]}
+        />
+        <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-[2fr_3fr] md:items-end md:gap-10">
+          <div className="flex justify-center rounded-[8px] border border-media-stroke bg-neutral-75 px-6 py-10">
+            <PhoneVideo
+              src={`${DIR}/sealed-confirmation-screen.png`}
+              alt="Confirmation sheet showing the photos about to be added, with an Add 2 photos button"
+              className="max-w-[220px]"
+            />
+          </div>
+          <Callout label="User feedback" heading="Testers wanted to delete memories after adding them.">
+            <div className="flex flex-col gap-4 text-pretty text-base leading-normal text-neutral-600">
+              <p>
+                But editing a sealed capsule would undo the point of sealing it. Instead, I added a{" "}
+                <strong className="font-medium text-neutral-800">confirmation sheet before contributing</strong>, so
+                people get one last look at what they&rsquo;re adding before it&rsquo;s locked in.
+              </p>
+              <p>
+                <span className="font-mono text-sm uppercase text-neutral-400">Tradeoff</span>
+                <span className="mx-2 text-neutral-300">·</span>
+                Less flexibility and curation for users.
+              </p>
+            </div>
+          </Callout>
+        </div>
+      </Section>
+
+      <Section
+        id="retrospect-in-retrospect"
+        tag="Retrospect, in retrospect"
+        headline="In closed beta, 62 testers made time capsules with their friends, and our launch content reached 10k+ people."
+        primary
+      >
+        <Media
+          src={`${DIR}/retrospect-review.png`}
+          alt="TestFlight email inviting a tester to Retrospect, beside an Instagram post from retrospect.space reading Make a time capsule with us"
+          width={3840}
+          height={2160}
+          caption="The rise: our TestFlight beta and launch content on Instagram"
+        />
+        <div className="flex flex-col gap-3">
+          <h2 className="text-xl font-medium leading-[1.3] text-neutral-800">
+            But after three months, traction started dying down.
+          </h2>
+          <Body>
+            Our beta testers gradually stopped using Retrospect, and in December 2025, we decided to stop working on it.
+          </Body>
+          <Body>
+            Novelty carried the first few weeks, but a capsule is a rare moment by design, so there wasn&rsquo;t much
+            reason to come back in between. We tested early whether people wanted to make a capsule, but not whether
+            they&rsquo;d make a second one. Social apps can gain traction quickly and still struggle to become a habit.
+          </Body>
+          <Body>
+            We stopped at v2, and plenty of successful consumer apps only clicked many versions later. Even so, it was
+            one of the most valuable things I&rsquo;ve built.
+          </Body>
+        </div>
+      </Section>
+
+      <Reflections
+        id="reflections"
+        tag="it's done! what did i learn?"
+        items={[
+          {
+            heading: "Move fast to test the hypothesis",
+            body: "We got a rough version in front of testers early to test our riskiest assumption first.",
+          },
+          {
+            heading: "Working with AI",
+            body: "AI got me through the first 80% faster, but the final decisions stayed with me.",
+          },
+        ]}
+      />
+    </div>
+  )
 }
