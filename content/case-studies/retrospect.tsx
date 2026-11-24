@@ -15,8 +15,8 @@ import {
 } from "@/components/cs"
 import retrospectOverview from "@/public/images/case-studies/retrospect/retrospect-overview.jpg"
 import retrospectInspiration from "@/public/images/case-studies/retrospect/retrospect-inspiration.png"
-import retrospectResearch1 from "@/public/images/case-studies/retrospect/retrospect-research-1.jpg"
-import contextScreen from "@/public/images/case-studies/retrospect/context-screen.png"
+import retrospectResearch1 from "@/public/images/case-studies/retrospect/retrospect-research.jpg"
+import contextScreen from "@/public/images/case-studies/retrospect/retrospect-memories-4.png"
 
 const DIR = "/images/case-studies/retrospect"
 
@@ -31,8 +31,8 @@ const steps = [
     heading: "Set up the capsule",
     body: "Say a group of friends are going on vacation and want a time capsule to capture the memories. Before the trip, one of them names the capsule, picks a cover, and sets it to stay open for the length of the trip. Everyone else gets an invite to join.",
     clips: [
-      { title: "Create a capsule", body: "Name it, choose a cover, and invite the group.", src: `${DIR}/concept-1-create-capsule.mp4`, alt: "Screen recording of naming a capsule Mexico '25 and choosing a cover" },
-      { title: "Join a capsule", body: "Friends accept the invite and land on the capsule's feed.", src: `${DIR}/concept-2-join-capsule.mp4`, alt: "Screen recording of a friend accepting an invite and joining Mexico '25" },
+      { title: "Create a capsule", body: "Name it, choose a cover, and invite the group.", src: `${DIR}/retrospect-concept-1.mp4`, alt: "Screen recording of naming a capsule Mexico '25 and choosing a cover" },
+      { title: "Join a capsule", body: "Friends accept the invite and land on the capsule's feed.", src: `${DIR}/retrospect-concept-2.mp4`, alt: "Screen recording of a friend accepting an invite and joining Mexico '25" },
     ],
   },
   {
@@ -41,9 +41,9 @@ const steps = [
     heading: "Add memories during the trip",
     body: "For the week they're in Mexico, the capsule is open for contributions. Anyone in the group can add live photos, library photos, voice memos, quotes, songs, and notes as things happen. The feed shows who added what and when, with a countdown to when the capsule opens, but every memory stays sealed until then.",
     clips: [
-      { title: "Add photos", body: "Pick shots straight from the camera roll.", src: `${DIR}/concept-3-add-memory-1.mp4`, alt: "Screen recording of adding photos from the library to the capsule" },
-      { title: "Add a quote", body: "Write down what someone said, tag who said it, and confirm before it's sealed.", src: `${DIR}/concept-4-add-quote.mp4`, alt: "Screen recording of writing a quote and tagging who said it" },
-      { title: "Add a song", body: "Search Spotify for the songs that soundtracked the day.", src: `${DIR}/concept-5-add-song.mp4`, alt: "Screen recording of searching Spotify and picking a song to add" },
+      { title: "Add photos", body: "Pick shots straight from the camera roll.", src: `${DIR}/retrospect-concept-3.mp4`, alt: "Screen recording of adding photos from the library to the capsule" },
+      { title: "Add a quote", body: "Write down what someone said, tag who said it, and confirm before it's sealed.", src: `${DIR}/retrospect-concept-4.mp4`, alt: "Screen recording of writing a quote and tagging who said it" },
+      { title: "Add a song", body: "Search Spotify for the songs that soundtracked the day.", src: `${DIR}/retrospect-concept-5.mp4`, alt: "Screen recording of searching Spotify and picking a song to add" },
     ],
   },
   {
@@ -52,7 +52,7 @@ const steps = [
     heading: "Open the capsule together",
     body: "Once the trip is over and everyone's back home, the capsule unlocks. The group can open it together and relive the trip through everything they saved.",
     clips: [
-      { title: "Open the capsule", body: "Memories play back one at a time, story-style.", src: `${DIR}/concept-6-open-capsule.mp4`, alt: "Screen recording of opening the capsule and revealing 11 memories from 4 people over 7 days" },
+      { title: "Open the capsule", body: "Memories play back one at a time, story-style.", src: `${DIR}/retrospect-concept-6.mp4`, alt: "Screen recording of opening the capsule and revealing 11 memories from 4 people over 7 days" },
     ],
   },
 ]
@@ -145,7 +145,7 @@ export default function RetrospectNew() {
         primary
       >
         <Media
-          src={`${DIR}/retrospect-mvp.png`}
+          src={`${DIR}/retrospect-why-1.png`}
           alt="MVP screens: name your time capsule, fill your box, set a date to open, sealed countdown, your capsule is ready, and the opened capsule"
           width={3840}
           height={1946}
@@ -158,7 +158,7 @@ export default function RetrospectNew() {
             body="We put the MVP in front of 12 testers for a week and asked why they'd want to make one. The answers were all over the place, but motivation was strongest when a capsule was tied to a real event, like a trip, semester, graduation, or birthday."
           />
           <Media
-            src={`${DIR}/retrospect-why.png`}
+            src={`${DIR}/retrospect-why-2.png`}
             alt="Testers' answers to why they would want to create a time capsule: personal diary, mood tracker, progress journal, letters to a loved one, vacation memories, friend group memories"
             width={3840}
             height={2160}
@@ -210,7 +210,7 @@ export default function RetrospectNew() {
         primary
       >
         <Media
-          src={`${DIR}/memories-spectrum-slide.png`}
+          src={`${DIR}/retrospect-memories-1.png`}
           alt="Memory types on a spectrum from authentic to curated: spontaneous live photos, voice memos, quotes, and camera gallery photos"
           width={3840}
           height={2160}
@@ -229,12 +229,12 @@ export default function RetrospectNew() {
           items={[
             {
               label: "Camera-first",
-              src: `${DIR}/memories-camera-first.mp4`,
+              src: `${DIR}/retrospect-memories-2.mp4`,
               alt: "Screen recording of the camera-first pattern: the capture screen opens straight away and memory types sit in a swipeable row above the shutter",
             },
             {
               label: "Menu-first",
-              src: `${DIR}/memories-menu-first.mp4`,
+              src: `${DIR}/retrospect-memories-3.mp4`,
               alt: "Screen recording of the menu-first pattern: a menu of memory types opens first, then the chosen type's capture screen",
             },
           ]}
@@ -267,17 +267,17 @@ export default function RetrospectNew() {
           items={[
             {
               label: "Calendar view",
-              src: `${DIR}/sealed-calendar.mp4`,
+              src: `${DIR}/retrospect-sealed-1.mp4`,
               alt: "Screen recording of the calendar view: contributions grouped under each day of the trip",
             },
             {
               label: "Grid view",
-              src: `${DIR}/sealed-grid.mp4`,
+              src: `${DIR}/retrospect-sealed-2.mp4`,
               alt: "Screen recording of the grid view: sealed contributions shown as blurred tiles",
             },
             {
               label: "List feed view",
-              src: `${DIR}/sealed-list.mp4`,
+              src: `${DIR}/retrospect-sealed-3.mp4`,
               alt: "Screen recording of the list feed view: who added what and when, with sealed thumbnails",
             },
           ]}
@@ -285,7 +285,7 @@ export default function RetrospectNew() {
         <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-[2fr_3fr] md:items-end md:gap-10">
           <div className="flex justify-center rounded-[8px] border border-media-stroke bg-neutral-75 px-6 py-10">
             <PhoneVideo
-              src={`${DIR}/sealed-confirmation-screen.png`}
+              src={`${DIR}/retrospect-sealed-4.png`}
               alt="Confirmation sheet showing the photos about to be added, with an Add 2 photos button"
               className="max-w-[220px]"
             />
@@ -314,7 +314,7 @@ export default function RetrospectNew() {
         primary
       >
         <Media
-          src={`${DIR}/retrospect-review.png`}
+          src={`${DIR}/retrospect-results.png`}
           alt="TestFlight email inviting a tester to Retrospect, beside an Instagram post from retrospect.space reading Make a time capsule with us"
           width={3840}
           height={2160}

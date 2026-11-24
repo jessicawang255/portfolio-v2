@@ -12,7 +12,7 @@ import retrospectFlows5 from "@/public/images/case-studies/retrospect-archive/re
 import retrospectFlows6 from "@/public/images/case-studies/retrospect-archive/retrospect-flows-6.jpg"
 import retrospectInspiration from "@/public/images/case-studies/retrospect/retrospect-inspiration.png"
 import retrospectOverview from "@/public/images/case-studies/retrospect/retrospect-overview.jpg"
-import retrospectResearch1 from "@/public/images/case-studies/retrospect/retrospect-research-1.jpg"
+import retrospectResearch1 from "@/public/images/case-studies/retrospect/retrospect-research.jpg"
 import retrospectResearch2 from "@/public/images/case-studies/retrospect-archive/retrospect-research-2.png"
 
 const SCREENS_DIR = "/images/case-studies/retrospect-archive/screens"
