@@ -104,6 +104,7 @@ export const projects: Project[] = [
   },
   {
     slug: "retrospect",
+    hidden: true,
     title: "A digital time capsule to capture memories with friends",
     name: "Retrospect",
     status: "Personal project 2025",
@@ -130,7 +131,6 @@ export const projects: Project[] = [
   },
   {
     slug: "retrospect_new",
-    hidden: true,
     title: "A digital time capsule to capture memories with friends",
     name: "Retrospect",
     status: "Personal project 2025",
