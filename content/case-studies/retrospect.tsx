@@ -11,7 +11,7 @@ import {
   FlowWalkthrough,
   PhoneVideo,
   PhoneVideoCompare,
-  FigmaEmbed,
+  // FigmaEmbed,
 } from "@/components/cs"
 import retrospectOverview from "@/public/images/case-studies/retrospect/retrospect-overview.jpg"
 import retrospectInspiration from "@/public/images/case-studies/retrospect/retrospect-inspiration.png"
@@ -129,11 +129,12 @@ export default function RetrospectNew() {
         id="the-concept"
         tag="The Concept"
         headline="Retrospect: a digital time capsule to capture memories with friends."
+        primary
       >
-        <FigmaEmbed
+        {/* <FigmaEmbed
           url="https://www.figma.com/deck/ozWzPhD4INbVLZj1fEyQ9v"
           title="Retrospect app walkthrough slides"
-        />
+        /> */}
         <FlowWalkthrough steps={steps} />
       </Section>
 
