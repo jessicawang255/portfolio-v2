@@ -240,7 +240,19 @@ export default function RetrospectNew() {
             },
           ]}
         />
-        <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-[2fr_3fr] md:items-end md:gap-10">
+        <Callout
+          className="mt-10"
+          label="Decision"
+          heading="We went with menu-first: it had lower friction, testers found it less confusing, and it handles a wide range of memory types far better than a screen built around the camera."
+          body="The tradeoff is one extra tap to capture a spontaneous moment."
+        />
+        <Callout
+          className="mt-10"
+          label="User feedback"
+          heading="Memories are only valuable when they're tied to context."
+          body="Testers kept telling us a photo on its own wasn't enough. They wanted to remember where it was taken, what was happening, and who was there."
+        />
+        <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-[2fr_3fr] md:items-end md:gap-8">
           <div className="flex justify-center rounded-[8px] border border-media-stroke bg-neutral-75 px-6 py-10">
             <Image
               src={contextScreen}
@@ -249,11 +261,13 @@ export default function RetrospectNew() {
               className="h-auto w-full max-w-[220px]"
             />
           </div>
-          <Callout
-            label="User feedback"
-            heading="Memories are only valuable when they're tied to context."
-            body="Testers kept telling us a photo on its own wasn't enough. They wanted to remember where it was taken, what was happening, and who was there. So a caption field now sits under every memory, with the day, time, and location filled in automatically and a quick way to tag who was there."
-          />
+          <div className="min-w-0 md:pb-2">
+            <h3 className="text-base font-medium leading-[1.4] text-neutral-800">A caption under every memory</h3>
+            <p className="mt-1 text-pretty text-base leading-normal text-neutral-600">
+              The day, time, and location fill in automatically, so adding context takes no extra effort. A tag button
+              records who was there.
+            </p>
+          </div>
         </div>
       </Section>
 
